@@ -145,10 +145,13 @@ public static class RandomizerSwitch
 		TeleporterController.Activate(Randomizer.TeleportTable[Value].ToString());
 		Randomizer.showHint(Value + " teleporter activated");
 	}
+
     
-    
-    public static void GivePickup(RandomizerAction Action)
+    public static void GivePickup(RandomizerAction Action, int coords, bool found_locally=true)
     {
+        if(found_locally)
+            RandomizerSyncManager.FoundPickup(Action, coords);
+
         switch (Action.Action) {
             case "AC":                
                 SkillPointPickup();
@@ -184,7 +187,5 @@ public static class RandomizerSwitch
                 Randomizer.showHint("Nothing");
                 return;
         }
-             
     }
-        
 }

@@ -59,19 +59,35 @@ public static class RandomizerBonus
             }
 			break;
 		case 13:
-			Randomizer.showHint("Health Regeneration");
             if (RandomizerBonus.HealthRegeneration() < 3) 
             {
                 Characters.Sein.Inventory.SkillPointsCollected += 1 << ID;
+                Randomizer.showHint("Health Regeneration (" + RandomizerBonus.HealthRegeneration().ToString() + "/3)");
             }
 			break;
-		case 15:
-			Randomizer.showHint("Energy Regeneration");
+        case -13:
+            if (RandomizerBonus.HealthRegeneration() > 0) 
+            {
+                Characters.Sein.Inventory.SkillPointsCollected -= 1 << -ID;
+                Randomizer.showHint("Health Regeneration (" + RandomizerBonus.HealthRegeneration().ToString() + "/3)");
+                }
+            break;
+        case 15:
+            Randomizer.showHint("Energy Regeneration");
             if (RandomizerBonus.EnergyRegeneration() < 3) 
             {
                 Characters.Sein.Inventory.SkillPointsCollected += 1 << ID;
+                Randomizer.showHint("Energy Regeneration (" + RandomizerBonus.EnergyRegeneration().ToString() + "/3)");
             }
-			break;
+            break;
+        case -15:
+            Randomizer.showHint("Energy Regeneration");
+            if (RandomizerBonus.EnergyRegeneration() > 0)
+            {
+                Characters.Sein.Inventory.SkillPointsCollected -= 1 << -ID;
+                Randomizer.showHint("Energy Regeneration (" + RandomizerBonus.EnergyRegeneration().ToString() + "/3)");
+            }
+            break;
         case 17:
             if (RandomizerBonus.WaterVeinShards() >= 3)
             {
@@ -89,6 +105,14 @@ public static class RandomizerBonus
                 {
                     Randomizer.showHint("*Water Vein Shard (" + RandomizerBonus.WaterVeinShards().ToString() + "/3)*");
                 }
+            }
+            break;
+        case -17:
+            if(RandomizerBonus.WaterVeinShards() > 0)
+            {
+                Characters.Sein.Inventory.SkillPointsCollected -= 1 << -ID;
+                Keys.GinsoTree = false;
+                Randomizer.showHint("*Water Vein Shard (" + RandomizerBonus.WaterVeinShards().ToString() + "/3)*");
             }
             break;
         case 19:
@@ -110,6 +134,14 @@ public static class RandomizerBonus
                 }
             }
             break;
+        case -19:
+            if(RandomizerBonus.GumonSealShards() > 0)
+            {
+                Characters.Sein.Inventory.SkillPointsCollected -= 1 << -ID;
+                Keys.ForlornRuins = false;
+                Randomizer.showHint("#Gumon Seal Shard (" + RandomizerBonus.GumonSealShards().ToString() + "/3)#");
+            }
+            break;
         case 21:
             if (RandomizerBonus.SunstoneShards() >= 3)
             {
@@ -129,6 +161,14 @@ public static class RandomizerBonus
                 }
             }
             break;
+        case -21:
+            if(RandomizerBonus.GumonSealShards() > 0)
+            {
+                Characters.Sein.Inventory.SkillPointsCollected -= 1 << -ID;
+                Keys.MountHoru = false;
+                Randomizer.showHint("@Sunstone Shard (" + RandomizerBonus.SunstoneShards().ToString() + "/3)@");
+            }
+        break;
 		}
 	}
 
