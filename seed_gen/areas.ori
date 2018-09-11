@@ -1160,12 +1160,152 @@ home: HollowGrove
 home: GinsoOuterDoor
 	conn: GinsoInnerDoor
 home: GinsoInnerDoor
+	-- anchor: Just inside the Ginso tree door after putting in the water vein
 	conn: LowerGinsoTree
 		normal WallJump DoubleJump
 		normal ChargeJump
 		normal Bash Grenade
+		extended DoubleJump 
+		--need to verify
 		extreme Dash WallJump Ability=6
 		extreme Dash Climb Ability=6
+home: LowerGinsoTree
+	-- anchor: At the top of the second room near the flower
+	pickup: LowerGinsoHiddenExp
+		normal ChargeJump
+		normal Bash Grenade
+		normal WallJump DoubleJump
+		normal Climb DoubleJump
+		extreme Dash Climb Ability=6
+		extreme Dash WallJump Ability=6
+	pickup: LowerGinsoPlant
+		normal ChargeFlame
+		normal Grenade
+		cdash Dash Ability=6
+	conn: GinsoMiniBossDoor
+		normal WallJump DoubleJump
+		normal WallJump Glide
+		normal Climb DoubleJump
+		normal Climb Glide
+		normal ChargeJump Glide
+		normal ChargeJump DoubleJump
+		normal Bash Grenade DoubleJump
+		normal Bash Grenade Glide
+		extended DoubleJump
+	conn: Horu
+		glitched Dash
+home: GinsoMiniBossDoor
+	-- anchor: Just past the Ginso Mini Boss Door which unlocks after mini boss defeat
+	pickup: LowerGinsoKeystone1 --can be gotten with no skills and a 2 hp dboost
+	pickup: LowerGinsoKeystone2
+		normal DoubleJump
+		normal Glide
+		normal ChargeJump 
+		--involves 2 hp dboost
+		normal Bash Grenade
+	pickup: LowerGinsoKeystone3
+		normal WallJump
+		normal Climb
+		normal ChargeJump
+		normal Bash Grenade
+		Extended DoubleJump
+	pickup: LowerGinsoKeystone4
+		normal WallJump
+		normal Climb
+		normal ChargeJump
+		normal Bash Grenade
+		Extended DoubleJump
+	conn: BashTreeDoor
+		normal Keystone=4
+home: BashTreeDoor
+	--anchor: Immediately adjacent to the first Ginso keystone door (unopened)
+	conn: BashTree
+		normal WallJump
+		normal Climb
+		normal ChargeJump
+		normal Bash Grenade
+		extended DoubleJump
+home: BashTree
+	--anchor: The Bash Tree Itself
+	pickup: BashSkillTree
+	pickup: BashAreaExp
+		normal Bash
+		normal ChargeJump
+	conn: UpperGinsoTree
+		normal Bash
+		normal ChargeJump Dash DoubleJump
+		dboost ChargeJump Health=4
+		cdash ChargeJump Dash Ability=6
+home: UpperGinsoTree
+	--anchor: Near the flower just before the Upper Ginso keystone area.
+	pickup: UpperGinsoLowerKeystone
+		normal bash
+		dboost ChargeJump Health=5
+	pickup: UpperGinsoRightKeystone
+		normal bash
+		dboost ChargeJump Health=5
+	pickup: UpperGinsoUpperRightKeystone
+		normal bash
+		dboost ChargeJump Health=5
+	pickup: UpperGinsoUpperLeftKeystone
+		normal bash
+		dboost ChargeJump Health=5
+	pickup: UpperGinsoRedirectLowerExp
+		normal Stomp
+		normal Bash
+		normal ChargeJump Climb
+	pickup: UpperGinsoRedirectUpperExp
+		normal Stomp
+		normal Bash
+	pickup: UpperGinsoEnergyCell
+		normal Stomp
+		normal Bash
+		normal ChargeJump Climb
+	conn: UpperGinsoDoor
+		normal Keystone=4
+home: UpperGinsoDoor
+	--anchor: Immediately adjacent to the upper ginso keystone door (unopened)
+	conn: TopGinsoTree
+		normal Bash DoubleJump
+		speed Bash
+		dboost ChargeJump WallJump Health=5
+		dboost ChargeJump Climb Health=5
+		extended-damage ChargeJump Health=5
+		extended-damage ChargeJump DoubleJump
+		extreme WallJump DoubleJump Health=7 Ability=12
+home: TopGinsoTree
+	--anchor: Where Water Vein is inserted at the top of the Ginso Tree
+	pickup: TopGinsoLeftLowerExp
+		normal DoubleJump
+		normal Bash
+		dboost ChargeJump Health=4
+		cdash Dash Ability=6
+	pickup: TopGinsoLeftUpperExp
+		normal Bash
+		dboost ChargeJump Health=4
+		dboost Dash DoubleJump Health=4
+		cdash Dash Ability=6
+	pickup: TopGinsoRightPlant
+		normal Bash ChargeFlame
+		normal Bash Grenade 
+		--requires 2 grenades or an air throw
+		normal ChargeJump ChargeFlame
+		normal ChargeJump Grenade
+		cdash Dash Ability=6
+	conn: GinsoEscape
+		normal Bash Grenade
+		normal Bash ChargeJump
+		normal Bash WallJump DoubleJump
+		speed Bash Stomp DoubleJump
+		speed Stomp ChargeJump
+		cdash Stomp Dash Ability=6
+		dbash Bash
+home: GinsoEscape
+	pickup: GinsoEscapeSpiderExp
+	pickup: GinsoEscapeJumpPadExp
+	pickup: GinsoEscapeProjectileExp
+	pickup: GinsoEscapeHangingExp
+	pickup: GinsoEscapeExit
 home: RightGinso
 	pickup: OuterSwampAbilityCell
 	pickup: OuterSwampStompExp
@@ -1449,65 +1589,6 @@ home: MobileGumoHideoutPlants
 home: HideoutRedirect
 	pickup: GumoHideoutRedirectEnergyCell
 	pickup: GumoHideoutRedirectExp
-home: LowerGinsoTree
-	pickup: LowerGinsoHiddenExp
-	pickup: LowerGinsoKeystone1
-	pickup: LowerGinsoKeystone2
-	pickup: LowerGinsoKeystone3
-	pickup: LowerGinsoKeystone4
-	pickup: LowerGinsoPlant
-		normal ChargeFlame
-		normal Grenade
-		cdash Dash Ability=6
-	conn: BashTree
-		normal Keystone=4
-	conn: Horu
-		glitched Dash
-home: BashTree
-	pickup: BashSkillTree
-	conn: UpperGinsoTree
-		normal Bash
-		normal ChargeJump
-home: UpperGinsoTree
-	pickup: BashAreaExp
-	pickup: UpperGinsoLowerKeystone
-	pickup: UpperGinsoRightKeystone
-	pickup: UpperGinsoUpperRightKeystone
-	pickup: UpperGinsoUpperLeftKeystone
-	conn: TopGinsoTree
-		ALL Keystone=4
-		normal Bash WallJump
-		normal Bash Climb
-		dboost ChargeJump WallJump Health=5
-		dboost ChargeJump Climb Health=5
-		extended Bash ChargeJump
-		extended-damage ChargeJump Health=5
-		extended-damage ChargeJump DoubleJump
-		extreme WallJump DoubleJump Health=7 Ability=12
-	conn: UpperGinsoFloors
-		normal Bash
-		normal Stomp
-		extended ChargeFlame
-home: UpperGinsoFloors
-	pickup: UpperGinsoRedirectLowerExp
-	pickup: UpperGinsoRedirectUpperExp
-	pickup: UpperGinsoEnergyCell
-home: TopGinsoTree
-	pickup: TopGinsoLeftLowerExp
-	pickup: TopGinsoLeftUpperExp
-	pickup: TopGinsoRightPlant
-		normal ChargeFlame
-		normal Grenade
-		cdash Dash Ability=6
-	conn: GinsoEscape
-		normal Bash
-		speed Stomp
-home: GinsoEscape
-	pickup: GinsoEscapeSpiderExp
-	pickup: GinsoEscapeJumpPadExp
-	pickup: GinsoEscapeProjectileExp
-	pickup: GinsoEscapeHangingExp
-	pickup: GinsoEscapeExit
 home: Swamp
 	pickup: InnerSwampStompExp
 		ALL Stomp
