@@ -1187,10 +1187,10 @@ home: GinsoInnerDoor
 		casual-core WallJump DoubleJump
 		casual-core ChargeJump
 		casual-core Bash Grenade
-		--need to verify
-		expert-core DoubleJump 
-		master-core Dash WallJump Ability=6
-		master-core Dash Climb Ability=6
+		--Involves double jump climbing at at least one point (Whether doing telehops or not)
+		expert-core DoubleJump
+		master-abilities Dash WallJump Ability=6
+		master-abilities Dash Climb Ability=6
 home: LowerGinsoTree
 	-- anchor: At the top of the second room near the flower
 	pickup: LowerGinsoHiddenExp
@@ -1198,8 +1198,8 @@ home: LowerGinsoTree
 		casual-core Bash Grenade
 		casual-core WallJump DoubleJump
 		casual-core Climb DoubleJump
-		master-core Dash Climb Ability=6
-		master-core Dash WallJump Ability=6
+		master-abilities Dash Climb Ability=6
+		master-abilities Dash WallJump Ability=6
 	pickup: LowerGinsoPlant
 		casual-core ChargeFlame DoubleJump
 		casual-core ChargeFlame WallJump
@@ -1209,7 +1209,7 @@ home: LowerGinsoTree
 		casual-core Grenade
 		expert-abilities Dash Ability=6
 	conn: GinsoMiniBossDoor
-	-- TODO: single damage instance falls through the teleporter room
+	-- TODO: single damage instance falls through the teleporter room (Completed)
 		casual-core WallJump DoubleJump
 		casual-core WallJump Glide
 		casual-core Climb DoubleJump
@@ -1218,18 +1218,36 @@ home: LowerGinsoTree
 		casual-core ChargeJump DoubleJump
 		casual-core Bash Grenade DoubleJump
 		casual-core Bash Grenade Glide
+		--A single relatively easy 2 hp dboost
+		standard-dboost WallJump
+		standard-dboost Climb
+		--A little more difficult for a 2 hp dboost here, maybe put in expert?
+		standard-dboost ChargeJump
+		--Added in paths to reach the miniboss area airdashing through teleporters
+		standard-abilities WallJump Dash Ability=3
+		standard-abilities Climb Dash Ability=3
+		standard-abilities ChargeJump Dash Ability=3
+		--involves a relatively precise movement through teleporter area to avoid damage
+		expert-core WallJump
+		--involves double jump climbing
 		expert-core DoubleJump
+		--lots of dbashes guiding a spider shot through the teleporter
+		dbash Bash
 	conn: Horu
 		glitched Dash
 home: GinsoMiniBossDoor
 	-- anchor: Just past the Ginso Mini Boss Door which unlocks after mini boss defeat
-	pickup: LowerGinsoKeystone1 --can be gotten with no skills and a 2 hp dboost
+	pickup: LowerGinsoKeystone1 
+		casual-core DoubleJump
+		standard-core Glide
+		standard-abilities Dash Ability=3
+		standard-dboost Health=3
 	pickup: LowerGinsoKeystone2
 		casual-core DoubleJump
 		casual-core Glide
-		--involves 2 hp dboost
-		casual-dboost ChargeJump Health=3
 		casual-core Bash Grenade
+		--involves 2 hp dboost
+		standard-dboost ChargeJump Health=3
 	pickup: LowerGinsoKeystone3
 		casual-core WallJump
 		casual-core Climb
@@ -1242,10 +1260,16 @@ home: GinsoMiniBossDoor
 		casual-core ChargeJump
 		casual-core Bash Grenade
 		expert-core DoubleJump
-	conn: BashTreeDoor
-		casual-core Keystone=4
-home: BashTreeDoor
+	conn: BashTreeDoorClosed
+	        casual-core Free
+home: BashTreeDoorClosed
 	--anchor: Immediately adjacent to the first Ginso keystone door (unopened)
+	conn: BashTreeDoorOpened
+        	casual-core Keystone=4
+home: BashTreeDoorOpened
+	--anchor: Immediately adjacent to the first Ginso keystone door (opened)
+   	conn: GinsoMiniBossDoor
+		casual-core Open Free
 	conn: BashTree
 		casual-core WallJump
 		casual-core Climb
@@ -1258,68 +1282,139 @@ home: BashTree
 	pickup: BashAreaExp
 		casual-core Bash
 		casual-core ChargeJump
-	conn: UpperGinsoTree
+		--Triple Jump path
+		master-abilities DoubleJump Ability=12
+	conn: BashTreeDoorClosed
+	        casual-core Open Free
+	conn: UpperGinsoRedirectArea
 		casual-core Bash
 		casual-core ChargeJump Dash DoubleJump
+		casual-core ChargeJump DoubleJump Glide
+		--spike pit here does 3 damage
 		standard-dboost ChargeJump Health=4
+		--involves taking an intentional hit from a fireball, dealing only 2 damage
 		expert-dboost ChargeJump Health=3
 		expert-abilities ChargeJump Dash Ability=6
-home: UpperGinsoTree
-	--anchor: Near the flower just before the Upper Ginso keystone area.
-	-- TODO: revisit these dboost paths. Classically, CJump and 3HP was sufficient in standard
-	-- Some implicit paths appear to be present here
-	pickup: UpperGinsoLowerKeystone
-		casual-core Bash
-		expert-dboost ChargeJump Health=5
-	pickup: UpperGinsoRightKeystone
-		casual-core Bash
-		expert-dboost ChargeJump Health=5
-	pickup: UpperGinsoUpperRightKeystone
-		casual-core Bash
-		expert-dboost ChargeJump Health=5
-	pickup: UpperGinsoUpperLeftKeystone
-		casual-core Bash
-		expert-dboost ChargeJump Health=5
+		master-abilities DoubleJump Ability=12
+home: UpperGinsoRedirectArea
+	-located at the first redirect area on top of where the UpperGinsoRedirectLowerExp is found
 	pickup: UpperGinsoRedirectLowerExp
 		casual-core Stomp
 		casual-core Bash
 		casual-core ChargeJump Climb
 		expert-core ChargeFlame
 	pickup: UpperGinsoRedirectUpperExp
+		--no climb + Cjump here due to the possibility of destroying the only surface to break the floor here
 		casual-core Stomp
 		casual-core Bash
 		expert-core ChargeFlame
+	conn: UpperGinsoTree
+		casual-core Bash
+		casual-core ChargeJump
+		master-abilities DoubleJump Stomp WallJump Ability=12
+		master-abilities DoubleJump ChargeFlame WallJump Ability=12
+		master-abilities DoubleJump Stomp Climb Ability=12 Health=3
+		master-abilities DoubleJump ChargeFlame Climb Ability=12 Health=3
+	conn: BashTree
+		casual-core Open Free
+home: UpperGinsoTree
+	--anchor: Near the flower just before the Upper Ginso keystone area, this is the flower AFTER the keydupe flower
+	pickup: UpperGinsoLowerKeystone
+		casual-core Bash DoubleJump
+		--May be a little too difficult for casual?
+		casual-core Bash Glide
+		-- All dboosts are pickups over spikes
+		standard-dboost Bash Health=3
+		standard-dboost DoubleJump Health=3
+		standard-dboost ChargeJump Health=3
+		expert-dboost Health=5
+	pickup: UpperGinsoRightKeystone
+		casual-core Bash DoubleJump
+		casual-core Bash Glide
+		standard-core Bash
+		standard-core ChargeJump DoubleJump
+		standard-core ChargeJump Glide
+		standard-dboost ChargeJump Health=3
+	pickup: UpperGinsoUpperRightKeystone
+		casual-core Bash DoubleJump
+		standard-core Bash
+		standard-core ChargeJump DoubleJump
+		standard-dboost ChargeJump Health=3
+	pickup: UpperGinsoUpperLeftKeystone
+		casual-core Bash DoubleJump
+		standard-core Bash
+		standard-core ChargeJump DoubleJump
+		standard-core ChargeJump Glide
+		standard-dboost ChargeJump Health=3
 	pickup: UpperGinsoEnergyCell
+		--with the exception of bash and cjump, all of these routes involve getting stuck in the energy cell area
 		casual-core Stomp
 		casual-core Bash
 		casual-core ChargeJump Climb
 		expert-core ChargeFlame
-	conn: UpperGinsoDoor
+	conn: UpperGinsoDoorClosed
+		casual-core Free
+home: UpperGinsoDoorClosed
+	conn: UpperGinsoDoorOpened
 		casual-core Keystone=4
-home: UpperGinsoDoor
+home: UpperGinsoDoorOpened
 	--anchor: Immediately adjacent to the upper ginso keystone door (unopened)
-	-- TODO: recheck these dboost paths, perhaps reconsider their difficult placement
 	conn: TopGinsoTree
-		casual-core Bash WallJump
-		casual-core Bash Climb
-		casual-core Bash ChargeJump
-		casual-core Bash Grenade
+		--these paths assume you are starting at UpperGinsoTree and progressing to TopGinsoTree
+		casual-core Bash WallJump DoubleJump
+		casual-core Bash Climb DoubleJump
+		casual-core Bash WallJump Glide
+		casual-core Bash Climb Glide
+		--dboost crossing the spikes past the keydoor
+		casual-dboost Bash Climb Health=3
+		casual-dboost Bash WallJump Health=3
+		standard-core Bash WallJump
+		standard-core Bash Climb
+		standard-core Bash Grenade
+		expert-core Bash DoubleJump
+		expert-dboost ChargeJump DoubleJump Health=3
+		master-core WallJump DoubleJump Health=7 Ability=12
+	conn: UpperGinsoTree
+		casual-core Open Bash
+		casual-core Open DoubleJump
+		casual-dboost Open Health=3
+		standard-dboost Open ChargeJump Health=3
+		standard-abilities Open Dash Ability=3
+home: GinsoTeleporter
+	--anchor: Ginso Teleporter
+	conn: TopGinsoTree
+		casual-core Bash
+		casual-core ChargeJump WallJump
 		expert-dboost ChargeJump Health=5
 		expert-dboost ChargeJump DoubleJump Health=3
 		master-core WallJump DoubleJump Health=7 Ability=12
+	conn: UpperGinsoDoorClosed
+		--may have to add in dboost paths (need to check jump across spikes before door)
+		casual-core Free
 home: TopGinsoTree
 	--anchor: Where Water Vein is inserted at the top of the Ginso Tree
 	-- TODO: recheck these dboost paths and their difficulties
-	-- (do these spikes actually do 3? What damage are we taking getting to the top left exp?)
 	pickup: TopGinsoLeftLowerExp
-		casual-core DoubleJump
-		casual-core Bash
-		standard-dboost ChargeJump Health=4
+		casual-core DoubleJump WallJump
+		casual-core DoubleJump Climb
+		casual-core Bash DoubleJump
+		casual-core Bash Glide
+		casual-core ChargeJump DoubleJump
+		casual-core ChargeJump Glide
+		--involves lobbing a grenade to the xp in order to avoid damage
+		standard-core Bash Grenade
+		standard-dboost ChargeJump Health=3
+		expert-core DoubleJump
 		expert-abilities Dash Ability=6
 	pickup: TopGinsoLeftUpperExp
-		casual-core Bash
-		standard-dboost ChargeJump Health=4
-		standard-dboost Dash DoubleJump Health=4
+		--consider also having double jump for casual access
+		casual-core Bash WallJump
+		casual-core Bash Climb
+		casual-core Bash Grenade
+		casual-core ChargeJump
+		--involves careful fronkey placement, may move to expert?
+		standard-core Bash
+		standard-dboost Dash DoubleJump Health=3
 		expert-abilities Dash Ability=6
 	pickup: TopGinsoRightPlant
 		casual-core Bash ChargeFlame
@@ -1329,19 +1424,90 @@ home: TopGinsoTree
 		casual-core ChargeJump Grenade
 		expert-abilities Dash Ability=6
 	conn: GinsoEscape
+		--all paths needed in order to break the spores/brambles/w/e in order to put in the water vein
 		casual-core Bash Grenade
 		casual-core Bash ChargeJump
 		casual-core Bash WallJump DoubleJump
-		standard-core Bash Stomp DoubleJump
+		--involves careful fronkey placement, may move to expert?
+		standard-core Bash
 		standard-core Stomp ChargeJump
 		expert-abilities Stomp Dash Ability=6
-		dbash Bash
+	conn: UpperGinsoDoorClosed
+		casual-core Free
 home: GinsoEscape
+	--gonna need to go over a lot of these paths for binning into difficulties, some can be quite a pain
 	pickup: GinsoEscapeSpiderExp
+		casual-core Bash DoubleJump WallJump
+		casual-core Bash ChargeJump WallJump
+		casual-core Bash DoubleJump Climb
+		--needs verification
+		--standard-core ChargeJump Climb DoubleJump
+		standard-dboost ChargeJump Climb Health=3
+		standard-dboost ChargeJump WallJump Health=3
+		--following master dboost need to be verified
+		--master-dboost ChargeJump DoubleJump Dash Health=5
+		--master-dboost ChargeJump DoubleJump Glide Health=5
+		dbash Bash
 	pickup: GinsoEscapeJumpPadExp
+		casual-core Bash DoubleJump WallJump
+		casual-core Bash ChargeJump WallJump
+		casual-core Bash DoubleJump Climb
+		--needs verification
+		--standard-core ChargeJump Climb DoubleJump
+		standard-dboost ChargeJump Climb Health=3
+		standard-dboost ChargeJump WallJump Health=3
+		--following master dboost need to be verified
+		--master-dboost ChargeJump DoubleJump Dash Health=5
+		--master-dboost ChargeJump DoubleJump Glide Health=5
+		dbash Bash
 	pickup: GinsoEscapeProjectileExp
+		casual-core Bash DoubleJump WallJump
+		casual-core Bash ChargeJump WallJump
+		casual-core Bash DoubleJump Climb
+		--needs verification
+		--standard-core ChargeJump Climb DoubleJump
+		standard-dboost ChargeJump Climb Health=3
+		standard-dboost ChargeJump WallJump Health=3
+		--following master dboost need to be verified
+		--master-dboost ChargeJump DoubleJump Dash Health=5
+		--master-dboost ChargeJump DoubleJump Glide Health=5
+		dbash Bash
 	pickup: GinsoEscapeHangingExp
+		casual-core Bash DoubleJump WallJump
+		casual-core Bash ChargeJump WallJump
+		casual-core Bash DoubleJump Climb
+		--needs verification
+		--standard-core ChargeJump Climb DoubleJump
+		standard-dboost ChargeJump Climb Health=3
+		standard-dboost ChargeJump WallJump Health=3
+		--following master dboost need to be verified
+		--master-dboost ChargeJump DoubleJump Dash Health=5
+		--master-dboost ChargeJump DoubleJump Glide Health=5
+		dbash Bash
 	pickup: GinsoEscapeExit
+		casual-core Bash DoubleJump WallJump
+		casual-core Bash ChargeJump WallJump
+		casual-core Bash DoubleJump Climb
+		--needs verification
+		--standard-core ChargeJump Climb DoubleJump
+		standard-dboost ChargeJump Climb Health=3
+		standard-dboost ChargeJump WallJump Health=3
+		--following master dboost need to be verified
+		--master-dboost ChargeJump DoubleJump Dash Health=5
+		--master-dboost ChargeJump DoubleJump Glide Health=5
+		dbash Bash
+	conn: Swamp
+		casual-core Bash DoubleJump WallJump
+		casual-core Bash ChargeJump WallJump
+		casual-core Bash DoubleJump Climb
+		--needs verification
+		--standard-core ChargeJump Climb DoubleJump
+		standard-dboost ChargeJump Climb Health=3
+		standard-dboost ChargeJump WallJump Health=3
+		--following master dboost need to be verified
+		--master-dboost ChargeJump DoubleJump Dash Health=5
+		--master-dboost ChargeJump DoubleJump Glide Health=5
+		dbash Bash
 home: RightGinso
 	pickup: OuterSwampAbilityCell
 	pickup: OuterSwampStompExp
