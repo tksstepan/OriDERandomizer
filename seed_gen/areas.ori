@@ -247,7 +247,8 @@ loc: ValleyRightExp -418 67 EX100 1 Valley
 loc: ValleyRightBirdStompCell -292 20 AC 1 Valley
 loc: GlideSkillFeather -460 -20 SKGlide 1 Valley
 loc: KuroPerchExp -546 54 EX200 1 Sorrow
-loc: MistyEntranceStompExp -678 -29 EX100 1 Misty
+loc: 
+StompExp -678 -29 EX100 1 Misty
 loc: MistyEntranceTreeExp -822 -9 EX100 1 Misty
 loc: ValleyMap -408 -170 MapStone 3 Valley
 loc: ValleyMainPlant -468 -67 Plant 1 Valley
@@ -2690,30 +2691,97 @@ home: SunstoneArea
 	conn: SorrowTeleporter
 		casual-core Climb ChargeJump DoubleJump
 		expert-dboost ChargeJump WallJump DoubleJump Health=5
-home: Misty
-	pickup: MistyFrogNookExp
-	pickup: MistyAbilityCell
-	pickup: MistyMortarCorridorUpperExp
-	pickup: MistyMortarCorridorHiddenExp
-	pickup: MistyKeystone1
+home: MistyEntrance
+    -- anchor point: shrouded lantern where gumon seal rests
+    -- no dboosts in misty in standard
+    pickup: MistyEntranceStompExp
+        casual-core Stomp
+        standard-lure Bash
+        expert-abilities ChargeJump Climb Dash Ability=6
+    pickup: MistyEntranceTreeExp
+        casual-core WallJump DoubleJump
+        casual-core DoubleJump Climb
+        casual-core ChargeJump
+        casual-core Bash Grenade
+        expert-core Bash
+        expert-abilities Dash Ability=6
+        master-core WallJump
+        master-core DoubleJump
+    conn: MistyPostFeatherTutorial
+        casual-core WallJump Bash Glide 
+        casual-core Bash Glide Climb
+        casual-core DoubleJump Bash Glide
+        standard-core Bash Glide
+        standard-abilities DoubleJump Glide Climb ChargeJump Dash Ability=3
+        expert-core DoubleJump Glide Climb ChargeJump
+        expert-dboost WallJump ChargeJump Health=7
+        expert-dboost DoubleJump ChargeJump Health=4
+        expert-abilities DoubleJump Glide ChargeJump Dash Ability=3
+        expert-abilities Dash Ability=6 Energy=4
+        dbash Bash
+        gjump Climb ChargeJump Grenade
+home: MistyPostFeatherTutorial
+    -- anchor point: right of the first keystone before the scene transition
+    pickup: MistyFrogNookExp
+        casual-core WallJump DoubleJump Glide
+        casual-core DoubleJump Glide Climb
+        casual-core DoubleJump Bash Grenade
+        standard-core Bash
+        standard-core Climb ChargeJump
+        standard-dboost WallJump Dash Ability=3 Health=4
+        standard-dboost WallJump Dash Health=7
+        expert-abilities Dash Ability=6
+        master-dboost DoubleJump Health=4
+        master-abilities DoubleJump Ability=12
+        dbash
+    pickup: MistyKeystone1
+        Free
+    conn: MistyPostKeystone1
+        Free
+home: MistyPostKeystone1
+    -- anchor point: left of the bird post keystone1 scene transition
+    conn: MistyPostFeatherTutorial
+        Free
+home: MistyPreKeystone2
+    -- anchor point: before the slime and keystone2
+    conn: MistyPostKeystone1
+        casual-core Bash Glide
+        standard-dboost DoubleJump Health=4
+        standard-dboost Glide Health=3
+        standard-dboost Dash Ability=3 Health=4
+        expert-core Glide
+        expert-dboost Health=10
+        master-abilities DoubleJump Ability=12
+        master-abilities Ability=12 Health=4
+        master-dboost Health=9
+        dbash
+home: MistyPreMortarCorridor
+    -- anchor point: right of the slime pre mortar corridor atop the wall
+    pickup: MistyMortarCorridorUpperExp
+        casual-core Bash Glide
+        standard-core Bash Grenade
+        standard-dboost Bash Health=4
+        standard-dboost ChargeJump Health=4
+        expert-abilities Dash Ability=6
+        master-abilities DoubleJump Ability=12
+        gjump Climb ChargeJump Grenade
+    pickup: MistyMortarCorridorHiddenExp
+        casual-core Glide
+        standard-dboost DoubleJump Bash
+        standard-dboost DoubleJump ChargeJump
+        standard-dboost Bash Health=7
+        standard-dboost Dash Ability=3 Health=4
+        expert-core DoubleJump Bash Grenade
+        expert-core DoubleJump Dash Ability=6
+        expert-dboost Bash Grenade Health=4
+        master-core Dash Ability=6
+        master-abilities DoubleJump Ability=12
+        master-dboost DoubleJump Health=4
 	pickup: ClimbSkillTree
 	pickup: MistyPlant
-		casual-core ChargeFlame
-		casual-core Grenade
-		expert-abilities Dash Ability=6
-	conn: MistyPostClimb
-		casual-core Climb DoubleJump
-		casual-core ChargeJump
-	conn: Forlorn
-		glitched Free
-	conn: RightForlorn
-		glitched Free
-home: MistyPostClimb
 	pickup: MistyPostClimbSpikeCave
 	pickup: MistyPostClimbAboveSpikePit
 	pickup: MistyKeystone3
 	pickup: MistyKeystone4
-	pickup: MistyGrenade
-		casual-core Grenade
 	pickup: GumonSeal
-		casual-core Keystone=4
+	pickup: MistyGrenade
