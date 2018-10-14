@@ -1,14 +1,18 @@
 using System;
-using System.Runtime.CompilerServices;
 using Core;
 using Game;
 using Sein.World;
 using UnityEngine;
 
-// Token: 0x02000361 RID: 865
+// Token: 0x02000367 RID: 871
 public class SeinSoulFlame : CharacterState, ISeinReceiver
 {
-	// Token: 0x0600135A RID: 4954 RVA: 0x00010F05 File Offset: 0x0000F105
+	// Token: 0x0600136B RID: 4971 RVA: 0x0006DFB8 File Offset: 0x0006C1B8
+	public SeinSoulFlame()
+	{
+	}
+
+	// Token: 0x0600136C RID: 4972 RVA: 0x0001141D File Offset: 0x0000F61D
 	static SeinSoulFlame()
 	{
 		SeinSoulFlame.OnSoulFlameCast = delegate
@@ -17,24 +21,12 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x1400001C RID: 28
-	// (add) Token: 0x0600135B RID: 4955 RVA: 0x00010F29 File Offset: 0x0000F129
-	// (remove) Token: 0x0600135C RID: 4956 RVA: 0x00010F40 File Offset: 0x0000F140
-	public static event Action OnSoulFlameCast
-	{
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		add
-		{
-			SeinSoulFlame.OnSoulFlameCast = (Action)Delegate.Combine(SeinSoulFlame.OnSoulFlameCast, value);
-		}
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		remove
-		{
-			SeinSoulFlame.OnSoulFlameCast = (Action)Delegate.Remove(SeinSoulFlame.OnSoulFlameCast, value);
-		}
-	}
+	// (add) Token: 0x0600136D RID: 4973 RVA: 0x00011441 File Offset: 0x0000F641
+	// (remove) Token: 0x0600136E RID: 4974 RVA: 0x00011458 File Offset: 0x0000F658
+	public static event Action OnSoulFlameCast;
 
 	// Token: 0x17000389 RID: 905
-	// (get) Token: 0x0600135D RID: 4957 RVA: 0x00010F57 File Offset: 0x0000F157
+	// (get) Token: 0x0600136F RID: 4975 RVA: 0x0001146F File Offset: 0x0000F66F
 	public bool SoulFlameExists
 	{
 		get
@@ -44,7 +36,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x1700038A RID: 906
-	// (get) Token: 0x0600135E RID: 4958 RVA: 0x00010F64 File Offset: 0x0000F164
+	// (get) Token: 0x06001370 RID: 4976 RVA: 0x0001147C File Offset: 0x0000F67C
 	public Vector3 SoulFlamePosition
 	{
 		get
@@ -53,7 +45,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600135F RID: 4959 RVA: 0x00010F76 File Offset: 0x0000F176
+	// Token: 0x06001371 RID: 4977 RVA: 0x0001148E File Offset: 0x0000F68E
 	public new void Awake()
 	{
 		base.Awake();
@@ -61,13 +53,13 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		Game.Events.Scheduler.OnGameReset.Add(new Action(this.OnGameReset));
 	}
 
-	// Token: 0x06001360 RID: 4960 RVA: 0x00010FAF File Offset: 0x0000F1AF
+	// Token: 0x06001372 RID: 4978 RVA: 0x000114C7 File Offset: 0x0000F6C7
 	public void OnGameReset()
 	{
 		this.m_numberOfSoulFlamesCast = 0;
 	}
 
-	// Token: 0x06001361 RID: 4961 RVA: 0x00010FB8 File Offset: 0x0000F1B8
+	// Token: 0x06001373 RID: 4979 RVA: 0x000114D0 File Offset: 0x0000F6D0
 	public void OnRestoreCheckpoint()
 	{
 		if (this.CanAffordSoulFlame)
@@ -78,7 +70,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		this.m_nagTimer = this.NagDuration;
 	}
 
-	// Token: 0x06001362 RID: 4962 RVA: 0x0006D52C File Offset: 0x0006B72C
+	// Token: 0x06001374 RID: 4980 RVA: 0x0006E008 File Offset: 0x0006C208
 	public override void OnDestroy()
 	{
 		base.OnDestroy();
@@ -92,7 +84,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001363 RID: 4963 RVA: 0x00010FE3 File Offset: 0x0000F1E3
+	// Token: 0x06001375 RID: 4981 RVA: 0x000114FB File Offset: 0x0000F6FB
 	public void FillSoulFlameBar()
 	{
 		this.m_cooldownRemaining = 0f;
@@ -100,7 +92,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x1700038B RID: 907
-	// (get) Token: 0x06001364 RID: 4964 RVA: 0x00010FFB File Offset: 0x0000F1FB
+	// (get) Token: 0x06001376 RID: 4982 RVA: 0x00011513 File Offset: 0x0000F713
 	public bool InsideCheckpointMarker
 	{
 		get
@@ -110,7 +102,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x1700038C RID: 908
-	// (get) Token: 0x06001365 RID: 4965 RVA: 0x0006D59C File Offset: 0x0006B79C
+	// (get) Token: 0x06001377 RID: 4983 RVA: 0x0006E078 File Offset: 0x0006C278
 	public SeinSoulFlame.SoulFlamePlacementSafety IsSafeToCastSoulFlame
 	{
 		get
@@ -180,7 +172,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x1700038D RID: 909
-	// (get) Token: 0x06001366 RID: 4966 RVA: 0x0001101B File Offset: 0x0000F21B
+	// (get) Token: 0x06001378 RID: 4984 RVA: 0x00011533 File Offset: 0x0000F733
 	public float BarValue
 	{
 		get
@@ -190,7 +182,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x1700038E RID: 910
-	// (get) Token: 0x06001367 RID: 4967 RVA: 0x00011036 File Offset: 0x0000F236
+	// (get) Token: 0x06001379 RID: 4985 RVA: 0x0001154E File Offset: 0x0000F74E
 	public float CooldownRemaining
 	{
 		get
@@ -200,7 +192,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x1700038F RID: 911
-	// (get) Token: 0x06001368 RID: 4968 RVA: 0x0001103E File Offset: 0x0000F23E
+	// (get) Token: 0x0600137A RID: 4986 RVA: 0x00011556 File Offset: 0x0000F756
 	public bool ShowFlameOnUI
 	{
 		get
@@ -210,7 +202,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x17000390 RID: 912
-	// (get) Token: 0x06001369 RID: 4969 RVA: 0x00011050 File Offset: 0x0000F250
+	// (get) Token: 0x0600137B RID: 4987 RVA: 0x00011568 File Offset: 0x0000F768
 	public float SoulFlameCost
 	{
 		get
@@ -220,7 +212,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x17000391 RID: 913
-	// (get) Token: 0x0600136A RID: 4970 RVA: 0x0001107B File Offset: 0x0000F27B
+	// (get) Token: 0x0600137C RID: 4988 RVA: 0x00011593 File Offset: 0x0000F793
 	public bool CanAffordSoulFlame
 	{
 		get
@@ -230,7 +222,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x17000392 RID: 914
-	// (get) Token: 0x0600136B RID: 4971
+	// (get) Token: 0x0600137D RID: 4989 RVA: 0x000115AB File Offset: 0x0000F7AB
 	public bool AllowedToAccessSkillTree
 	{
 		get
@@ -240,7 +232,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x17000393 RID: 915
-	// (get) Token: 0x0600136C RID: 4972 RVA: 0x0006D7EC File Offset: 0x0006B9EC
+	// (get) Token: 0x0600137E RID: 4990 RVA: 0x0006E2C8 File Offset: 0x0006C4C8
 	public bool PlayerCouldSoulFlame
 	{
 		get
@@ -249,7 +241,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600136D RID: 4973 RVA: 0x0006D848 File Offset: 0x0006BA48
+	// Token: 0x0600137F RID: 4991 RVA: 0x0006E324 File Offset: 0x0006C524
 	public void HandleNagging()
 	{
 		if (this.m_readyForReadySequence && this.PlayerCouldSoulFlame && this.IsSafeToCastSoulFlame == SeinSoulFlame.SoulFlamePlacementSafety.Safe && this.CanAffordSoulFlame)
@@ -284,8 +276,8 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600136E RID: 4974 RVA: 0x000110B7 File Offset: 0x0000F2B7
-	private void HandleDelayOnGround()
+	// Token: 0x06001380 RID: 4992 RVA: 0x000115D1 File Offset: 0x0000F7D1
+	public void HandleDelayOnGround()
 	{
 		if (!this.m_sein.IsOnGround)
 		{
@@ -297,7 +289,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600136F RID: 4975 RVA: 0x0006D9D0 File Offset: 0x0006BBD0
+	// Token: 0x06001381 RID: 4993 RVA: 0x0006E4AC File Offset: 0x0006C6AC
 	public override void UpdateCharacterState()
 	{
 		if (this.m_sein.Controller.IsBashing)
@@ -400,8 +392,8 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001370 RID: 4976 RVA: 0x0006DD94 File Offset: 0x0006BF94
-	private void CastSoulFlame()
+	// Token: 0x06001382 RID: 4994 RVA: 0x0006E870 File Offset: 0x0006CA70
+	public void CastSoulFlame()
 	{
 		if (this.ChargingSound)
 		{
@@ -424,6 +416,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 			this.m_checkpointMarkerGameObject.GetComponent<SoulFlame>().Disappear();
 		}
 		this.SpawnSoulFlame(Characters.Sein.Position);
+		Randomizer.LastSoulLink = Characters.Sein.Position;
 		SeinSoulFlame.OnSoulFlameCast();
 		SaveSlotBackupsManager.CreateCurrentBackup();
 		GameController.Instance.CreateCheckpoint();
@@ -439,8 +432,8 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001371 RID: 4977 RVA: 0x0006DF08 File Offset: 0x0006C108
-	private void HandleCharging()
+	// Token: 0x06001383 RID: 4995 RVA: 0x0006E9E4 File Offset: 0x0006CBE4
+	public void HandleCharging()
 	{
 		if (this.m_isCasting && this.CanAffordSoulFlame && this.IsSafeToCastSoulFlame == SeinSoulFlame.SoulFlamePlacementSafety.Safe && this.m_cooldownRemaining == 0f && !this.InsideCheckpointMarker && this.PlayerCouldSoulFlame)
 		{
@@ -485,8 +478,8 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001372 RID: 4978 RVA: 0x0006E0D0 File Offset: 0x0006C2D0
-	private void HandleCooldown()
+	// Token: 0x06001384 RID: 4996 RVA: 0x0006EBAC File Offset: 0x0006CDAC
+	public void HandleCooldown()
 	{
 		if (this.m_cooldownRemaining > 0f)
 		{
@@ -507,8 +500,8 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001373 RID: 4979 RVA: 0x0006E16C File Offset: 0x0006C36C
-	private void HandleCheckpointMarkerVisibility()
+	// Token: 0x06001385 RID: 4997 RVA: 0x0006EC48 File Offset: 0x0006CE48
+	public void HandleCheckpointMarkerVisibility()
 	{
 		if (this.m_checkpointMarkerGameObject)
 		{
@@ -528,8 +521,8 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001374 RID: 4980 RVA: 0x0006E1F4 File Offset: 0x0006C3F4
-	private void HandleSkillTreeHint()
+	// Token: 0x06001386 RID: 4998 RVA: 0x0006ECD0 File Offset: 0x0006CED0
+	public void HandleSkillTreeHint()
 	{
 		if (this.AllowedToAccessSkillTree)
 		{
@@ -548,7 +541,7 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001375 RID: 4981 RVA: 0x000110F5 File Offset: 0x0000F2F5
+	// Token: 0x06001387 RID: 4999 RVA: 0x0001160F File Offset: 0x0000F80F
 	public void HideOtherMessages()
 	{
 		if (this.m_notReadyHint)
@@ -561,14 +554,14 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001376 RID: 4982 RVA: 0x0001112D File Offset: 0x0000F32D
+	// Token: 0x06001388 RID: 5000 RVA: 0x00011647 File Offset: 0x0000F847
 	public void SetReferenceToSein(SeinCharacter sein)
 	{
 		this.m_sein = sein;
 		this.m_sein.SoulFlame = this;
 	}
 
-	// Token: 0x06001377 RID: 4983 RVA: 0x0006E2BC File Offset: 0x0006C4BC
+	// Token: 0x06001389 RID: 5001 RVA: 0x0006ED98 File Offset: 0x0006CF98
 	public override void Serialize(Archive ar)
 	{
 		base.Serialize(ar);
@@ -609,14 +602,14 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001378 RID: 4984 RVA: 0x00011142 File Offset: 0x0000F342
+	// Token: 0x0600138A RID: 5002 RVA: 0x0001165C File Offset: 0x0000F85C
 	public void SpawnSoulFlame(Vector3 position)
 	{
 		this.m_checkpointMarkerGameObject = (GameObject)InstantiateUtility.Instantiate(this.CheckpointMarker, position, Quaternion.identity);
 		this.m_soulFlame = this.m_checkpointMarkerGameObject.GetComponent<SoulFlame>();
 	}
 
-	// Token: 0x06001379 RID: 4985 RVA: 0x00011171 File Offset: 0x0000F371
+	// Token: 0x0600138B RID: 5003 RVA: 0x0001168B File Offset: 0x0000F88B
 	public void DestroySoulFlame()
 	{
 		if (this.m_soulFlame)
@@ -627,141 +620,141 @@ public class SeinSoulFlame : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x04001230 RID: 4656
+	// Token: 0x04001236 RID: 4662
 	public BaseAnimator ChargeEffectAnimator;
 
-	// Token: 0x04001231 RID: 4657
+	// Token: 0x04001237 RID: 4663
 	public GameObject CheckpointMarker;
 
-	// Token: 0x04001232 RID: 4658
+	// Token: 0x04001238 RID: 4664
 	public ActionMethod CheckpointSequence;
 
-	// Token: 0x04001233 RID: 4659
+	// Token: 0x04001239 RID: 4665
 	public AnimationCurve ParticleRateOverSpeed;
 
-	// Token: 0x04001234 RID: 4660
+	// Token: 0x0400123A RID: 4666
 	public AchievementAsset CreateManySoulLinkAchievement;
 
-	// Token: 0x04001235 RID: 4661
+	// Token: 0x0400123B RID: 4667
 	public MessageProvider SkillTreeRekindleMessage;
 
-	// Token: 0x04001236 RID: 4662
+	// Token: 0x0400123C RID: 4668
 	public MessageProvider SkillTreeMessage;
 
-	// Token: 0x04001237 RID: 4663
+	// Token: 0x0400123D RID: 4669
 	public MessageProvider NotSafeZoneMessage;
 
-	// Token: 0x04001238 RID: 4664
+	// Token: 0x0400123E RID: 4670
 	public MessageProvider NotSafeEnemiesMessage;
 
-	// Token: 0x04001239 RID: 4665
+	// Token: 0x0400123F RID: 4671
 	public MessageProvider NotSafeGroundMessage;
 
-	// Token: 0x0400123A RID: 4666
+	// Token: 0x04001240 RID: 4672
 	public MessageProvider SavePedestalZoneMessage;
 
-	// Token: 0x0400123B RID: 4667
+	// Token: 0x04001241 RID: 4673
 	public MessageProvider NotReadyMessage;
 
-	// Token: 0x0400123C RID: 4668
+	// Token: 0x04001242 RID: 4674
 	public LayerMask UnsafeMask;
 
-	// Token: 0x0400123D RID: 4669
-	private MessageBox m_notSafeHint;
-
-	// Token: 0x0400123E RID: 4670
-	private MessageBox m_notReadyHint;
-
-	// Token: 0x0400123F RID: 4671
-	private MessageBox m_skillTreeHint;
-
-	// Token: 0x04001240 RID: 4672
-	private GameObject m_checkpointMarkerGameObject;
-
-	// Token: 0x04001241 RID: 4673
-	private SoulFlame m_soulFlame;
-
-	// Token: 0x04001242 RID: 4674
-	private SeinCharacter m_sein;
-
 	// Token: 0x04001243 RID: 4675
-	private int m_numberOfSoulFlamesCast;
+	public MessageBox m_notSafeHint;
 
 	// Token: 0x04001244 RID: 4676
-	private float m_holdDownTime;
+	public MessageBox m_notReadyHint;
 
 	// Token: 0x04001245 RID: 4677
-	public float HoldDownDuration = 0.7f;
+	public MessageBox m_skillTreeHint;
 
 	// Token: 0x04001246 RID: 4678
-	private float m_nagTimer;
+	public GameObject m_checkpointMarkerGameObject;
 
 	// Token: 0x04001247 RID: 4679
-	public float NagDuration = 120f;
+	public SoulFlame m_soulFlame;
 
 	// Token: 0x04001248 RID: 4680
-	public bool LockSoulFlame;
+	public SeinCharacter m_sein;
 
 	// Token: 0x04001249 RID: 4681
-	public SoundProvider NotSafeSound;
+	public int m_numberOfSoulFlamesCast;
 
 	// Token: 0x0400124A RID: 4682
-	public SoundProvider NotReadySound;
+	public float m_holdDownTime;
 
 	// Token: 0x0400124B RID: 4683
-	public SoundSource ChargingSound;
+	public float HoldDownDuration = 0.7f;
 
 	// Token: 0x0400124C RID: 4684
-	public SoundSource AbortChargingSound;
+	public float m_nagTimer;
 
 	// Token: 0x0400124D RID: 4685
-	public SoundProvider FullyAbortedSound;
+	public float NagDuration = 120f;
 
 	// Token: 0x0400124E RID: 4686
-	public SoundProvider SoulFlameReadySoundProvider;
+	public bool LockSoulFlame;
 
 	// Token: 0x0400124F RID: 4687
-	public GameObject SoulFlameReadyEffect;
+	public SoundProvider NotSafeSound;
 
 	// Token: 0x04001250 RID: 4688
-	public GameObject SoulFlameReadyText;
+	public SoundProvider NotReadySound;
 
 	// Token: 0x04001251 RID: 4689
-	public float CooldownDuration = 60f;
+	public SoundSource ChargingSound;
 
 	// Token: 0x04001252 RID: 4690
-	public float RekindleCooldownDuration = 10f;
+	public SoundSource AbortChargingSound;
 
 	// Token: 0x04001253 RID: 4691
-	private float m_cooldownRemaining;
+	public SoundProvider FullyAbortedSound;
 
 	// Token: 0x04001254 RID: 4692
-	private bool m_readyForReadySequence;
+	public SoundProvider SoulFlameReadySoundProvider;
 
 	// Token: 0x04001255 RID: 4693
-	private float m_tapRemainingTime;
+	public GameObject SoulFlameReadyEffect;
 
 	// Token: 0x04001256 RID: 4694
-	private MoonGuid m_sceneCheckpoint = new MoonGuid(0, 0, 0, 0);
+	public GameObject SoulFlameReadyText;
 
 	// Token: 0x04001257 RID: 4695
-	private bool m_isCasting;
+	public float CooldownDuration = 60f;
 
 	// Token: 0x04001258 RID: 4696
-	private float m_delayOnGround;
+	public float RekindleCooldownDuration = 10f;
 
-	// Token: 0x02000362 RID: 866
+	// Token: 0x04001259 RID: 4697
+	public float m_cooldownRemaining;
+
+	// Token: 0x0400125A RID: 4698
+	public bool m_readyForReadySequence;
+
+	// Token: 0x0400125B RID: 4699
+	public float m_tapRemainingTime;
+
+	// Token: 0x0400125C RID: 4700
+	public MoonGuid m_sceneCheckpoint = new MoonGuid(0, 0, 0, 0);
+
+	// Token: 0x0400125D RID: 4701
+	public bool m_isCasting;
+
+	// Token: 0x0400125E RID: 4702
+	public float m_delayOnGround;
+
+	// Token: 0x02000368 RID: 872
 	public enum SoulFlamePlacementSafety
 	{
-		// Token: 0x0400125C RID: 4700
+		// Token: 0x04001262 RID: 4706
 		Safe,
-		// Token: 0x0400125D RID: 4701
+		// Token: 0x04001263 RID: 4707
 		UnsafeEnemies,
-		// Token: 0x0400125E RID: 4702
+		// Token: 0x04001264 RID: 4708
 		UnsafeGround,
-		// Token: 0x0400125F RID: 4703
+		// Token: 0x04001265 RID: 4709
 		UnsafeZone,
-		// Token: 0x04001260 RID: 4704
+		// Token: 0x04001266 RID: 4710
 		SavePedestal
 	}
 }

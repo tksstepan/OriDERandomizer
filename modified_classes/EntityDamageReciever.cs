@@ -101,6 +101,7 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 			}
 			if (this.Entity is Enemy)
 			{
+				RandomizerBonus.DamageDealt(damage.Amount);
 				if (damage.Type == DamageType.ChargeFlame)
 				{
 					if (Characters.Sein && Characters.Sein.Abilities.Dash)

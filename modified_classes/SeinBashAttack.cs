@@ -7,18 +7,18 @@ using UnityEngine;
 // Token: 0x02000309 RID: 777
 public class SeinBashAttack : CharacterState, ISeinReceiver
 {
-	// Token: 0x06000F88 RID: 3976 RVA: 0x0005EA74 File Offset: 0x0005CC74
+	// Token: 0x06000F88 RID: 3976 RVA: 0x0005EC30 File Offset: 0x0005CE30
 	public SeinBashAttack()
 	{
 	}
 
-	// Token: 0x06000F89 RID: 3977 RVA: 0x0005EAEC File Offset: 0x0005CCEC
+	// Token: 0x06000F89 RID: 3977 RVA: 0x0005ECA8 File Offset: 0x0005CEA8
 	static SeinBashAttack()
 	{
 		SeinBashAttack.OnBashAttackEvent = delegate(Vector2 A_0)
 		{
 		};
-		SeinBashAttack.OnBashBegin = delegate()
+		SeinBashAttack.OnBashBegin = delegate
 		{
 		};
 		SeinBashAttack.OnBashEnemy = delegate(EntityTargetting A_0)
@@ -27,22 +27,22 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x1400000E RID: 14
-	// (add) Token: 0x06000F8A RID: 3978 RVA: 0x0000DA13 File Offset: 0x0000BC13
-	// (remove) Token: 0x06000F8B RID: 3979 RVA: 0x0000DA2A File Offset: 0x0000BC2A
+	// (add) Token: 0x06000F8A RID: 3978 RVA: 0x0005ECF4 File Offset: 0x0005CEF4
+	// (remove) Token: 0x06000F8B RID: 3979 RVA: 0x0005ED28 File Offset: 0x0005CF28
 	public static event Action<Vector2> OnBashAttackEvent;
 
 	// Token: 0x1400000F RID: 15
-	// (add) Token: 0x06000F8C RID: 3980 RVA: 0x0000DA41 File Offset: 0x0000BC41
-	// (remove) Token: 0x06000F8D RID: 3981 RVA: 0x0000DA58 File Offset: 0x0000BC58
+	// (add) Token: 0x06000F8C RID: 3980 RVA: 0x0005ED5C File Offset: 0x0005CF5C
+	// (remove) Token: 0x06000F8D RID: 3981 RVA: 0x0005ED90 File Offset: 0x0005CF90
 	public static event Action OnBashBegin;
 
 	// Token: 0x14000010 RID: 16
-	// (add) Token: 0x06000F8E RID: 3982 RVA: 0x0000DA6F File Offset: 0x0000BC6F
-	// (remove) Token: 0x06000F8F RID: 3983 RVA: 0x0000DA86 File Offset: 0x0000BC86
+	// (add) Token: 0x06000F8E RID: 3982 RVA: 0x0005EDC4 File Offset: 0x0005CFC4
+	// (remove) Token: 0x06000F8F RID: 3983 RVA: 0x0005EDF8 File Offset: 0x0005CFF8
 	public static event Action<EntityTargetting> OnBashEnemy;
 
 	// Token: 0x17000271 RID: 625
-	// (get) Token: 0x06000F90 RID: 3984 RVA: 0x0000DA9D File Offset: 0x0000BC9D
+	// (get) Token: 0x06000F90 RID: 3984 RVA: 0x0000D9E1 File Offset: 0x0000BBE1
 	public Component TargetAsComponent
 	{
 		get
@@ -52,7 +52,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x17000272 RID: 626
-	// (get) Token: 0x06000F91 RID: 3985 RVA: 0x0000DAAA File Offset: 0x0000BCAA
+	// (get) Token: 0x06000F91 RID: 3985 RVA: 0x0000D9EE File Offset: 0x0000BBEE
 	public CharacterAirNoDeceleration AirNoDeceleration
 	{
 		get
@@ -62,7 +62,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x17000273 RID: 627
-	// (get) Token: 0x06000F92 RID: 3986 RVA: 0x0000DABC File Offset: 0x0000BCBC
+	// (get) Token: 0x06000F92 RID: 3986 RVA: 0x0000DA00 File Offset: 0x0000BC00
 	public SeinDoubleJump DoubleJump
 	{
 		get
@@ -72,7 +72,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x17000274 RID: 628
-	// (get) Token: 0x06000F93 RID: 3987 RVA: 0x0000DACE File Offset: 0x0000BCCE
+	// (get) Token: 0x06000F93 RID: 3987 RVA: 0x0000DA12 File Offset: 0x0000BC12
 	public CharacterApplyFrictionToSpeed ApplyFrictionToSpeed
 	{
 		get
@@ -82,7 +82,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x17000275 RID: 629
-	// (get) Token: 0x06000F94 RID: 3988 RVA: 0x0000DAE0 File Offset: 0x0000BCE0
+	// (get) Token: 0x06000F94 RID: 3988 RVA: 0x0000DA24 File Offset: 0x0000BC24
 	public CharacterGravity Gravity
 	{
 		get
@@ -92,7 +92,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x17000276 RID: 630
-	// (get) Token: 0x06000F95 RID: 3989 RVA: 0x0000DAF2 File Offset: 0x0000BCF2
+	// (get) Token: 0x06000F95 RID: 3989 RVA: 0x0000DA36 File Offset: 0x0000BC36
 	public CharacterLeftRightMovement CharacterLeftRightMovement
 	{
 		get
@@ -102,7 +102,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x17000277 RID: 631
-	// (get) Token: 0x06000F96 RID: 3990 RVA: 0x0000DB04 File Offset: 0x0000BD04
+	// (get) Token: 0x06000F96 RID: 3990 RVA: 0x0000DA48 File Offset: 0x0000BC48
 	public PlayerAbilities PlayerAbilities
 	{
 		get
@@ -112,7 +112,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x17000278 RID: 632
-	// (get) Token: 0x06000F97 RID: 3991 RVA: 0x0000DB11 File Offset: 0x0000BD11
+	// (get) Token: 0x06000F97 RID: 3991 RVA: 0x0000DA55 File Offset: 0x0000BC55
 	public PlatformMovement PlatformMovement
 	{
 		get
@@ -122,7 +122,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x17000279 RID: 633
-	// (get) Token: 0x06000F98 RID: 3992 RVA: 0x0000DB23 File Offset: 0x0000BD23
+	// (get) Token: 0x06000F98 RID: 3992 RVA: 0x0000DA67 File Offset: 0x0000BC67
 	public SeinController SeinController
 	{
 		get
@@ -132,34 +132,34 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x1700027A RID: 634
-	// (get) Token: 0x06000F99 RID: 3993 RVA: 0x0005EB60 File Offset: 0x0005CD60
+	// (get) Token: 0x06000F99 RID: 3993 RVA: 0x0005EE2C File Offset: 0x0005D02C
 	public TextureAnimationWithTransitions BashChargeAnimation
 	{
 		get
 		{
-			Vector2 v = this.m_directionToTarget;
+			Vector2 vector = this.m_directionToTarget;
 			float num = Mathf.Cos(0.3926991f);
 			SeinBashAttack.DirectionalAnimationSet directionalAnimationSet = (!this.Sein.Controller.IsSwimming) ? this.BashChargeAnimationSet : this.SwimBashChargeAnimationSet;
-			v.x = Mathf.Abs(v.x);
-			if (Vector3.Dot(Vector3.up, v) > num)
+			vector.x = Mathf.Abs(vector.x);
+			if (Vector3.Dot(Vector3.up, vector) > num)
 			{
 				return directionalAnimationSet.Up;
 			}
-			Vector3 vector = new Vector3(1f, 1f);
-			if (Vector3.Dot(vector.normalized, v) > num)
+			Vector3 vector2 = new Vector3(1f, 1f);
+			if (Vector3.Dot(vector2.normalized, vector) > num)
 			{
 				return directionalAnimationSet.UpDiagonal;
 			}
-			if (Vector3.Dot(Vector3.right, v) > num)
+			if (Vector3.Dot(Vector3.right, vector) > num)
 			{
 				return directionalAnimationSet.Horizontal;
 			}
-			Vector3 vector2 = new Vector3(1f, -1f);
-			if (Vector3.Dot(vector2.normalized, v) > num)
+			Vector3 vector3 = new Vector3(1f, -1f);
+			if (Vector3.Dot(vector3.normalized, vector) > num)
 			{
 				return directionalAnimationSet.DownDiagonal;
 			}
-			if (Vector3.Dot(Vector3.down, v) > num)
+			if (Vector3.Dot(Vector3.down, vector) > num)
 			{
 				return directionalAnimationSet.Down;
 			}
@@ -168,35 +168,34 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x1700027B RID: 635
-	// (get) Token: 0x06000F9A RID: 3994 RVA: 0x0005EC7C File Offset: 0x0005CE7C
+	// (get) Token: 0x06000F9A RID: 3994 RVA: 0x0005EF34 File Offset: 0x0005D134
 	public TextureAnimationWithTransitions BashJumpAnimation
 	{
 		get
 		{
-			float angle = this.m_bashAngle + 90f;
-			Vector2 v = MoonMath.Angle.VectorFromAngle(angle);
+			Vector2 vector = MoonMath.Angle.VectorFromAngle(this.m_bashAngle + 90f);
 			float num = Mathf.Cos(0.3926991f);
 			SeinBashAttack.DirectionalAnimationSet directionalAnimationSet = (!this.Sein.Controller.IsSwimming) ? this.BashJumpAnimationSet : this.SwimBashJumpAnimationSet;
-			v.x = Mathf.Abs(v.x);
-			if (Vector3.Dot(Vector3.up, v) > num)
+			vector.x = Mathf.Abs(vector.x);
+			if (Vector3.Dot(Vector3.up, vector) > num)
 			{
 				return directionalAnimationSet.Up;
 			}
-			Vector3 vector = new Vector3(1f, 1f);
-			if (Vector3.Dot(vector.normalized, v) > num)
+			Vector3 vector2 = new Vector3(1f, 1f);
+			if (Vector3.Dot(vector2.normalized, vector) > num)
 			{
 				return directionalAnimationSet.UpDiagonal;
 			}
-			if (Vector3.Dot(Vector3.right, v) > num)
+			if (Vector3.Dot(Vector3.right, vector) > num)
 			{
 				return directionalAnimationSet.Horizontal;
 			}
-			Vector3 vector2 = new Vector3(1f, -1f);
-			if (Vector3.Dot(vector2.normalized, v) > num)
+			Vector3 vector3 = new Vector3(1f, -1f);
+			if (Vector3.Dot(vector3.normalized, vector) > num)
 			{
 				return directionalAnimationSet.DownDiagonal;
 			}
-			if (Vector3.Dot(Vector3.down, v) > num)
+			if (Vector3.Dot(Vector3.down, vector) > num)
 			{
 				return directionalAnimationSet.Down;
 			}
@@ -205,8 +204,8 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x1700027C RID: 636
-	// (get) Token: 0x06000F9B RID: 3995 RVA: 0x0000DB30 File Offset: 0x0000BD30
-	// (set) Token: 0x06000F9C RID: 3996 RVA: 0x0005EDA0 File Offset: 0x0005CFA0
+	// (get) Token: 0x06000F9B RID: 3995 RVA: 0x0000DA74 File Offset: 0x0000BC74
+	// (set) Token: 0x06000F9C RID: 3996 RVA: 0x0005F040 File Offset: 0x0005D240
 	public bool SpriteMirrorLock
 	{
 		get
@@ -218,20 +217,23 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 			if (this.m_spriteMirrorLock != value)
 			{
 				this.m_spriteMirrorLock = value;
+				int @lock;
 				if (value)
 				{
-					this.Sein.PlatformBehaviour.Visuals.SpriteMirror.Lock++;
+					CharacterSpriteMirror spriteMirror = this.Sein.PlatformBehaviour.Visuals.SpriteMirror;
+					@lock = spriteMirror.Lock;
+					spriteMirror.Lock = @lock + 1;
+					return;
 				}
-				else
-				{
-					this.Sein.PlatformBehaviour.Visuals.SpriteMirror.Lock--;
-				}
+				CharacterSpriteMirror spriteMirror2 = this.Sein.PlatformBehaviour.Visuals.SpriteMirror;
+				@lock = spriteMirror2.Lock;
+				spriteMirror2.Lock = @lock - 1;
 			}
 		}
 	}
 
 	// Token: 0x1700027D RID: 637
-	// (get) Token: 0x06000F9D RID: 3997 RVA: 0x0005EE10 File Offset: 0x0005D010
+	// (get) Token: 0x06000F9D RID: 3997 RVA: 0x0005F0AC File Offset: 0x0005D2AC
 	public bool CanBash
 	{
 		get
@@ -240,7 +242,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000F9E RID: 3998 RVA: 0x0000DB38 File Offset: 0x0000BD38
+	// Token: 0x06000F9E RID: 3998 RVA: 0x0000DA7C File Offset: 0x0000BC7C
 	public void SetReferenceToSein(SeinCharacter sein)
 	{
 		this.Sein = sein;
@@ -248,7 +250,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		this.Sein.Abilities.Bash = this;
 	}
 
-	// Token: 0x06000F9F RID: 3999 RVA: 0x0005EE90 File Offset: 0x0005D090
+	// Token: 0x06000F9F RID: 3999 RVA: 0x0005F114 File Offset: 0x0005D314
 	public void Start()
 	{
 		this.m_hasStarted = true;
@@ -257,7 +259,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		this.Gravity.ModifyGravityPlatformMovementSettingsEvent += this.ModifyGravityPlatformMovementSettings;
 	}
 
-	// Token: 0x06000FA0 RID: 4000 RVA: 0x0005EEE8 File Offset: 0x0005D0E8
+	// Token: 0x06000FA0 RID: 4000 RVA: 0x0005F16C File Offset: 0x0005D36C
 	public new void OnDestroy()
 	{
 		base.OnDestroy();
@@ -269,7 +271,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000FA1 RID: 4001 RVA: 0x0000DB63 File Offset: 0x0000BD63
+	// Token: 0x06000FA1 RID: 4001 RVA: 0x0000DAA7 File Offset: 0x0000BCA7
 	public void ModifyGravityPlatformMovementSettings(GravityPlatformMovementSettings settings)
 	{
 		if (this.IsBashing)
@@ -278,7 +280,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000FA2 RID: 4002 RVA: 0x0000DB7B File Offset: 0x0000BD7B
+	// Token: 0x06000FA2 RID: 4002 RVA: 0x0000DABC File Offset: 0x0000BCBC
 	public void ModifyHorizontalPlatformMovementSettings(HorizontalPlatformMovementSettings settings)
 	{
 		if (this.IsBashing)
@@ -287,7 +289,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000FA3 RID: 4003 RVA: 0x0000DB8F File Offset: 0x0000BD8F
+	// Token: 0x06000FA3 RID: 4003 RVA: 0x0000DACD File Offset: 0x0000BCCD
 	public void OnRestoreCheckpoint()
 	{
 		if (this.IsBashing)
@@ -298,7 +300,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		this.m_spriteMirrorLock = false;
 	}
 
-	// Token: 0x06000FA4 RID: 4004 RVA: 0x0000DBB9 File Offset: 0x0000BDB9
+	// Token: 0x06000FA4 RID: 4004 RVA: 0x0000DAF4 File Offset: 0x0000BCF4
 	public void OnDisable()
 	{
 		if (this.IsBashing)
@@ -307,7 +309,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000FA5 RID: 4005 RVA: 0x0000DBCC File Offset: 0x0000BDCC
+	// Token: 0x06000FA5 RID: 4005 RVA: 0x0000DB04 File Offset: 0x0000BD04
 	public void ExitBash()
 	{
 		if (GameController.Instance)
@@ -318,7 +320,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		this.IsBashing = false;
 	}
 
-	// Token: 0x06000FA6 RID: 4006 RVA: 0x0005EF4C File Offset: 0x0005D14C
+	// Token: 0x06000FA6 RID: 4006 RVA: 0x0005F1CC File Offset: 0x0005D3CC
 	public void MovePlayerToTargetAndCreateEffect()
 	{
 		Component component = this.Target as Component;
@@ -335,7 +337,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000FA7 RID: 4007 RVA: 0x0005F038 File Offset: 0x0005D238
+	// Token: 0x06000FA7 RID: 4007 RVA: 0x0005F2AC File Offset: 0x0005D4AC
 	public void BeginBash()
 	{
 		this.m_timeRemainingOfBashButtonPress = 0f;
@@ -366,7 +368,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		this.Sein.PlatformBehaviour.Visuals.Animation.PlayLoop(this.BashChargeAnimation, 10, new Func<bool>(this.ShouldBashChargeAnimationKeepPlaying), false);
 	}
 
-	// Token: 0x06000FA8 RID: 4008 RVA: 0x0000DBFE File Offset: 0x0000BDFE
+	// Token: 0x06000FA8 RID: 4008 RVA: 0x0000DB33 File Offset: 0x0000BD33
 	public void BashGameComplete(float angle)
 	{
 		this.JumpOffTarget(angle);
@@ -374,7 +376,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		this.ExitBash();
 	}
 
-	// Token: 0x06000FA9 RID: 4009 RVA: 0x0005F208 File Offset: 0x0005D408
+	// Token: 0x06000FA9 RID: 4009 RVA: 0x0005F470 File Offset: 0x0005D670
 	public void JumpOffTarget(float angle)
 	{
 		if (GameController.Instance)
@@ -382,7 +384,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 			GameController.Instance.ResumeGameplay();
 		}
 		Vector2 vector = Quaternion.Euler(0f, 0f, angle) * Vector2.up;
-		Vector2 vector2 = vector * this.BashVelocity;
+		Vector2 vector2 = vector * (this.BashVelocity  + this.BashVelocity * .10f * RandomizerBonus.Velocity());
 		this.PlatformMovement.WorldSpeed = vector2;
 		this.AirNoDeceleration.NoDeceleration = true;
 		this.Sein.ResetAirLimits();
@@ -399,8 +401,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		gameObject.transform.localRotation = Quaternion.Euler(0f, 0f, MoonMath.Angle.AngleFromVector(vector));
 		if (this.BashReleaseEffect)
 		{
-			GameObject gameObject2 = (GameObject)InstantiateUtility.Instantiate(this.BashReleaseEffect);
-			gameObject2.transform.position = position;
+			((GameObject)InstantiateUtility.Instantiate(this.BashReleaseEffect)).transform.position = position;
 		}
 		SeinBashAttack.OnBashAttackEvent(vector2);
 		this.m_timeRemainingTillNextBash = this.DelayTillNextBash;
@@ -414,21 +415,20 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000FAA RID: 4010 RVA: 0x0000DC13 File Offset: 0x0000BE13
+	// Token: 0x06000FAA RID: 4010 RVA: 0x0000DB48 File Offset: 0x0000BD48
 	public void OnAnimationStart()
 	{
 		this.SpriteMirrorLock = true;
 	}
 
-	// Token: 0x06000FAB RID: 4011 RVA: 0x0005F448 File Offset: 0x0005D648
+	// Token: 0x06000FAB RID: 4011 RVA: 0x0005F690 File Offset: 0x0005D890
 	public void AttackTarget()
 	{
 		Component component = this.Target as Component;
 		if (!InstantiateUtility.IsDestroyed(component))
 		{
 			Vector2 force = -MoonMath.Angle.VectorFromAngle(this.m_bashAngle + 90f) * 4f;
-			Damage damage = new Damage((!this.Sein.PlayerAbilities.BashBuff.HasAbility) ? this.Damage : this.UpgradedDamage, force, Characters.Sein.Position, DamageType.Bash, base.gameObject);
-			damage.DealToComponents(component.gameObject);
+			new Damage((!this.Sein.PlayerAbilities.BashBuff.HasAbility) ? this.Damage : this.UpgradedDamage, force, Characters.Sein.Position, DamageType.Bash, base.gameObject).DealToComponents(component.gameObject);
 			EntityTargetting component2 = component.gameObject.GetComponent<EntityTargetting>();
 			if (component2 && component2.Entity is Enemy)
 			{
@@ -441,15 +441,15 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000FAC RID: 4012 RVA: 0x0000DC1C File Offset: 0x0000BE1C
-	private void BeginBashThroughEnemies()
+	// Token: 0x06000FAC RID: 4012 RVA: 0x0000DB51 File Offset: 0x0000BD51
+	public void BeginBashThroughEnemies()
 	{
 		this.m_bashThroughEnemiesRemainingTime = 0.5f;
 		this.Sein.Mortality.DamageReciever.MakeInvincibleToEnemies(this.m_bashThroughEnemiesRemainingTime);
 		this.m_enemiesBashedThrough.Clear();
 	}
 
-	// Token: 0x06000FAD RID: 4013 RVA: 0x0005F530 File Offset: 0x0005D730
+	// Token: 0x06000FAD RID: 4013 RVA: 0x0005F768 File Offset: 0x0005D968
 	public void UpdateBashThroughEnemies()
 	{
 		if (this.m_bashThroughEnemiesRemainingTime > 0f)
@@ -458,20 +458,16 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 			for (int i = 0; i < Targets.Attackables.Count; i++)
 			{
 				IAttackable attackable = Targets.Attackables[i];
-				if (attackable.CanBeSpiritFlamed())
+				if (attackable.CanBeSpiritFlamed() && !this.m_enemiesBashedThrough.Contains(attackable))
 				{
-					if (!this.m_enemiesBashedThrough.Contains(attackable))
+					Vector3 vector = attackable.Position - this.Sein.PlatformBehaviour.PlatformMovement.Position;
+					if (vector.magnitude < 3f && Vector2.Dot(vector.normalized, this.PlatformMovement.LocalSpeed.normalized) > 0f)
 					{
-						Vector3 vector = attackable.Position - this.Sein.PlatformBehaviour.PlatformMovement.Position;
-						float magnitude = vector.magnitude;
-						if (magnitude < 3f && Vector2.Dot(vector.normalized, this.PlatformMovement.LocalSpeed.normalized) > 0f)
-						{
-							Damage damage = new Damage(this.UpgradedDamage, this.PlatformMovement.WorldSpeed.normalized, this.Sein.Position, DamageType.SpiritFlame, base.gameObject);
-							GameObject gameObject = ((Component)attackable).gameObject;
-							damage.DealToComponents(gameObject);
-							this.m_enemiesBashedThrough.Add(attackable);
-							break;
-						}
+						Damage damage = new Damage(this.UpgradedDamage, this.PlatformMovement.WorldSpeed.normalized, this.Sein.Position, DamageType.SpiritFlame, base.gameObject);
+						GameObject gameObject = ((Component)attackable).gameObject;
+						damage.DealToComponents(gameObject);
+						this.m_enemiesBashedThrough.Add(attackable);
+						break;
 					}
 				}
 			}
@@ -483,13 +479,13 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000FAE RID: 4014 RVA: 0x0000DC4F File Offset: 0x0000BE4F
-	private void FinishBashThroughEnemies()
+	// Token: 0x06000FAE RID: 4014 RVA: 0x0000DB84 File Offset: 0x0000BD84
+	public void FinishBashThroughEnemies()
 	{
 		this.m_enemiesBashedThrough.Clear();
 	}
 
-	// Token: 0x06000FAF RID: 4015 RVA: 0x0005F68C File Offset: 0x0005D88C
+	// Token: 0x06000FAF RID: 4015 RVA: 0x0005F8A8 File Offset: 0x0005DAA8
 	public void UpdateBashingState()
 	{
 		this.HandleBashAngle();
@@ -498,17 +494,16 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		this.Sein.PlatformBehaviour.Visuals.SpriteMirror.FaceLeft = (this.m_directionToTarget.x < 0f);
 	}
 
-	// Token: 0x06000FB0 RID: 4016 RVA: 0x0005F6EC File Offset: 0x0005D8EC
+	// Token: 0x06000FB0 RID: 4016 RVA: 0x0000DB91 File Offset: 0x0000BD91
 	public void BashFailed()
 	{
 		if (this.NoBashTargetEffect)
 		{
-			GameObject gameObject = (GameObject)InstantiateUtility.Instantiate(this.NoBashTargetEffect, base.transform.position, Quaternion.identity);
-			gameObject.transform.parent = this.m_seinTransform;
+			((GameObject)InstantiateUtility.Instantiate(this.NoBashTargetEffect, base.transform.position, Quaternion.identity)).transform.parent = this.m_seinTransform;
 		}
 	}
 
-	// Token: 0x06000FB1 RID: 4017 RVA: 0x0005F73C File Offset: 0x0005D93C
+	// Token: 0x06000FB1 RID: 4017 RVA: 0x0005F908 File Offset: 0x0005DB08
 	public void UpdateNormalState()
 	{
 		Randomizer.BashWasQueued = Randomizer.QueueBash;
@@ -546,7 +541,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		this.UpdateTargetHighlight(this.Target);
 	}
 
-	// Token: 0x06000FB2 RID: 4018 RVA: 0x0005F944 File Offset: 0x0005DB44
+	// Token: 0x06000FB2 RID: 4018 RVA: 0x0005FB10 File Offset: 0x0005DD10
 	public override void UpdateCharacterState()
 	{
 		if (this.Sein.IsSuspended)
@@ -580,22 +575,20 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		if (this.IsBashing)
 		{
 			this.UpdateBashingState();
+			return;
 		}
-		else
-		{
-			this.UpdateNormalState();
-		}
+		this.UpdateNormalState();
 	}
 
-	// Token: 0x06000FB3 RID: 4019 RVA: 0x0005FA4C File Offset: 0x0005DC4C
+	// Token: 0x06000FB3 RID: 4019 RVA: 0x0005FBFC File Offset: 0x0005DDFC
 	public void HandleMovingTowardsBashTarget()
 	{
 		Vector3 a = this.m_playerTargetPosition - this.PlatformMovement.Position;
 		this.PlatformMovement.WorldSpeed = a / Time.deltaTime * 0.1f;
 	}
 
-	// Token: 0x06000FB4 RID: 4020 RVA: 0x0000DC5C File Offset: 0x0000BE5C
-	private void HandleBashAngle()
+	// Token: 0x06000FB4 RID: 4020 RVA: 0x0000DBD0 File Offset: 0x0000BDD0
+	public void HandleBashAngle()
 	{
 		if (!InstantiateUtility.IsDestroyed(this.m_bashAttackGame))
 		{
@@ -603,29 +596,29 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000FB5 RID: 4021 RVA: 0x0005FA98 File Offset: 0x0005DC98
-	private void HandleFindingTarget()
+	// Token: 0x06000FB5 RID: 4021 RVA: 0x0005FC48 File Offset: 0x0005DE48
+	public void HandleFindingTarget()
 	{
 		if (this.Sein.Controller.IsCarrying)
 		{
 			this.Target = null;
+			return;
 		}
-		else if (this.m_timeRemainingTillNextBash > 0f)
+		if (this.m_timeRemainingTillNextBash > 0f)
 		{
 			this.Target = null;
+			return;
 		}
-		else if (this.PlayerAbilities.Bash.HasAbility)
+		if (this.PlayerAbilities.Bash.HasAbility)
 		{
 			this.Target = this.FindClosestAttackHandler();
+			return;
 		}
-		else
-		{
-			this.Target = null;
-		}
+		this.Target = null;
 	}
 
-	// Token: 0x06000FB6 RID: 4022 RVA: 0x0005FB10 File Offset: 0x0005DD10
-	private void UpdateTargetHighlight(IBashAttackable target)
+	// Token: 0x06000FB6 RID: 4022 RVA: 0x0005FCAC File Offset: 0x0005DEAC
+	public void UpdateTargetHighlight(IBashAttackable target)
 	{
 		if (this.m_lastTarget == target)
 		{
@@ -642,8 +635,8 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000FB7 RID: 4023 RVA: 0x0005FB74 File Offset: 0x0005DD74
-	private IBashAttackable FindClosestAttackHandler()
+	// Token: 0x06000FB7 RID: 4023 RVA: 0x0005FD04 File Offset: 0x0005DF04
+	public IBashAttackable FindClosestAttackHandler()
 	{
 		IBashAttackable result = null;
 		float num = float.MaxValue;
@@ -661,14 +654,11 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 					if (bashAttackable != null)
 					{
 						int bashPriority = bashAttackable.BashPriority;
-						if (bashPriority > num2 || (magnitude <= num && bashPriority == num2))
+						if ((bashPriority > num2 || (magnitude <= num && bashPriority == num2)) && this.Sein.Controller.RayTest(((Component)bashAttackable).gameObject))
 						{
-							if (this.Sein.Controller.RayTest(((Component)bashAttackable).gameObject))
-							{
-								num = magnitude;
-								num2 = bashPriority;
-								result = bashAttackable;
-							}
+							num = magnitude;
+							num2 = bashPriority;
+							result = bashAttackable;
 						}
 					}
 				}
@@ -677,25 +667,25 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		return result;
 	}
 
-	// Token: 0x06000FB8 RID: 4024 RVA: 0x0000DC7F File Offset: 0x0000BE7F
-	private bool ShouldBashChargeAnimationKeepPlaying()
+	// Token: 0x06000FB8 RID: 4024 RVA: 0x0000DBF0 File Offset: 0x0000BDF0
+	public bool ShouldBashChargeAnimationKeepPlaying()
 	{
 		return this.IsBashing;
 	}
 
-	// Token: 0x06000FB9 RID: 4025 RVA: 0x0000DC87 File Offset: 0x0000BE87
-	private bool ShouldBashJumpAnimationKeepPlaying()
+	// Token: 0x06000FB9 RID: 4025 RVA: 0x0000DBF8 File Offset: 0x0000BDF8
+	public bool ShouldBashJumpAnimationKeepPlaying()
 	{
 		return !this.PlatformMovement.IsOnGround;
 	}
 
-	// Token: 0x06000FBA RID: 4026 RVA: 0x0000DC97 File Offset: 0x0000BE97
-	private void OnAnimationEnd()
+	// Token: 0x06000FBA RID: 4026 RVA: 0x0000DC08 File Offset: 0x0000BE08
+	public void OnAnimationEnd()
 	{
 		this.SpriteMirrorLock = false;
 	}
 
-	// Token: 0x06000FBB RID: 4027 RVA: 0x0005FC6C File Offset: 0x0005DE6C
+	// Token: 0x06000FBB RID: 4027 RVA: 0x0005FDD0 File Offset: 0x0005DFD0
 	public override void Serialize(Archive ar)
 	{
 		ar.Serialize(ref this.m_timeRemainingOfBashButtonPress);
@@ -770,7 +760,7 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	public float UpgradedDamage = 5f;
 
 	// Token: 0x04000EFB RID: 3835
-	public float DelayTillNextBash = 0.2f;
+	public float DelayTillNextBash  = 0.2f;
 
 	// Token: 0x04000EFC RID: 3836
 	public AnimationCurve FrictionCurve;
@@ -791,37 +781,37 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	public IBashAttackable Target;
 
 	// Token: 0x04000F02 RID: 3842
-	private Vector3 m_directionToTarget;
+	public Vector3 m_directionToTarget;
 
 	// Token: 0x04000F03 RID: 3843
-	private float m_bashAngle;
+	public float m_bashAngle;
 
 	// Token: 0x04000F04 RID: 3844
-	private Vector3 m_playerTargetPosition;
+	public Vector3 m_playerTargetPosition;
 
 	// Token: 0x04000F05 RID: 3845
-	private BashAttackGame m_bashAttackGame;
+	public BashAttackGame m_bashAttackGame;
 
 	// Token: 0x04000F06 RID: 3846
-	private float m_frictionTimeRemaining;
+	public float m_frictionTimeRemaining;
 
 	// Token: 0x04000F07 RID: 3847
-	private IBashAttackable m_lastTarget;
+	public IBashAttackable m_lastTarget;
 
 	// Token: 0x04000F08 RID: 3848
-	private Transform m_seinTransform;
+	public Transform m_seinTransform;
 
 	// Token: 0x04000F09 RID: 3849
-	private bool m_spriteMirrorLock;
+	public bool m_spriteMirrorLock;
 
 	// Token: 0x04000F0A RID: 3850
-	private float m_timeRemainingTillNextBash;
+	public float m_timeRemainingTillNextBash;
 
 	// Token: 0x04000F0B RID: 3851
-	private float m_timeRemainingOfBashButtonPress;
+	public float m_timeRemainingOfBashButtonPress;
 
 	// Token: 0x04000F0C RID: 3852
-	private readonly HashSet<ISuspendable> m_bashSuspendables = new HashSet<ISuspendable>();
+	public readonly HashSet<ISuspendable> m_bashSuspendables = new HashSet<ISuspendable>();
 
 	// Token: 0x04000F0D RID: 3853
 	public GameObject NoBashTargetEffect;
@@ -830,13 +820,13 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	public bool IsBashing;
 
 	// Token: 0x04000F0F RID: 3855
-	private float m_bashThroughEnemiesRemainingTime;
+	public float m_bashThroughEnemiesRemainingTime;
 
 	// Token: 0x04000F10 RID: 3856
-	private HashSet<IAttackable> m_enemiesBashedThrough = new HashSet<IAttackable>();
+	public HashSet<IAttackable> m_enemiesBashedThrough = new HashSet<IAttackable>();
 
 	// Token: 0x04000F11 RID: 3857
-	private bool m_hasStarted;
+	public bool m_hasStarted;
 
 	// Token: 0x04000F12 RID: 3858
 	public float BackFlipSpeed = 5f;
@@ -845,24 +835,24 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 	[Serializable]
 	public class DirectionalAnimationSet
 	{
-		// Token: 0x06000FBF RID: 4031 RVA: 0x000024FF File Offset: 0x000006FF
+		// Token: 0x06000FBC RID: 4028 RVA: 0x000024FF File Offset: 0x000006FF
 		public DirectionalAnimationSet()
 		{
 		}
 
-		// Token: 0x04000F19 RID: 3865
+		// Token: 0x04000F16 RID: 3862
 		public TextureAnimationWithTransitions Down;
 
-		// Token: 0x04000F1A RID: 3866
+		// Token: 0x04000F17 RID: 3863
 		public TextureAnimationWithTransitions DownDiagonal;
 
-		// Token: 0x04000F1B RID: 3867
+		// Token: 0x04000F18 RID: 3864
 		public TextureAnimationWithTransitions Horizontal;
 
-		// Token: 0x04000F1C RID: 3868
+		// Token: 0x04000F19 RID: 3865
 		public TextureAnimationWithTransitions Up;
 
-		// Token: 0x04000F1D RID: 3869
+		// Token: 0x04000F1A RID: 3866
 		public TextureAnimationWithTransitions UpDiagonal;
 	}
 }

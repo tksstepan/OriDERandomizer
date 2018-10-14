@@ -434,6 +434,7 @@ public class GameController : SaveSerialize, ISuspendable
 		Randomizer.Update();
 		if ((MoonInput.GetKey(KeyCode.LeftAlt) || MoonInput.GetKey(KeyCode.RightAlt)) && MoonInput.GetKeyDown(KeyCode.U))
 		{
+			UI.SeinUI.ShowUI = true;
 			SeinUI.DebugHideUI = !SeinUI.DebugHideUI;
 		}
 	}

@@ -20,8 +20,8 @@ public class SeinHealthController : SaveSerialize, ISeinReceiver
 	// Token: 0x0600116B RID: 4459 RVA: 0x00066790 File Offset: 0x00064990
 	public void FixedUpdate()
 	{
-		this.VisualMinAmount = Mathf.MoveTowards(this.VisualMinAmount, this.Amount, Time.deltaTime * 4f);
-		this.VisualMaxAmount = Mathf.MoveTowards(this.VisualMaxAmount, this.Amount, Time.deltaTime * 4f);
+		this.VisualMinAmount = Mathf.MoveTowards(this.VisualMinAmount, (float)((int)this.Amount), Time.deltaTime * 4f);
+		this.VisualMaxAmount = Mathf.MoveTowards(this.VisualMaxAmount, (float)((int)this.Amount), Time.deltaTime * 4f);
 	}
 
 	// Token: 0x170002EA RID: 746
@@ -57,10 +57,7 @@ public class SeinHealthController : SaveSerialize, ISeinReceiver
 	// Token: 0x0600116F RID: 4463
 	public void OnRespawn()
 	{
-		if (Randomizer.Sync)
-		{
-			RandomizerSyncManager.onDeath();
-		}
+		Randomizer.OnDeath();
 		InstantiateUtility.Instantiate(this.RespawnEffect, this.m_sein.Transform.position, Quaternion.identity);
 		this.m_sein.Mortality.DamageReciever.MakeInvincible(1f);
 	}

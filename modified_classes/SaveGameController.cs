@@ -230,10 +230,7 @@ public class SaveGameController
 		{
 			return;
 		}
-		if (Randomizer.Sync)
-		{
-			RandomizerSyncManager.onSave();
-		}
+		Randomizer.OnSave();
 		SaveSlotsManager.CurrentSaveSlot.FillData();
 		SaveSlotsManager.BackupIndex = -1;
 		this.SaveToFile(this.CurrentSaveFilePath);
