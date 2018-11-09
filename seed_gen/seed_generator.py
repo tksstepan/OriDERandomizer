@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import re
 import math
 import xml.etree.ElementTree as XML
@@ -1386,7 +1388,7 @@ def main():
     random = Random()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--preset", help="Choose a preset group of paths for the generator to use", choices=["casual", "standard", "expert", "master", "hard", "ohko", "0xp", "glitched"])
+    parser.add_argument("--preset", help="Choose a preset group of paths for the generator to use", choices=["casual", "standard", "expert", "master", "hard", "ohko", "0xp", "glitched"], default="standard")
     parser.add_argument("--custom-logic", help="Customize paths that the generator will use, comma-separated: normal,speed,dbash,extended,extended-damage,lure,speed-lure,lure-hard,dboost,dboost-light,dboost-hard,gjump,cdash,cdash-farming,extreme,timed-level,glitched")
     parser.add_argument("--seed", help="Seed number (default 1)", type=int, default=1)
     parser.add_argument("--count", help="Number of seeds to generate (default 1)", type=int, default=1)
@@ -1430,12 +1432,13 @@ def main():
         "glitched": ["casual-core", "casual-dboost", "standard-core", "standard-lure", "standard-dboost", "standard-abilities", "expert-core", "expert-lure", "expert-dboost", "expert-abilities", "master-core", "master-lure", "master-dboost", "master-abilities", "dbash", "gjump", "glitched", "timed-level"]
     }
 
-    if args.preset:
-        mode = args.preset
-        modes = presets[args.preset]
+    # default to standard logic
     if args.custom_logic:
         mode = "custom"
         modes = args.custom_logic.split(',')
+    else:
+        mode = args.preset
+        modes = presets[args.preset]
 
     flags = ""
     syncFlags = ""
