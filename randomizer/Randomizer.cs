@@ -245,6 +245,7 @@ public static class Randomizer
 		{
 			Randomizer.changeColor();
 		}
+		BingoController.OnLoc(ID * 4);
 		RandomizerSwitch.GivePickup((RandomizerAction)Randomizer.Table[ID * 4], ID * 4, true);
 	}
 
@@ -348,6 +349,7 @@ public static class Randomizer
 			int hashKey = GetHashKey(position);
 			if (hashKey != -1)
 			{
+				BingoController.OnLoc(hashKey);
 				RandomizerSwitch.GivePickup((RandomizerAction)Randomizer.Table[hashKey], hashKey, true);
 				if (Randomizer.HotColdItems.ContainsKey(hashKey))
 				{
@@ -589,6 +591,7 @@ public static class Randomizer
 		if (Randomizer.ColorShift) {
 			Randomizer.changeColor();
 		}
+		BingoController.OnLoc(20 + RandomizerBonus.MapStoneProgression() * 4);
 		RandomizerSwitch.GivePickup((RandomizerAction)Randomizer.Table[20 + RandomizerBonus.MapStoneProgression() * 4], 20 + RandomizerBonus.MapStoneProgression() * 4, true);
 	}
 
@@ -677,7 +680,7 @@ public static class Randomizer
 
 	public static void showSeedInfo()
 	{
-		string obj = "v3.0b - seed loaded: " + Randomizer.SeedMeta;
+		string obj = "v3.1Bingo - seed loaded: " + Randomizer.SeedMeta;
 		Randomizer.printInfo(obj);
 	}
 
@@ -885,6 +888,7 @@ public static class Randomizer
 		if (Randomizer.TickCounter <= 0)
 		{
 			Randomizer.TickCounter = 60;
+			BingoController.Tick();
 			if(ResetVolume == 1)
 			{
 				ResetVolume = 0;
@@ -1047,6 +1051,8 @@ public static class Randomizer
 	}
 
 	public static void ParseFlags(string[] rawFlags) {
+		bool doBingo = false;
+
 		foreach (string rawFlag in rawFlags)
 		{
 			string flag = rawFlag.ToLower();
@@ -1095,6 +1101,10 @@ public static class Randomizer
 			if (flag.StartsWith("shared="))
 			{
 				Randomizer.ShareParams = flag.Substring(7);
+			}
+			if(flag == "bingo")
+			{
+				doBingo = true;
 			}
 			if (flag == "noextraexp")
 			{
@@ -1161,6 +1171,10 @@ public static class Randomizer
 			{
 				Randomizer.StompTriggers = true;
 			}
+		}
+		if(doBingo)
+		{
+			BingoController.Init();
 		}
 	}
 

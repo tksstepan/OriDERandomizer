@@ -460,7 +460,7 @@ public static class RandomizerBonus
 
     // Token: 0x0600377B RID: 14203 RVA: 0x0002BADF File Offset: 0x00029CDF
 
-    public static int ExpWithBonuses(int baseExp)
+    public static int ExpWithBonuses(int baseExp, bool doTrack)
     {
         float mult = 1.0f + Characters.Sein.Inventory.GetRandomizerItem(9);
         if(Characters.Sein.PlayerAbilities.AbilityMarkers.HasAbility) 
@@ -468,7 +468,11 @@ public static class RandomizerBonus
         if(Characters.Sein.PlayerAbilities.SoulEfficiency.HasAbility)
             mult += .5f;
         int total = (int)(baseExp*mult);
-        RandomizerStatsManager.OnExp(baseExp, total-baseExp);
+        if(doTrack)
+        {
+            RandomizerStatsManager.OnExp(baseExp, total-baseExp);
+            BingoController.OnExp(total);            
+        }
         return total;
     }
 

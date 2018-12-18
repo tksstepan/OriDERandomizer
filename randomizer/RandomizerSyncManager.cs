@@ -187,7 +187,7 @@ public static class RandomizerSyncManager
 					}
 					else if (text.StartsWith("pickup:"))
 					{
-						string[] parts = RandomizerSyncManager.SendingUri.ToString().Split(new char[] { ':' });
+						string[] parts = text.Substring(7).Split(new char[] { '|' });
 						RandomizerAction action;
 						if(Randomizer.StringKeyPickupTypes.Contains(parts[0])) {
 							 action = new RandomizerAction(parts[0], parts[1]);
@@ -197,7 +197,6 @@ public static class RandomizerSyncManager
 							action = new RandomizerAction(parts[0], pickup_id);
 						}
 						RandomizerSwitch.GivePickup(action, 0, false);
-
 					}
 					else if (text == "spawnChaos")
 					{

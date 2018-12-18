@@ -184,6 +184,7 @@ public static class RandomizerStatsManager {
 
 		SceneToZone.Add("mangroveFallsDashEscalation", "mangrove");
 		SceneToZone.Add("northMangroveFallsIntro", "mangrove");
+		SceneToZone.Add("southMangroveFallsGrenadeEscalationB", "mangrove");
 		SceneToZone.Add("southMangroveFallsGrenadeEscalationBR", "mangrove");
 
 		SceneToZone.Add("mountHoruMovingPlatform", "mountHoru");

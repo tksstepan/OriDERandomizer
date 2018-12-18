@@ -134,7 +134,7 @@
 1581 - Time since last pickup
 1582 - Longest drought
 1583 - Longest drought end time
-
+1599 - Finished Horu Escape
 ==== End Persists Through Death Zone ===
 
 1600 - Pickups found everywhere
@@ -156,5 +156,6 @@
 1652 - ExpGained
 1653 - ExpBonus
 
-
 2000-2256 - reserved IDs for Sense pickups
+
+2500++ - Reserved for bingo

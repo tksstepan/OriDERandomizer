@@ -1,7 +1,7 @@
 using System;
 using Game;
 using UnityEngine;
-
+using Core;
 // Token: 0x02000422 RID: 1058
 public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IProjectileDetonatable
 {
@@ -106,6 +106,7 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 			}
 			if (this.Entity is Enemy)
 			{
+				BingoController.OnDestroyEntity(this.Entity, damage);
 				RandomizerStatsManager.OnKill(damage.Type);
 				if (damage.Type == DamageType.ChargeFlame)
 				{

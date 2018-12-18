@@ -189,6 +189,7 @@ public static class RandomizerSwitch
         {
             RandomizerSyncManager.FoundPickup(Action, coords);
         }
+        BingoController.OnItem(Action, coords);
         
         switch (Action.Action) {
             case "RP":
