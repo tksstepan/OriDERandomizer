@@ -20,6 +20,7 @@ public static class Randomizer
 		Randomizer.ChaosVerbose = false;
 		Randomizer.Returning = false;
 		Randomizer.Sync = false;
+		Randomizer.SyncId = "";
 		Randomizer.ForceMaps = false;
 		Randomizer.SyncMode = 4;
 		Randomizer.StringKeyPickupTypes = new List<string> {"TP", "SH", "NO", "WT", "MU", "HN", "WP", "RP", "WS"};

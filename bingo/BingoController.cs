@@ -7,35 +7,45 @@ using Core;
 
 public static class BingoController
 {
+	private static string scene() {
+		return Scenes.Manager.CurrentScene != null ? Scenes.Manager.CurrentScene.Scene : "" ;
+	}
     private static string locStr() {
         string ret = " at ";
         if(Characters.Sein != null)
         {
             ret += "Pos: " + Characters.Sein.Position + ", ";
         }
-        if(Scenes.Manager.CurrentScene != null) {
-            ret += "Scene: " + Scenes.Manager.CurrentScene.Scene + ", ";
-        }
+            ret += "Scene: " + scene() + ", ";
         ret += "Zone: " + RandomizerStatsManager.CurrentZone();
         return ret;
     }
 
     public static void Tick() {
-        if(!Active || Characters.Sein == null) return;
-        if(Characters.Sein.Inventory.Keystones > IntGoals["UnspentKeystones"].Value)
-            IntGoals["UnspentKeystones"].Value = Characters.Sein.Inventory.Keystones;
-        if(CoreSkipTimeout > 0)
-            CoreSkipTimeout--;
-        if(UpdateTimer > 0)
-            UpdateTimer--;
-        else 
-            PostUpdate();
-        if(Scenes.Manager.CurrentScene != null && Scenes.Manager.CurrentScene.Scene != CurrentScene) {
-            CurrentScene = Scenes.Manager.CurrentScene.Scene;
-            if(SingleSceneListeners.ContainsKey(CurrentScene)) {
-                SingleSceneListeners[CurrentScene].Handle();
-            }
-        }
+    	try {
+	        if(!Active || Characters.Sein == null) return;
+	        if(Characters.Sein.Inventory.Keystones > IntGoals["UnspentKeystones"].Value)
+	            IntGoals["UnspentKeystones"].Value = Characters.Sein.Inventory.Keystones;
+	        if(CoreSkipTimeout > 0)
+	            CoreSkipTimeout--;
+	        if(UpdateTimer > 0)
+	            UpdateTimer--;
+	        else 
+	            PostUpdate();
+	        if(scene() == "catAndMouseRight" && Characters.Sein.Position.x > 190f)
+	        {
+	        	MultiBoolGoals["CompleteEscape"]["Mount Horu"] = true;
+	        }
+	        if(scene() != CurrentScene) {
+	            CurrentScene = scene();
+	            if(SingleSceneListeners.ContainsKey(CurrentScene)) {
+	                SingleSceneListeners[CurrentScene].Handle();
+	            }
+	        }
+    	} catch(Exception e) {
+    		Randomizer.LogError("Tick: " + e.Message);
+    	}
+    		
     }
 
     public static void OnStompPost(MoonGuid guid) {
@@ -55,71 +65,79 @@ public static class BingoController
     }
 
     public static void OnDestroyEntity(Entity entity, Damage damage) {
-        if(!Active) return;
-        if(entity.MoonGuid == StomplessRocks && Scenes.Manager.CurrentScene != null && Scenes.Manager.CurrentScene.Scene != "sorrowPassValleyD") {
-            BoolGoals["FastStompless"].Completed = true;
-        } else if(entity.MoonGuid == Drain) {
-            BoolGoals["DrainSwamp"].Completed = true;
-        }
-        else if(entity.MoonGuid == CoreSkipRight || entity.MoonGuid == CoreSkipLeft && damage.Type == DamageType.LevelUp) {
-            if(CoreSkipTimeout > 0) {
-                BoolGoals["CoreSkip"].Completed = true;
-            } else {
-                CoreSkipTimeout = 5;
-            }
-        } else if(Amphibians.Contains(entity.name) && damage.Type == DamageType.Water) {
-            BoolGoals["DrownFrog"].Completed = true;
-        }
-        if(Walls.Contains(entity.MoonGuid)) {
-            IntGoals["BreakWalls"].Value++;
-        }
-        else if(Floors.Contains(entity.MoonGuid)) {
-            IntGoals["BreakFloors"].Value++;
-        }
-        if(entity is Enemy && !entity.name.Contains("swarmEnemySmall") && !entity.name.Contains("swarmEnemyTiny")) {
-            IntGoals["KillEnemies"].Value++;
-        }
-        if(SingleGuidSwitchListeners.ContainsKey(entity.MoonGuid))
-            SingleGuidSwitchListeners[entity.MoonGuid].Handle();
-        if(entity.MoonGuid == FronkeyFightFronkeys) {
-        	FronkeyFightFronkeysKilled++;
-        	if(FronkeyFightFronkeysKilled >= 3)
-        	{
-        		FronkeyFightFronkeysKilled = 0;
-				MultiBoolGoals["HuntEnemies"]["Fronkey Fight"] = true;
-        	}
-        } else if(entity.MoonGuid == MistyMinibosses) {
-        	MistyMinibossesKilled++;
-        	if(MistyMinibossesKilled >= 2)
-        	{
-        		MistyMinibossesKilled = 0;
-				MultiBoolGoals["HuntEnemies"]["Misty Miniboss"] = true;
-        	}
-        } else if(LostGroveFightRoom.Contains(entity.MoonGuid)) {
-        	LostGroveFightRoomKilled++;
-        	if(LostGroveFightRoomKilled >= 4)
-        	{
-        		LostGroveFightRoomKilled = 0;
-				MultiBoolGoals["HuntEnemies"]["Lost Grove Fight Room"] = true;
-        	}
-        }
-        if(RandomizerSettings.Dev) Randomizer.log("destroyed entity, name " + entity.name + ", guid " + entity.MoonGuid.ToString() + " with damage (" + damage.Type.ToString() + ", " + damage.Amount.ToString() + ")"  + locStr());
+    	try {
+	        if(!Active) return;
+	        if(entity.MoonGuid == StomplessRocks && Scenes.Manager.CurrentScene != null && Scenes.Manager.CurrentScene.Scene != "sorrowPassValleyD") {
+	            BoolGoals["FastStompless"].Completed = true;
+	        } else if(entity.MoonGuid == Drain) {
+	            BoolGoals["DrainSwamp"].Completed = true;
+	        }
+	        else if(entity.MoonGuid == CoreSkipRight || entity.MoonGuid == CoreSkipLeft && damage.Type == DamageType.LevelUp) {
+	            if(CoreSkipTimeout > 0) {
+	                BoolGoals["CoreSkip"].Completed = true;
+	            } else {
+	                CoreSkipTimeout = 5;
+	            }
+	        } else if(Amphibians.Contains(entity.name) && damage.Type == DamageType.Water) {
+	            BoolGoals["DrownFrog"].Completed = true;
+	        }
+	        if(Walls.Contains(entity.MoonGuid)) {
+	            IntGoals["BreakWalls"].Value++;
+	        }
+	        else if(Floors.Contains(entity.MoonGuid)) {
+	            IntGoals["BreakFloors"].Value++;
+	        }
+	        if(entity is Enemy && !entity.name.Contains("swarmEnemySmall") && !entity.name.Contains("swarmEnemyTiny")) {
+	            IntGoals["KillEnemies"].Value++;
+	        }
+	        if(SingleGuidSwitchListeners.ContainsKey(entity.MoonGuid))
+	            SingleGuidSwitchListeners[entity.MoonGuid].Handle();
+	        if(entity.MoonGuid == FronkeyFightFronkeys && scene() == "sunkenGladesOriRoom") {
+	        	FronkeyFightFronkeysKilled++;
+	        	if(FronkeyFightFronkeysKilled >= 3)
+	        	{
+	        		FronkeyFightFronkeysKilled = 0;
+					MultiBoolGoals["HuntEnemies"]["Fronkey Fight"] = true;
+	        	}
+	        } else if(entity.MoonGuid == MistyMinibosses) {
+	        	MistyMinibossesKilled++;
+	        	if(MistyMinibossesKilled >= 2)
+	        	{
+	        		MistyMinibossesKilled = 0;
+					MultiBoolGoals["HuntEnemies"]["Misty Miniboss"] = true;
+	        	}
+	        } else if(LostGroveFightRoom.Contains(entity.MoonGuid) && scene() == "mangroveFallsGrenadeEscalationR") {
+	        	LostGroveFightRoomKilled++;
+	        	if(LostGroveFightRoomKilled >= 4)
+	        	{
+	        		LostGroveFightRoomKilled = 0;
+					MultiBoolGoals["HuntEnemies"]["Lost Grove Fight Room"] = true;
+	        	}
+	        }
+	        if(RandomizerSettings.Dev) Randomizer.log("destroyed entity, name " + entity.name + ", guid " + entity.MoonGuid.ToString() + " with damage (" + damage.Type.ToString() + ", " + damage.Amount.ToString() + ")"  + locStr());
+    	} catch(Exception e) {
+    		Randomizer.LogError("OnDestroyEntity: " + e.Message);
+    	}
     }
 
     public static void OnDeath(Damage damage)
     {
-        if(!Active) return;
-        string log_out ="Killed by:" + damage.Sender.name + " ";
-        Entity test = damage.Sender.FindComponent<Entity>();
-        if(test != null)
-            log_out += "(entity: " + test.MoonGuid + ")";
-        else {
-            GuidOwner test2 = damage.Sender.FindComponent<GuidOwner>();
-        if(test2 != null)
-            log_out += "(owner: " + test2.MoonGuid + ")";
-        }
-        log_out += " with damage (" + damage.Type.ToString() + ", " + damage.Amount.ToString() + ")" + locStr();
-        if(RandomizerSettings.Dev) Randomizer.log(log_out);
+    	try {
+	        if(!Active) return;
+	        string log_out ="Killed by:" + damage.Sender.name + " ";
+	        Entity test = damage.Sender.FindComponent<Entity>();
+	        if(test != null)
+	            log_out += "(entity: " + test.MoonGuid + ")";
+	        else {
+	            GuidOwner test2 = damage.Sender.FindComponent<GuidOwner>();
+	        if(test2 != null)
+	            log_out += "(owner: " + test2.MoonGuid + ")";
+	        }
+	        log_out += " with damage (" + damage.Type.ToString() + ", " + damage.Amount.ToString() + ")" + locStr();
+	        if(RandomizerSettings.Dev) Randomizer.log(log_out);
+    	} catch(Exception e) {
+    		Randomizer.LogError("OnDeath: " + e.Message);
+    	}
     }
 
     public static void OnScream() {
@@ -149,15 +167,20 @@ public static class BingoController
     }
 
     public static void OnItem(RandomizerAction action, int coords) {
-        if(!Active) return;
-        if(coords == 2 && (action.Action == "HC" || action.Action == "EC" || action.Action == "AC"))
-        	return;
-        string itemCode = action.Action + "|" + action.Value.ToString();
-        if(SingleItemListeners.ContainsKey(itemCode)) 
-            SingleItemListeners[itemCode].Handle();
+    	try
+    	{		
+	        if(!Active) return;
+	        if(coords == 2 && (action.Action == "HC" || action.Action == "EC" || action.Action == "AC"))
+	        	return;
+	        string itemCode = action.Action + "|" + action.Value.ToString();
+	        if(SingleItemListeners.ContainsKey(itemCode)) 
+	            SingleItemListeners[itemCode].Handle();
 
-        foreach(ItemListener listener in ItemListeners) 
-            listener.Handle(itemCode);
+	        foreach(ItemListener listener in ItemListeners) 
+	            listener.Handle(itemCode);
+    	} catch(Exception e) {
+    		Randomizer.LogError("OnItem: " + e.Message);
+    	}
     }
 
     public static void OnExp(int exp){
@@ -166,8 +189,12 @@ public static class BingoController
     }
 
     public static void OnActivateTeleporter(string identifier) {
-        if(!Active) return;
-        MultiBoolGoals["ActivateTeleporter"][identifier] = true;
+    	try {
+	        if(!Active) return;    		
+	        MultiBoolGoals["ActivateTeleporter"][identifier] = true;
+    	} catch(Exception e) {
+    		Randomizer.LogError("Tick: " + e.Message);
+    	}
     }
 
     
@@ -360,16 +387,17 @@ public static class BingoController
     public static void Init() {
     	try
     	{
+            if(!Randomizer.SyncId.Contains("."))
+            {
+            	Randomizer.LogError("Unable to initialize bingo: " + Randomizer.SyncId + " is not a valid SyncId");
+            	return;
+            }
+            string[] parts = Randomizer.SyncId.Split('.');
+            UpdateUrl = "http://orirandov3.appspot.com/netcode/game/" + parts[0] + "/player/" + parts[1] + "/bingo";
+
 	        if(!Active)
 	        {
 	            UpdateClient = new WebClient();
-	            if(!Randomizer.SyncId.Contains("."))
-	            {
-	            	Randomizer.LogError("Unable to initialize bingo: " + Randomizer.SyncId + " is not a valid SyncId");
-	            	return;
-	            }
-	            string[] parts = Randomizer.SyncId.Split('.');
-	            UpdateUrl = "http://orirandov3.appspot.com/netcode/game/" + parts[0] + "/player/" + parts[1] + "/bingo";
 	            SingleLocListeners = new Dictionary<int, SingleLocListener>();
 	            SingleItemListeners = new Dictionary<string, SingleItemListener>();
 	            SingleSceneListeners = new Dictionary<string, SingleSceneListener>();
@@ -391,15 +419,19 @@ public static class BingoController
 	            IntLocsGoal.mk("BreakPlants", 2510, new HashSet<int> {-11040068, -12320248, -1800088, -4680068, -4799416, -6080316, -6319752, -8160268, 1240020, 3119768, 3160244, 3279920, 3399820, 3639880, 399844, 4319860, 4359656, 4439632, 4919600, 5119900, 5359824, 5399780, 5400100, 6080608, 6279880});
 	            IntGoal.mk("TotalPickups", 1600);            // already tracked by stats C:
 	            IntLocsGoal.mk("UnderwaterPickups", 2511, new HashSet<int>() {-5160280, -3600088, 39756, 3959588, 4199724, 7679852, 5919864, 7959788, 3359784});
-	            IntLocsGoal.mk("HealthCells", 2512, new HashSet<int>() {-6119704, -6280316, -800192, 1479880, 1599920, 2599880, 3199820, 3919624, 3919688, 4239780, 5399808, 5799932});
-	            IntLocsGoal.mk("EnergyCells", 2513, new HashSet<int>() {-1560188, -280256, -3200164, -3360288, -400240, -6279608, 1720000, 2480400, 2719900, 4199828, 5119556, 5360432, 5439640, 599844, 7199904});
-	            IntLocsGoal.mk("AbilityCells", 2514, new HashSet<int>() {-10760004, -1680140, -2080116, -2160176, -2919980, -3520100, -3559936, -4160080, -4600188, -480168, -5119796, -6479528, -6719712, 1759964, 1799708, 2079568, 2519668, 2759624, 3319936, 3359784, 3519820, 3879576, 4079964, 4479568, 4479704, 4559492, 4999892, 5239456, 639888, 6399872, 6999916, 799804, 919908 } );
+	            IntLocsGoal.mk("HealthCellLocs", 2512, new HashSet<int>() {-6119704, -6280316, -800192, 1479880, 1599920, 2599880, 3199820, 3919624, 3919688, 4239780, 5399808, 5799932});
+	            IntLocsGoal.mk("EnergyCellsLocs", 2513, new HashSet<int>() {-1560188, -280256, -3200164, -3360288, -400240, -6279608, 1720000, 2480400, 2719900, 4199828, 5119556, 5360432, 5439640, 599844, 7199904});
+	            IntLocsGoal.mk("AbilityCellsLocs", 2514, new HashSet<int>() {-10760004, -1680140, -2080116, -2160176, -2919980, -3520100, -3559936, -4160080, -4600188, -480168, -5119796, -6479528, -6719712, 1759964, 1799708, 2079568, 2519668, 2759624, 3319936, 3359784, 3519820, 3879576, 4079964, 4479568, 4479704, 4559492, 4999892, 5239456, 639888, 6399872, 6999916, 799804, 919908 } );
 	            IntGoal.mk("LightLanterns", 2515); 
 	            IntGoal.mk("SpendPoints", 80);
 	            IntGoal.mk("GainExperience", 2516);
 	            IntGoal.mk("KillEnemies", 2518);
 	            IntGoal.mk("OpenEnergyDoors", 2519);
 	            IntGoal.mk("ActivateMaps", 23);
+	            IntItemGoal.mk("HealthCells", 2605, "HC|1");
+	            IntItemGoal.mk("EnergyCells", 2606, "EC|1");
+	            IntItemGoal.mk("AbilityCells", 2607,"AC|1");
+
 	            MultiBoolGoals = new Dictionary<string, MultiBoolGoal>();
 	            MultiBoolGoal.mk("CompleteHoruRoom", new List<BoolGoal>() {
 	                new BoolLocGoal("L1", 2522, -919624),
@@ -415,7 +447,7 @@ public static class BingoController
 	            MultiBoolGoal.mk("CompleteEscape", new List<BoolGoal>() {
 	                new BoolLocGoal("Ginso Tree", 2530, 5480952),
 	                new BoolSceneGoal("Forlorn Ruins", 2531, "forlornRuinsNestC"),
-	                new BoolSceneGoal("Mount Horu", 1599, "theSacrifice"),
+	                new BoolGoal("Mount Horu", 1599)
 	            });
 
 	            MultiBoolGoal.mk("ActivateTeleporter", new List<BoolGoal>() {
@@ -444,10 +476,10 @@ public static class BingoController
 
 	            MultiBoolGoal.mk("GetEvent", new List<BoolGoal>() {
 	                new BoolItemGoal("Water Vein", 2548, "EV|0"),
-	                new BoolItemGoal("Gumon Seal", 2549, "EV|1"),
-	                new BoolItemGoal("Sunstone", 2550, "EV|2"),
-	                new BoolItemGoal("Clean Water", 2551, "EV|3"),
-	                new BoolItemGoal("Wind Restored", 2552, "EV|4"),
+	                new BoolItemGoal("Gumon Seal", 2549, "EV|2"),
+	                new BoolItemGoal("Sunstone", 2550, "EV|4"),
+	                new BoolItemGoal("Clean Water", 2551, "EV|1"),
+	                new BoolItemGoal("Wind Restored", 2552, "EV|3"),
 	                new BoolItemGoal("Warmth Returned", 2553, "EV|5")
 	            });
 
