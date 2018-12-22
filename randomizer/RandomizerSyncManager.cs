@@ -414,16 +414,10 @@ public static class RandomizerSyncManager
 			string cleaned_id = this.id.Replace("#","");
 			if(cleaned_id.Contains("\\"))
 				cleaned_id = cleaned_id.Split('\\')[0];
-			return new Uri(string.Concat(new object[]
-			{
-				RandomizerSyncManager.RootUrl,
-				"/found/",
-				this.coords,
-				"/",
-				this.type,
-				"/",
-				cleaned_id
-			}));
+			string url = RandomizerSyncManager.RootUrl + "/found/" + this.coords + "/" + this.type + "/" + cleaned_id;
+			url += "?zone=" + RandomizerStatsManager.CurrentZone();
+
+			return new Uri(url);
 		}
 
 		// Token: 0x0400327B RID: 12923

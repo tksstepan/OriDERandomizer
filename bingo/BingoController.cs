@@ -411,7 +411,7 @@ public static class BingoController
 	            BoolGoal.mk("DrainSwamp", 2503);
 	            BoolGoal.mk("WilhelmScream", 2504);
 	            IntGoals = new Dictionary<string, IntGoal>();
-	            IntLocsGoal.mk("CollectMapstones", 2505, new HashSet<int> {-1840228, -4359680, -4440152, -5640092, 1480360, 2999904, 3439744, 5119584, 7959788});
+	            IntLocsGoal.mk("MapstoneLocs", 2505, new HashSet<int> {-1840228, -4359680, -4440152, -5640092, 1480360, 2999904, 3439744, 5119584, 7959788});
 	            IntGoal.mk("OpenKSDoors", 2506);
 	            IntGoal.mk("BreakFloors", 2507);
 	            IntGoal.mk("BreakWalls", 2508);
@@ -420,8 +420,8 @@ public static class BingoController
 	            IntGoal.mk("TotalPickups", 1600);            // already tracked by stats C:
 	            IntLocsGoal.mk("UnderwaterPickups", 2511, new HashSet<int>() {-5160280, -3600088, 39756, 3959588, 4199724, 7679852, 5919864, 7959788, 3359784});
 	            IntLocsGoal.mk("HealthCellLocs", 2512, new HashSet<int>() {-6119704, -6280316, -800192, 1479880, 1599920, 2599880, 3199820, 3919624, 3919688, 4239780, 5399808, 5799932});
-	            IntLocsGoal.mk("EnergyCellsLocs", 2513, new HashSet<int>() {-1560188, -280256, -3200164, -3360288, -400240, -6279608, 1720000, 2480400, 2719900, 4199828, 5119556, 5360432, 5439640, 599844, 7199904});
-	            IntLocsGoal.mk("AbilityCellsLocs", 2514, new HashSet<int>() {-10760004, -1680140, -2080116, -2160176, -2919980, -3520100, -3559936, -4160080, -4600188, -480168, -5119796, -6479528, -6719712, 1759964, 1799708, 2079568, 2519668, 2759624, 3319936, 3359784, 3519820, 3879576, 4079964, 4479568, 4479704, 4559492, 4999892, 5239456, 639888, 6399872, 6999916, 799804, 919908 } );
+	            IntLocsGoal.mk("EnergyCellLocs", 2513, new HashSet<int>() {-1560188, -280256, -3200164, -3360288, -400240, -6279608, 1720000, 2480400, 2719900, 4199828, 5119556, 5360432, 5439640, 599844, 7199904});
+	            IntLocsGoal.mk("AbilityCellLocs", 2514, new HashSet<int>() {-10760004, -1680140, -2080116, -2160176, -2919980, -3520100, -3559936, -4160080, -4600188, -480168, -5119796, -6479528, -6719712, 1759964, 1799708, 2079568, 2519668, 2759624, 3319936, 3359784, 3519820, 3879576, 4079964, 4479568, 4479704, 4559492, 4999892, 5239456, 639888, 6399872, 6999916, 799804, 919908 } );
 	            IntGoal.mk("LightLanterns", 2515); 
 	            IntGoal.mk("SpendPoints", 80);
 	            IntGoal.mk("GainExperience", 2516);
@@ -431,6 +431,7 @@ public static class BingoController
 	            IntItemGoal.mk("HealthCells", 2605, "HC|1");
 	            IntItemGoal.mk("EnergyCells", 2606, "EC|1");
 	            IntItemGoal.mk("AbilityCells", 2607,"AC|1");
+	            IntItemGoal.mk("CollectMapstones", 2608,"AC|1");
 
 	            MultiBoolGoals = new Dictionary<string, MultiBoolGoal>();
 	            MultiBoolGoal.mk("CompleteHoruRoom", new List<BoolGoal>() {
