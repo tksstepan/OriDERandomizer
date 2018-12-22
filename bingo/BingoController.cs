@@ -431,7 +431,7 @@ public static class BingoController
 	            IntItemGoal.mk("HealthCells", 2605, "HC|1");
 	            IntItemGoal.mk("EnergyCells", 2606, "EC|1");
 	            IntItemGoal.mk("AbilityCells", 2607,"AC|1");
-	            IntItemGoal.mk("CollectMapstones", 2608,"AC|1");
+	            IntItemGoal.mk("CollectMapstones", 2608,"MS|1");
 
 	            MultiBoolGoals = new Dictionary<string, MultiBoolGoal>();
 	            MultiBoolGoal.mk("CompleteHoruRoom", new List<BoolGoal>() {
