@@ -471,7 +471,7 @@ public static class RandomizerBonus
         if(doTrack)
         {
             RandomizerStatsManager.OnExp(baseExp, total-baseExp);
-            BingoController.OnExp(total);            
+            BingoController.OnExp(total);
         }
         return total;
     }

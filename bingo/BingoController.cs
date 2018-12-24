@@ -279,6 +279,18 @@ public static class BingoController
         public void Handle() { this.Completed = true; }
     }
 
+    public class SceneBoolGuidSwitchGoal : BoolGoal, SingleGuidSwitchListener {
+        public SceneBoolGuidSwitchGoal(string name, int id, MoonGuid switchId, string sceneName) : base(name, id) {
+            if(SingleGuidSwitchListeners.ContainsKey(switchId)) 
+                Randomizer.LogError(SingleGuidSwitchListeners[switchId].GetName() + " conflicts with " + this.Name + ". The latter has overwritten the former.");
+            SingleGuidSwitchListeners[switchId] = this;
+            this.scene = sceneName;
+
+        }
+        public string scene;
+        public void Handle() { if(scene() == this.scene) { this.Completed = true; } ; }
+    }
+
 
     public class BoolLocGoal : BoolGoal, SingleLocListener {
         public BoolLocGoal(string name, int id, int loc) : base(name, id) {
@@ -534,11 +546,11 @@ public static class BingoController
 	            	new BoolGoal("Fronkey Fight", 2594), // 2595: counter
 	            	new BoolGoal("Misty Miniboss", 2596), // 2597: counter
 	            	new BoolGoal("Lost Grove Fight Room", 2598), // 2599: counter
-	            	new BoolGuidSwitchGoal("Grotto Miniboss", 2600, new MoonGuid(753955069, 1333369053, -1290834504, -489487479)),
-					new BoolGuidSwitchGoal("Lower Ginso Miniboss", 2601, new MoonGuid(-1929190932, 1293183304, 1208134027, -1558841540)),
-					new BoolGuidSwitchGoal("Upper Ginso Miniboss", 2602, new MoonGuid(-1692004559, 1088261266, -1227855229, -1994528446)),
-					new BoolGuidSwitchGoal("Swamp Rhino Miniboss", 2603, new MoonGuid(1455784838, 1310150852, 472023716, 1847344991)),
-					new BoolGuidSwitchGoal("Mount Horu Miniboss", 2604,  new MoonGuid(-1217115431, 1220427397, -319931201, -64494172))
+	            	new SceneBoolGuidSwitchGoal("Grotto Miniboss", 2600, new MoonGuid(753955069, 1333369053, -1290834504, -489487479), "moonGrottoEnemyPuzzle"),
+					new SceneBoolGuidSwitchGoal("Lower Ginso Miniboss", 2601, new MoonGuid(-1929190932, 1293183304, 1208134027, -1558841540), "ginsoTreePuzzles"),
+					new SceneBoolGuidSwitchGoal("Upper Ginso Miniboss", 2602, new MoonGuid(-1692004559, 1088261266, -1227855229, -1994528446), "ginsoTreeResurrection"),
+					new SceneBoolGuidSwitchGoal("Swamp Rhino Miniboss", 2603, new MoonGuid(1455784838, 1310150852, 472023716, 1847344991), "thornfeltSwampStompAbility"),
+					new SceneBoolGuidSwitchGoal("Mount Horu Miniboss", 2604,  new MoonGuid(-1217115431, 1220427397, -319931201, -64494172), "mountHoruHubBottom")
 	            });
 	            Active = true;
 	        }

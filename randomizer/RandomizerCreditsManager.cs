@@ -14,24 +14,28 @@ public static class RandomizerCreditsManager {
 
 Developed by:
 Sigmasin
-*Eiko*  #Meldon#  @Vulajin@", 14));
+*Eiko*  #Meldon#  @Vulajin@", 9));
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_7.5_2_Major contributions by:
 DevilSquirrel
 
 Community Contributions by:
 GreeZ  Hydra  Jitaenow  LusTher
-Phant  Skulblaka  Terra  xaviershay", 14));
+Phant  Skulblaka  Terra  xaviershay", 11));
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_10_2_Additional community contributions by:
 Athos213    AvengedRuler    Cereberon    Cleanfel
 CovertMuffin    Grimelios    iRobin    JHobz
 Jitaenow    Kirefel    madinsane    Mattermonkey
-RainbowPoogle    Roryrai    UncleRonny Wingheart
+RainbowPoogle    Roryrai    UncleRonny   Wingheart
+SeaAverage   DireKrow   Eph   shedd", 14));
 
-Ori DE Randomizer inspired by:
+		Credits.Add(new KeyValuePair<string, int>(
+@"ANCHORTOPPARAMS_20_10_2_Ori DE Randomizer inspired by:
 Chicken_Supreme's Ori 'remix'
-Link to the Past Randomizer", 14));
+Link to the Past Randomizer", 7));
+
+
 		Credits.Add(new KeyValuePair<string, int>(
 @"ALIGNLEFTANCHORTOPPARAMS_20_10_2_        Ori Randomizer Tournament Champions
 
@@ -45,11 +49,10 @@ Doubles:	That Is Still Faster (Sigmasin and IMRaziel)
 ", 14));
 
 
-		// Credits.Add(new KeyValuePair<string, int>("In memory of Grandma", 5));
+		// Credits.Add(new KeyValuePair<string, int>("In memory of Grandma Irine", 5));
 		Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(0), 50));
 		Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(1), 50));
 		Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(2), 50));
-
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_12_2_Thanks for playing!
 Website: orirando.com
