@@ -530,7 +530,7 @@ public static class BingoController
 	            });
 	            MultiBoolGoal.mk("StompPeg", new List<BoolGoal>() {
 	                new BoolGuidSwitchGoal("BlackrootTeleporter" , 2580, new MoonGuid(-896629726, 1267685881, 1301835908, 1482947216)), 
-	                new BoolGuidSwitchGoal("SwampPostSwamp" , 2581, new MoonGuid(-1973919964, 1235174309, 1801441926, 1977910307)), 
+	                new BoolGuidSwitchGoal("SwampPostStomp" , 2581, new MoonGuid(-1973919964, 1235174309, 1801441926, 1977910307)), 
 	                new BoolGuidSwitchGoal("GroveMapstoneTree" , 2582, new MoonGuid(-1664353560, 1216217354, 845171129, -1310424046)), 
 	                new BoolGuidSwitchGoal("HoruFieldsTPAccess" , 2583, new MoonGuid(938332473, 1306647788, 243261569, 1200294177)), 
 	                new BoolGuidSwitchGoal("L1" , 2584, new MoonGuid(-931451667, 1186606623, -1576090735, 604062528)), 
