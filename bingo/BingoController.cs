@@ -41,6 +41,8 @@ public static class BingoController
 	            if(SingleSceneListeners.ContainsKey(CurrentScene)) {
 	                SingleSceneListeners[CurrentScene].Handle();
 	            }
+	            foreach(SceneListener listener in SceneListeners)
+	            	listener.Handle(CurrentScene);
 	        }
     	} catch(Exception e) {
     		Randomizer.LogError("Tick: " + e.Message);
@@ -125,14 +127,62 @@ public static class BingoController
     	try {
 	        if(!Active) return;
 	        string log_out ="Killed by:" + damage.Sender.name + " ";
+	        string currentScene = scene();
 	        Entity test = damage.Sender.FindComponent<Entity>();
 	        if(test != null)
 	            log_out += "(entity: " + test.MoonGuid + ")";
-	        else {
-	            GuidOwner test2 = damage.Sender.FindComponent<GuidOwner>();
-	        if(test2 != null)
-	            log_out += "(owner: " + test2.MoonGuid + ")";
+
+
+            GuidOwner owner = damage.Sender.FindComponent<GuidOwner>();
+	        if(owner != null)
+	        {
+	            log_out += "(owner: " + owner.MoonGuid + ")";
 	        }
+	        switch(currentScene)
+	        {
+	        	case "ginsoTreeWaterRisingEnd":
+	        		if((damage.Type == DamageType.Explosion) || 
+	        		   (owner != null && owner.MoonGuid == new MoonGuid(-1008478342, 1331842787, -1292489029, -195874113))) 
+		                MultiBoolGoals["DieTo"]["Ginso Escape Fronkey"] = true;
+		        	break;
+		        case "thornfeltSwampStompAbility":
+		        	if(owner != null && owner.MoonGuid == new MoonGuid(864189451, 1278497087, -115370064, 1863139783)) 
+		                MultiBoolGoals["DieTo"]["Stomp Rhino"] = true;
+	        		break;
+	        	case "valleyOfTheWindTop":
+	        		if(damage.Type == DamageType.Spikes && damage.Amount > 1000) 
+		                MultiBoolGoals["DieTo"]["Sunstone Lightning"] = true;
+	        		break;
+	        	case "valleyOfTheWindWideMid":
+	        	case "valleyOfTheWindWideLeft":
+	        	case "valleyOfTheWindWideRight":
+	        		if(damage.Type == DamageType.Spikes) 
+		                MultiBoolGoals["DieTo"]["NoobSpikes"] = true;
+	        		break;
+	        	case "mangroveFallsDashEscalation":
+	        		if(damage.Type == DamageType.Crush) 
+	        			MultiBoolGoals["DieTo"]["Blackroot Teleporter Crushers"] = true;
+	        		break;
+	        	case "southMangroveFallsGrenadeEscalationBR":
+	        		if(damage.Type == DamageType.Laser || damage.Type == DamageType.Lava) 
+	        			MultiBoolGoals["DieTo"]["Lost Grove Laser"] = true;
+	        		break;
+	        	case "horuFieldsB":
+	        		if(damage.Type == DamageType.Spikes && damage.Amount > 1000) 
+	        			MultiBoolGoals["DieTo"]["Horu Fields Acid"] = true;
+	        		break;
+	        	case "mountHoruHubBottom":
+	        		if(damage.Type == DamageType.Spikes && damage.Amount > 1000) 
+	        			MultiBoolGoals["DieTo"]["Doorwarp Lava"] = true;
+	        		break;
+	        	case "forlornRuinsEntrancePlaceholder":
+	        		if(damage.Type == DamageType.Spikes && damage.Amount > 1000) 
+	        			MultiBoolGoals["DieTo"]["Forlorn Void"] = true;
+	        		break;
+
+	        }
+
+
 	        log_out += " with damage (" + damage.Type.ToString() + ", " + damage.Amount.ToString() + ")" + locStr();
 	        if(RandomizerSettings.Dev) Randomizer.log(log_out);
     	} catch(Exception e) {
@@ -160,7 +210,8 @@ public static class BingoController
     public static void OnLoc(int loc) {
         if(!Active) return;
         if(SingleLocListeners.ContainsKey(loc)) 
-            SingleLocListeners[loc].Handle();
+        	foreach(SingleLocListener listener in SingleLocListeners[loc])
+            	listener.Handle();
         
         foreach(LocListener listener in LocListeners) 
             listener.Handle(loc);
@@ -224,6 +275,7 @@ public static class BingoController
 
     public interface LocListener { void Handle(int loc); }
     public interface ItemListener { void Handle(string itemCode); }
+    public interface SceneListener { void Handle(string sceneName); }
 
     public interface SingleLocListener {
         string GetName();
@@ -294,12 +346,25 @@ public static class BingoController
 
     public class BoolLocGoal : BoolGoal, SingleLocListener {
         public BoolLocGoal(string name, int id, int loc) : base(name, id) {
-            if(SingleLocListeners.ContainsKey(loc)) 
-                Randomizer.LogError(SingleLocListeners[loc].GetName() + " conflicts with " + this.Name + ". The latter has overwritten the former.");
-            SingleLocListeners[loc] = this;
+            if(!SingleLocListeners.ContainsKey(loc)) 
+            	SingleLocListeners[loc] = new List<SingleLocListener>();    
+            SingleLocListeners[loc].Add(this);
         }
         public void Handle() { this.Completed = true; }
     }
+    public class BoolMultiSceneGoal : BoolGoal, SceneListener {
+        public HashSet<string> Scenes;
+        public BoolMultiSceneGoal(string name, int id,  HashSet<string> scenes) : base(name, id) {
+            this.Scenes = scenes;
+            SceneListeners.Add(this);
+        }
+        public static void mk(string name, int id, HashSet<string> scenes) {
+            BoolMultiSceneGoal goal = new BoolMultiSceneGoal(name, id, scenes);
+            BoolGoals[goal.Name] = goal;
+        }
+        public void Handle(string scene) { this.Completed = this.Completed || this.Scenes.Contains(scene); }
+    }
+
 
     public class BoolSceneGoal : BoolGoal, SingleSceneListener {
         public BoolSceneGoal(string name, int id, string sceneName) : base(name, id) {
@@ -410,12 +475,13 @@ public static class BingoController
 	        if(!Active)
 	        {
 	            UpdateClient = new WebClient();
-	            SingleLocListeners = new Dictionary<int, SingleLocListener>();
+	            SingleLocListeners = new Dictionary<int, List<SingleLocListener>>();
 	            SingleItemListeners = new Dictionary<string, SingleItemListener>();
 	            SingleSceneListeners = new Dictionary<string, SingleSceneListener>();
 	            SingleGuidSwitchListeners = new Dictionary<MoonGuid, SingleGuidSwitchListener>();
 	            ItemListeners = new List<ItemListener>();
 	            LocListeners = new List<LocListener>();
+	            SceneListeners = new List<SceneListener>();
 	            BoolGoals = new Dictionary<string, BoolGoal>();
 	            BoolGoal.mk("FastStompless", 2500);
 	            BoolGoal.mk("CoreSkip", 2501);
@@ -445,6 +511,7 @@ public static class BingoController
 	            IntItemGoal.mk("AbilityCells", 2607,"AC|1");
 	            IntItemGoal.mk("CollectMapstones", 2608,"MS|1");
 
+
 	            MultiBoolGoals = new Dictionary<string, MultiBoolGoal>();
 	            MultiBoolGoal.mk("CompleteHoruRoom", new List<BoolGoal>() {
 	                new BoolLocGoal("L1", 2522, -919624),
@@ -455,6 +522,27 @@ public static class BingoController
 	                new BoolLocGoal("R2", 2527, 1720288),
 	                new BoolLocGoal("R3", 2528, 3040304),
 	                new BoolLocGoal("R4", 2529, 2160192)
+	            });
+
+	            MultiBoolGoal.mk("VanillaEventLocs", new List<BoolGoal>() {
+	                new BoolLocGoal("Water Vein", 2609, 4999752),
+	                new BoolLocGoal("Gumon Seal", 2610, -7200024),
+	                new BoolLocGoal("Sunstone", 2611, -5599400),
+	                new BoolLocGoal("Clean Water", 2612, 5480952),
+	                new BoolLocGoal("Wind Restored", 2613, -7320236),
+	                new BoolLocGoal("Warmth Returned", 2614, -2399488)
+	            });
+
+	            MultiBoolGoal.mk("DieTo", new List<BoolGoal>() {
+	                new BoolGoal("Sunstone Lightning", 1598),
+	                new BoolGoal("Lost Grove Laser", 1597),
+	                new BoolGoal("Forlorn Void", 1596),
+	                new BoolGoal("Stomp Rhino", 1595),
+	                new BoolGoal("Horu Fields Acid", 1594),
+	                new BoolGoal("Doorwarp Lava", 1593),
+	                new BoolGoal("Ginso Escape Fronkey", 1592),
+	                new BoolGoal("Blackroot Teleporter Crushers", 1591),
+	                new BoolGoal("NoobSpikes", 1590),
 	            });
 
 	            MultiBoolGoal.mk("CompleteEscape", new List<BoolGoal>() {
@@ -479,12 +567,12 @@ public static class BingoController
 	            });
 
 	            MultiBoolGoal.mk("EnterArea", new List<BoolGoal>() {
-	                new BoolSceneGoal("Lost Grove", 2543, "southMangroveFallsGrenadeEscalationB"),
+	                new BoolMultiSceneGoal("Lost Grove", 2543, new HashSet<string>() { "southMangroveFallsGrenadeEscalationB", "southMangroveFallsGrenadeEscalationBR"}),
 	                new BoolSceneGoal("Misty Woods", 2544, "sorrowPassForestB"),
-	                new BoolSceneGoal("Forlorn Ruins", 2545, "forlornRuinsGetNightberry"),
-	                new BoolSceneGoal("Sorrow Pass", 2546, "valleyOfTheWindHubR"),
-	                new BoolSceneGoal("Mount Horu", 2547, "mountHoruHubMid"),
-	                new BoolSceneGoal("Ginso Tree", 2517, "ginsoEntranceIntro")
+	                new BoolMultiSceneGoal("Forlorn Ruins", 2545,new HashSet<string>() {"forlornRuinsGravityRoomA", "forlornRuinsGetNightberry"}),
+	                new BoolMultiSceneGoal("Sorrow Pass", 2546, new HashSet<string>() {"valleyOfTheWindGauntlet", "valleyOfTheWindTop", "valleyOfTheWindHubR"}),
+	                new BoolMultiSceneGoal("Mount Horu", 2547, new HashSet<string>() {"mountHoruHubBottom", "mountHoruHubMid"}),
+	                new BoolMultiSceneGoal("Ginso Tree", 2517,new HashSet<string>() { "ginsoTreeSaveRoom", "ginsoEntranceIntro", "ginsoTreeWaterRisingEnd"})
 	            });
 
 	            MultiBoolGoal.mk("GetEvent", new List<BoolGoal>() {
@@ -556,7 +644,7 @@ public static class BingoController
 	        }
 	    }
 		catch(Exception e) {
-			Randomizer.LogError("BingoController.Init: " + e.Message);
+			Randomizer.LogError("BingoController.Init: " + e.Message + " " + e.StackTrace);
 		}
     }
 
@@ -708,10 +796,11 @@ public static class BingoController
     public static Dictionary<string, BoolGoal> BoolGoals;
     public static Dictionary<string, IntGoal> IntGoals;
     public static Dictionary<string, MultiBoolGoal> MultiBoolGoals;
-    public static Dictionary<int, SingleLocListener> SingleLocListeners;
+    public static Dictionary<int, List<SingleLocListener>> SingleLocListeners;
     public static Dictionary<string, SingleItemListener> SingleItemListeners;
     public static Dictionary<MoonGuid, SingleGuidSwitchListener> SingleGuidSwitchListeners;
     public static Dictionary<string, SingleSceneListener> SingleSceneListeners;
     public static List<ItemListener> ItemListeners;
     public static List<LocListener> LocListeners;
+    public static List<SceneListener> SceneListeners;
 }

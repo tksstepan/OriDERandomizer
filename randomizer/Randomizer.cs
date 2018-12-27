@@ -598,85 +598,90 @@ public static class Randomizer
 
 	public static void showProgress()
 	{
-		string text = "";
-		if(Randomizer.ForceTrees || Randomizer.CluesMode)
-		{
-			if (RandomizerBonus.SkillTreeProgression() == 10)
+		try {
+			string text = "";
+			if(Randomizer.ForceTrees || Randomizer.CluesMode)
 			{
-				text += "$Trees (10/10)$  ";
+				if (RandomizerBonus.SkillTreeProgression() == 10)
+				{
+					text += "$Trees (10/10)$  ";
+				}
+				else
+				{
+					text = text + "Trees (" + RandomizerBonus.SkillTreeProgression().ToString() + "/10)  ";
+				}
+			}	
+			if (Randomizer.WorldTour && Characters.Sein) {
+				int relics = Characters.Sein.Inventory.GetRandomizerItem(302);
+				if(relics < Randomizer.RelicCount) {
+					text += "Relics (" + relics.ToString() + "/"+Randomizer.RelicCount.ToString() + ") ";
+				} else {
+					text += "$Relics (" + relics.ToString() + "/"+Randomizer.RelicCount.ToString() + ")$ ";
+				}
+			}
+			if (RandomizerBonus.MapStoneProgression() == 9 && Randomizer.ForceMaps)
+			{
+				text += "$Maps (9/9)$  ";
 			}
 			else
 			{
-				text = text + "Trees (" + RandomizerBonus.SkillTreeProgression().ToString() + "/10)  ";
+				text = text + "Maps (" + RandomizerBonus.MapStoneProgression().ToString() + "/9)  ";
 			}
-		}	
-		if (Randomizer.WorldTour && Characters.Sein) {
-			int relics = Characters.Sein.Inventory.GetRandomizerItem(302);
-			if(relics < Randomizer.RelicCount) {
-				text += "Relics (" + relics.ToString() + "/"+Randomizer.RelicCount.ToString() + ") ";
-			} else {
-				text += "$Relics (" + relics.ToString() + "/"+Randomizer.RelicCount.ToString() + ")$ ";
-			}
-		}
-		if (RandomizerBonus.MapStoneProgression() == 9 && Randomizer.ForceMaps)
-		{
-			text += "$Maps (9/9)$  ";
-		}
-		else
-		{
-			text = text + "Maps (" + RandomizerBonus.MapStoneProgression().ToString() + "/9)  ";
-		}
-		text = text + "Total (" + RandomizerBonus.GetPickupCount().ToString() + "/256)\n";
-		if (Randomizer.CluesMode)
-		{
-			text += RandomizerClues.GetClues();
-		}
-		else
-		{
-			if (Keys.GinsoTree)
+			text = text + "Total (" + RandomizerBonus.GetPickupCount().ToString() + "/256)\n";
+			if (Randomizer.CluesMode)
 			{
-				text += "*WV (3/3)*  ";
+				text += RandomizerClues.GetClues();
 			}
 			else
 			{
-				text = text + " *WV* (" + RandomizerBonus.WaterVeinShards().ToString() + "/3)  ";
+				if (Keys.GinsoTree)
+				{
+					text += "*WV (3/3)*  ";
+				}
+				else
+				{
+					text = text + " *WV* (" + RandomizerBonus.WaterVeinShards().ToString() + "/3)  ";
+				}
+				if (Keys.ForlornRuins)
+				{
+					text += "#GS (3/3)#  ";
+				}
+				else
+				{
+					text = text + "#GS# (" + RandomizerBonus.GumonSealShards().ToString() + "/3)  ";
+				}
+				if (Keys.MountHoru)
+				{
+					text += "@SS (3/3)@";
+				}
+				else
+				{
+					text = text + " @SS@ (" + RandomizerBonus.SunstoneShards().ToString() + "/3)";
+				}
 			}
-			if (Keys.ForlornRuins)
+			if (Randomizer.fragsEnabled)
 			{
-				text += "#GS (3/3)#  ";
+				text = string.Concat(new string[] { text, " Frags: (", RandomizerBonus.WarmthFrags().ToString(), "/", Randomizer.fragKeyFinish.ToString(), ")" });
 			}
-			else
+			if(RandomizerBonus.ForlornEscapeHint())
 			{
-				text = text + "#GS# (" + RandomizerBonus.GumonSealShards().ToString() + "/3)  ";
-			}
-			if (Keys.MountHoru)
-			{
-				text += "@SS (3/3)@";
-			}
-			else
-			{
-				text = text + " @SS@ (" + RandomizerBonus.SunstoneShards().ToString() + "/3)";
-			}
-		}
-		if (Randomizer.fragsEnabled)
-		{
-			text = string.Concat(new string[] { text, " Frags: (", RandomizerBonus.WarmthFrags().ToString(), "/", Randomizer.fragKeyFinish.ToString(), ")" });
-		}
-		if(RandomizerBonus.ForlornEscapeHint())
-		{
-            string s_color = "";
-            string g_color = "";
-         	if(Characters.Sein)
-         	{
-	            if(Characters.Sein.PlayerAbilities.HasAbility(AbilityType.Stomp))
-	                s_color = "$";
-	            if(Characters.Sein.PlayerAbilities.HasAbility(AbilityType.Grenade))
-	                g_color = "$";         		
-         	}
+	            string s_color = "";
+	            string g_color = "";
+	         	if(Characters.Sein)
+	         	{
+		            if(Characters.Sein.PlayerAbilities.HasAbility(AbilityType.Stomp))
+		                s_color = "$";
+		            if(Characters.Sein.PlayerAbilities.HasAbility(AbilityType.Grenade))
+		                g_color = "$";         		
+	         	}
 
-			text += "\n" +s_color + "Stomp: " + StompZone + s_color + g_color+ "    Grenade: "+ GrenadeZone + g_color;
+				text += "\n" +s_color + "Stomp: " + StompZone + s_color + g_color+ "    Grenade: "+ GrenadeZone + g_color;
+			}
+			Randomizer.printInfo(text);
 		}
-		Randomizer.printInfo(text);
+		catch(Exception e) {
+			Randomizer.LogError("ShowProgress: " + e.Message);
+		}
 	}
 
 	public static void showSeedInfo()
