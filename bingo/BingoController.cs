@@ -7,6 +7,7 @@ using Core;
 
 public static class BingoController
 {
+	public static string BINGO_VERSION = "0.0.5";
 	private static string scene() {
 		return Scenes.Manager.CurrentScene != null ? Scenes.Manager.CurrentScene.Scene : "" ;
 	}
@@ -209,8 +210,13 @@ public static class BingoController
     }
 
     public static void OnLoc(int loc) {
-        if(!Active || !(Randomizer.HotColdItems.ContainsKey(loc) && get(Randomizer.HotColdItems[loc].Id) == 0))
+        if(!Active)
         	return;
+        if(!(Randomizer.HotColdItems.ContainsKey(loc) && get(Randomizer.HotColdItems[loc].Id) == 0))
+       	{
+       		Randomizer.LogError("not calling listeners for repeatable pickup at " + loc.ToString());
+       		return;
+       	}
         if(SingleLocListeners.ContainsKey(loc)) 
         	foreach(SingleLocListener listener in SingleLocListeners[loc])
             	listener.Handle();        
@@ -754,6 +760,7 @@ public static class BingoController
         jsonStr += String.Join(",\n", jsonFrags.ToArray()) + "\n}";
         NameValueCollection values = new NameValueCollection();
         values["bingoData"] = jsonStr;
+        values["version"] = BINGO_VERSION;
         UpdateClient.UploadValuesAsync(new Uri(UpdateUrl), values);
         UpdateTimer = 5;
     }
@@ -768,7 +775,6 @@ public static class BingoController
     	new MoonGuid(-895992511, 1115106663, 1657482928, -2045061172), 
     	new MoonGuid(-708350847, 1147298936, -343652685, -47410724)
 	};
-	public static HashSet<int> SeenLocations = new HashSet<string>() {}
     public static HashSet<string> Amphibians = new HashSet<string>() { "jumperEnemy", "spitterEnemy", "fastSpitterEnemy" };
     public static string CurrentScene;
 
