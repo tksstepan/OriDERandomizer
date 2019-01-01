@@ -28,10 +28,6 @@ public static class BingoController
 	            IntGoals["UnspentKeystones"].Value = Characters.Sein.Inventory.Keystones;
 	        if(CoreSkipTimeout > 0)
 	            CoreSkipTimeout--;
-	        if(UpdateTimer > 0)
-	            UpdateTimer--;
-	        else 
-	            PostUpdate();
 	        if(scene() == "catAndMouseRight" && Characters.Sein.Position.x > 190f)
 	        {
 	        	MultiBoolGoals["CompleteEscape"]["Mount Horu"] = true;
@@ -44,6 +40,11 @@ public static class BingoController
 	            foreach(SceneListener listener in SceneListeners)
 	            	listener.Handle(CurrentScene);
 	        }
+	        if(UpdateTimer > 0)
+	            UpdateTimer--;
+	        else 
+	            PostUpdate();
+
     	} catch(Exception e) {
     		Randomizer.LogError("Tick: " + e.Message);
     	}
@@ -208,11 +209,11 @@ public static class BingoController
     }
 
     public static void OnLoc(int loc) {
-        if(!Active) return;
+        if(!Active || !(Randomizer.HotColdItems.ContainsKey(loc) && get(Randomizer.HotColdItems[loc].Id) == 0))
+        	return;
         if(SingleLocListeners.ContainsKey(loc)) 
         	foreach(SingleLocListener listener in SingleLocListeners[loc])
-            	listener.Handle();
-        
+            	listener.Handle();        
         foreach(LocListener listener in LocListeners) 
             listener.Handle(loc);
     }
@@ -496,7 +497,7 @@ public static class BingoController
 	            IntGoal.mk("UnspentKeystones", 2509);
 	            IntLocsGoal.mk("BreakPlants", 2510, new HashSet<int> {-11040068, -12320248, -1800088, -4680068, -4799416, -6080316, -6319752, -8160268, 1240020, 3119768, 3160244, 3279920, 3399820, 3639880, 399844, 4319860, 4359656, 4439632, 4919600, 5119900, 5359824, 5399780, 5400100, 6080608, 6279880});
 	            IntGoal.mk("TotalPickups", 1600);            // already tracked by stats C:
-	            IntLocsGoal.mk("UnderwaterPickups", 2511, new HashSet<int>() {-5160280, -3600088, 39756, 3959588, 4199724, 7679852, 5919864, 7959788, 3359784, -3200164, -400240, 559720, 7599824, 6839792, 7639816, 8719856, 5239456});
+	            IntLocsGoal.mk("UnderwaterPickups", 2511, new HashSet<int>() {1839836, 3559792, -5160280, -3600088, 39756, 3959588, 4199724, 7679852, 5919864, 7959788, 3359784, -3200164, -400240, 559720, 7599824, 6839792, 7639816, 8719856, 5239456});
 	            IntLocsGoal.mk("HealthCellLocs", 2512, new HashSet<int>() {-6119704, -6280316, -800192, 1479880, 1599920, 2599880, 3199820, 3919624, 3919688, 4239780, 5399808, 5799932});
 	            IntLocsGoal.mk("EnergyCellLocs", 2513, new HashSet<int>() {-1560188, -280256, -3200164, -3360288, -400240, -6279608, 1720000, 2480400, 2719900, 4199828, 5119556, 5360432, 5439640, 599844, 7199904});
 	            IntLocsGoal.mk("AbilityCellLocs", 2514, new HashSet<int>() {-10760004, -1680140, -2080116, -2160176, -2919980, -3520100, -3559936, -4160080, -4600188, -480168, -5119796, -6479528, -6719712, 1759964, 1799708, 2079568, 2519668, 2759624, 3319936, 3359784, 3519820, 3879576, 4079964, 4479568, 4479704, 4559492, 4999892, 5239456, 639888, 6399872, 6999916, 799804, 919908 } );
@@ -756,6 +757,7 @@ public static class BingoController
         UpdateClient.UploadValuesAsync(new Uri(UpdateUrl), values);
         UpdateTimer = 5;
     }
+
     public static MoonGuid StomplessRocks = new MoonGuid(-1118019250, 1080908127, 1929144468, -1515713832);
     public static MoonGuid Drain = new MoonGuid(1711549718, 1225123502, -2036372807, 248162391);
     public static MoonGuid CoreSkipRight = new MoonGuid(1165644159, 1142717490, -237578866, -2119320164);
@@ -766,7 +768,7 @@ public static class BingoController
     	new MoonGuid(-895992511, 1115106663, 1657482928, -2045061172), 
     	new MoonGuid(-708350847, 1147298936, -343652685, -47410724)
 	};
-
+	public static HashSet<int> SeenLocations = new HashSet<string>() {}
     public static HashSet<string> Amphibians = new HashSet<string>() { "jumperEnemy", "spitterEnemy", "fastSpitterEnemy" };
     public static string CurrentScene;
 

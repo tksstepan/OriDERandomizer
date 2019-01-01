@@ -107,6 +107,9 @@ public static class Randomizer
 				string[] flags = flagLine[0].Split(new char[] { ',' });
 				Randomizer.SeedMeta = allLines[0];
 				Randomizer.ParseFlags(flags);
+				if(Randomizer.CluesMode) {
+					RandomizerClues.initialize();
+				}
 				for (int i = 1; i < allLines.Length; i++)
 				{
 					string[] lineParts = allLines[i].Split(new char[] { '|' });
@@ -672,7 +675,7 @@ public static class Randomizer
 		            if(Characters.Sein.PlayerAbilities.HasAbility(AbilityType.Stomp))
 		                s_color = "$";
 		            if(Characters.Sein.PlayerAbilities.HasAbility(AbilityType.Grenade))
-		                g_color = "$";         		
+		                g_color = "$";
 	         	}
 
 				text += "\n" +s_color + "Stomp: " + StompZone + s_color + g_color+ "    Grenade: "+ GrenadeZone + g_color;
@@ -1140,7 +1143,6 @@ public static class Randomizer
 			if (flag == "clues")
 			{
 				Randomizer.CluesMode = true;
-				RandomizerClues.initialize();
 			}
 			if (flag == "shards")
 			{
