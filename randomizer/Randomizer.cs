@@ -67,6 +67,7 @@ public static class Randomizer
 		Randomizer.HotColdItems = new Dictionary<int, RandomizerHotColdItem>();
 		Randomizer.HotColdMaps = new List<int>();
 		int HotColdSaveId = 2000;
+		int RepeatablePickupId = 2500;
 		Randomizer.HoruScene = "";
 		Randomizer.HoruMap = new Hashtable();
 		Randomizer.HoruMap["mountHoruStomperSystemsR"] = 2640380;
@@ -94,7 +95,7 @@ public static class Randomizer
 		Randomizer.RelicCount = 0;
 		Randomizer.GrenadeZone = "MIA";
 		Randomizer.StompZone = "MIA";
-		Randomizer.RepeatablePickups = new HashSet<int>();
+		Randomizer.RepeatablePickupIds = new Dictionary<int, int>();
 		Randomizer.StompTriggers = false;
 		Randomizer.SpawnWith = "";
 		Randomizer.IgnoreEnemyExp = false;
@@ -150,7 +151,8 @@ public static class Randomizer
 							}
 						}
 						if(lineParts[1] == "RP") {
-							Randomizer.RepeatablePickups.Add(coords);
+							Randomizer.RepeatablePickupIds[coords] = RepeatablePickupId;
+							RepeatablePickupId++;
 						}
 					}
 					else
@@ -1042,7 +1044,7 @@ public static class Randomizer
 	public static int RepeatableCheck(Vector3 position){
 		// 2: grabbable, 1: cooldown, 0: not repeatable
 		try{
-			if(RepeatablePickups.Contains(GetHashKey(position)))
+			if(RepeatablePickupIds.ContainsKey(GetHashKey(position)))
 			{
 				if(RepeatableCooldown <= 0)
 				{
@@ -1051,7 +1053,7 @@ public static class Randomizer
 				} else {
 					return 1;
 				}
-			} 			
+			}
 		}
 		catch(Exception e) {
 			Randomizer.LogError("RepeatableCheck: " + e.Message);
@@ -1361,7 +1363,7 @@ public static class Randomizer
 
 	public static bool AltRDisabled;
 
-	public static HashSet<int> RepeatablePickups;
+	public static Dictionary<int, int> RepeatablePickupIds;
 
 	public static int RepeatableCooldown;
 

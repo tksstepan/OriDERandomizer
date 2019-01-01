@@ -212,10 +212,13 @@ public static class BingoController
     public static void OnLoc(int loc) {
         if(!Active)
         	return;
-        if(!(Randomizer.HotColdItems.ContainsKey(loc) && get(Randomizer.HotColdItems[loc].Id) == 0))
-       	{
-       		Randomizer.LogError("not calling listeners for repeatable pickup at " + loc.ToString());
-       		return;
+        if(Randomizer.RepeatablePickupIds.ContainsKey(loc))
+       	{	if(get(Randomizer.RepeatablePickupIds[loc]) != 0)
+       		{
+	       		Randomizer.LogError("not calling listeners for repeatable pickup at " + loc.ToString());
+	       		return;
+       		}
+		   	set(Randomizer.RepeatablePickupIds[loc], 1);    
        	}
         if(SingleLocListeners.ContainsKey(loc)) 
         	foreach(SingleLocListener listener in SingleLocListeners[loc])
@@ -226,7 +229,7 @@ public static class BingoController
 
     public static void OnItem(RandomizerAction action, int coords) {
     	try
-    	{		
+    	{
 	        if(!Active) return;
 	        if(coords == 2 && (action.Action == "HC" || action.Action == "EC" || action.Action == "AC"))
 	        	return;
