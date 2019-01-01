@@ -691,7 +691,7 @@ public static class Randomizer
 
 	public static void showSeedInfo()
 	{
-		string obj = "v3.1Bingo - seed loaded: " + Randomizer.SeedMeta;
+		string obj = "v3.1 (Bingo v" + BingoController.BINGO_VERSION + ") - seed loaded: " + Randomizer.SeedMeta;
 		Randomizer.printInfo(obj);
 	}
 

@@ -7,7 +7,7 @@ using Core;
 
 public static class BingoController
 {
-	public static string BINGO_VERSION = "0.0.5";
+	public static string BINGO_VERSION = "0.1.0";
 	private static string scene() {
 		return Scenes.Manager.CurrentScene != null ? Scenes.Manager.CurrentScene.Scene : "" ;
 	}
