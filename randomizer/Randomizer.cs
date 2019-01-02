@@ -67,7 +67,7 @@ public static class Randomizer
 		Randomizer.HotColdItems = new Dictionary<int, RandomizerHotColdItem>();
 		Randomizer.HotColdMaps = new List<int>();
 		int HotColdSaveId = 2000;
-		int RepeatablePickupId = 2500;
+		int RepeatablePickupId = 3000;
 		Randomizer.HoruScene = "";
 		Randomizer.HoruMap = new Hashtable();
 		Randomizer.HoruMap["mountHoruStomperSystemsR"] = 2640380;

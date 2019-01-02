@@ -7,7 +7,7 @@ using Core;
 
 public static class BingoController
 {
-	public static string BINGO_VERSION = "0.1.0";
+	public static string BINGO_VERSION = "0.1.1";
 	private static string scene() {
 		return Scenes.Manager.CurrentScene != null ? Scenes.Manager.CurrentScene.Scene : "" ;
 	}
@@ -631,7 +631,8 @@ public static class BingoController
 	                new BoolGuidSwitchGoal("SwampPostStomp" , 2581, new MoonGuid(-1973919964, 1235174309, 1801441926, 1977910307)), 
 	                new BoolGuidSwitchGoal("GroveMapstoneTree" , 2582, new MoonGuid(-1664353560, 1216217354, 845171129, -1310424046)), 
 	                new BoolGuidSwitchGoal("HoruFieldsTPAccess" , 2583, new MoonGuid(938332473, 1306647788, 243261569, 1200294177)), 
-	                new BoolGuidSwitchGoal("L1" , 2584, new MoonGuid(-931451667, 1186606623, -1576090735, 604062528)), 
+	                new BoolGuidSwitchGoal("SorrowLasersArea", 2615, new MoonGuid(-344918519, 1287316567, 75338928, 233490553)),
+	                new BoolGuidSwitchGoal("L1" , 2584, new MoonGuid(-931451667, 1186606623, -1576090735, 604062528)),
 	                new BoolGuidSwitchGoal("R2" , 2585, new MoonGuid(-1449971991, 1203470121, 209341883, 254513811)), 
 	                new BoolGuidSwitchGoal("L2" , 2586, new MoonGuid(1123382356, 1244294063, 1435789238, 1593458155)), 
 	                new BoolGuidSwitchGoal("L4Fire" , 2589, new MoonGuid(-338506493, 1267621739, -966392693, -623848418)), 
