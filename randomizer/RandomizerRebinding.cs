@@ -59,7 +59,11 @@ public static class RandomizerRebinding {
 				{"List Map Altars", "LeftAlt+Alpha2, RightAlt+Alpha2"},
 				{"List Teleporters", "LeftAlt+Alpha3, RightAlt+Alpha3"},
 				{"List Relics", "LeftAlt+Alpha4, RightAlt+Alpha4"},
-				{"Show Stats", "LeftAlt+Alpha5, RightAlt+Alpha5"}
+				{"Show Stats", "LeftAlt+Alpha5, RightAlt+Alpha5"},
+				{"Bonus 1",""},
+				{"Bonus 2",""},
+				{"Bonus 3",""},
+				{"Bonus 4",""},
 			};
 			if (!File.Exists("RandomizerRebinding.txt"))
 			{
@@ -88,7 +92,14 @@ public static class RandomizerRebinding {
 				AssignBind(missingKey, null, writeList);
 			}
 			if(writeList.Count > 0) {
-				Randomizer.printInfo("Default Binds written for these missing binds: " + String.Join(", ", writeList.ToArray()) + ".", 480);
+				List<string> warnList = new List<string>();
+				foreach(string writeKey in writeList)
+				{
+					if(DefaultBinds[writeKey] != "")
+						warnList.Add(writeKey);
+				}
+				if(warnList.Count > 0)
+					Randomizer.printInfo("Default Binds written for these missing binds: " + String.Join(", ", warnList.ToArray()) + ".", 480);
 				string writeText = "";
 				foreach(string writeKey in writeList) {
 					writeText += Environment.NewLine + writeKey+ ": " + DefaultBinds[writeKey];
@@ -135,6 +146,14 @@ public static class RandomizerRebinding {
 			RandomizerRebinding.ListTeleporters = ParseOrDefault(bind, key, writeList);
 		} else if(key == "Show Stats") {
 			RandomizerRebinding.ShowStats = ParseOrDefault(bind, key, writeList);
+		} else if(key == "Bonus 1") {
+			RandomizerRebinding.Bonus1 = ParseOrDefault(bind, key, writeList);
+		} else if(key == "Bonus 2") {
+			RandomizerRebinding.Bonus2 = ParseOrDefault(bind, key, writeList);
+		} else if(key == "Bonus 3") {
+			RandomizerRebinding.Bonus3 = ParseOrDefault(bind, key, writeList);
+		} else if(key == "Bonus 4") {
+			RandomizerRebinding.Bonus4 = ParseOrDefault(bind, key, writeList);
 		}
 	}
 
@@ -220,6 +239,10 @@ public static class RandomizerRebinding {
 	public static RandomizerRebinding.BindSet ListMapAltars;
 	public static RandomizerRebinding.BindSet ListTeleporters;
 	public static RandomizerRebinding.BindSet ShowStats;
+	public static RandomizerRebinding.BindSet Bonus1;
+	public static RandomizerRebinding.BindSet Bonus2;
+	public static RandomizerRebinding.BindSet Bonus3;
+	public static RandomizerRebinding.BindSet Bonus4;
 
 	// Token: 0x02000A03 RID: 2563
 	public class Bind

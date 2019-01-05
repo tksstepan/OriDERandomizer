@@ -7,7 +7,7 @@ using Core;
 
 public static class BingoController
 {
-	public static string BINGO_VERSION = "0.1.1";
+	public static string BINGO_VERSION = "0.1.2";
 	private static string scene() {
 		return Scenes.Manager.CurrentScene != null ? Scenes.Manager.CurrentScene.Scene : "" ;
 	}
@@ -552,7 +552,7 @@ public static class BingoController
 	                new BoolGoal("Doorwarp Lava", 1593),
 	                new BoolGoal("Ginso Escape Fronkey", 1592),
 	                new BoolGoal("Blackroot Teleporter Crushers", 1591),
-	                new BoolGoal("NoobSpikes", 1590),
+	                new BoolGoal("NoobSpikes", 1590), // 1589 used by bonus skill!
 	            });
 
 	            MultiBoolGoal.mk("CompleteEscape", new List<BoolGoal>() {

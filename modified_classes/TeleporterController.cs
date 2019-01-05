@@ -115,6 +115,7 @@ public class TeleporterController : SaveSerialize, ISuspendable
 	// Token: 0x06002CE9 RID: 11497 RVA: 0x000C3C3C File Offset: 0x000C1E3C
 	public static void Activate(string identifier)
 	{
+		BingoController.OnActivateTeleporter(identifier);
 		foreach (GameMapTeleporter gameMapTeleporter in TeleporterController.Instance.Teleporters)
 		{
 			if (gameMapTeleporter.Identifier == identifier)

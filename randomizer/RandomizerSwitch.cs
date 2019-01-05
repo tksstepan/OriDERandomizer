@@ -37,7 +37,7 @@ public static class RandomizerSwitch
         {
             return;
         }
-        Characters.Sein.Level.GainExperience(RandomizerBonus.ExpWithBonuses(Value));
+        Characters.Sein.Level.GainExperience(RandomizerBonus.ExpWithBonuses(Value, true));
     }
     
     public static void KeystonePickup() {
@@ -254,7 +254,14 @@ public static class RandomizerSwitch
             case "WP":
                 Randomizer.SaveAfterWarp = Action.Action == "WS";
                 string[] xy = ((string)Action.Value).Split(',');
-                Randomizer.WarpTo(new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1])), 15);
+                if(xy.Length > 2 && xy[2] == "force") {
+                    Randomizer.WarpTo(new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1])), 15);
+                }
+                else {
+                    Randomizer.WarpTarget = new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1]));
+                    Randomizer.WarpSource = Characters.Sein.Position;
+                    Randomizer.CanWarp = 3;
+	            }
                 break;
             case "NO":
                 break;

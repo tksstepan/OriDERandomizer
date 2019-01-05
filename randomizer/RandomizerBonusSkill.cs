@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Game;
 using UnityEngine;
@@ -9,52 +10,72 @@ public static class RandomizerBonusSkill
     // Token: 0x060037F8 RID: 14328
     public static void SwitchBonusSkill()
     {
+        Dictionary<int, int> unlocked = new Dictionary<int, int>(UnlockedBonusSkills);
+        int slot_0 = unlocked.Keys.Min();
+        int slot_n = unlocked.Keys.Max();
         if(ActiveBonus == 0)
         {
-            foreach (int skillId in BonusSkillNames.Keys)
-            {
-                if(Characters.Sein.Inventory.GetRandomizerItem(skillId) > 0)
-                {
-                    ActiveBonus = skillId;
-                    Randomizer.printInfo("Active Bonus Skill: " + BonusSkillNames[ActiveBonus]);
-                    return;
-                }
+            if(unlocked.Count == 0) {
+                Randomizer.Print("No bonus skills unlocked!",  3, false, false, false, true);
+                return;
             }
-                Randomizer.printInfo("No bonus skills unlocked!");
-                return;            
+            ActiveBonus = unlocked[slot_0];
         }
-        int newBonus = ActiveBonus;
-        while(newBonus < LastId)
+        int active_slot = get(ActiveBonus) >> 2;
+        int cur_slot = active_slot;
+        if (unlocked.Count == 1)
         {
-            newBonus++;
-            if(Characters.Sein.Inventory.GetRandomizerItem(newBonus) > 0)
+                Randomizer.Print("Bonus Skill (" + (cur_slot+1).ToString() + "): " + BonusSkillNames[unlocked[cur_slot]],  3, false, false, false, true);
+            return;
+        }
+        while (cur_slot < slot_n)
+        {
+            cur_slot++;
+            if (unlocked.ContainsKey(cur_slot) && get(unlocked[cur_slot]) > 0)
             {
-                ActiveBonus = newBonus;
-                Randomizer.printInfo("Active Bonus Skill: " + BonusSkillNames[ActiveBonus]);
+                ActiveBonus = unlocked[cur_slot];
+                Randomizer.Print("Bonus Skill (" + (cur_slot+1).ToString() + "): " + BonusSkillNames[unlocked[cur_slot]],  3, false, false, false, true);
                 return;
             }
         }
-        newBonus = FirstId;
-        while(newBonus < ActiveBonus)
+        cur_slot = slot_0;
+        while (cur_slot < active_slot)
         {
-            if(Characters.Sein.Inventory.GetRandomizerItem(newBonus) > 0)
+            if (unlocked.ContainsKey(cur_slot) && get(unlocked[cur_slot]) > 0)
             {
-                ActiveBonus = newBonus;
-                Randomizer.printInfo("Active Bonus Skill: " + BonusSkillNames[ActiveBonus]);
+                ActiveBonus = unlocked[cur_slot];
+                Randomizer.Print("Bonus Skill (" + (cur_slot+1).ToString() + "): " + BonusSkillNames[unlocked[cur_slot]],  3, false, false, false, true);
                 return;
             }
-            newBonus++;
+            cur_slot++;
         }
     }
 
-    // Token: 0x060037F9 RID: 14329
+    public static void BonusSkillSlot(int slot)
+    {
+        int bonus = -1;
+        UnlockedBonusSkills.TryGetValue(slot, out bonus);
+        if(bonus < 0)
+        {
+            Randomizer.Print("No bonus skill in slot "+ (1+slot).ToString(),  3, false, false, false, true);
+            return;
+        }
+        ActivateBonusSkill(bonus);
+    }
+
     public static void ActivateBonusSkill()
     {
-        if (!Characters.Sein || Characters.Sein.IsSuspended || ActiveBonus == 0)
+        int ab = ActiveBonus;
+        ActivateBonusSkill(ab);
+    }
+
+    public static void ActivateBonusSkill(int ab)
+    {
+        if (!Characters.Sein || Characters.Sein.IsSuspended || ab == 0)
         {
             return;
         }
-        switch (ActiveBonus)
+        switch (ab)
         {
         case 101:
             if (Characters.Sein.Energy.Current > 0f)
@@ -68,52 +89,29 @@ public static class RandomizerBonusSkill
             Characters.Sein.Energy.NotifyOutOfEnergy();
             return;
         case 102:
-            if (RandomizerBonusSkill.ActiveDrainSkills.Contains(ActiveBonus))
-            {
-                RandomizerBonusSkill.ActiveDrainSkills.Remove(ActiveBonus);
-                Randomizer.printInfo(BonusSkillNames[ActiveBonus] + " off");
-                Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle = 0f;
-                RandomizerBonusSkill.EnergyDrainRate -= 0.001f;
-                return;
-            }
-            if (Characters.Sein.Energy.Current > 0f)
-            {
-                RandomizerBonusSkill.ActiveDrainSkills.Add(ActiveBonus);
-                Randomizer.printInfo(BonusSkillNames[ActiveBonus] + " on");
-                Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle = 180f;
-                RandomizerBonusSkill.EnergyDrainRate += 0.001f;
-                return;
-            }
-            UI.SeinUI.ShakeEnergyOrbBar();
-            Characters.Sein.Energy.NotifyOutOfEnergy();
-            return;
         case 103:
-            if (RandomizerBonusSkill.ActiveDrainSkills.Contains(ActiveBonus))
+            if (IsActive(ab))
             {
-                RandomizerBonusSkill.ActiveDrainSkills.Remove(ActiveBonus);
-                Randomizer.printInfo(BonusSkillNames[ActiveBonus] + " off");
-                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.MaxSpeed = 11.6666f;
-                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.MaxSpeed = 11.6666f;
-                RandomizerBonusSkill.EnergyDrainRate -= 0.001f;
-                return;
-            }
-            if (Characters.Sein.Energy.Current > 0f)
+                Deactivate(ab);
+                Randomizer.printInfo(BonusSkillNames[ab] + " off");
+                RandomizerBonusSkill.EnergyDrainRate -= 0.00112f;
+            } else if (Characters.Sein.Energy.Current > 0f)
             {
-                RandomizerBonusSkill.ActiveDrainSkills.Add(ActiveBonus);
-                Randomizer.printInfo(BonusSkillNames[ActiveBonus] + " on");
-                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.MaxSpeed = 40f;
-                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.MaxSpeed = 40f;
-                RandomizerBonusSkill.EnergyDrainRate += 0.001f;
-                return;
+                Activate(ab);
+                Randomizer.printInfo(BonusSkillNames[ab] + " on");
+                RandomizerBonusSkill.EnergyDrainRate += 0.00112f;
+            } else {
+                UI.SeinUI.ShakeEnergyOrbBar();
+                Characters.Sein.Energy.NotifyOutOfEnergy();
+                return;                
             }
-            UI.SeinUI.ShakeEnergyOrbBar();
-            Characters.Sein.Energy.NotifyOutOfEnergy();
-            return;
+            if(ab == 102) {
+                Characters.Sein.PlatformBehaviour.LeftRightMovement.PlatformMovement.LocalSpeedX *= -1;
+            }
+            break;
         case 104:
-            if (Characters.Sein.Abilities.Carry.IsCarrying || !Characters.Sein.Controller.CanMove || !Characters.Sein.Active || (LastAltR.x == 0f && LastAltR.y == 0f))
-            {
+            if (!CanWarpTo(LastAltR))
                 return;
-            }
             if (Characters.Sein.Energy.Current >= 0.5f)
             {
                Characters.Sein.Energy.Spend(0.5f);
@@ -124,10 +122,8 @@ public static class RandomizerBonusSkill
             Characters.Sein.Energy.NotifyOutOfEnergy();
             return;
         case 105:
-            if (Characters.Sein.Abilities.Carry.IsCarrying || !Characters.Sein.Controller.CanMove || !Characters.Sein.Active || (LastSoulLink.x == 0f && LastSoulLink.y == 0f))
-            {
+            if (!CanWarpTo(LastSoulLink))
                 return;
-            }
             if (Characters.Sein.Energy.Current >= 0.5f)
             {
                 Characters.Sein.Energy.Spend(0.5f);
@@ -140,7 +136,7 @@ public static class RandomizerBonusSkill
         case 106:
             if (!Characters.Sein.SoulFlame.InsideCheckpointMarker)
             {
-                Randomizer.printInfo("You can only Respec at a Soul Link!");
+                Randomizer.Print("You can only Respec at a Soul Link!",  3, false, false, false, true);
                 return;
             }
             {
@@ -190,7 +186,9 @@ public static class RandomizerBonusSkill
             return;
         }
     }
-
+    static bool CanWarpTo(Vector3 target) {
+        return !(Characters.Sein.Abilities.Carry.IsCarrying || !Characters.Sein.Controller.CanMove || !Characters.Sein.Active || (target.x == 0f && target.y == 0f));
+    }
     // Token: 0x060037FA RID: 14330
     static RandomizerBonusSkill()
     {
@@ -200,12 +198,13 @@ public static class RandomizerBonusSkill
     // Token: 0x060037FB RID: 14331
     public static void Update()
     {
-        if (!Characters.Sein.IsSuspended && RandomizerBonusSkill.EnergyDrainRate > 0f)
+        if (!Characters.Sein.IsSuspended && Characters.Sein.Controller.CanMove && Characters.Sein.Active && RandomizerBonusSkill.EnergyDrainRate > 0f)
         {
             if (RandomizerBonusSkill.EnergyDrainRate > Characters.Sein.Energy.Current)
             {
-                RandomizerBonusSkill.EnergyDrainRate = 0f;
-                RandomizerBonusSkill.DisableAllPersistant();
+                foreach(int ds in ActiveDrainSkills)
+                    Deactivate(ds);
+                UpdateDrain();
                 return;
             }
             Characters.Sein.Energy.Spend(RandomizerBonusSkill.EnergyDrainRate);
@@ -213,15 +212,6 @@ public static class RandomizerBonusSkill
     }
 
     // Token: 0x060037FC RID: 14332
-    public static void DisableAllPersistant()
-    {
-        RandomizerBonusSkill.ActiveDrainSkills.Clear();
-        RandomizerBonusSkill.EnergyDrainRate = 0f;
-        Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.MaxSpeed = 11.6666f;
-        Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.MaxSpeed = 11.6666f;
-        Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle = 0f;
-    }
-
     // Token: 0x060037FD RID: 14333
     public static void OnSave()
     {
@@ -230,69 +220,160 @@ public static class RandomizerBonusSkill
     // Token: 0x060037FE RID: 14334
     public static void OnDeath()
     {
-        RandomizerBonusSkill.DisableAllPersistant();
+        UpdateDrain();
     }
 
     // Token: 0x06003801 RID: 14337
     public static void FoundBonusSkill(int ID)
     {
-        if(Characters.Sein.Inventory.GetRandomizerItem(ID) > 0) {
+        if(get(ID) > 0) {
             return;
         }
         Randomizer.showHint("Unlocked Bonus Skill: " + RandomizerBonusSkill.BonusSkillNames[ID]);
-        Characters.Sein.Inventory.SetRandomizerItem(ID, 1);
+        int offset = 0;
+        Dictionary<int, int> ubs = new Dictionary<int, int>(UnlockedBonusSkills);
+        if(ubs.Count > 0) 
+        offset = (1+UnlockedBonusSkills.Keys.Max()) << 2;
+        set(ID, offset+1);
         if(ActiveBonus == 0)
             ActiveBonus = ID;
     }
 
     // Token: 0x06003802 RID: 14338
     public static void Reset()
-    {       
-        ActiveDrainSkills = new HashSet<int>();
-        EnergyDrainRate = 0f;
+    {   
+        UpdateDrain();
+    }
+
+    public static void UpdateDrain() {
+        if(!Characters.Sein || !Characters.Sein.Inventory)
+            return;
+        HashSet<int> ads = new HashSet<int>(ActiveDrainSkills);
+        EnergyDrainRate = ads.Count * 0.00112f;
+        if(ads.Contains(102)) {
+            Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle = 180f; 
+        } else {
+            Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle = 0f; 
+        }
+        if(ads.Contains(103)) {
+            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.MaxSpeed = 35f;
+            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.Acceleration = 90f;
+            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.Decceleration = 45f;
+            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.MaxSpeed = 35f;
+            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.Acceleration = 39f;
+            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.Decceleration = 39f;
+        } else {
+            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.Acceleration = 60f;
+            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.Decceleration = 30f;
+            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.MaxSpeed = 11.6666f;
+            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.Acceleration = 26f;
+            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.Decceleration = 26f;
+            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.MaxSpeed = 11.6666f;
+        }
     }
 
     // Token: 0x040032C8 RID: 13000
     public static int ActiveBonus 
     {
-        get { return Characters.Sein.Inventory.GetRandomizerItem(83); }
-        set { Characters.Sein.Inventory.SetRandomizerItem(83, value); }
+        get { return get(1589); }
+        set { set(1589, value); }
     }
     public static int LevelExplosionCooldown = 0;
     public static Vector3 LastAltR
     {
         get { return new Vector3(
-            ((float)Characters.Sein.Inventory.GetRandomizerItem(84))/100f, 
-            ((float)Characters.Sein.Inventory.GetRandomizerItem(85))/100f
+            ((float)get(84))/100f, 
+            ((float)get(85))/100f
         );}
         set { 
-            Characters.Sein.Inventory.SetRandomizerItem(84, (int)(value.x*100));
-            Characters.Sein.Inventory.SetRandomizerItem(85, (int)(value.y*100));
+            set(84, (int)(value.x*100));
+            set(85, (int)(value.y*100));
         }
     }
     public static Vector3 LastSoulLink
     {
         get { return new Vector3(
-            ((float)Characters.Sein.Inventory.GetRandomizerItem(86))/100f, 
-            ((float)Characters.Sein.Inventory.GetRandomizerItem(87))/100f
+            ((float)get(86))/100f, 
+            ((float)get(87))/100f
         );}
         set { 
-            Characters.Sein.Inventory.SetRandomizerItem(86, (int)(value.x*100));
-            Characters.Sein.Inventory.SetRandomizerItem(87, (int)(value.y*100));
+            set(86, (int)(value.x*100));
+            set(87, (int)(value.y*100));
         }
     }
     public static float OldHealth;
     public static float OldEnergy;
 
     // Token: 0x040032C9 RID: 13001
-    public static List<int> UnlockedBonusSkills;
+    public static Dictionary<int, int> UnlockedBonusSkills
+    {
+        get {
+            Dictionary<int, int> ubs = new Dictionary<int, int>();
+            foreach(int id in BonusSkillNames.Keys) {
+                int val = get(id);
+                if(val % 2 == 1)
+                {
+                    if(ubs.ContainsKey(val >> 2)) {
+                        Randomizer.LogError("Duplicate keys: " + ubs[val >> 2].ToString() + " and " + id.ToString());
+                    }
+                    ubs[val >> 2] = id;
+                }
+            }
+            
+            return ubs;
+        }
+    }
     public static float EnergyDrainRate;
-    public static HashSet<int> ActiveDrainSkills;
+    public static bool IsActive(int id) {
+        try {
+            return (get(id) >> 1) % 2 == 1;
+        }
+        catch(Exception e)
+        {
+            Randomizer.LogError("IsActive: " + e.Message);
+            return false;
+        }
+    }
+    public static void Deactivate(int id) {
+        if(IsActive(id))
+            set(id, get(id)-2);
+        else
+            if(RandomizerSettings.Dev)
+                Randomizer.log("ignoring deactivation of " + id.ToString() + " since skill was not active");
+        UpdateDrain();
+    }
+    public static void Activate(int id) {
+        if(!IsActive(id))
+            set(id, get(id)+2);
+        else
+            if(RandomizerSettings.Dev)
+                Randomizer.log("ignoring activation of " + id.ToString() + " since skill was already active");
+        UpdateDrain();
+    }
 
-    public static int FirstId = 101;
+    public static HashSet<int> ActiveDrainSkills
+    {
+        get {
+            HashSet<int> ads = new HashSet<int>();
+            foreach(int id in BonusSkillNames.Keys) {
+                if(IsActive(id))
+                    ads.Add(id);
+            }
+            return ads;
+        }
+    }
 
-    public static int LastId = 107;
 
+    private static int get(int item) { return Characters.Sein.Inventory.GetRandomizerItem(item); }
+    private static int set(int item, int value) { return Characters.Sein.Inventory.SetRandomizerItem(item, value); }
+    public static bool ExtremeSpeed 
+    {
+        get { return IsActive(103); }
+    }
+    public static bool GravitySwap
+    {
+        get { return IsActive(102); }
+    }
     // Token: 0x040032CD RID: 13005
     public static Dictionary<int, string> BonusSkillNames = new Dictionary<int, string>
     {
@@ -304,4 +385,7 @@ public static class RandomizerBonusSkill
         { 106, "Respec" },
         { 107, "Level Explosion" }
     };
+
+    public static HashSet<int> DrainSkills = new HashSet<int> { 102, 103 };
 }
+
