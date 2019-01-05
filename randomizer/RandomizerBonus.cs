@@ -265,9 +265,9 @@ public static class RandomizerBonus
             else if (RandomizerBonus.Lifesteal() > 0)
                 Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
             if(Lifesteal() == 1)
-                Randomizer.showHint("Health Drain");
+                Randomizer.showHint("Health Leech");
             else
-                Randomizer.showHint("Health Drain x" + RandomizerBonus.Lifesteal().ToString());
+                Randomizer.showHint("Health Leech x" + RandomizerBonus.Lifesteal().ToString());
             break;
         case 32:
             if (!flag)
@@ -275,9 +275,9 @@ public static class RandomizerBonus
             else if (RandomizerBonus.Manavamp() > 0)
                 Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
             if(Manavamp() == 1)
-                Randomizer.showHint("Energy Drain");
+                Randomizer.showHint("Energy Leech");
             else
-                Randomizer.showHint("Health Drain x" + RandomizerBonus.Manavamp().ToString());
+                Randomizer.showHint("Energy Leech x" + RandomizerBonus.Manavamp().ToString());
             break;
             break;
         case 33:
@@ -532,8 +532,8 @@ public static class RandomizerBonus
             {
                 damage = 20f;
             }
-            Characters.Sein.Mortality.Health.GainHealth((float)RandomizerBonus.Lifesteal() * 0.8f * damage);
-            Characters.Sein.Energy.Gain((float)RandomizerBonus.Manavamp() * 0.2f * damage);
+            Characters.Sein.Mortality.Health.GainHealth((float)RandomizerBonus.Lifesteal() * 0.2f * damage);
+            Characters.Sein.Energy.Gain((float)RandomizerBonus.Manavamp() * 0.05f * damage);
         }
     }
 
