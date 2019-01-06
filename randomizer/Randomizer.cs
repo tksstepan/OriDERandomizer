@@ -233,7 +233,7 @@ public static class Randomizer
 		{
 			Items.NightBerry.transform.position = new Vector3(-755f, -400f);
 		}
-		if(Vector3.Distance(Randomizer.WarpSource, Characters.Sein.Position) < 2 && Randomizer.CanWarp > 0) {
+		if(Vector3.Distance(Randomizer.WarpSource, Characters.Sein.Position) < 5 && Randomizer.CanWarp > 0) {
 			Randomizer.WarpTo(Randomizer.WarpTarget, 15);
 			return;
 		}
