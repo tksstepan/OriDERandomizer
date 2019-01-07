@@ -106,6 +106,7 @@ public static class RandomizerBonusSkill
                 return;                
             }
             if(ab == 102) {
+                Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle += 180f;
                 Characters.Sein.PlatformBehaviour.LeftRightMovement.PlatformMovement.LocalSpeedX *= -1;
             }
             break;
@@ -215,6 +216,7 @@ public static class RandomizerBonusSkill
     // Token: 0x060037FD RID: 14333
     public static void OnSave()
     {
+        UpdateDrain();
     }
 
     // Token: 0x060037FE RID: 14334
@@ -250,11 +252,7 @@ public static class RandomizerBonusSkill
             return;
         HashSet<int> ads = new HashSet<int>(ActiveDrainSkills);
         EnergyDrainRate = ads.Count * 0.00112f;
-        if(ads.Contains(102)) {
-            Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle = 180f; 
-        } else {
-            Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle = 0f; 
-        }
+
         if(ads.Contains(103)) {
             Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.MaxSpeed = 35f;
             Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.Acceleration = 90f;
@@ -323,6 +321,13 @@ public static class RandomizerBonusSkill
             return ubs;
         }
     }
+    public static float ExtremeSpeed
+    {
+        get {
+            return IsActive(103) ? 3.0f : 1.0f;
+        }
+    }
+
     public static float EnergyDrainRate;
     public static bool IsActive(int id) {
         try {
@@ -363,17 +368,8 @@ public static class RandomizerBonusSkill
         }
     }
 
-
     private static int get(int item) { return Characters.Sein.Inventory.GetRandomizerItem(item); }
     private static int set(int item, int value) { return Characters.Sein.Inventory.SetRandomizerItem(item, value); }
-    public static bool ExtremeSpeed 
-    {
-        get { return IsActive(103); }
-    }
-    public static bool GravitySwap
-    {
-        get { return IsActive(102); }
-    }
     // Token: 0x040032CD RID: 13005
     public static Dictionary<int, string> BonusSkillNames = new Dictionary<int, string>
     {

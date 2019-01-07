@@ -408,6 +408,8 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 			this.PlatformMovement.GroundNormal = Vector3.up;
 			this.PlatformMovement.PositionY = this.WaterSurfacePositionY;
 			this.PlatformMovement.LocalSpeedY = 0f;
+			this.PlatformMovement.LocalSpeed *= RandomizerBonusSkill.ExtremeSpeed; 
+
 			this.m_sein.PlatformBehaviour.Visuals.Animation.PlayLoop((this.m_sein.Input.NormalizedHorizontal != 0) ? this.Animations.SwimSurface.Moving : this.Animations.SwimSurface.Idle, 9, new Func<bool>(this.ShouldSwimSurfaceAnimationPlay), false);
 			if (this.SurfaceSwimmingSoundProvider && !this.SurfaceSwimmingSoundProvider.IsPlaying && this.m_sein.Input.NormalizedHorizontal != 0)
 			{
@@ -579,6 +581,7 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 			this.m_swimIdleTime += Time.deltaTime;
 		}
 		this.PlatformMovement.LocalSpeed = Vector3.Lerp(this.PlatformMovement.LocalSpeed, vector2, this.AccelerationOverTime.Evaluate(this.m_swimAccelerationTime));
+		this.PlatformMovement.LocalSpeed *= RandomizerBonusSkill.ExtremeSpeed; 
 		if (this.IsUpsideDown && Math.Abs(this.SmoothAngleDelta) < 10f)
 		{
 			this.VerticalFlip();
