@@ -93,12 +93,12 @@ public static class RandomizerBonusSkill
             if (IsActive(ab))
             {
                 Deactivate(ab);
-                Randomizer.printInfo(BonusSkillNames[ab] + " off");
+//                Randomizer.printInfo(BonusSkillNames[ab] + " off");
                 RandomizerBonusSkill.EnergyDrainRate -= 0.00112f;
-            } else if (Characters.Sein.Energy.Current > 0f)
+            } else if (Characters.Sein.Energy.Current > 0.0112f)
             {
                 Activate(ab);
-                Randomizer.printInfo(BonusSkillNames[ab] + " on");
+//                Randomizer.printInfo(BonusSkillNames[ab] + " on");
                 RandomizerBonusSkill.EnergyDrainRate += 0.00112f;
             } else {
                 UI.SeinUI.ShakeEnergyOrbBar();
@@ -204,7 +204,13 @@ public static class RandomizerBonusSkill
             if (RandomizerBonusSkill.EnergyDrainRate > Characters.Sein.Energy.Current)
             {
                 foreach(int ds in ActiveDrainSkills)
+                {
                     Deactivate(ds);
+                    if(ds == 102) {
+                        Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle += 180f;
+                        Characters.Sein.PlatformBehaviour.LeftRightMovement.PlatformMovement.LocalSpeedX *= -1;
+                    }
+                }
                 UpdateDrain();
                 return;
             }
