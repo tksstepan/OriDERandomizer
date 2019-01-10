@@ -93,12 +93,12 @@ public static class RandomizerBonusSkill
             if (IsActive(ab))
             {
                 Deactivate(ab);
-//                Randomizer.printInfo(BonusSkillNames[ab] + " off");
+                Randomizer.printInfo(BonusSkillNames[ab] + " off");
                 RandomizerBonusSkill.EnergyDrainRate -= 0.00112f;
             } else if (Characters.Sein.Energy.Current > 0.0112f)
             {
                 Activate(ab);
-//                Randomizer.printInfo(BonusSkillNames[ab] + " on");
+                Randomizer.printInfo(BonusSkillNames[ab] + " on");
                 RandomizerBonusSkill.EnergyDrainRate += 0.00112f;
             } else {
                 UI.SeinUI.ShakeEnergyOrbBar();
