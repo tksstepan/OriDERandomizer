@@ -185,6 +185,11 @@ public static class RandomizerSyncManager
 					{
 						Randomizer.printInfo(text.Substring(4), 360);
 					}
+					else if (text.StartsWith("win:"))
+					{
+						Randomizer.Print(text.Substring(4), 420, false, true, false, true);
+						RandomizerStatsManager.WriteStatsFile();
+					}
 					else if (text.StartsWith("pickup:"))
 					{
 						string[] parts = text.Substring(7).Split(new char[] { '|' });
@@ -204,7 +209,7 @@ public static class RandomizerSyncManager
 						RandomizerChaosManager.SpawnEffect();
 						RandomizerSyncManager.ChaosTimeoutCounter = 3600;
 					}
-					RandomizerSyncManager.webClient.DownloadStringAsync(new Uri(RandomizerSyncManager.RootUrl + "/signalCallback/" + text));
+					RandomizerSyncManager.webClient.DownloadStringAsync(new Uri(RandomizerSyncManager.RootUrl + "/callback/" + text));
 				}
 			}
 			return;
