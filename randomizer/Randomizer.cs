@@ -958,7 +958,6 @@ public static class Randomizer
 				if(scene == "thornfeltSwampActTwoStart" && NeedGinsoEscapeCleanup) {
 					try
 					{
-						Randomizer.ParseFlags(Randomizer.SeedMeta.Split(new char[] {'|'})[0].Split(new char[] {','}));
 						GameController.Instance.CreateCheckpoint();
 						RandomizerStatsManager.OnSave(false);
 						GameController.Instance.SaveGameController.PerformSave();

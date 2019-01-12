@@ -20,8 +20,6 @@ public class SetSeinWorldStateAction : ActionMethod
 			if (!Randomizer.NeedGinsoEscapeCleanup)
 			{
 				Randomizer.NeedGinsoEscapeCleanup = true;
-				Randomizer.OpenWorld = true;
-				Randomizer.StompTriggers = false;
 				Randomizer.getPickup(new Vector3(548f, 952f));
 			}
 			return;

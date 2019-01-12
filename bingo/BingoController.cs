@@ -142,6 +142,7 @@ public static class BingoController
             }
             switch(currentScene)
             {
+                case "ginsoTreeWaterRisingBtm":
                 case "ginsoTreeWaterRisingEnd":
                     if((damage.Type == DamageType.Explosion) || 
                        (owner != null && owner.MoonGuid == new MoonGuid(-1008478342, 1331842787, -1292489029, -195874113))) 

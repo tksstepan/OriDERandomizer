@@ -8,10 +8,6 @@ public class ReturnToTitleScreenAction : ActionMethod
 	{
 		try
 		{
-			if(Randomizer.NeedGinsoEscapeCleanup) {
-				Randomizer.ParseFlags(Randomizer.SeedMeta.Split(new char[] {'|'})[0].Split(new char[] {','}));
-				Randomizer.NeedGinsoEscapeCleanup = false;
-			}
 			Randomizer.Returning = false;
 			Randomizer.Warping = 0;
 			RandomizerStatsManager.OnReturnToMenu();
