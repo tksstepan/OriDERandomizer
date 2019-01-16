@@ -60,7 +60,7 @@ public static class Randomizer
 			Randomizer.BashWasQueued = false;
 			Randomizer.BashTap = false;
 			Randomizer.fragsEnabled = false;
-			Randomizer.TickCounter = 60;
+			Randomizer.LastTick = 10000000L;
 			Randomizer.LockedCount = 0;
 			Randomizer.ResetTrackerCount = 0;
 			Randomizer.HotCold = false;
@@ -933,10 +933,10 @@ public static class Randomizer
 	// Token: 0x06003848 RID: 14408
 	public static void Tick()
 	{
-		Randomizer.TickCounter--;
-		if (Randomizer.TickCounter <= 0)
+		long old_tick = Randomizer.LastTick;
+		Randomizer.LastTick = DateTime.Now.Ticks % 10000000L;
+		if (Randomizer.LastTick < old_tick)
 		{
-			Randomizer.TickCounter = 60;
 			BingoController.Tick();
 			if(ResetVolume == 1)
 			{
@@ -1352,13 +1352,10 @@ public static class Randomizer
 	// Token: 0x04003301 RID: 13057
 	public static Hashtable HoruMap;
 
-	// Token: 0x04003332 RID: 13106
-	public static int TickCounter;
+	public static long LastTick;
 
-	// Token: 0x040032F7 RID: 13047
 	public static ArrayList GladesData;
 
-	// Token: 0x04003304 RID: 13060
 	public static int LockedCount;
 
 	public static int ResetTrackerCount;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using Game;
@@ -74,7 +75,10 @@ public static class RandomizerSyncManager
 		{
 			string[] array = File.ReadAllLines("randomizer.dat");
 			array[0] = array[0].Replace(',', '|');
-			RandomizerSyncManager.UriQueue.Enqueue(new Uri(RandomizerSyncManager.RootUrl + "/setSeed?seed=" + string.Join(",", array).Replace("#","")));
+			NameValueCollection nvc = new NameValueCollection();
+			nvc.Set("seed", string.Join(",", array).Replace("#",""));
+			nvc.Set("version", BingoController.BINGO_VERSION);
+			RandomizerSyncManager.webClient.UploadValuesAsync(new Uri(RandomizerSyncManager.RootUrl + "/setSeed"), nvc);
 			RandomizerSyncManager.flags["seedSent"] = true;
 		}
 		RandomizerSyncManager.Countdown--;
