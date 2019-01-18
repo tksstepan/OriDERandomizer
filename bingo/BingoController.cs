@@ -7,7 +7,7 @@ using Core;
 
 public static class BingoController
 {
-    public static string BINGO_VERSION = "0.1.7";
+    public static string BINGO_VERSION = "0.1.9";
     private static string scene() {
         return Scenes.Manager.CurrentScene != null ? Scenes.Manager.CurrentScene.Scene : "" ;
     }
@@ -254,7 +254,17 @@ public static class BingoController
             if(!Active) return;         
             MultiBoolGoals["ActivateTeleporter"][identifier] = true;
         } catch(Exception e) {
-            Randomizer.LogError("Tick: " + e.Message);
+            Randomizer.LogError("OnActivateTP: " + e.Message);
+        }
+    }
+
+    public static void OnTouchMapstone() {
+        try {
+        if(!Active) return;         
+	    	MultiBoolGoals["TouchMapstone"][RandomizerStatsManager.CurrentZone()] = true;
+	    	Randomizer.log(RandomizerStatsManager.CurrentZone());
+        } catch(Exception e) {
+            Randomizer.LogError("OnTouchMapstone: " + e.Message);
         }
     }
 
@@ -543,6 +553,21 @@ public static class BingoController
                     new BoolLocGoal("Wind Restored", 2613, -7320236),
                     new BoolLocGoal("Warmth Returned", 2614, -2399488)
                 });
+
+                MultiBoolGoal.mk("TouchMapstone", new<ListBoolGoal>() {
+						new BoolGoal("sunkenGlades", 2615),
+						new BoolGoal("hollowGrove", 2616),
+						new BoolGoal("moonGrotto", 2617),
+						new BoolGoal("mangrove", 2618),
+						new BoolGoal("thornfeltSwamp", 2619),
+						new BoolGoal("ginsoTree", 2620),
+						new BoolGoal("valleyOfTheWind", 2621),
+						new BoolGoal("mistyWoods", 2622),
+						new BoolGoal("forlornRuins", 2623),
+						new BoolGoal("sorrowPass", 2624),
+						new BoolGoal("mountHoru", 2625)
+                	});
+
 
                 MultiBoolGoal.mk("DieTo", new List<BoolGoal>() {
                     new BoolGoal("Sunstone Lightning", 1598),
