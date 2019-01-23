@@ -281,10 +281,13 @@ public static class RandomizerBonus
             break;
             break;
         case 33:
+            int vel = Characters.Sein.Inventory.GetRandomizerItem(33);
             if (!flag)
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
                 Randomizer.showHint("Skill Velocity Upgrade x" + RandomizerBonus.Velocity().ToString());
+                if(vel == 0) 
+                    RandomizerBonusSkill.FoundBonusSkill(108);
                 return;
             }
             if (RandomizerBonus.Velocity() > 0)
@@ -563,6 +566,8 @@ public static class RandomizerBonus
     // Token: 0x06003788 RID: 14216 RVA: 0x0002BBCA File Offset: 0x00029DCA
     public static int Velocity()
     {
+        if(RandomizerBonusSkill.IsActive(108))
+            return 0;
         return Characters.Sein.Inventory.GetRandomizerItem(33);
     }
 

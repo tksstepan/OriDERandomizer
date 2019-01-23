@@ -183,6 +183,18 @@ public static class RandomizerBonusSkill
             UI.SeinUI.ShakeEnergyOrbBar();
             Characters.Sein.Energy.NotifyOutOfEnergy();
             return;
+        case 108:
+            if (IsActive(ab))
+            {
+                Deactivate(ab);
+                Randomizer.printInfo("Skill Velocity on");
+            }
+            else
+            {
+                Activate(ab);
+                Randomizer.printInfo("Skill Velocity off");
+            }
+            return;
         default:
             return;
         }
@@ -237,7 +249,8 @@ public static class RandomizerBonusSkill
         if(get(ID) > 0) {
             return;
         }
-        Randomizer.showHint("Unlocked Bonus Skill: " + RandomizerBonusSkill.BonusSkillNames[ID]);
+        if(ID != 108)
+            Randomizer.showHint("Unlocked Bonus Skill: " + RandomizerBonusSkill.BonusSkillNames[ID]);
         int offset = 0;
         Dictionary<int, int> ubs = new Dictionary<int, int>(UnlockedBonusSkills);
         if(ubs.Count > 0) 
@@ -366,7 +379,7 @@ public static class RandomizerBonusSkill
     {
         get {
             HashSet<int> ads = new HashSet<int>();
-            foreach(int id in BonusSkillNames.Keys) {
+            foreach(int id in DrainSkills) {
                 if(IsActive(id))
                     ads.Add(id);
             }
@@ -385,7 +398,8 @@ public static class RandomizerBonusSkill
         { 104, "Teleport to Last AltR" },
         { 105, "Teleport to Soul Link" },
         { 106, "Respec" },
-        { 107, "Level Explosion" }
+        { 107, "Level Explosion" },
+        { 108, "Toggle Skill Velocity" }
     };
 
     public static HashSet<int> DrainSkills = new HashSet<int> { 102, 103 };
