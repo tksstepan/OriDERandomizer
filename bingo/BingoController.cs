@@ -214,7 +214,7 @@ public static class BingoController
             return;
         if(SingleLocListeners.ContainsKey(loc)) 
             foreach(SingleLocListener listener in SingleLocListeners[loc])
-                listener.Handle();        
+                listener.Handle();
         foreach(LocListener listener in LocListeners) 
             listener.Handle(loc);
     }
