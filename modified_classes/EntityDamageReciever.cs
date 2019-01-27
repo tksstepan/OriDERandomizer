@@ -61,7 +61,7 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 		bool terrain = (damage.Type == DamageType.Crush || damage.Type == DamageType.Spikes || damage.Type == DamageType.Lava || damage.Type == DamageType.Laser);
 		if (this.Entity is Enemy && !(terrain || damage.Type == DamageType.Projectile || damage.Type == DamageType.Enemy))
 		{
-			RandomizerBonus.DamageDealt(Math.Max(Math.Min(this.Health / 4f, damage.Amount), 0f));
+			RandomizerBonus.DamageDealt(Math.Max(Math.Min(this.Health, damage.Amount), 0f));
 		}
 		this.OnModifyDamage(damage);
 		if (damage.Type == DamageType.Enemy)

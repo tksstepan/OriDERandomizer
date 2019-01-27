@@ -195,6 +195,7 @@ public static class RandomizerStatsManager {
 		SceneToZone.Add("catAndMouseLeft", "mountHoru");
 		SceneToZone.Add("catAndMouseResurrectionRoom", "mountHoru");
 		SceneToZone.Add("mountHoruHubBottom", "mountHoru");
+		SceneToZone.Add("mountHoruHubTop", "mountHoru");
 	}
 
 	public static string CurrentZone() {
