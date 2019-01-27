@@ -7,7 +7,7 @@ using Core;
 
 public static class BingoController
 {
-    public static string BINGO_VERSION = "0.1.11";
+    public static string BINGO_VERSION = "0.1.12";
     private static string scene() {
         return Scenes.Manager.CurrentScene != null ? Scenes.Manager.CurrentScene.Scene : "" ;
     }
@@ -422,6 +422,43 @@ public static class BingoController
         }
     }
 
+    public class MultiIntGoal : BingoGoal {
+        public Dictionary<string, IntGoal> Subgoals;
+        public int this[string key]
+        {
+            get
+            {
+                if(!this.Subgoals.ContainsKey(key)) {
+                    Randomizer.LogError("Key " + key + " not found in MultiIntGoal " + this.Name);
+                    return 0;
+                }
+                return  this.Subgoals[key].Value;
+            }
+            set { this.Subgoals[key].Value = value; }
+        }
+        public MultiIntGoal(string name, List<IntGoal> subgoals) {
+            this.Name = name;
+            this.Subgoals = new Dictionary<string, IntGoal>();
+            foreach(IntGoal subgoal in subgoals)
+                this.Subgoals[subgoal.Name] = subgoal;
+        }
+        public static void mk(string name, List<IntGoal> subgoals) {
+            MultiIntGoal goal = new MultiIntGoal(name, subgoals);
+            MultiIntGoals[goal.Name] = goal;
+        }
+        public override string ToJson() {
+            string jsonStr = "\"" + this.Name + "\": { \"value\": {";
+            int count = 0;
+            foreach(IntGoal subgoal in this.Subgoals.Values)
+            {
+                jsonStr += subgoal.ToJson() + ",";
+                count += subgoal.Value;
+            }
+            return jsonStr.TrimEnd(',') + "}, \"total\": " + count.ToString() + "}";
+        }
+    }
+
+
     public class IntGoal : BingoGoal {
         public int ItemId;
         public int Value {
@@ -544,18 +581,6 @@ public static class BingoController
                     new BoolLocGoal("Warmth Returned", 2614, -2399488)
                 });
 
-                MultiBoolGoal.mk("TouchMapstone", new List<BoolGoal>() {
-                        new BoolGoal("sunkenGlades", 2615),
-                        new BoolGoal("hollowGrove", 2616),
-                        new BoolGoal("moonGrotto", 2617),
-                        new BoolGoal("mangrove", 2618),
-                        new BoolGoal("thornfeltSwamp", 2619),
-                        new BoolGoal("valleyOfTheWind", 2621),
-                        new BoolGoal("forlornRuins", 2622),
-                        new BoolGoal("sorrowPass", 2623),
-                        new BoolGoal("mountHoru", 2624)
-                });
-
                 MultiBoolGoal.mk("DieTo", new List<BoolGoal>() {
                     new BoolGoal("Sunstone Lightning", 1598),
                     new BoolGoal("Lost Grove Laser", 1597),
@@ -664,6 +689,36 @@ public static class BingoController
                     new SceneBoolGuidSwitchGoal("Swamp Rhino Miniboss", 2603, new MoonGuid(1455784838, 1310150852, 472023716, 1847344991), "thornfeltSwampStompAbility"),
                     new SceneBoolGuidSwitchGoal("Mount Horu Miniboss", 2604,  new MoonGuid(-1217115431, 1220427397, -319931201, -64494172), "mountHoruHubBottom")
                 });
+
+
+                MultiBoolGoal.mk("TouchMapstone", new List<BoolGoal>() {
+                        new BoolGoal("sunkenGlades", 2615),
+                        new BoolGoal("hollowGrove", 2616),
+                        new BoolGoal("moonGrotto", 2617),
+                        new BoolGoal("mangrove", 2618),
+                        new BoolGoal("thornfeltSwamp", 2619),
+                        new BoolGoal("valleyOfTheWind", 2621),
+                        new BoolGoal("forlornRuins", 2622),
+                        new BoolGoal("sorrowPass", 2623),
+                        new BoolGoal("mountHoru", 2624)
+                });
+
+                MultiIntGoals = new Dictionary<string, MultiIntGoal>();
+
+                MultiIntGoal.mk("PickupsInZone", new List<IntGoal>() {
+                        new IntGoal("sunkenGlades", 1601),
+                        new IntGoal("hollowGrove", 1602),
+                        new IntGoal("moonGrotto", 1603),
+                        new IntGoal("mangrove", 1604),
+                        new IntGoal("thornfeltSwamp", 1605),
+                        new IntGoal("ginsoTree", 1606),
+                        new IntGoal("valleyOfTheWind", 1607),
+                        new IntGoal("mistyWoods", 1608),
+                        new IntGoal("forlornRuins", 1609),
+                        new IntGoal("sorrowPass", 1610),
+                        new IntGoal("mountHoru", 1611)
+                });
+
                 Active = true;
             }
         }
@@ -774,6 +829,9 @@ public static class BingoController
         foreach(MultiBoolGoal goal in MultiBoolGoals.Values) {
             jsonFrags.Add(goal.ToJson());
         }
+        foreach(MultiIntGoal goal in MultiIntGoals.Values) {
+            jsonFrags.Add(goal.ToJson());
+        }
         jsonStr += String.Join(",\n", jsonFrags.ToArray()) + "\n}";
         NameValueCollection values = new NameValueCollection();
         values["bingoData"] = jsonStr;
@@ -823,6 +881,7 @@ public static class BingoController
     public static Dictionary<string, BoolGoal> BoolGoals;
     public static Dictionary<string, IntGoal> IntGoals;
     public static Dictionary<string, MultiBoolGoal> MultiBoolGoals;
+    public static Dictionary<string, MultiIntGoal> MultiIntGoals;
     public static Dictionary<int, List<SingleLocListener>> SingleLocListeners;
     public static Dictionary<string, SingleItemListener> SingleItemListeners;
     public static Dictionary<MoonGuid, SingleGuidSwitchListener> SingleGuidSwitchListeners;

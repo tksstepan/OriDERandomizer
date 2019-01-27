@@ -94,19 +94,22 @@ public static class RandomizerBonusSkill
             {
                 Deactivate(ab);
                 Randomizer.printInfo(BonusSkillNames[ab] + " off");
-                RandomizerBonusSkill.EnergyDrainRate -= 0.00112f;
-            } else if (Characters.Sein.Energy.Current > 0.0112f)
+                RandomizerBonusSkill.EnergyDrainRate -= DrainRates[ab];
+            } else if (Characters.Sein.Energy.Current > DrainRates[ab])
             {
                 Activate(ab);
                 Randomizer.printInfo(BonusSkillNames[ab] + " on");
-                RandomizerBonusSkill.EnergyDrainRate += 0.00112f;
+                RandomizerBonusSkill.EnergyDrainRate += DrainRates[ab];
             } else {
                 UI.SeinUI.ShakeEnergyOrbBar();
                 Characters.Sein.Energy.NotifyOutOfEnergy();
                 return;                
             }
             if(ab == 102) {
-                Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle += 180f;
+                if(IsActive(ab) || Characters.Sein.Abilities.Carry.IsCarrying)
+                    Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle += 180f;
+                else
+                    Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle = 0f;                   
                 Characters.Sein.PlatformBehaviour.LeftRightMovement.PlatformMovement.LocalSpeedX *= -1;
             }
             break;
@@ -195,6 +198,25 @@ public static class RandomizerBonusSkill
                 Randomizer.printInfo("Skill Velocity off");
             }
             return;
+        case 110:
+            if (IsActive(ab))
+            {
+                Deactivate(ab);
+                Randomizer.printInfo(BonusSkillNames[ab] + " off");
+                RandomizerBonusSkill.EnergyDrainRate -= DrainRates[ab];
+            } else if (Characters.Sein.Energy.Current > 1f)
+            {
+                Activate(ab);
+                Characters.Sein.Energy.Spend(0.5f);
+                Randomizer.printInfo(BonusSkillNames[ab] + " on");
+                RandomizerBonusSkill.EnergyDrainRate += DrainRates[ab];
+            } else {
+                UI.SeinUI.ShakeEnergyOrbBar();
+                Characters.Sein.Energy.NotifyOutOfEnergy();
+                return;                
+            }
+        break;
+
         default:
             return;
         }
@@ -219,7 +241,11 @@ public static class RandomizerBonusSkill
                 {
                     Deactivate(ds);
                     if(ds == 102) {
-                        Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle += 180f;
+                        if(Characters.Sein.Abilities.Carry.IsCarrying)
+                            Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle += 180f;
+                        else
+                            Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle = 0f;
+
                         Characters.Sein.PlatformBehaviour.LeftRightMovement.PlatformMovement.LocalSpeedX *= -1;
                     }
                 }
@@ -267,25 +293,35 @@ public static class RandomizerBonusSkill
     }
 
     public static void UpdateDrain() {
-        if(!Characters.Sein || !Characters.Sein.Inventory)
-            return;
-        HashSet<int> ads = new HashSet<int>(ActiveDrainSkills);
-        EnergyDrainRate = ads.Count * 0.00112f;
+        try
+        {
+            if(!Characters.Sein || !Characters.Sein.Inventory)
+                return;
+            HashSet<int> ads = new HashSet<int>(ActiveDrainSkills);
 
-        if(ads.Contains(103)) {
-            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.MaxSpeed = 35f;
-            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.Acceleration = 90f;
-            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.Decceleration = 45f;
-            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.MaxSpeed = 35f;
-            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.Acceleration = 39f;
-            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.Decceleration = 39f;
-        } else {
-            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.Acceleration = 60f;
-            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.Decceleration = 30f;
-            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.MaxSpeed = 11.6666f;
-            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.Acceleration = 26f;
-            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.Decceleration = 26f;
-            Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.MaxSpeed = 11.6666f;
+            EnergyDrainRate = 0f;
+            foreach(int ds in ads) {
+                EnergyDrainRate += DrainRates[ds];
+            }
+
+            if(ads.Contains(103)) {
+                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.MaxSpeed = 35f;
+                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.Acceleration = 90f;
+                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.Decceleration = 45f;
+                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.MaxSpeed = 35f;
+                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.Acceleration = 39f;
+                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.Decceleration = 39f;
+            } else {
+                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.Acceleration = 60f;
+                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.Decceleration = 30f;
+                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Ground.MaxSpeed = 11.6666f;
+                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.Acceleration = 26f;
+                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.Decceleration = 26f;
+                Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.MaxSpeed = 11.6666f;
+            }
+        }
+        catch(Exception e) {
+            Randomizer.LogError("Update Drain: " + e.Message);
         }
     }
 
@@ -346,7 +382,12 @@ public static class RandomizerBonusSkill
             return IsActive(103) ? 3.0f : 1.0f;
         }
     }
-
+    public static bool Invincible
+    {
+        get {
+            return IsActive(110);
+        }
+    }
     public static float EnergyDrainRate;
     public static bool IsActive(int id) {
         try {
@@ -399,8 +440,15 @@ public static class RandomizerBonusSkill
         { 105, "Teleport to Soul Link" },
         { 106, "Respec" },
         { 107, "Level Explosion" },
-        { 108, "Toggle Skill Velocity" }
+        { 108, "Toggle Skill Velocity" },
+        { 110, "Invincibility" }
+    };
+    public static Dictionary <int, float> DrainRates = new Dictionary<int, float>
+    {
+        { 102, 0.00112f },
+        { 103, 0.00112f },
+        { 110, 0.0112f },
     };
 
-    public static HashSet<int> DrainSkills = new HashSet<int> { 102, 103 };
+    public static HashSet<int> DrainSkills = new HashSet<int> { 102, 103, 110 };
 }
