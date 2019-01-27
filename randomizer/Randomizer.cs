@@ -356,15 +356,13 @@ public static class Randomizer
 	{
 		try {
 			RandomizerBonus.CollectPickup();
-			RandomizerStatsManager.IncPickup();
 			if (Randomizer.ColorShift)
-			{
 				Randomizer.changeColor();
-			}
 			int hashKey = GetHashKey(position);
 			if (hashKey != -1)
 			{
 				BingoController.OnLoc(hashKey);
+				RandomizerStatsManager.IncPickup(hashKey);
 				RandomizerSwitch.GivePickup((RandomizerAction)Randomizer.Table[hashKey], hashKey, true);
 				if (Randomizer.HotColdItems.ContainsKey(hashKey))
 				{
@@ -464,6 +462,8 @@ public static class Randomizer
 		if (RandomizerRebinding.ReloadSeed.IsPressed())
 		{
 			Randomizer.initialize();
+			if(RandomizerSettings.Dev)
+				Randomizer.log("Reset and loaded seed: " + SeedMeta);
 			Randomizer.showSeedInfo();
 			return;
 		}
@@ -660,7 +660,7 @@ public static class Randomizer
 			{
 				text = text + "Maps (" + RandomizerBonus.MapStoneProgression().ToString() + "/9)  ";
 			}
-			text = text + "Total (" + RandomizerBonus.GetPickupCount().ToString() + "/256)\n";
+			text = text + "Total (" + Characters.Sein.Inventory.GetRandomizerItem(1600).ToString() + "/256)\n";
 			if (Randomizer.CluesMode)
 			{
 				text += RandomizerClues.GetClues();

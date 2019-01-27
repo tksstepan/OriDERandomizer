@@ -404,4 +404,3 @@ public static class RandomizerBonusSkill
 
     public static HashSet<int> DrainSkills = new HashSet<int> { 102, 103 };
 }
-

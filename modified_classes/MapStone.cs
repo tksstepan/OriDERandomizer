@@ -59,6 +59,7 @@ public class MapStone : SaveSerialize
 		Characters.Ori.GetComponent<Rigidbody>().velocity = Vector3.zero;
 		Characters.Ori.EnableHoverWobbling = false;
 		Characters.Ori.InsideMapstone = true;
+		BingoController.OnTouchMapstone();
 		if (this.m_hint == null)
 		{
 			this.m_hint = UI.Hints.Show(this.HintMessage, HintLayer.HintZone, 3f);

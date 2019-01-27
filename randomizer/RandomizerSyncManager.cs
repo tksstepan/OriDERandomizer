@@ -10,28 +10,19 @@ using UnityEngine;
 // Token: 0x020009FF RID: 2559
 public static class RandomizerSyncManager
 {
-	// Token: 0x06003793 RID: 14227
 	public static void Initialize()
 	{
 		Countdown = 60;
 		webClient = new WebClient();
 		webClient.DownloadStringCompleted += RetryOnFail;
 		getClient = new WebClient();
-		PostClient = new WebClient();
 		getClient.DownloadStringCompleted += CheckPickups;
-		SendingUri = null;
-		if (UnsavedPickups == null)
-		{
-			UnsavedPickups = new List<Pickup>();
-		}
-		if (UriQueue == null)
-		{
-			UriQueue = new Queue<Uri>();
-		}
-		flags = new Dictionary<string, bool>();
-		flags.Add("seedSent", false);
+		if (JustFound == null)
+			JustFound = new HashSet<String>();
+		if (PickupQueue == null)
+			PickupQueue = new Queue<Pickup>();
+		SeedSent = false;
 		Hints = new Dictionary<int, int>();
-		LoseOnDeath = new HashSet<string>();
 		SkillInfos = new List<SkillInfoLine>();
 		EventInfos = new List<EventInfoLine>();
 		TeleportInfos = new List<TeleportInfoLine>();
@@ -67,34 +58,51 @@ public static class RandomizerSyncManager
 	// Token: 0x06003794 RID: 14228
 	public static void Update()
 	{
-		if (SendingUri == null && UriQueue.Count > 0 && !webClient.IsBusy)
+		try
 		{
-			SendingUri = UriQueue.Dequeue();
-			webClient.DownloadStringAsync(SendingUri);
+			if (SendingPickup == null && PickupQueue.Count > 0 && !webClient.IsBusy)
+			{
+				SendingPickup = PickupQueue.Dequeue();
+				webClient.DownloadStringAsync(SendingPickup.GetURL());
+			}
+			else if (Randomizer.SyncId != "" && !SeedSent)
+			{
+				UploadSeed();
+			}
+			Countdown--;
+			ChaosTimeoutCounter--;
+			if (ChaosTimeoutCounter < 0)
+			{
+				RandomizerChaosManager.ClearEffects();
+				ChaosTimeoutCounter = 216000;
+			}
+			if (Countdown <= 0 && !getClient.IsBusy)
+			{
+				Countdown = 60 * PERIOD;
+				Vector3 pos = Characters.Sein.Position;
+				Uri uri = new Uri(RootUrl + "/tick/" + pos.x.ToString() + "," + pos.y.ToString()); 
+				getClient.DownloadStringAsync(uri);
+			}
+		} catch(Exception e) {
+			Randomizer.LogError("UploadSeed: " + e.Message);
 		}
-		else if (Randomizer.SyncId != "" && !flags["seedSent"])
+
+	}
+
+	public static void UploadSeed()
+	{
+		try
 		{
 			string[] array = File.ReadAllLines("randomizer.dat");
 			array[0] = array[0].Replace(',', '|');
 			NameValueCollection nvc = new NameValueCollection();
 			nvc.Set("seed", string.Join(",", array).Replace("#",""));
 			nvc.Set("version", BingoController.BINGO_VERSION);
-			PostClient.UploadValuesAsync(new Uri(RootUrl + "/setSeed"), nvc);
-			flags["seedSent"] = true;
-		}
-		Countdown--;
-		ChaosTimeoutCounter--;
-		if (ChaosTimeoutCounter < 0)
-		{
-			RandomizerChaosManager.ClearEffects();
-			ChaosTimeoutCounter = 216000;
-		}
-		if (Countdown <= 0 && !getClient.IsBusy)
-		{
-			Countdown = 60 * PERIOD;
-			Vector3 pos = Characters.Sein.Position;
-			Uri uri = new Uri(RootUrl + "/tick/" + pos.x.ToString() + "," + pos.y.ToString()); 
-			getClient.DownloadStringAsync(uri);
+			var client = new WebClient();
+			client.UploadValuesAsync(new Uri(RootUrl + "/setSeed"), nvc);
+			SeedSent = true;			
+		} catch(Exception e) {
+			Randomizer.LogError("UploadSeed: " + e.Message);
 		}
 	}
 
@@ -162,7 +170,7 @@ public static class RandomizerSyncManager
 					int cnt = int.Parse(splitpair[1]);
 					if(RandomizerBonus.UpgradeCount(id) < cnt) {
 						RandomizerBonus.UpgradeID(id);
-					} else if(RandomizerBonus.UpgradeCount(id) > cnt) {
+					} else if(!JustFound.Contains("RB"+splitpair[0]) && RandomizerBonus.UpgradeCount(id) > cnt) {
 						RandomizerBonus.UpgradeID(-id);					
 					}
 				}
@@ -214,7 +222,8 @@ public static class RandomizerSyncManager
 						RandomizerChaosManager.SpawnEffect();
 						ChaosTimeoutCounter = 3600;
 					}
-					webClient.DownloadStringAsync(new Uri(RootUrl + "/callback/" + text));
+					var client = new WebClient();
+					client.DownloadStringAsync(new Uri(RootUrl + "/callback/" + text));
 				}
 			}
 			return;
@@ -232,84 +241,68 @@ public static class RandomizerSyncManager
 	// Token: 0x06003799 RID: 14233
 	public static void onSave()
 	{
-		foreach (Pickup pickup in UnsavedPickups)
-		{
-			UriQueue.Enqueue(pickup.GetURL());
-		}
-		UnsavedPickups.Clear();
 	}
 
 	// Token: 0x0600379A RID: 14234
 	public static void onDeath()
 	{
-		UnsavedPickups.Clear();
 	}
 
 	// Token: 0x0600379B RID: 14235
 	public static void RetryOnFail(object sender, DownloadStringCompletedEventArgs e)
 	{
-		if (e.Cancelled || e.Error != null)
+		try
 		{
-			if (e.Error.GetType().Name == "WebException")
+			if (e.Cancelled || e.Error != null)
 			{
-				HttpStatusCode statusCode = ((HttpWebResponse)((WebException)e.Error).Response).StatusCode;
-				if (statusCode == HttpStatusCode.NotAcceptable)
+				if (e.Error.GetType().Name == "WebException")
 				{
-					SendingUri = null;
-					return;
-				}
-				if (statusCode == HttpStatusCode.Gone)
-				{
-					string[] array = SendingUri.ToString().Split(new char[]
-					{
-						'/'
-					});
-					int num = array.Length;
-					if (array[num - 2] == "RB")
-					{
-						RandomizerBonus.UpgradeID(-int.Parse(array[num - 1]));
+					HttpStatusCode statusCode = ((HttpWebResponse)((WebException)e.Error).Response).StatusCode;
+					if (statusCode == HttpStatusCode.Gone) {
+						if (SendingPickup.type == "RB")
+						{
+							RandomizerBonus.UpgradeID(-int.Parse(SendingPickup.id));
+						}
+					} else if (statusCode != HttpStatusCode.NotAcceptable) {
+						Randomizer.log("RetryOnFail: Got status code " + statusCode.ToString() + " when sending pickup " + SendingPickup.type+"|"+SendingPickup.id + ", retrying...");
+						webClient.DownloadStringAsync(SendingPickup.GetURL());
+						return;
 					}
-					SendingUri = null;
 				}
 			}
-			webClient.DownloadStringAsync(SendingUri);
-			return;
+			JustFound.Remove(SendingPickup.type+SendingPickup.id);
+			SendingPickup = null;
+		} catch(Exception ee) {
+			Randomizer.LogError("RetryOnFail: " + ee.Message);
 		}
-		if (e.Result.ToString().StartsWith("GC|"))
-		{
-			Randomizer.SyncId = e.Result.ToString().Substring(3);
-			return;
-		}
-		SendingUri = null;
 	}
-
 
 	// Token: 0x0600379C RID: 14236
 	public static void FoundPickup(RandomizerAction action, int coords)
 	{
-		Pickup pickup = new Pickup(action, coords);
-		if(pickup.type == "HN") {
-			string[] hintParts = pickup.id.Split('-');
-			string name = hintParts[0];
-			string type = hintParts[1];
-			string owner = hintParts[2];
-			string hintText = type + " for " + owner;
-			if(Hints.ContainsKey(coords)) {
-				if(Hints[coords] > 0) {
-					Randomizer.showHint("$" + owner + " found "+ name + " here$");
+		try {
+			Pickup pickup = new Pickup(action, coords);
+			if(pickup.type == "HN") {
+				string[] hintParts = pickup.id.Split('-');
+				string name = hintParts[0];
+				string type = hintParts[1];
+				string owner = hintParts[2];
+				string hintText = type + " for " + owner;
+				if(Hints.ContainsKey(coords)) {
+					if(Hints[coords] > 0) {
+						Randomizer.showHint("$" + owner + " found "+ name + " here$");
+					} else {
+						Randomizer.showHint(hintText);
+					}
 				} else {
-					Randomizer.showHint(hintText);
+					Randomizer.showHint("@" + hintText + "@");
 				}
-			} else {
-				Randomizer.showHint("@" + hintText + "@");
 			}
+			JustFound.Add(pickup.type+pickup.id);
+			PickupQueue.Enqueue(pickup);	
+		} catch(Exception e) {
+			Randomizer.LogError("FoundPickup: " + e.Message);
 		}
-		if (LoseOnDeath.Contains(pickup.type + pickup.id))
-		{
-			UnsavedPickups.Add(pickup);
-			return;
-		}
-		UriQueue.Enqueue(pickup.GetURL());
 	}
 
 	// Token: 0x0600379D RID: 14237
@@ -333,7 +326,7 @@ public static class RandomizerSyncManager
 		return false;
 	}
 
-	public static Uri SendingUri;
+	public static Pickup SendingPickup;
 
 	public static string RootUrl;
 
@@ -346,19 +339,8 @@ public static class RandomizerSyncManager
 	// Token: 0x0400326C RID: 12908
 	public static WebClient webClient;
 
-	public static WebClient PostClient;
-
-	// Token: 0x0400326E RID: 12910
-	public static string lastRaw;
-
-	// Token: 0x0400326F RID: 12911
-	public static bool canRun;
-
 	// Token: 0x04003270 RID: 12912
 	public static WebClient getClient;
-
-	// Token: 0x04003271 RID: 12913
-	public static List<Pickup> UnsavedPickups;
 
 	// Token: 0x04003272 RID: 12914
 	public static List<SkillInfoLine> SkillInfos;
@@ -366,21 +348,18 @@ public static class RandomizerSyncManager
 	// Token: 0x04003273 RID: 12915
 	public static List<EventInfoLine> EventInfos;
 
-	// Token: 0x04003275 RID: 12917
-	public static HashSet<string> LoseOnDeath;
-
 	// Token: 0x04003276 RID: 12918
 	public static List<TeleportInfoLine> TeleportInfos;
 
 	// Token: 0x04003277 RID: 12919
 	public static int ChaosTimeoutCounter = 0;
 
-	// Token: 0x04003278 RID: 12920
-	public static Queue<Uri> UriQueue;
+	public static HashSet<string> JustFound;
 
-	// Token: 0x04003279 RID: 12921
-	public static Dictionary<string, bool> flags;
-	// Token: 0x04003279 RID: 12921
+	// Token: 0x04003278 RID: 12920
+	public static Queue<Pickup> PickupQueue;
+
+	public static bool SeedSent;
 
 	public static Dictionary<int, int> Hints;
 
@@ -470,13 +449,8 @@ public static class RandomizerSyncManager
 			return this.skill.GetHashCode() ^ this.id.GetHashCode() ^ this.bit.GetHashCode();
 		}
 
-		// Token: 0x0400327E RID: 12926
 		public int id;
-
-		// Token: 0x0400327F RID: 12927
 		public int bit;
-
-		// Token: 0x04003280 RID: 12928
 		public AbilityType skill;
 	}
 

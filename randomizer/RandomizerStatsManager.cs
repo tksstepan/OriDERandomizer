@@ -298,8 +298,17 @@ public static class RandomizerStatsManager {
 			}
 		}
 	}
+	public static void IncPickup (int loc) {
+        if(Randomizer.RepeatablePickupIds.ContainsKey(loc))
+        {   
+            if(get(Randomizer.RepeatablePickupIds[loc]) != 0)
+                return;
+            set(Randomizer.RepeatablePickupIds[loc], 1);
+        }
+	    IncPickup();
+	}
 
-	public static void IncPickup () {
+	public static void IncPickup() {
 		if(!Active)
 			return;
 		try {

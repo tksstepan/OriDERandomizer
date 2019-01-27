@@ -7,7 +7,7 @@ using Core;
 
 public static class BingoController
 {
-    public static string BINGO_VERSION = "0.1.10";
+    public static string BINGO_VERSION = "0.1.11";
     private static string scene() {
         return Scenes.Manager.CurrentScene != null ? Scenes.Manager.CurrentScene.Scene : "" ;
     }
@@ -182,10 +182,7 @@ public static class BingoController
                     if(damage.Type == DamageType.Spikes && damage.Amount > 1000) 
                         MultiBoolGoals["DieTo"]["Forlorn Void"] = true;
                     break;
-
             }
-
-
             log_out += " with damage (" + damage.Type.ToString() + ", " + damage.Amount.ToString() + ")" + locStr();
             if(RandomizerSettings.Dev) Randomizer.log(log_out);
         } catch(Exception e) {
@@ -213,13 +210,8 @@ public static class BingoController
     public static void OnLoc(int loc) {
         if(!Active)
             return;
-        if(Randomizer.RepeatablePickupIds.ContainsKey(loc))
-        {   if(get(Randomizer.RepeatablePickupIds[loc]) != 0)
-            {
-                return;
-            }
-            set(Randomizer.RepeatablePickupIds[loc], 1);    
-        }
+        if(Randomizer.RepeatablePickupIds.ContainsKey(loc) && get(Randomizer.RepeatablePickupIds[loc]) != 0)
+            return;
         if(SingleLocListeners.ContainsKey(loc)) 
             foreach(SingleLocListener listener in SingleLocListeners[loc])
                 listener.Handle();        
@@ -251,7 +243,7 @@ public static class BingoController
 
     public static void OnActivateTeleporter(string identifier) {
         try {
-            if(!Active) return;         
+            if(!Active) return;
             MultiBoolGoals["ActivateTeleporter"][identifier] = true;
         } catch(Exception e) {
             Randomizer.LogError("OnActivateTP: " + e.Message);
@@ -260,14 +252,12 @@ public static class BingoController
 
     public static void OnTouchMapstone() {
         try {
-        if(!Active) return;         
-	    	MultiBoolGoals["TouchMapstone"][RandomizerStatsManager.CurrentZone()] = true;
-	    	Randomizer.log(RandomizerStatsManager.CurrentZone());
+        if(!Active) return;
+            MultiBoolGoals["TouchMapstone"][RandomizerStatsManager.CurrentZone()] = true;
         } catch(Exception e) {
             Randomizer.LogError("OnTouchMapstone: " + e.Message);
         }
     }
-
     
     public static void OnGainAbility(AbilityType ability) {
         if(!Active) return;
@@ -554,20 +544,18 @@ public static class BingoController
                     new BoolLocGoal("Warmth Returned", 2614, -2399488)
                 });
 
-                MultiBoolGoal.mk("TouchMapstone", new<ListBoolGoal>() {
-						new BoolGoal("sunkenGlades", 2615),
-						new BoolGoal("hollowGrove", 2616),
-						new BoolGoal("moonGrotto", 2617),
-						new BoolGoal("mangrove", 2618),
-						new BoolGoal("thornfeltSwamp", 2619),
-						new BoolGoal("ginsoTree", 2620),
-						new BoolGoal("valleyOfTheWind", 2621),
-						new BoolGoal("mistyWoods", 2622),
-						new BoolGoal("forlornRuins", 2623),
-						new BoolGoal("sorrowPass", 2624),
-						new BoolGoal("mountHoru", 2625)
-                	});
-
+                MultiBoolGoal.mk("TouchMapstone", new List<BoolGoal>() {
+                        new BoolGoal("sunkenGlades", 2615),
+                        new BoolGoal("hollowGrove", 2616),
+                        new BoolGoal("moonGrotto", 2617),
+                        new BoolGoal("mangrove", 2618),
+                        new BoolGoal("thornfeltSwamp", 2619),
+                        new BoolGoal("ginsoTree", 2620),
+                        new BoolGoal("valleyOfTheWind", 2621),
+                        new BoolGoal("forlornRuins", 2622),
+                        new BoolGoal("sorrowPass", 2623),
+                        new BoolGoal("mountHoru", 2624)
+                });
 
                 MultiBoolGoal.mk("DieTo", new List<BoolGoal>() {
                     new BoolGoal("Sunstone Lightning", 1598),
