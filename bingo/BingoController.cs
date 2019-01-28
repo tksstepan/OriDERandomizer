@@ -7,7 +7,7 @@ using Core;
 
 public static class BingoController
 {
-    public static string BINGO_VERSION = "0.1.12";
+    public static string BINGO_VERSION = "0.1.13";
     private static string scene() {
         return Scenes.Manager.CurrentScene != null ? Scenes.Manager.CurrentScene.Scene : "" ;
     }
@@ -558,6 +558,17 @@ public static class BingoController
                 IntItemGoal.mk("EnergyCells", 2606, "EC|1");
                 IntItemGoal.mk("AbilityCells", 2607,"AC|1");
                 IntItemGoal.mk("CollectMapstones", 2608,"MS|1");
+                IntGoal.mk("PickupsInGlades", 1601);
+                IntGoal.mk("PickupsInGrove", 1602);
+                IntGoal.mk("PickupsInGrotto", 1603);
+                IntGoal.mk("PickupsInBlackroot", 1604);
+                IntGoal.mk("PickupsInSwamp", 1605);
+                IntGoal.mk("PickupsInGinso", 1606);
+                IntGoal.mk("PickupsInValley", 1607);
+                IntGoal.mk("PickupsInMisty", 1608);
+                IntGoal.mk("PickupsInForlorn", 1609);
+                IntGoal.mk("PickupsInSorrow", 1610);
+                IntGoal.mk("PickupsInHoru", 1611);
 
 
                 MultiBoolGoals = new Dictionary<string, MultiBoolGoal>();
@@ -704,20 +715,6 @@ public static class BingoController
                 });
 
                 MultiIntGoals = new Dictionary<string, MultiIntGoal>();
-
-                MultiIntGoal.mk("PickupsInZone", new List<IntGoal>() {
-                        new IntGoal("sunkenGlades", 1601),
-                        new IntGoal("hollowGrove", 1602),
-                        new IntGoal("moonGrotto", 1603),
-                        new IntGoal("mangrove", 1604),
-                        new IntGoal("thornfeltSwamp", 1605),
-                        new IntGoal("ginsoTree", 1606),
-                        new IntGoal("valleyOfTheWind", 1607),
-                        new IntGoal("mistyWoods", 1608),
-                        new IntGoal("forlornRuins", 1609),
-                        new IntGoal("sorrowPass", 1610),
-                        new IntGoal("mountHoru", 1611)
-                });
 
                 Active = true;
             }
