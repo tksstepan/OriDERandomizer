@@ -7,7 +7,7 @@ using Core;
 
 public static class BingoController
 {
-    public static string BINGO_VERSION = "0.1.13";
+    public static string BINGO_VERSION = "0.1.14";
     private static string scene() {
         return Scenes.Manager.CurrentScene != null ? Scenes.Manager.CurrentScene.Scene : "" ;
     }
@@ -96,14 +96,7 @@ public static class BingoController
             }
             if(SingleGuidSwitchListeners.ContainsKey(entity.MoonGuid))
                 SingleGuidSwitchListeners[entity.MoonGuid].Handle();
-            if(entity.MoonGuid == FronkeyFightFronkeys && scene() == "sunkenGladesOriRoom") {
-                FronkeyFightFronkeysKilled++;
-                if(FronkeyFightFronkeysKilled >= 3)
-                {
-                    FronkeyFightFronkeysKilled = 0;
-                    MultiBoolGoals["HuntEnemies"]["Fronkey Fight"] = true;
-                }
-            } else if(entity.MoonGuid == MistyMinibosses) {
+            if(entity.MoonGuid == MistyMinibosses) {
                 MistyMinibossesKilled++;
                 if(MistyMinibossesKilled >= 2)
                 {
@@ -169,6 +162,10 @@ public static class BingoController
                 case "southMangroveFallsGrenadeEscalationBR":
                     if(damage.Type == DamageType.Laser || damage.Type == DamageType.Lava) 
                         MultiBoolGoals["DieTo"]["Lost Grove Laser"] = true;
+                    break;
+                case "forlornRuinsGetIceB":
+                    if(damage.Type == DamageType.Laser || damage.Type == DamageType.Lava) 
+                        MultiBoolGoals["DieTo"]["Right Forlorn Laser"] = true;
                     break;
                 case "horuFieldsB":
                     if(damage.Type == DamageType.Spikes && damage.Amount > 1000) 
@@ -558,6 +555,7 @@ public static class BingoController
                 IntItemGoal.mk("EnergyCells", 2606, "EC|1");
                 IntItemGoal.mk("AbilityCells", 2607,"AC|1");
                 IntItemGoal.mk("CollectMapstones", 2608,"MS|1");
+
                 IntGoal.mk("PickupsInGlades", 1601);
                 IntGoal.mk("PickupsInGrove", 1602);
                 IntGoal.mk("PickupsInGrotto", 1603);
@@ -602,6 +600,7 @@ public static class BingoController
                     new BoolGoal("Ginso Escape Fronkey", 1592),
                     new BoolGoal("Blackroot Teleporter Crushers", 1591),
                     new BoolGoal("NoobSpikes", 1590), // 1589 used by bonus skill!
+                    new BoolGoal("Right Forlorn Laser", 1588)
                 });
 
                 MultiBoolGoal.mk("CompleteEscape", new List<BoolGoal>() {
@@ -626,10 +625,10 @@ public static class BingoController
                 });
 
                 MultiBoolGoal.mk("EnterArea", new List<BoolGoal>() {
-                    new BoolMultiSceneGoal("Lost Grove", 2543, new HashSet<string>() { "southMangroveFallsGrenadeEscalationB", "southMangroveFallsGrenadeEscalationBR"}),
+                    new BoolMultiSceneGoal("Lost Grove", 2543, new HashSet<string>() { "southMangroveFallsStoryRoomA", "southMangroveFallsGrenadeEscalationB", "southMangroveFallsGrenadeEscalationBR"}),
                     new BoolSceneGoal("Misty Woods", 2544, "sorrowPassForestB"),
-                    new BoolMultiSceneGoal("Forlorn Ruins", 2545,new HashSet<string>() {"forlornRuinsGravityRoomA", "forlornRuinsGetNightberry"}),
-                    new BoolMultiSceneGoal("Sorrow Pass", 2546, new HashSet<string>() {"valleyOfTheWindGauntlet", "valleyOfTheWindTop", "valleyOfTheWindHubR"}),
+                    new BoolMultiSceneGoal("Forlorn Ruins", 2545, new HashSet<string>() {"forlornRuinsGravityRoomA", "forlornRuinsGetNightberry", "forlornRuinsGetIceB"}),
+                    new BoolMultiSceneGoal("Sorrow Pass", 2546, new HashSet<string>() {"valleyOfTheWindEArt", "valleyOfTheWindLaserShaft", "valleyOfTheWindGauntlet", "valleyOfTheWindTop", "valleyOfTheWindHubR"}),
                     new BoolMultiSceneGoal("Mount Horu", 2547, new HashSet<string>() {"mountHoruHubBottom", "mountHoruHubMid"}),
                     new BoolMultiSceneGoal("Ginso Tree", 2517,new HashSet<string>() { "ginsoTreeSaveRoom", "ginsoEntranceIntro", "ginsoTreeWaterRisingEnd"})
                 });
@@ -691,7 +690,6 @@ public static class BingoController
                     new BoolGuidSwitchGoal("GroveGrottoLower" , 2593, new MoonGuid(1980402418, 1183311360, -882091623, 275381859))
                 });
                 MultiBoolGoal.mk("HuntEnemies", new List<BoolGoal>() {
-                    new BoolGoal("Fronkey Fight", 2594), // 2595: counter
                     new BoolGoal("Misty Miniboss", 2596), // 2597: counter
                     new BoolGoal("Lost Grove Fight Room", 2598), // 2599: counter
                     new SceneBoolGuidSwitchGoal("Grotto Miniboss", 2600, new MoonGuid(753955069, 1333369053, -1290834504, -489487479), "moonGrottoEnemyPuzzle"),
@@ -841,7 +839,6 @@ public static class BingoController
     public static MoonGuid Drain = new MoonGuid(1711549718, 1225123502, -2036372807, 248162391);
     public static MoonGuid CoreSkipRight = new MoonGuid(1165644159, 1142717490, -237578866, -2119320164);
     public static MoonGuid CoreSkipLeft = new MoonGuid(1709969197, 1275364087, -792362568, -1385507206);
-    public static MoonGuid FronkeyFightFronkeys = new MoonGuid(1453622155, 1248684342, 1898421159, 1791790656);
     public static MoonGuid MistyMinibosses = new MoonGuid(753955069, 1333369053, -1290834504, -489487479);
     public static HashSet<MoonGuid> LostGroveFightRoom = new HashSet<MoonGuid>() { 
         new MoonGuid(-895992511, 1115106663, 1657482928, -2045061172), 
@@ -855,10 +852,6 @@ public static class BingoController
     private static int inc(int item, int value) { return Characters.Sein.Inventory.IncRandomizerItem(item, value); }
 
     public static int UpdateTimer = 5;
-    public static int FronkeyFightFronkeysKilled {
-            get { return get(2595); }
-            set { set(2595, value); }
-    }
     public static int MistyMinibossesKilled {
             get { return get(2597); }
             set { set(2597, value); }
