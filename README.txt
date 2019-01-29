@@ -1,11 +1,10 @@
 Setup:
 
 Put Assembly-CSharp.dll and OriDERandoDecoder.dll in Steam/steamapps/common/Ori DE/oriDE_Data/Managed
-Use https://sigmasin.github.io/OriDERandomizer/ to generate seeds
-Place a seed named "randomizer.dat" in Steam/steamapps/common/Ori DE
+Use https://orirando.com to generate seeds.
+Generated seeds should be placed in Steam/steamapps/common/Ori DE and named "randomizer.dat"
 
-CovertMuffin has a video guide on setting up the randomizer here: https://www.youtube.com/playlist?list=PLH50Ff3OqAXFUP-lWw0j34GsaMbXLgV9Y
-
+Information on how to set up the randomizer can be found at https://orirando.com/faq
 COMMANDS (can be customized using RandomizerRebinding.txt):
 
 Alt+T               Replay last pickup message
