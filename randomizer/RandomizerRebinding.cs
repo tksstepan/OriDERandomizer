@@ -64,6 +64,7 @@ public static class RandomizerRebinding {
 				{"Bonus 2",""},
 				{"Bonus 3",""},
 				{"Bonus 4",""},
+				{"Bonus 5",""},
 			};
 			if (!File.Exists("RandomizerRebinding.txt"))
 			{
@@ -154,6 +155,8 @@ public static class RandomizerRebinding {
 			RandomizerRebinding.Bonus3 = ParseOrDefault(bind, key, writeList);
 		} else if(key == "Bonus 4") {
 			RandomizerRebinding.Bonus4 = ParseOrDefault(bind, key, writeList);
+		} else if(key == "Bonus 5") {
+			RandomizerRebinding.Bonus5 = ParseOrDefault(bind, key, writeList);
 		}
 	}
 
@@ -243,6 +246,7 @@ public static class RandomizerRebinding {
 	public static RandomizerRebinding.BindSet Bonus2;
 	public static RandomizerRebinding.BindSet Bonus3;
 	public static RandomizerRebinding.BindSet Bonus4;
+	public static RandomizerRebinding.BindSet Bonus5;
 
 	// Token: 0x02000A03 RID: 2563
 	public class Bind

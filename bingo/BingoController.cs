@@ -7,7 +7,7 @@ using Core;
 
 public static class BingoController
 {
-    public static string BINGO_VERSION = "0.1.14";
+    public static string BINGO_VERSION = "0.1.15";
     private static string scene() {
         return Scenes.Manager.CurrentScene != null ? Scenes.Manager.CurrentScene.Scene : "" ;
     }
@@ -29,12 +29,11 @@ public static class BingoController
                 IntGoals["UnspentKeystones"].Value = Characters.Sein.Inventory.Keystones;
             if(CoreSkipTimeout > 0)
                 CoreSkipTimeout--;
-            if(scene() == "catAndMouseRight" && Characters.Sein.Position.x > 190f)
-            {
+            string s = scene();
+            if(s == "catAndMouseRight" && Characters.Sein.Position.x > 190f)
                 MultiBoolGoals["CompleteEscape"]["Mount Horu"] = true;
-            }
-            if(scene() != CurrentScene) {
-                CurrentScene = scene();
+            if(s != CurrentScene) {
+                CurrentScene = s;
                 if(SingleSceneListeners.ContainsKey(CurrentScene)) {
                     SingleSceneListeners[CurrentScene].Handle();
                 }
@@ -45,7 +44,6 @@ public static class BingoController
                 UpdateTimer--;
             else 
                 PostUpdate();
-
         } catch(Exception e) {
             Randomizer.LogError("Tick: " + e.Message);
         }
@@ -56,7 +54,7 @@ public static class BingoController
         if(!Active) return;
         if(SingleGuidSwitchListeners.ContainsKey(guid))
             SingleGuidSwitchListeners[guid].Handle();
-        if(RandomizerSettings.Dev) Randomizer.log("Stomped post, guid " + guid.ToString() + locStr()); 
+//        if(RandomizerSettings.Dev) Randomizer.log("Stomped post, guid " + guid.ToString() + locStr()); 
     }
 
     public static void OnLanternLit(MoonGuid guid, bool byGrenade) {
@@ -65,7 +63,7 @@ public static class BingoController
             SingleGuidSwitchListeners[guid].Handle();
         if(!BlackrootLanterns.Contains(guid))
             IntGoals["LightLanterns"].Value++;
-        if(RandomizerSettings.Dev) Randomizer.log("Lit lantern with " + (byGrenade ? "grenade " : "orb ")  + guid.ToString() + locStr());
+//        if(RandomizerSettings.Dev) Randomizer.log("Lit lantern with " + (byGrenade ? "grenade " : "orb ")  + guid.ToString() + locStr());
     }
 
     public static void OnDestroyEntity(Entity entity, Damage damage) {
@@ -831,8 +829,11 @@ public static class BingoController
         NameValueCollection values = new NameValueCollection();
         values["bingoData"] = jsonStr;
         values["version"] = BINGO_VERSION;
-        UpdateClient.UploadValuesAsync(new Uri(UpdateUrl), values);
-        UpdateTimer = 5;
+        if(!UpdateClient.IsBusy)
+        {
+            UpdateClient.UploadValuesAsync(new Uri(UpdateUrl), values);
+            UpdateTimer = 5;
+        }
     }
 
     public static MoonGuid StomplessRocks = new MoonGuid(-1118019250, 1080908127, 1929144468, -1515713832);

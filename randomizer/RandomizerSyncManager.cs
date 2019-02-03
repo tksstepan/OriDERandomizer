@@ -128,6 +128,8 @@ public static class RandomizerSyncManager
 	{
 		if (e.Error != null)
 		{
+			if(e.Error is System.NullReferenceException)
+				return;
 			Randomizer.LogError("CheckPickups: " + e.Error.ToString());
 		}
 		if (!e.Cancelled && e.Error == null)
@@ -200,7 +202,7 @@ public static class RandomizerSyncManager
 					}
 					else if (text.StartsWith("win:"))
 					{
-						Randomizer.Print(text.Substring(4), 420, false, true, false, true);
+						Randomizer.Print(text.Substring(4), 10, false, true, false, false);
 						RandomizerStatsManager.WriteStatsFile();
 					}
 					else if (text.StartsWith("pickup:"))
@@ -264,7 +266,6 @@ public static class RandomizerSyncManager
 							RandomizerBonus.UpgradeID(-int.Parse(SendingPickup.id));
 						}
 					} else if (statusCode != HttpStatusCode.NotAcceptable) {
-						Randomizer.log("RetryOnFail: Got status code " + statusCode.ToString() + " when sending pickup " + SendingPickup.type+"|"+SendingPickup.id + ", retrying...");
 						webClient.DownloadStringAsync(SendingPickup.GetURL());
 						return;
 					}

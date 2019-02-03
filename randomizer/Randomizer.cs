@@ -233,7 +233,7 @@ public static class Randomizer
 		{
 			Items.NightBerry.transform.position = new Vector3(-755f, -400f);
 		}
-		if(Vector3.Distance(Randomizer.WarpSource, Characters.Sein.Position) < 5 && Randomizer.CanWarp > 0) {
+		if(Vector3.Distance(Randomizer.WarpSource, Characters.Sein.Position) < 6 && Randomizer.CanWarp > 0) {
 			Randomizer.WarpTo(Randomizer.WarpTarget, 15);
 			return;
 		}
@@ -526,6 +526,11 @@ public static class Randomizer
 			if (RandomizerRebinding.Bonus4.IsPressed())
 			{
 				RandomizerBonusSkill.BonusSkillSlot(3);
+				return;
+			}
+			if (RandomizerRebinding.Bonus5.IsPressed())
+			{
+				RandomizerBonusSkill.BonusSkillSlot(4);
 				return;
 			}
 		}
@@ -905,10 +910,9 @@ public static class Randomizer
 			{
 				CachedVolume = Math.Max(GameSettings.Instance.SoundEffectsVolume, CachedVolume);
 				GameSettings.Instance.SoundEffectsVolume = 0f;
+				ResetVolume = 3;
 			}
 			UI.Hints.Show(Randomizer.MessageProvider, HintLayer.GameSaved, (float)seconds);
-			if(mute)
-				ResetVolume = 3;
 			if(setMessage)
 			{
 				Message = text;

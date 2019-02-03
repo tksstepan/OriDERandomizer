@@ -100,7 +100,7 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 	// Token: 0x06001030 RID: 4144
 	public void OnRecieveDamage(Damage damage)
 	{
-		if (RandomizerBonusSkill.Invincible
+		if (RandomizerBonusSkill.Invincible)
 			return;
 		if (damage.Amount < 9000f || damage.Type != DamageType.Water)
 		{

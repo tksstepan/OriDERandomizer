@@ -260,7 +260,7 @@ public static class RandomizerSwitch
                 else {
                     Randomizer.WarpTarget = new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1]));
                     Randomizer.WarpSource = Characters.Sein.Position;
-                    Randomizer.CanWarp = 4;
+                    Randomizer.CanWarp = 6;
 	            }
                 break;
             case "NO":
