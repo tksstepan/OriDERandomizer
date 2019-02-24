@@ -55,6 +55,71 @@
 106 - Respec
 107 - Level Explosion
 
+200 - Quick Flame
+201 - Spark Flame
+202 - Charge Flame Burn
+203 - Split Flame
+204 - Ultra Light Burst
+205 - Cinder Flame
+206 - Ultra Stomp
+207 - Rapid Flame
+208 - Charge Flame Blast
+209 - Ultra Split Flame
+
+210 - Spirit Magnet
+211 - Map Markers
+212 - Life Efficiency
+213 - Ultra Spirit Magnet
+214 - Energy Efficiency
+215 - Ability Markers
+216 - Spirit Efficiency
+217 - Life Markers
+218 - Energy Markers
+219 - Sense
+
+220 - Rekindle
+221 - Regroup
+222 - Charge Flame Efficiency
+223 - Air Dash
+224 - Ultra Soul Link
+225 - Charge Dash
+226 - Water Breath
+227 - Soul Link Efficiency
+228 - Triple Jump
+229 - Ultra Defense
+
+230 - Lose Quick Flame
+231 - Lose Spark Flame
+232 - Lose Charge Flame Burn
+233 - Lose Split Flame
+234 - Lose Ultra Light Burst
+235 - Lose Cinder Flame
+236 - Lose Ultra Stomp
+237 - Lose Rapid Flame
+238 - Lose Charge Flame Blast
+239 - Lose Ultra Split Flame
+
+240 - Lose Spirit Magnet
+241 - Lose Map Markers
+242 - Lose Life Efficiency
+243 - Lose Ultra Spirit Magnet
+244 - Lose Energy Efficiency
+245 - Lose Ability Markers
+246 - Lose Spirit Efficiency
+247 - Lose Life Markers
+248 - Lose Energy Markers
+249 - Lose Sense
+
+250 - Lose Rekindle
+251 - Lose Regroup
+252 - Lose Charge Flame Efficiency
+253 - Lose Air Dash
+254 - Lose Ultra Soul Link
+255 - Lose Charge Dash
+256 - Lose Water Breath
+257 - Lose Soul Link Efficiency
+258 - Lose Triple Jump
+259 - Lose Ultra Defense
 
 1000 - plant tracking for map markers
 1001 - tree field for tracker

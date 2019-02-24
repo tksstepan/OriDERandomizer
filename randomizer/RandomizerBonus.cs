@@ -14,11 +14,27 @@ public static class RandomizerBonus
         {
             ID = -ID;
         }
-        if (ID >= 100)
+        
+        if (ID >= 100 && ID < 200)
         {
             RandomizerBonusSkill.FoundBonusSkill(ID);
             return;
         }
+        if (ID >= 200 && ID < 260)
+        {
+            var abilityIndex = (ID - 200) % 30;
+            var ability = abilities[abilityIndex];
+            if (ID < 230)
+            {
+                ability.Found();
+            }
+            else
+            {
+                ability.Lost();
+            }
+            return;
+        }
+        
         switch (ID)
         {
         case 0:
@@ -278,7 +294,6 @@ public static class RandomizerBonus
                 Randomizer.showHint("Energy Drain");
             else
                 Randomizer.showHint("Health Drain x" + RandomizerBonus.Manavamp().ToString());
-            break;
             break;
         case 33:
             if (!flag)
@@ -595,4 +610,69 @@ public static class RandomizerBonus
 
     // Token: 0x04003262 RID: 12898
     public static bool DoubleAirDashUsed;
+    
+    private class Ability
+    {
+        public Ability(string name, Func<PlayerAbilities, CharacterAbility> selector)
+        {
+            this.name = name;
+            this.selector = selector;
+        }
+        
+        public void Found()
+        {
+            if (!Characters.Sein)
+                return;
+            Randomizer.showHint("$" + name + "$", 240);
+            selector(Characters.Sein.PlayerAbilities).HasAbility = true;
+        }
+        
+        public void Lost()
+        {
+            if (!Characters.Sein)
+                return;
+            Randomizer.showHint("@" + name + " Lost!!@", 240);
+            selector(Characters.Sein.PlayerAbilities).HasAbility = false;
+        }
+        
+        private string name;
+        
+        private Func<PlayerAbilities, CharacterAbility> selector;
+    }
+    
+    private static Ability[] abilities = new Ability[]
+    {
+        new Ability("Quick Flame", p => p.QuickFlame),
+        new Ability("Spark Flame", p => p.SparkFlame),
+        new Ability("Charge Flame Burn", p => p.ChargeFlameBurn),
+        new Ability("Split Flame", p => p.SplitFlameUpgrade),
+        new Ability("Ultra Light Burst", p => p.GrenadeUpgrade),
+        new Ability("Cinder Flame", p => p.CinderFlame),
+        new Ability("Ultra Stomp", p => p.StompUpgrade),
+        new Ability("Rapid Flame", p => p.RapidFire),
+        new Ability("Charge Flame Blast", p => p.ChargeFlameBlast),
+        new Ability("Ultra Split Flame", p => p.UltraSplitFlame),
+
+        new Ability("Spirit Magnet", p => p.Magnet),
+        new Ability("Map Markers", p => p.MapMarkers),
+        new Ability("Life Efficiency", p => p.HealthEfficiency),
+        new Ability("Ultra Spirit Magnet", p => p.UltraMagnet),
+        new Ability("Energy Efficiency", p => p.EnergyEfficiency),
+        new Ability("Ability Markers", p => p.AbilityMarkers),
+        new Ability("Spirit Efficiency", p => p.SoulEfficiency),
+        new Ability("Life Markers", p => p.HealthMarkers),
+        new Ability("Energy Markers", p => p.EnergyMarkers),
+        new Ability("Sense", p => p.Sense),
+
+        new Ability("Rekindle", p => p.Rekindle),
+        new Ability("Regroup", p => p.Regroup),
+        new Ability("Charge Flame Efficiency", p => p.ChargeFlameEfficiency),
+        new Ability("Air Dash", p => p.AirDash),
+        new Ability("Ultra Soul Link", p => p.UltraSoulFlame),
+        new Ability("Charge Dash", p => p.ChargeDash),
+        new Ability("Water Breath", p => p.WaterBreath),
+        new Ability("Soul Link Efficiency", p => p.SoulFlameEfficiency),
+        new Ability("Triple Jump", p => p.DoubleJumpUpgrade),
+        new Ability("Ultra Defense", p => p.UltraDefense)
+    };
 }
