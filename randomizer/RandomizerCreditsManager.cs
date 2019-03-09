@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Core;
 using Game;
+using System;
 using Sein.World;
 using UnityEngine;
 
@@ -61,14 +62,17 @@ Doubles:	That Is Still Faster (Sigmasin and IMRaziel)
 
 
 		// Credits.Add(new KeyValuePair<string, int>("In memory of Grandma Irine", 5));
-		Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(0), 50));
-		Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(1), 50));
-		Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(2), 50));
-		Credits.Add(new KeyValuePair<string, int>(
+		try {
+			Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(0), 50));
+			Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(1), 50));
+			Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(2), 50));
+			Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_12_2_Thanks for playing!
 Website: orirando.com
 Join the Ori community: orirando.com/discord", 40));
-
+        } catch(Exception e) {
+            Randomizer.LogError("Init credits: " + e.Message);
+        }
 		NextCreditCountdown = 0;
 	}
 

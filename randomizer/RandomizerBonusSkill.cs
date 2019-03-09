@@ -393,6 +393,8 @@ public static class RandomizerBonusSkill
     public static float EnergyDrainRate;
     public static bool IsActive(int id) {
         try {
+            if(!Characters.Sein)
+                return false;
             return (get(id) >> 1) % 2 == 1;
         }
         catch(Exception e)

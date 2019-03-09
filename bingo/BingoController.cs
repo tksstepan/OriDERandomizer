@@ -8,7 +8,7 @@ using Sein.World;
 
 public static class BingoController
 {
-    public static string BINGO_VERSION = "0.2.0";
+    public static string BINGO_VERSION = "0.2.1";
     private static string scene() {
         return Scenes.Manager.CurrentScene != null ? Scenes.Manager.CurrentScene.Scene : "" ;
     }

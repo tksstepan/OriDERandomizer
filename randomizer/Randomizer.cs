@@ -242,6 +242,8 @@ public static class Randomizer
 				GameController.Instance.SaveGameController.PerformSave();
 				Randomizer.WarpTo(new Vector3(-2478,-595, 0), 0);
 				GameController.Instance.RemoveGameplayObjects();
+				RandomizerStatsManager.Active = false;
+				RandomizerCreditsManager.Initialize();
 				RandomizerSyncManager.DoCreditWarp = false;
 				Randomizer.CanWarp = 0;
 				return;
@@ -1003,7 +1005,6 @@ public static class Randomizer
 					if(!CreditsActive && !RandomizerCreditsManager.CreditsDone)
 					{
 						CreditsActive = true;
-						RandomizerCreditsManager.Initialize();
 					}
 				}
 				else if (scene == "theSacrifice" && RandomizerStatsManager.Active)
@@ -1013,6 +1014,7 @@ public static class Randomizer
 						if (sms.MetaData.Scene == "creditsScreen" && sms.CurrentState == SceneManagerScene.State.Loading)
 						{
 							RandomizerStatsManager.Finish();
+							RandomizerCreditsManager.Initialize();
 						}
 					}
 				}
