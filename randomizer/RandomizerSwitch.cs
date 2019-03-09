@@ -189,8 +189,7 @@ public static class RandomizerSwitch
         {
             RandomizerSyncManager.FoundPickup(Action, coords);
         }
-        BingoController.OnItem(Action, coords);
-        
+         
         switch (Action.Action) {
             case "RP":
             case "MU":
@@ -260,12 +259,13 @@ public static class RandomizerSwitch
                 else {
                     Randomizer.WarpTarget = new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1]));
                     Randomizer.WarpSource = Characters.Sein.Position;
-                    Randomizer.CanWarp = 6;
-	            }
+                    Randomizer.CanWarp = 7;
+                }
                 break;
             case "NO":
                 break;
         }
+        BingoController.OnItem(Action, coords);
         RandomizerTrackedDataManager.UpdateBitfields();
         }
         catch(Exception e) {

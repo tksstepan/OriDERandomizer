@@ -90,13 +90,13 @@ public static class RandomizerBonusSkill
             return;
         case 102:
         case 103:
+        case 109:
             if (IsActive(ab))
             {
                 Deactivate(ab);
                 Randomizer.printInfo(BonusSkillNames[ab] + " off");
                 RandomizerBonusSkill.EnergyDrainRate -= DrainRates[ab];
-            } else if (Characters.Sein.Energy.Current > DrainRates[ab])
-            {
+            } else if (Characters.Sein.Energy.Current > 5*DrainRates[ab]) {
                 Activate(ab);
                 Randomizer.printInfo(BonusSkillNames[ab] + " on");
                 RandomizerBonusSkill.EnergyDrainRate += DrainRates[ab];
@@ -273,6 +273,8 @@ public static class RandomizerBonusSkill
     public static void FoundBonusSkill(int ID)
     {
         if(get(ID) > 0) {
+            if(ID != 108)
+                Randomizer.showHint(RandomizerBonusSkill.BonusSkillNames[ID] + " (duplicate)");
             return;
         }
         if(ID != 108)
@@ -280,7 +282,7 @@ public static class RandomizerBonusSkill
         int offset = 0;
         Dictionary<int, int> ubs = new Dictionary<int, int>(UnlockedBonusSkills);
         if(ubs.Count > 0) 
-        offset = (1+UnlockedBonusSkills.Keys.Max()) << 2;
+        offset = (1+ubs.Keys.Max()) << 2;
         set(ID, offset+1);
         if(ActiveBonus == 0)
             ActiveBonus = ID;
@@ -420,7 +422,7 @@ public static class RandomizerBonusSkill
     {
         get {
             HashSet<int> ads = new HashSet<int>();
-            foreach(int id in DrainSkills) {
+            foreach(int id in DrainRates.Keys) {
                 if(IsActive(id))
                     ads.Add(id);
             }
@@ -441,14 +443,36 @@ public static class RandomizerBonusSkill
         { 106, "Respec" },
         { 107, "Level Explosion" },
         { 108, "Toggle Skill Velocity" },
+        { 109, "Timewarp" },
         { 110, "Invincibility" }
     };
     public static Dictionary <int, float> DrainRates = new Dictionary<int, float>
     {
         { 102, 0.00112f },
         { 103, 0.00112f },
-        { 110, 0.0112f },
+        { 109, 0.00112f },
+        { 110, 0.01667f },
     };
 
-    public static HashSet<int> DrainSkills = new HashSet<int> { 102, 103, 110 };
+    public static float TimewarpFactor = 0.5f;
+
+    public static float TimeScale(float orig)
+    {
+        return IsActive(109) ? orig * TimewarpFactor : orig;
+    }
+
+    public static Vector3 TimeScale(Vector3 orig)
+    {
+        return orig * TimeScale(1.0f);
+    }
+    public static Vector2 TimeScale(Vector2 orig)
+    {
+        return orig * TimeScale(1.0f);
+    }
+    public static void TimeScale(Animator animator)
+    {
+        animator.speed = TimeScale(1.0f);
+    }
+
+
 }

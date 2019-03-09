@@ -349,6 +349,8 @@ public static class RandomizerStatsManager {
 			{
 				Randomizer.PrintImmediately("", 1, false, false, false);
 				WriteStatsFile();
+				if(RandomizerSettings.Dev && BingoController.Active)
+					Randomizer.log("Bingo payload: " + BingoController.GetJson());
 			}
 			 else 
 				ShowStats(duration);
@@ -616,7 +618,6 @@ public static class RandomizerStatsManager {
 			default:
 				break;
 		}
-
 	}
 
 

@@ -9,31 +9,42 @@ public static class RandomizerCreditsManager {
 	{
 		CreditsDone = false;
 		Credits = new List<KeyValuePair<string, int>>();
-		Credits.Add(new KeyValuePair<string, int>(
-@"ANCHORTOPPARAMS_20_7.5_2_Ori DE Randomizer (3.0)
+		if(BingoController.Active)
+			Credits.Add(new KeyValuePair<string, int>(
+@"ANCHORTOPPARAMS_20_7.5_2_Ori DE Randomizer (" + Randomizer.VERSION + @")
+Developed by:
+Sigmasin
+*Eiko*  #Meldon#  @Vulajin@
+
+Bingo (" + BingoController.BINGO_VERSION + ") by *Eiko*", 14));
+		else
+			Credits.Add(new KeyValuePair<string, int>(
+@"ANCHORTOPPARAMS_20_7.5_2_Ori DE Randomizer (" + Randomizer.VERSION + @")
 
 Developed by:
 Sigmasin
-*Eiko*  #Meldon#  @Vulajin@", 9));
+*Eiko*  #Meldon#  @Vulajin@", 14));
+
+
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_7.5_2_Major contributions by:
 DevilSquirrel
 
 Community Contributions by:
 GreeZ  Hydra  Jitaenow  LusTher
-Phant  Skulblaka  Terra  xaviershay", 11));
+Phant  Skulblaka  Terra  Xemsys", 14));
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_10_2_Additional community contributions by:
 Athos213    AvengedRuler    Cereberon    Cleanfel
 CovertMuffin    Grimelios    iRobin    JHobz
 Jitaenow    Kirefel    madinsane    Mattermonkey
 RainbowPoogle    Roryrai    UncleRonny   Wingheart
-SeaAverage   DireKrow   Eph   shedd", 14));
+SeaAverage   DireKrow   Eph   shedd   xaviershay", 14));
 
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_10_2_Ori DE Randomizer inspired by:
 Chicken_Supreme's Ori 'remix'
-Link to the Past Randomizer", 7));
+Link to the Past Randomizer", 10));
 
 
 		Credits.Add(new KeyValuePair<string, int>(
@@ -56,7 +67,7 @@ Doubles:	That Is Still Faster (Sigmasin and IMRaziel)
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_12_2_Thanks for playing!
 Website: orirando.com
-Join the Ori community: orirando.com/discord", 30));
+Join the Ori community: orirando.com/discord", 40));
 
 		NextCreditCountdown = 0;
 	}

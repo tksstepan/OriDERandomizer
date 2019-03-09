@@ -4,10 +4,11 @@ using System.Collections.Specialized;
 using System.Net;
 using Game;
 using Core;
+using Sein.World;
 
 public static class BingoController
 {
-    public static string BINGO_VERSION = "0.1.15";
+    public static string BINGO_VERSION = "0.2.0";
     private static string scene() {
         return Scenes.Manager.CurrentScene != null ? Scenes.Manager.CurrentScene.Scene : "" ;
     }
@@ -57,6 +58,13 @@ public static class BingoController
 //        if(RandomizerSettings.Dev) Randomizer.log("Stomped post, guid " + guid.ToString() + locStr()); 
     }
 
+    public static void OnPurpleDoor(MoonGuid guid) {
+        if(!Active) return;
+        if(SingleGuidSwitchListeners.ContainsKey(guid))
+            SingleGuidSwitchListeners[guid].Handle();
+//        if(RandomizerSettings.Dev) Randomizer.log("opend purple door, guid " + guid.ToString() + locStr()); 
+    }
+
     public static void OnLanternLit(MoonGuid guid, bool byGrenade) {
         if(!Active) return;
         if(SingleGuidSwitchListeners.ContainsKey(guid))
@@ -94,22 +102,7 @@ public static class BingoController
             }
             if(SingleGuidSwitchListeners.ContainsKey(entity.MoonGuid))
                 SingleGuidSwitchListeners[entity.MoonGuid].Handle();
-            if(entity.MoonGuid == MistyMinibosses) {
-                MistyMinibossesKilled++;
-                if(MistyMinibossesKilled >= 2)
-                {
-                    MistyMinibossesKilled = 0;
-                    MultiBoolGoals["HuntEnemies"]["Misty Miniboss"] = true;
-                }
-            } else if(LostGroveFightRoom.Contains(entity.MoonGuid) && scene() == "mangroveFallsGrenadeEscalationR") {
-                LostGroveFightRoomKilled++;
-                if(LostGroveFightRoomKilled >= 4)
-                {
-                    LostGroveFightRoomKilled = 0;
-                    MultiBoolGoals["HuntEnemies"]["Lost Grove Fight Room"] = true;
-                }
-            }
-            if(RandomizerSettings.Dev) Randomizer.log("destroyed entity, name " + entity.name + ", guid " + entity.MoonGuid.ToString() + " with damage (" + damage.Type.ToString() + ", " + damage.Amount.ToString() + ")"  + locStr());
+//            if(RandomizerSettings.Dev) Randomizer.log("destroyed entity, name " + entity.name + ", guid " + entity.MoonGuid.ToString() + " with damage (" + damage.Type.ToString() + ", " + damage.Amount.ToString() + ")"  + locStr());
         } catch(Exception e) {
             Randomizer.LogError("OnDestroyEntity: " + e.Message);
         }
@@ -179,7 +172,7 @@ public static class BingoController
                     break;
             }
             log_out += " with damage (" + damage.Type.ToString() + ", " + damage.Amount.ToString() + ")" + locStr();
-            if(RandomizerSettings.Dev) Randomizer.log(log_out);
+//            if(RandomizerSettings.Dev) Randomizer.log(log_out);
         } catch(Exception e) {
             Randomizer.LogError("OnDeath: " + e.Message);
         }
@@ -193,13 +186,13 @@ public static class BingoController
     public static void OnKSDoor(MoonGuid doorGuid) {
         if(!Active) return;
         IntGoals["OpenKSDoors"].Value++;
-        if(RandomizerSettings.Dev) Randomizer.log("Opened door, guid " + doorGuid.ToString() + " " + locStr());
+//        if(RandomizerSettings.Dev) Randomizer.log("Opened door, guid " + doorGuid.ToString() + " " + locStr());
     }
 
     public static void OnEnergyDoor(MoonGuid doorGuid) {
         if(!Active) return;
         IntGoals["OpenEnergyDoors"].Value++;
-        if(RandomizerSettings.Dev) Randomizer.log("Opened door, guid " + doorGuid.ToString() + " " + locStr());
+//        if(RandomizerSettings.Dev) Randomizer.log("Opened door, guid " + doorGuid.ToString() + " " + locStr());
     }
 
     public static void OnLoc(int loc) {
@@ -221,7 +214,13 @@ public static class BingoController
             if(coords == 2 && (action.Action == "HC" || action.Action == "EC" || action.Action == "AC"))
                 return;
             string itemCode = action.Action + "|" + action.Value.ToString();
-            if(SingleItemListeners.ContainsKey(itemCode)) 
+            if(action.Action == "RB")
+            {
+                SingleItemListeners["EV|0"].Set(Keys.GinsoTree);
+                SingleItemListeners["EV|2"].Set(Keys.ForlornRuins);
+                SingleItemListeners["EV|4"].Set(Keys.MountHoru);
+            }
+            if(SingleItemListeners.ContainsKey(itemCode))
                 SingleItemListeners[itemCode].Handle();
 
             foreach(ItemListener listener in ItemListeners) 
@@ -289,6 +288,7 @@ public static class BingoController
     public interface SingleItemListener {
         string GetName();
         void Handle();
+        void Set(bool newValue);
     }
     public interface SingleGuidSwitchListener {
         string GetName();
@@ -325,6 +325,7 @@ public static class BingoController
             SingleItemListeners[itemCode] = this;
         }
         public void Handle() { this.Completed = true; }
+        public void Set(bool newValue) { this.Completed = newValue; }
     }
 
     public class BoolGuidSwitchGoal : BoolGoal, SingleGuidSwitchListener {
@@ -485,6 +486,7 @@ public static class BingoController
             IntGoals[goal.Name] = goal;
         }
         public void Handle() { this.Value++; }
+        public void Set(bool newValue) { this.Value += newValue ? 1 : -1 ; }
     }
 
     public class IntLocsGoal : IntGoal, LocListener {
@@ -688,15 +690,16 @@ public static class BingoController
                     new BoolGuidSwitchGoal("GroveGrottoLower" , 2593, new MoonGuid(1980402418, 1183311360, -882091623, 275381859))
                 });
                 MultiBoolGoal.mk("HuntEnemies", new List<BoolGoal>() {
-                    new BoolGoal("Misty Miniboss", 2596), // 2597: counter
-                    new BoolGoal("Lost Grove Fight Room", 2598), // 2599: counter
-                    new SceneBoolGuidSwitchGoal("Grotto Miniboss", 2600, new MoonGuid(753955069, 1333369053, -1290834504, -489487479), "moonGrottoEnemyPuzzle"),
-                    new SceneBoolGuidSwitchGoal("Lower Ginso Miniboss", 2601, new MoonGuid(-1929190932, 1293183304, 1208134027, -1558841540), "ginsoTreePuzzles"),
-                    new SceneBoolGuidSwitchGoal("Upper Ginso Miniboss", 2602, new MoonGuid(-1692004559, 1088261266, -1227855229, -1994528446), "ginsoTreeResurrection"),
-                    new SceneBoolGuidSwitchGoal("Swamp Rhino Miniboss", 2603, new MoonGuid(1455784838, 1310150852, 472023716, 1847344991), "thornfeltSwampStompAbility"),
-                    new SceneBoolGuidSwitchGoal("Mount Horu Miniboss", 2604,  new MoonGuid(-1217115431, 1220427397, -319931201, -64494172), "mountHoruHubBottom")
+                    new BoolGuidSwitchGoal("Misty Miniboss", 2596, new MoonGuid(-1042451585, 1166751436, 1922297510, -83736415)), 
+                    new BoolGuidSwitchGoal("Frog Toss", 2597, new MoonGuid(-2143519163, 1146437181, -51560278, -1978077749)),
+                    new BoolGuidSwitchGoal("Lost Grove Fight Room", 2598, new MoonGuid(-1679036972, 1237382256, -182501967, -2059998279)),
+                    new BoolGuidSwitchGoal("R2", 2599, new MoonGuid(-1624679962, 1208388157, 520226958, -1390952276)),
+                    new BoolGuidSwitchGoal("Grotto Miniboss", 2600, new MoonGuid(-2054701236, 1079020693, -51310956, 1825594796)),
+                    new BoolGuidSwitchGoal("Lower Ginso Miniboss", 2601, new MoonGuid(74624213, 1320731591, 1926247103, 701829352)),
+                    new BoolGuidSwitchGoal("Upper Ginso Miniboss", 2602, new MoonGuid(-627974393, 1255028302, -367677274, 668375081)),
+                    new BoolGuidSwitchGoal("Swamp Rhino Miniboss", 2603, new MoonGuid(320654260, 1306461320, -1091082354, -1855445076)),
+                    new BoolGuidSwitchGoal("Mount Horu Miniboss", 2604,  new MoonGuid(-1829316912, 1244306941, 1626759309, -571989581))
                 });
-
 
                 MultiBoolGoal.mk("TouchMapstone", new List<BoolGoal>() {
                         new BoolGoal("sunkenGlades", 2615),
@@ -810,7 +813,7 @@ public static class BingoController
                 new MoonGuid(-379111785, 1117012912, 1234316431, 1476933075)
             };
 
-    public static void PostUpdate() {
+    public static string GetJson() {
         string jsonStr = "{\n";
         List<string> jsonFrags = new List<string>();
         foreach(BoolGoal goal in BoolGoals.Values) {
@@ -826,8 +829,12 @@ public static class BingoController
             jsonFrags.Add(goal.ToJson());
         }
         jsonStr += String.Join(",\n", jsonFrags.ToArray()) + "\n}";
+        return jsonStr;
+
+    }
+    public static void PostUpdate() {
         NameValueCollection values = new NameValueCollection();
-        values["bingoData"] = jsonStr;
+        values["bingoData"] = GetJson();
         values["version"] = BINGO_VERSION;
         if(!UpdateClient.IsBusy)
         {
@@ -840,11 +847,6 @@ public static class BingoController
     public static MoonGuid Drain = new MoonGuid(1711549718, 1225123502, -2036372807, 248162391);
     public static MoonGuid CoreSkipRight = new MoonGuid(1165644159, 1142717490, -237578866, -2119320164);
     public static MoonGuid CoreSkipLeft = new MoonGuid(1709969197, 1275364087, -792362568, -1385507206);
-    public static MoonGuid MistyMinibosses = new MoonGuid(753955069, 1333369053, -1290834504, -489487479);
-    public static HashSet<MoonGuid> LostGroveFightRoom = new HashSet<MoonGuid>() { 
-        new MoonGuid(-895992511, 1115106663, 1657482928, -2045061172), 
-        new MoonGuid(-708350847, 1147298936, -343652685, -47410724)
-    };
     public static HashSet<string> Amphibians = new HashSet<string>() { "jumperEnemy", "spitterEnemy", "fastSpitterEnemy" };
     public static string CurrentScene;
 
@@ -853,14 +855,6 @@ public static class BingoController
     private static int inc(int item, int value) { return Characters.Sein.Inventory.IncRandomizerItem(item, value); }
 
     public static int UpdateTimer = 5;
-    public static int MistyMinibossesKilled {
-            get { return get(2597); }
-            set { set(2597, value); }
-    }
-    public static int LostGroveFightRoomKilled {
-            get { return get(2599); }
-            set { set(2599, value); }
-    }
     public static WebClient UpdateClient;
     public static string UpdateUrl;
     public static bool Active;

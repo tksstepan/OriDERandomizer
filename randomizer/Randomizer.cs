@@ -10,6 +10,7 @@ using UnityEngine;
 // Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
+	public static string VERSION = "3.1 beta";
 	public static void initialize()
 	{
 		try {
@@ -227,15 +228,29 @@ public static class Randomizer
 
 	public static void returnToStart()
 	{
-		if (Characters.Sein.Abilities.Carry.IsCarrying || !Characters.Sein.Controller.CanMove || !Characters.Sein.Active)
+
+		if (!Characters.Sein.Controller.CanMove || !Characters.Sein.Active)
 			return;
 		if (Items.NightBerry != null)
-		{
 			Items.NightBerry.transform.position = new Vector3(-755f, -400f);
-		}
-		if(Vector3.Distance(Randomizer.WarpSource, Characters.Sein.Position) < 6 && Randomizer.CanWarp > 0) {
-			Randomizer.WarpTo(Randomizer.WarpTarget, 15);
-			return;
+		if(Characters.Sein.Abilities.Carry.IsCarrying)
+			Characters.Sein.Abilities.Carry.CurrentCarryable.Drop();
+		if(Randomizer.CanWarp > 0) {
+			if(RandomizerSyncManager.DoCreditWarp) {
+				GameController.Instance.CreateCheckpoint();
+				RandomizerStatsManager.OnSave(false);
+				GameController.Instance.SaveGameController.PerformSave();
+				Randomizer.WarpTo(new Vector3(-2478,-595, 0), 0);
+				GameController.Instance.RemoveGameplayObjects();
+				RandomizerSyncManager.DoCreditWarp = false;
+				Randomizer.CanWarp = 0;
+				return;
+			}
+			else if(Vector3.Distance(Randomizer.WarpSource, Characters.Sein.Position) < 7) {
+				Randomizer.WarpTo(Randomizer.WarpTarget, 15);
+				Randomizer.CanWarp = 0;
+				return;
+			}
 		}
 		RandomizerStatsManager.WarpedToStart();
 		RandomizerBonusSkill.LastAltR = Characters.Sein.Position;
@@ -299,7 +314,7 @@ public static class Randomizer
 	public static void log(string message)
 	{
 		StreamWriter streamWriter = File.AppendText("randomizer.log");
-		streamWriter.WriteLine(message);
+		streamWriter.WriteLine(DateTime.Now.ToString() + ": " + message);
 		streamWriter.Flush();
 		streamWriter.Dispose();
 	}
@@ -444,6 +459,7 @@ public static class Randomizer
 					if(Randomizer.Warping == 0 && Randomizer.SaveAfterWarp)
 					{
 						GameController.Instance.CreateCheckpoint();
+						RandomizerStatsManager.OnSave(false);
 						GameController.Instance.SaveGameController.PerformSave();
 						Randomizer.SaveAfterWarp = false;
 					}
@@ -703,17 +719,17 @@ public static class Randomizer
 			}
 			if(RandomizerBonus.ForlornEscapeHint())
 			{
-	            string s_color = "";
-	            string g_color = "";
-	         	if(Characters.Sein)
-	         	{
-		            if(Characters.Sein.PlayerAbilities.HasAbility(AbilityType.Stomp))
-		                s_color = "$";
-		            if(Characters.Sein.PlayerAbilities.HasAbility(AbilityType.Grenade))
-		                g_color = "$";
-	         	}
+				string s_color = "";
+				string g_color = "";
+			 	if(Characters.Sein)
+			 	{
+					if(Characters.Sein.PlayerAbilities.HasAbility(AbilityType.Stomp))
+						s_color = "$";
+					if(Characters.Sein.PlayerAbilities.HasAbility(AbilityType.Grenade))
+						g_color = "$";
+			 	}
 
-				text += "\n" +s_color + "Stomp: " + StompZone + s_color + g_color+ "    Grenade: "+ GrenadeZone + g_color;
+				text += "\n" +s_color + "Stomp: " + StompZone + s_color + g_color+ "	Grenade: "+ GrenadeZone + g_color;
 			}
 			Randomizer.printInfo(text);
 		}
@@ -724,7 +740,7 @@ public static class Randomizer
 
 	public static void showSeedInfo()
 	{
-		string obj = "v3.1 (Bingo v" + BingoController.BINGO_VERSION + ") - seed loaded: " + Randomizer.SeedMeta;
+		string obj = "v" + VERSION + " (Bingo v" + BingoController.BINGO_VERSION + ") - seed loaded: " + Randomizer.SeedMeta;
 		Randomizer.printInfo(obj);
 	}
 
@@ -764,10 +780,6 @@ public static class Randomizer
 
 	public static void OnDeath()
 	{
-		if (Randomizer.Sync)
-		{
-			RandomizerSyncManager.onDeath();
-		}
 		RandomizerBonusSkill.OnDeath();
 		RandomizerTrackedDataManager.UpdateBitfields();
 		RandomizerStatsManager.OnDeath();
@@ -775,10 +787,6 @@ public static class Randomizer
 
 	public static void OnSave()
 	{
-		if (Randomizer.Sync)
-		{
-			RandomizerSyncManager.onSave();
-		}
 		RandomizerBonusSkill.OnSave();
 	}
 
@@ -950,7 +958,11 @@ public static class Randomizer
 				ResetVolume--;
 			}
 			if(CanWarp > 0)
+			{
 				CanWarp--;
+				if(RandomizerSyncManager.DoCreditWarp && CanWarp == 0)
+					RandomizerSyncManager.DoCreditWarp = false;
+			}
 			if(RepeatableCooldown > 0)
 				RepeatableCooldown--;
 			if(RandomizerStatsManager.StatsTimer > 0)

@@ -17,8 +17,11 @@ public static class RandomizerSyncManager
 		webClient.DownloadStringCompleted += RetryOnFail;
 		getClient = new WebClient();
 		getClient.DownloadStringCompleted += CheckPickups;
+		DoCreditWarp = false;
 		if (JustFound == null)
 			JustFound = new HashSet<String>();
+		if (CurrentSignals == null)
+			CurrentSignals = new HashSet<String>();
 		if (PickupQueue == null)
 			PickupQueue = new Queue<Pickup>();
 		SeedSent = false;
@@ -84,7 +87,7 @@ public static class RandomizerSyncManager
 				getClient.DownloadStringAsync(uri);
 			}
 		} catch(Exception e) {
-			Randomizer.LogError("UploadSeed: " + e.Message);
+			Randomizer.LogError("RSM.Update: " + e.Message);
 		}
 
 	}
@@ -126,128 +129,135 @@ public static class RandomizerSyncManager
 	// Token: 0x06003798 RID: 14232
 	public static void CheckPickups(object sender, DownloadStringCompletedEventArgs e)
 	{
-		if (e.Error != null)
+		try
 		{
-			if(e.Error is System.NullReferenceException)
-				return;
-			Randomizer.LogError("CheckPickups: " + e.Error.ToString());
-		}
-		if (!e.Cancelled && e.Error == null)
-		{
-			string[] array = e.Result.Split(new char[]
+			if (e.Error != null)
 			{
-				','
-			});
-			int bf = int.Parse(array[0]);
-			foreach (SkillInfoLine skillInfoLine in SkillInfos)
-			{
-				if (getBit(bf, skillInfoLine.bit) && !Characters.Sein.PlayerAbilities.HasAbility(skillInfoLine.skill))
-				{
-					RandomizerSwitch.GivePickup(new RandomizerAction("SK", skillInfoLine.id), 0, false);
-				}
+				if(e.Error is System.NullReferenceException)
+					return;
+				Randomizer.LogError("CheckPickups got error: " + e.Error.ToString());
 			}
-			int bf2 = int.Parse(array[1]);
-			foreach (EventInfoLine eventInfoLine in EventInfos)
+			if (!e.Cancelled && e.Error == null)
 			{
-				if (getBit(bf2, eventInfoLine.bit) && !eventInfoLine.checker())
+				string[] array = e.Result.Split(new char[]
 				{
-					RandomizerSwitch.GivePickup(new RandomizerAction("EV", eventInfoLine.id), 0, false);
-				}
-			}
-			int bf4 = int.Parse(array[2]);
-			foreach (TeleportInfoLine teleportInfoLine in TeleportInfos)
-			{
-				if (getBit(bf4, teleportInfoLine.bit) && !isTeleporterActivated(teleportInfoLine.id))
+					','
+				});
+				int bf = int.Parse(array[0]);
+				foreach (SkillInfoLine skillInfoLine in SkillInfos)
 				{
-					RandomizerSwitch.GivePickup(new RandomizerAction("TP", teleportInfoLine.id), 0, false);
-				}
-			}
-			if(array[3] != "")
-				{
-				string[] upgrades = array[3].Split(';');
-				foreach(string rawUpgrade in upgrades)
-				{
-					string[] splitpair = rawUpgrade.Split('x');
-					int id = int.Parse(splitpair[0]);
-					int cnt = int.Parse(splitpair[1]);
-					if(RandomizerBonus.UpgradeCount(id) < cnt) {
-						RandomizerBonus.UpgradeID(id);
-					} else if(!JustFound.Contains("RB"+splitpair[0]) && RandomizerBonus.UpgradeCount(id) > cnt) {
-						RandomizerBonus.UpgradeID(-id);					
+					if (getBit(bf, skillInfoLine.bit) && !Characters.Sein.PlayerAbilities.HasAbility(skillInfoLine.skill))
+					{
+						RandomizerSwitch.GivePickup(new RandomizerAction("SK", skillInfoLine.id), 0, false);
 					}
 				}
-			}
-			if(array[4] != "")
+				int bf2 = int.Parse(array[1]);
+				foreach (EventInfoLine eventInfoLine in EventInfos)
 				{
-				string[] hints = array[4].Split(';');
-				foreach(string rawHint in hints)
-				{
-					string[] splitpair = rawHint.Split(':');
-					int coords = int.Parse(splitpair[0]);
-					int player = int.Parse(splitpair[1]);
-					Hints[coords] = player;
+					if (getBit(bf2, eventInfoLine.bit) && !eventInfoLine.checker())
+					{
+						RandomizerSwitch.GivePickup(new RandomizerAction("EV", eventInfoLine.id), 0, false);
+					}
 				}
-			}
-			if (array.Length > 5)
-			{
-				foreach (string text in array[5].Split(new char[] { '|' }))
+				int bf4 = int.Parse(array[2]);
+				foreach (TeleportInfoLine teleportInfoLine in TeleportInfos)
 				{
-					if (text == "stop")
+					if (getBit(bf4, teleportInfoLine.bit) && !isTeleporterActivated(teleportInfoLine.id))
 					{
-						RandomizerChaosManager.ClearEffects();
+						RandomizerSwitch.GivePickup(new RandomizerAction("TP", teleportInfoLine.id), 0, false);
 					}
-					else if (text.StartsWith("msg:"))
+				}
+				if(array[3] != "")
 					{
-						Randomizer.printInfo(text.Substring(4), 360);
-					}
-					else if (text.StartsWith("win:"))
+					string[] upgrades = array[3].Split(';');
+					foreach(string rawUpgrade in upgrades)
 					{
-						Randomizer.Print(text.Substring(4), 10, false, true, false, false);
-						RandomizerStatsManager.WriteStatsFile();
-					}
-					else if (text.StartsWith("pickup:"))
-					{
-						string[] parts = text.Substring(7).Split(new char[] { '|' });
-						RandomizerAction action;
-						if(Randomizer.StringKeyPickupTypes.Contains(parts[0])) {
-							 action = new RandomizerAction(parts[0], parts[1]);
-						} else {
-							int pickup_id;
-							int.TryParse(parts[1], out pickup_id);
-							action = new RandomizerAction(parts[0], pickup_id);
+						string[] splitpair = rawUpgrade.Split('x');
+						int id = int.Parse(splitpair[0]);
+						int cnt = int.Parse(splitpair[1]);
+						if(id >= 100) {
+							if(!RandomizerBonusSkill.UnlockedBonusSkills.ContainsValue(id) && cnt > 0)
+								RandomizerBonus.UpgradeID(id);
+						} else if(RandomizerBonus.UpgradeCount(id) < cnt) {
+							RandomizerBonus.UpgradeID(id);
+						} else if(!JustFound.Contains("RB"+splitpair[0]) && RandomizerBonus.UpgradeCount(id) > cnt) {
+							RandomizerBonus.UpgradeID(-id);
 						}
-						RandomizerSwitch.GivePickup(action, 0, false);
 					}
-					else if (text == "spawnChaos")
-					{
-						Randomizer.ChaosVerbose = true;
-						RandomizerChaosManager.SpawnEffect();
-						ChaosTimeoutCounter = 3600;
-					}
-					var client = new WebClient();
-					client.DownloadStringAsync(new Uri(RootUrl + "/callback/" + text));
 				}
+				if(array[4] != "")
+					{
+					string[] hints = array[4].Split(';');
+					foreach(string rawHint in hints)
+					{
+						string[] splitpair = rawHint.Split(':');
+						int coords = int.Parse(splitpair[0]);
+						int player = int.Parse(splitpair[1]);
+						Hints[coords] = player;
+					}
+				}
+				if (array.Length > 5)
+				{
+					foreach (string text in array[5].Split(new char[] { '|' }))
+					{
+						if(CurrentSignals.Contains(text))
+							continue;
+						if (text == "stop")
+						{
+							RandomizerChaosManager.ClearEffects();
+						}
+						else if (text.StartsWith("msg:"))
+						{
+							Randomizer.printInfo(text.Substring(4), 360);
+						}
+						else if (text.StartsWith("win:"))
+						{
+							Randomizer.Print(text.Substring(4)+"\n (Press Alt+R to warp to credits)", 10, false, true, false, false);
+							Randomizer.CanWarp = 10;
+							DoCreditWarp = true;
+							RandomizerStatsManager.WriteStatsFile();
+						}
+						else if (text.StartsWith("pickup:"))
+						{
+							string[] parts = text.Substring(7).Split(new char[] { '|' });
+							RandomizerAction action;
+							if(Randomizer.StringKeyPickupTypes.Contains(parts[0])) {
+								 action = new RandomizerAction(parts[0], parts[1]);
+							} else {
+								int pickup_id;
+								int.TryParse(parts[1], out pickup_id);
+								action = new RandomizerAction(parts[0], pickup_id);
+							}
+							RandomizerSwitch.GivePickup(action, 0, false);
+						}
+						else if (text == "spawnChaos")
+						{
+							Randomizer.ChaosVerbose = true;
+							RandomizerChaosManager.SpawnEffect();
+							ChaosTimeoutCounter = 3600;
+						}
+						var client = new WebClient();
+						client.DownloadStringAsync(new Uri(RootUrl + "/callback/" + text));
+						CurrentSignals.Add(text);
+					}
+				} else {
+					CurrentSignals.Clear();
+				}
+				return;
 			}
-			return;
+			if (e.Error.GetType().Name == "WebException" && ((HttpWebResponse)((WebException)e.Error).Response).StatusCode == HttpStatusCode.PreconditionFailed)
+			{
+				if(Randomizer.SyncMode == 1)
+					Randomizer.printInfo("Co-op server error, try reloading the seed (Alt+L)");
+				else
+					Randomizer.LogError("Co-op server error, try reloading the seed (Alt+L)");
+				return;
+			}
 		}
-		if (e.Error.GetType().Name == "WebException" && ((HttpWebResponse)((WebException)e.Error).Response).StatusCode == HttpStatusCode.PreconditionFailed)
+		catch (Exception e2)
 		{
-			if(Randomizer.SyncMode == 1)
-				Randomizer.printInfo("Co-op server error, try reloading the seed (Alt+L)");
-			else
-				Randomizer.LogError("Co-op server error, try reloading the seed (Alt+L)");
-			return;
+			Randomizer.LogError("FoundPickup threw error: " + e2.Message);
 		}
-	}
-
-	// Token: 0x06003799 RID: 14233
-	public static void onSave()
-	{
-	}
-
-	// Token: 0x0600379A RID: 14234
-	public static void onDeath()
-	{
 	}
 
 	// Token: 0x0600379B RID: 14235
@@ -309,12 +319,12 @@ public static class RandomizerSyncManager
 	// Token: 0x0600379D RID: 14237
 	public static bool isTeleporterActivated(string identifier)
 	{
-        if(identifier == "Ginso" && Characters.Sein.Inventory.GetRandomizerItem(1024) == 1)
-        	return true;
-        if(identifier == "Forlorn" && Characters.Sein.Inventory.GetRandomizerItem(1025) == 1)
-        	return true;
-        if(identifier == "Horu" && Characters.Sein.Inventory.GetRandomizerItem(1026) == 1)
-        	return true;
+		if(identifier == "Ginso" && Characters.Sein.Inventory.GetRandomizerItem(1024) == 1)
+			return true;
+		if(identifier == "Forlorn" && Characters.Sein.Inventory.GetRandomizerItem(1025) == 1)
+			return true;
+		if(identifier == "Horu" && Characters.Sein.Inventory.GetRandomizerItem(1026) == 1)
+			return true;
 
 
 		foreach (GameMapTeleporter gameMapTeleporter in TeleporterController.Instance.Teleporters)
@@ -363,6 +373,10 @@ public static class RandomizerSyncManager
 	public static bool SeedSent;
 
 	public static Dictionary<int, int> Hints;
+
+	public static HashSet<string> CurrentSignals;
+
+	public static bool DoCreditWarp;
 
 	// Token: 0x02000A00 RID: 2560
 	public class Pickup
