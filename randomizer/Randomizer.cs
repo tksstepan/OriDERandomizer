@@ -947,133 +947,137 @@ public static class Randomizer
 	// Token: 0x06003848 RID: 14408
 	public static void Tick()
 	{
-		long old_tick = Randomizer.LastTick;
-		Randomizer.LastTick = DateTime.Now.Ticks % 10000000L;
-		if (Randomizer.LastTick < old_tick)
-		{
-			BingoController.Tick();
-			if(ResetVolume == 1)
+		try {
+			long old_tick = Randomizer.LastTick;
+			Randomizer.LastTick = DateTime.Now.Ticks % 10000000L;
+			if (Randomizer.LastTick < old_tick)
 			{
-				ResetVolume = 0;
-				GameSettings.Instance.SoundEffectsVolume = CachedVolume;
-			} else if(ResetVolume > 1) {
-				ResetVolume--;
-			}
-			if(CanWarp > 0)
-			{
-				CanWarp--;
-				if(RandomizerSyncManager.DoCreditWarp && CanWarp == 0)
-					RandomizerSyncManager.DoCreditWarp = false;
-			}
-			if(RepeatableCooldown > 0)
-				RepeatableCooldown--;
-			if(RandomizerStatsManager.StatsTimer > 0)
-				RandomizerStatsManager.StatsTimer--;
-			RandomizerStatsManager.IncTime();
-			if(Scenes.Manager.CurrentScene != null)
-			{
-				string scene = Scenes.Manager.CurrentScene.Scene;
-				if(scene == "thornfeltSwampActTwoStart" && NeedGinsoEscapeCleanup) {
-					try
-					{
-						GameController.Instance.CreateCheckpoint();
-						RandomizerStatsManager.OnSave(false);
-						GameController.Instance.SaveGameController.PerformSave();
-						GameController.Instance.SaveGameController.PerformLoad();
-					}
-					catch (Exception e)
-					{
-						Randomizer.LogError("GinsoEscapeCleanup: " + e.Message);
-					}
-					NeedGinsoEscapeCleanup = false;
-				}
-				if(scene == "titleScreenSwallowsNest")
+				BingoController.Tick();
+				if(ResetVolume == 1)
 				{
-					ResetTrackerCount++;
-					if(ResetTrackerCount > 10)
+					ResetVolume = 0;
+					GameSettings.Instance.SoundEffectsVolume = CachedVolume;
+				} else if(ResetVolume > 1) {
+					ResetVolume--;
+				}
+				if(CanWarp > 0)
+				{
+					CanWarp--;
+					if(RandomizerSyncManager.DoCreditWarp && CanWarp == 0)
+						RandomizerSyncManager.DoCreditWarp = false;
+				}
+				if(RepeatableCooldown > 0)
+					RepeatableCooldown--;
+				if(RandomizerStatsManager.StatsTimer > 0)
+					RandomizerStatsManager.StatsTimer--;
+				RandomizerStatsManager.IncTime();
+				if(Scenes.Manager.CurrentScene != null)
+				{
+					string scene = Scenes.Manager.CurrentScene.Scene;
+					if(scene == "thornfeltSwampActTwoStart" && NeedGinsoEscapeCleanup) {
+						try
+						{
+							GameController.Instance.CreateCheckpoint();
+							RandomizerStatsManager.OnSave(false);
+							GameController.Instance.SaveGameController.PerformSave();
+							GameController.Instance.SaveGameController.PerformLoad();
+						}
+						catch (Exception e)
+						{
+							Randomizer.LogError("GinsoEscapeCleanup: " + e.Message);
+						}
+						NeedGinsoEscapeCleanup = false;
+					}
+					if(scene == "titleScreenSwallowsNest")
 					{
-						RandomizerTrackedDataManager.Reset();
+						ResetTrackerCount++;
+						if(ResetTrackerCount > 10)
+						{
+							RandomizerTrackedDataManager.Reset();
+							ResetTrackerCount = 0;
+						}
+						if(RandomizerCreditsManager.CreditsDone)
+						{
+							RandomizerCreditsManager.CreditsDone = false;
+						}
+					}
+					else if(scene == "creditsScreen")
+					{
+						if(!CreditsActive && !RandomizerCreditsManager.CreditsDone)
+						{
+							CreditsActive = true;
+						}
+					}
+					else if (scene == "theSacrifice" && RandomizerStatsManager.Active)
+					{
+						foreach (SceneManagerScene sms in Scenes.Manager.ActiveScenes)
+						{
+							if (sms.MetaData.Scene == "creditsScreen" && sms.CurrentState == SceneManagerScene.State.Loading)
+							{
+								RandomizerStatsManager.Finish();
+								RandomizerCreditsManager.Initialize();
+							}
+						}
+					}
+				}
+
+				if(CreditsActive && !RandomizerCreditsManager.CreditsDone)
+						RandomizerCreditsManager.Tick();
+
+				if(Characters.Sein)
+				{
+					if(JustSpawned && SpawnWith != "" && Characters.Sein.Inventory) {
+						JustSpawned = false;
+						RandomizerAction spawnItem;
+						if(Randomizer.StringKeyPickupTypes.Contains(SpawnWith.Substring(0, 2)))
+							spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), SpawnWith.Substring(2));
+						else
+							spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), int.Parse(SpawnWith.Substring(2)));
+						RandomizerSwitch.GivePickup(spawnItem, 2, true);
+					}
+					if(!Characters.Sein.IsSuspended && Scenes.Manager.CurrentScene != null)
+					{
 						ResetTrackerCount = 0;
-					}
-					if(RandomizerCreditsManager.CreditsDone)
-					{
-						RandomizerCreditsManager.CreditsDone = false;
-					}
-				}
-				else if(scene == "creditsScreen")
-				{
-					if(!CreditsActive && !RandomizerCreditsManager.CreditsDone)
-					{
-						CreditsActive = true;
-					}
-				}
-				else if (scene == "theSacrifice" && RandomizerStatsManager.Active)
-				{
-					foreach (SceneManagerScene sms in Scenes.Manager.ActiveScenes)
-					{
-						if (sms.MetaData.Scene == "creditsScreen" && sms.CurrentState == SceneManagerScene.State.Loading)
+						RandomizerTrackedDataManager.UpdateBitfields();
+						RandomizerColorManager.UpdateHotColdTarget();
+						if (Characters.Sein.Position.y > 935f && Sein.World.Events.WarmthReturned && Scenes.Manager.CurrentScene.Scene == "ginsoTreeWaterRisingEnd")
 						{
-							RandomizerStatsManager.Finish();
-							RandomizerCreditsManager.Initialize();
+							if (Characters.Sein.Abilities.Bash && Characters.Sein.Abilities.Bash.IsBashing)
+							{
+								Characters.Sein.Abilities.Bash.BashGameComplete(0f);
+							}
+							Characters.Sein.Position = new Vector3(750f, -120f);
+							return;
+						}
+						if (Scenes.Manager.CurrentScene.Scene == "catAndMouseResurrectionRoom" && !Randomizer.canFinalEscape())
+						{
+							if (Randomizer.Entrance)
+							{
+								Randomizer.EnterDoor(new Vector3(-242f, 489f));
+								return;
+							}
+							Characters.Sein.Position = new Vector3(20f, 105f);
+							return;
+						}
+						else if (!Characters.Sein.Controller.CanMove && Scenes.Manager.CurrentScene.Scene == "moonGrottoGumosHideoutB")
+						{
+							Randomizer.LockedCount++;
+							if (Randomizer.LockedCount >= 4)
+							{
+								GameController.Instance.ResetInputLocks();
+								return;
+							}
+						}
+						else
+						{
+							Randomizer.LockedCount = 0;
 						}
 					}
 				}
 			}
-
-			if(CreditsActive && !RandomizerCreditsManager.CreditsDone)
-					RandomizerCreditsManager.Tick();
-
-			if(Characters.Sein)
-			{
-				if(JustSpawned && SpawnWith != "" && Characters.Sein.Inventory) {
-					JustSpawned = false;
-					RandomizerAction spawnItem;
-					if(Randomizer.StringKeyPickupTypes.Contains(SpawnWith.Substring(0, 2)))
-						spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), SpawnWith.Substring(2));
-					else
-						spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), int.Parse(SpawnWith.Substring(2)));
-					RandomizerSwitch.GivePickup(spawnItem, 2, true);
-				}
-				if(!Characters.Sein.IsSuspended && Scenes.Manager.CurrentScene != null)
-				{
-					ResetTrackerCount = 0;
-					RandomizerTrackedDataManager.UpdateBitfields();
-					RandomizerColorManager.UpdateHotColdTarget();
-					if (Characters.Sein.Position.y > 937f && Sein.World.Events.WarmthReturned && Scenes.Manager.CurrentScene.Scene == "ginsoTreeWaterRisingEnd")
-					{
-						if (Characters.Sein.Abilities.Bash.IsBashing)
-						{
-							Characters.Sein.Abilities.Bash.BashGameComplete(0f);
-						}
-						Characters.Sein.Position = new Vector3(750f, -120f);
-						return;
-					}
-					if (Scenes.Manager.CurrentScene.Scene == "catAndMouseResurrectionRoom" && !Randomizer.canFinalEscape())
-					{
-						if (Randomizer.Entrance)
-						{
-							Randomizer.EnterDoor(new Vector3(-242f, 489f));
-							return;
-						}
-						Characters.Sein.Position = new Vector3(20f, 105f);
-						return;
-					}
-					else if (!Characters.Sein.Controller.CanMove && Scenes.Manager.CurrentScene.Scene == "moonGrottoGumosHideoutB")
-					{
-						Randomizer.LockedCount++;
-						if (Randomizer.LockedCount >= 4)
-						{
-							GameController.Instance.ResetInputLocks();
-							return;
-						}
-					}
-					else
-					{
-						Randomizer.LockedCount = 0;
-					}
-				}
-			}
-
+		} catch (Exception e2)
+		{
+			Randomizer.LogError("Tick: " + e2.Message);
 		}
 	}
 
