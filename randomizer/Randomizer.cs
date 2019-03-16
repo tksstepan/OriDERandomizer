@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -26,7 +27,6 @@ public static class Randomizer
 			Randomizer.ForceMaps = false;
 			Randomizer.SyncMode = 4;
 			Randomizer.StringKeyPickupTypes = new List<string> {"TP", "SH", "NO", "WT", "MU", "HN", "WP", "RP", "WS"};
-			Randomizer.ShareParams = "";
 			RandomizerChaosManager.initialize();
 			Randomizer.DamageModifier = 1f;
 			Randomizer.Table = new Hashtable();
@@ -65,7 +65,7 @@ public static class Randomizer
 			Randomizer.LockedCount = 0;
 			Randomizer.ResetTrackerCount = 0;
 			Randomizer.HotCold = false;
-			Randomizer.HotColdTypes = new string[] {"EV", "RB17", "RB19", "RB21", "RB28", "SK"};
+			Randomizer.HotColdTypes = new HashSet<string>() {"EV", "RB17", "RB19", "RB21", "RB28", "SK"};
 			Randomizer.HotColdItems = new Dictionary<int, RandomizerHotColdItem>();
 			Randomizer.HotColdMaps = new List<int>();
 			int HotColdSaveId = 2000;
@@ -122,26 +122,17 @@ public static class Randomizer
 							SpawnWith = lineParts[1] + lineParts[2];
 							continue;
 						}
-						int index = Array.BinarySearch<string>(Randomizer.HotColdTypes, lineParts[1]);
-						if (index < 0)
+						if (Randomizer.HotColdTypes.Contains(lineParts[1]) || Randomizer.HotColdTypes.Contains(lineParts[1] + lineParts[2]))
 						{
-							index = -index - 1;
-						}
-						while (index < Randomizer.HotColdTypes.Length && Randomizer.HotColdTypes[index].Substring(0, 2) == lineParts[1])
-						{
-							if (Randomizer.HotColdTypes[index] == lineParts[1] || Randomizer.HotColdTypes[index].Substring(2) == lineParts[2])
+							if (Math.Abs(coords) > 100)
 							{
-								if (Math.Abs(coords) > 100)
-								{
-									Randomizer.HotColdItems.Add(coords, new RandomizerHotColdItem(Randomizer.HashKeyToVector(coords), HotColdSaveId));
-									HotColdSaveId++;
-								}
-								else
-								{
-									Randomizer.HotColdMaps.Add(coords);
-								}
+								Randomizer.HotColdItems.Add(coords, new RandomizerHotColdItem(Randomizer.HashKeyToVector(coords), HotColdSaveId));
+								HotColdSaveId++;
 							}
-							index++;
+							else
+							{
+								Randomizer.HotColdMaps.Add(coords);
+							}
 						}
 						if (Randomizer.StringKeyPickupTypes.Contains(lineParts[1]))
 						{
@@ -1169,10 +1160,6 @@ public static class Randomizer
 				}
 				Randomizer.SyncMode = syncMode;
 			}
-			if (flag.StartsWith("shared="))
-			{
-				Randomizer.ShareParams = flag.Substring(7);
-			}
 			if(flag == "bingo")
 			{
 				doBingo = true;
@@ -1225,13 +1212,11 @@ public static class Randomizer
 			if (flag.StartsWith("hotcold="))
 			{
 				Randomizer.HotCold = true;
-				Randomizer.HotColdTypes = flag.Substring(8).Split(new char[]{ '+' });
-				Array.Sort(Randomizer.HotColdTypes);
+				Randomizer.HotColdTypes = new HashSet<string>(rawFlag.Substring(8).Split(new char[]{'+'}).ToList<string>());
 			}
 			if (flag.StartsWith("sense="))
 			{
-				Randomizer.HotColdTypes = flag.Substring(6).Split(new char[] { '+' });
-				Array.Sort(Randomizer.HotColdTypes);
+				Randomizer.HotColdTypes = new HashSet<string>(rawFlag.Substring(6).Split(new char[]{'+'}).ToList<string>());
 			}
 			if (flag == "noaltr")
 			{
@@ -1322,9 +1307,6 @@ public static class Randomizer
 	// Token: 0x04003245 RID: 12869
 	public static int SyncMode;
 
-	// Token: 0x04003246 RID: 12870
-	public static string ShareParams;
-
 	// Token: 0x04003247 RID: 12871
 	public static List<string> StringKeyPickupTypes;
 
@@ -1388,7 +1370,7 @@ public static class Randomizer
 
 	public static bool HotCold;
 
-	public static string[] HotColdTypes;
+	public static HashSet<string> HotColdTypes;
 
 	public static Dictionary<int, RandomizerHotColdItem> HotColdItems;
 
