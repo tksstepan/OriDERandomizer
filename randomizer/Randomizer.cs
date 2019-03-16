@@ -203,12 +203,12 @@ public static class Randomizer
 					if (flag.StartsWith("hotcold="))
 					{
 						Randomizer.HotCold = true;
-						Randomizer.HotColdTypes = flag.Substring(8).Split(new char[]{ '+' });
+						Randomizer.HotColdTypes = rawFlag.Substring(8).Split(new char[]{ '+' });
 						Array.Sort(Randomizer.HotColdTypes);
 					}
 					if (flag.StartsWith("sense="))
 					{
-						Randomizer.HotColdTypes = flag.Substring(6).Split(new char[] { '+' });
+						Randomizer.HotColdTypes = rawFlag.Substring(6).Split(new char[] { '+' });
 						Array.Sort(Randomizer.HotColdTypes);
 					}
 					if (flag == "noaltr")
