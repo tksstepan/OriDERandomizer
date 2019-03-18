@@ -37,9 +37,9 @@ Phant  Skulblaka  Terra  Xemsys", 14));
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_10_2_Additional community contributions by:
 Athos213    AvengedRuler    Cereberon    Cleanfel
-CovertMuffin    Grimelios    iRobin    JHobz
+CovertMuffin   Grimelios   iRobin   JHobz   Roryrai
 Jitaenow    Kirefel    madinsane    Mattermonkey
-RainbowPoogle    Roryrai    UncleRonny   Wingheart
+RainbowPoogle   UncleRonny   Wingheart   spineshealth
 SeaAverage   DireKrow   Eph   shedd   xaviershay", 14));
 
 		Credits.Add(new KeyValuePair<string, int>(

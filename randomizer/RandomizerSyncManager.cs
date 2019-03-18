@@ -139,6 +139,8 @@ public static class RandomizerSyncManager
 			}
 			if (!e.Cancelled && e.Error == null)
 			{
+				if(!Characters.Sein)
+					return;
 				string[] array = e.Result.Split(new char[]
 				{
 					','
@@ -256,7 +258,7 @@ public static class RandomizerSyncManager
 		}
 		catch (Exception e2)
 		{
-			Randomizer.LogError("FoundPickup threw error: " + e2.Message);
+			Randomizer.LogError("CheckPickups threw error: " + e2.Message);
 		}
 	}
 
