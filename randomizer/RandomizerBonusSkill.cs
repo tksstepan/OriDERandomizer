@@ -94,11 +94,11 @@ public static class RandomizerBonusSkill
             if (IsActive(ab))
             {
                 Deactivate(ab);
-                Randomizer.printInfo(BonusSkillNames[ab] + " off");
+                BonusSkillText(BonusSkillNames[ab] + " off");
                 RandomizerBonusSkill.EnergyDrainRate -= DrainRates[ab];
             } else if (Characters.Sein.Energy.Current > 5*DrainRates[ab]) {
                 Activate(ab);
-                Randomizer.printInfo(BonusSkillNames[ab] + " on");
+                BonusSkillText(BonusSkillNames[ab] + " on");
                 RandomizerBonusSkill.EnergyDrainRate += DrainRates[ab];
             } else {
                 UI.SeinUI.ShakeEnergyOrbBar();
@@ -109,7 +109,7 @@ public static class RandomizerBonusSkill
                 if(IsActive(ab) || Characters.Sein.Abilities.Carry.IsCarrying)
                     Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle += 180f;
                 else
-                    Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle = 0f;                   
+                    Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle = 0f;
                 Characters.Sein.PlatformBehaviour.LeftRightMovement.PlatformMovement.LocalSpeedX *= -1;
             }
             break;
@@ -140,11 +140,16 @@ public static class RandomizerBonusSkill
         case 106:
             if (!Characters.Sein.SoulFlame.InsideCheckpointMarker)
             {
-                Randomizer.Print("You can only Respec at a Soul Link!",  3, false, false, false, true);
+                BonusSkillText("You can only Respec on a Soul Link!");
                 return;
             }
             {
                 int apToGain = RandomizerBonus.ResetAP();
+                if(apToGain == 0) {
+                    BonusSkillText("No AP to refund");
+                    return;
+                }
+                BonusSkillText("Respec successful. " + apToGain.ToString() + " AP refunded!");
                 CharacterAbility[] abilities = Characters.Sein.PlayerAbilities.Abilities;
                 List<CharacterAbility> actuallySkills = new List<CharacterAbility>() {
                     Characters.Sein.PlayerAbilities.WallJump,
@@ -190,25 +195,25 @@ public static class RandomizerBonusSkill
             if (IsActive(ab))
             {
                 Deactivate(ab);
-                Randomizer.printInfo("Skill Velocity on");
+                BonusSkillText("Skill Velocity on");
             }
             else
             {
                 Activate(ab);
-                Randomizer.printInfo("Skill Velocity off");
+                BonusSkillText("Skill Velocity off");
             }
             return;
         case 110:
             if (IsActive(ab))
             {
                 Deactivate(ab);
-                Randomizer.printInfo(BonusSkillNames[ab] + " off");
+                BonusSkillText(BonusSkillNames[ab] + " off");
                 RandomizerBonusSkill.EnergyDrainRate -= DrainRates[ab];
             } else if (Characters.Sein.Energy.Current > 1f)
             {
                 Activate(ab);
                 Characters.Sein.Energy.Spend(0.5f);
-                Randomizer.printInfo(BonusSkillNames[ab] + " on");
+                BonusSkillText(BonusSkillNames[ab] + " on");
                 RandomizerBonusSkill.EnergyDrainRate += DrainRates[ab];
             } else {
                 UI.SeinUI.ShakeEnergyOrbBar();
@@ -249,6 +254,7 @@ public static class RandomizerBonusSkill
                         Characters.Sein.PlatformBehaviour.LeftRightMovement.PlatformMovement.LocalSpeedX *= -1;
                     }
                 }
+                BonusSkillText("Out of energy! Bonus skills disabled.");
                 UpdateDrain();
                 return;
             }
@@ -474,6 +480,9 @@ public static class RandomizerBonusSkill
     public static void TimeScale(Animator animator)
     {
         animator.speed = TimeScale(1.0f);
+    }
+    public static void BonusSkillText(string text) {
+        Randomizer.Print(text, 3, false, false, false, true);
     }
 
 

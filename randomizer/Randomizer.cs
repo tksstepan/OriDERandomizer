@@ -11,7 +11,7 @@ using UnityEngine;
 // Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
-	public static string VERSION = "3.1 beta";
+	public static string VERSION = "3.1";
 	public static void initialize()
 	{
 		try {
@@ -122,7 +122,7 @@ public static class Randomizer
 							SpawnWith = lineParts[1] + lineParts[2];
 							continue;
 						}
-						if (Randomizer.HotColdTypes.Contains(lineParts[1]) || Randomizer.HotColdTypes.Contains(lineParts[1] + lineParts[2]))
+						if (Randomizer.HotColdTypes.Contains(lineParts[1]) || Randomizer.HotColdTypes.Any((string t) => (lineParts[1] + lineParts[2]).StartsWith(t)))
 						{
 							if (Math.Abs(coords) > 100)
 							{
@@ -733,8 +733,12 @@ public static class Randomizer
 
 	public static void showSeedInfo()
 	{
-		string obj = "v" + VERSION + " (Bingo v" + BingoController.BINGO_VERSION + ") - seed loaded: " + Randomizer.SeedMeta;
-		Randomizer.printInfo(obj);
+
+		string seedInfo = "v" + Randomizer.VERSION;
+		if(BingoController.Active)
+			seedInfo += " (Bingo v" + BingoController.BINGO_VERSION  + ")";
+		seedInfo += "- seed loaded: " + Randomizer.SeedMeta;
+		Randomizer.printInfo(seedInfo);
 	}
 
 	public static void changeColor()
@@ -1228,9 +1232,10 @@ public static class Randomizer
 			}
 		}
 		if(doBingo)
-		{
 			BingoController.Init();
-		}
+		else
+			BingoController.Active = false;
+
 	}
 
 	// Token: 0x0400322E RID: 12846

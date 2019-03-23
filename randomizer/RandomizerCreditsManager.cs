@@ -35,7 +35,7 @@ Community Contributions by:
 GreeZ  Hydra  Jitaenow  LusTher
 Phant  Skulblaka  Terra  Xemsys", 14));
 		Credits.Add(new KeyValuePair<string, int>(
-@"ANCHORTOPPARAMS_20_10_2_Additional community contributions by:
+@"ANCHORTOPPARAMS_20_12_2_Additional community contributions by:
 Athos213    AvengedRuler    Cereberon    Cleanfel
 CovertMuffin   Grimelios   iRobin   JHobz   Roryrai
 Jitaenow    Kirefel    madinsane    Mattermonkey
