@@ -39,7 +39,7 @@ Phant  Skulblaka  Terra  Xemsys", 14));
 Athos213    AvengedRuler    Cereberon    Cleanfel
 CovertMuffin   Grimelios   iRobin   JHobz   Roryrai
 Jitaenow    Kirefel    madinsane    Mattermonkey
-RainbowPoogle   UncleRonny   Wingheart   spineshealth
+RainbowPoogle   UncleRonny   Wingheart   spinesheath
 SeaAverage   DireKrow   Eph   shedd   xaviershay", 14));
 
 		Credits.Add(new KeyValuePair<string, int>(
