@@ -1319,6 +1319,7 @@ home: OuterSwampLowerArea
 		standard-core Climb DoubleJump
 		expert-abilities Dash Ability=6
 		master-core Bash
+		master-core DoubleJump Glide
 		master-abilities DoubleJump Ability=12
 	conn: OuterSwampMortarAbilityCellLedge
 		casual-core Bash
@@ -1699,6 +1700,7 @@ home: UpperGrotto
 		expert-abilities WallJump Dash Ability=6
 		expert-abilities Climb Dash Ability=6
 		master-core Bash
+		master-core DoubleJump Glide
 	conn: OuterSwampMortarAbilityCellLedge
 		casual-core ChargeJump
 	conn: MoonGrottoStompPlantAccess
@@ -2343,6 +2345,8 @@ home: RightSwamp
 		casual-core Bash
 		standard-core Climb ChargeJump
 		expert-core ChargeFlame
+		expert-abilities Dash Ability=6 Energy=1
+		master-core Grenade
 	pickup: StompAreaRoofExp
 		casual-core ChargeJump
 		dbash Bash
@@ -2902,27 +2906,12 @@ home: R2
         standard-core Stomp Bash Glide WallJump
         standard-core Stomp Bash Glide Climb
         standard-core Stomp Bash Glide ChargeJump
-        expert-core Stomp Bash DoubleJump WallJump
-        expert-core Stomp Bash DoubleJump Climb
-        expert-core Stomp Bash DoubleJump ChargeJump
-        expert-core Stomp Bash DoubleJump Grenade
+        expert-core Stomp Climb
+	expert-core Stomp WallJump
+	expert-core Stomp ChargeJump
+        expert-core Stomp Bash Grenade
         master-core Stomp Bash
-        master-dboost Stomp ChargeJump ChargeFlame Dash Ability=3 Health=13
-        master-dboost Stomp ChargeJump ChargeFlame Dash Ability=12 Health=10
-        master-dboost Stomp ChargeJump Grenade Dash Ability=3 Health=13
-        master-dboost Stomp ChargeJump Grenade Dash Ability=12 Health=10
-        master-dboost Stomp ChargeJump ChargeFlame DoubleJump Health=13
-        master-dboost Stomp ChargeJump ChargeFlame DoubleJump Ability=12 Health=10
-        master-dboost Stomp ChargeJump Grenade DoubleJump Health=13
-        master-dboost Stomp ChargeJump Grenade DoubleJump Ability=12 Health=10
-        master-dboost Stomp ChargeJump ChargeFlame Glide Health=13
-        master-dboost Stomp ChargeJump ChargeFlame Glide Ability=12 Health=10
-        master-dboost Stomp ChargeJump Grenade Glide Health=13
-        master-dboost Stomp ChargeJump Grenade Glide Ability=12 Health=10
-        master-dboost Stomp ChargeJump ChargeFlame Ability=12 Health=13
-        master-dboost Stomp ChargeJump Grenade Ability=12 Health=13
-        gjump Stomp ChargeJump Climb Grenade Health=4
-        gjump Stomp ChargeJump Climb Grenade Health=3 Ability=12
+	master-core Stomp DoubleJump
 home: R3OuterDoor
 	conn: R3InnerDoor
 	-- TODO: fix this connection for entrance
@@ -3432,7 +3421,10 @@ home: ValleyForlornApproach
 		casual-core Bash Mapstone
 		expert-core ChargeFlame ChargeJump Mapstone
 		expert-core ChargeFlame DoubleJump Mapstone
+		expert-core Grenade ChargeJump Mapstone
+		expert-core Grenade DoubleJump Mapstone
 		expert-abilities ChargeFlame Dash Ability=3 Mapstone
+		expert-abilities Grenade Dash Ability=3 Mapstone
 	conn: OutsideForlornCliff
 		casual-core Stomp
 		casual-core ChargeJump
@@ -3829,6 +3821,14 @@ home: LowerSorrow
 		standard-core Bash ChargeJump Climb
 		expert-core ChargeJump Climb
 		expert-dboost ChargeJump WallJump DoubleJump Health=5
+		expert-lure Glide Stomp ChargeJump
+		expert-lure Glide Stomp Bash Grenade
+		expert-lure Glide Stomp Climb DoubleJump
+		expert-lure Glide Stomp WallJump DoubleJump
+		expert-lure Glide Stomp Dash Ability=6 Energy=2
+		master-lure Glide Stomp Climb
+		master-lure Glide Stomp WallJump
+		master-lure Glide Stomp DoubleJump
 		dbash Bash
 	pickup: SorrowLowerLeftKeystone
 		casual-core Glide
@@ -4252,6 +4252,8 @@ home: MistyEntrance
         casual-core Stomp
         standard-lure Bash
         expert-core ChargeJump Climb Dash
+	expert-core Dash ChargeFlame
+	master-core Dash Ability=6 Energy=2
     pickup: MistyEntranceTreeExp
         casual-core WallJump DoubleJump
         casual-core Climb DoubleJump
