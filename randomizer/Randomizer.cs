@@ -231,7 +231,7 @@ public static class Randomizer
 				GameController.Instance.CreateCheckpoint();
 				RandomizerStatsManager.OnSave(false);
 				GameController.Instance.SaveGameController.PerformSave();
-				Randomizer.WarpTo(new Vector3(-2478,-595, 0), 0);
+				Randomizer.WarpTo(new Vector3(-2478,-593, 0), 0);
 				GameController.Instance.RemoveGameplayObjects();
 				RandomizerStatsManager.Active = false;
 				RandomizerCreditsManager.Initialize();
