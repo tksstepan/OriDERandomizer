@@ -483,6 +483,7 @@ home: DeathGauntletDoorOpened
 		expert-dboost WallJump Health=3
 		expert-dboost Climb Health=3
 		expert-dboost Bash Health=3
+		expert-abilities Dash Ability=6 Energy=1
 		master-core DoubleJump
 	conn: DeathGauntletMoat
 		casual-core Water
@@ -535,6 +536,8 @@ home: DeathGauntlet
 		casual-core Bash Grenade
 		casual-core ChargeJump
 		casual-core DoubleJump
+		master-lure Bash
+		master-lure Dash Ability=6 Energy=1
 home: DeathGauntletRoof
 	-- anchor: above death gauntlet, next to the health cell
 	pickup: DeathGauntletRoofHealthCell
@@ -1768,6 +1771,7 @@ home: MoonGrottoAboveTeleporter
 		standard-core Bash Grenade
 		expert-core Climb Glide
 		master-core DoubleJump
+		master-core Bash Dash Ability=3
 	conn: MoonGrottoStompPlantAccess
 		expert-core ChargeFlame
 	conn: MoonGrottoSwampAccessArea
@@ -1803,6 +1807,7 @@ home: MoonGrotto
 		casual-core Bash Grenade
 		casual-core ChargeJump
 		master-core DoubleJump
+		expert-abilities Dash Ability=6 Energy=1
 	conn: DeathGauntlet
 		casual-core WallJump
 		casual-core Climb
