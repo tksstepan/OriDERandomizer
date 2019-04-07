@@ -77,7 +77,7 @@ public class ChargeFlameBurst : MonoBehaviour, IPooled, ISuspendable
 				{
 					this.m_damageAttackables.Add(attackable);
 					GameObject gameObject = ((Component)attackable).gameObject;
-					new Damage(RandomizerBonus.ExplosionPower() ? (this.DamageAmount * 2f) : this.DamageAmount, vector.normalized * 3f, position, DamageType.ChargeFlame, base.gameObject).DealToComponents(gameObject);
+					new Damage(this.DamageAmount + (float)(6 * RandomizerBonus.SpiritFlameLevel()), vector.normalized * 3f, position, DamageType.ChargeFlame, base.gameObject).DealToComponents(gameObject);
 					bool expr_D8 = attackable.IsDead();
 					if (!expr_D8)
 					{

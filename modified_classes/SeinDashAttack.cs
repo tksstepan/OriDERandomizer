@@ -1,70 +1,45 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Core;
 using Game;
 using UnityEngine;
 
-// Token: 0x02000318 RID: 792
+// Token: 0x0200031B RID: 795
 public class SeinDashAttack : CharacterState, ISeinReceiver
 {
-	// Token: 0x06001051 RID: 4177 RVA: 0x00061A6C File Offset: 0x0005FC6C
+	// Token: 0x06001057 RID: 4183
 	static SeinDashAttack()
 	{
-		SeinDashAttack.OnDashEvent = delegate
+		SeinDashAttack.OnDashEvent = delegate()
 		{
 		};
-		SeinDashAttack.OnWallDashEvent = delegate
+		SeinDashAttack.OnWallDashEvent = delegate()
 		{
 		};
 	}
 
 	// Token: 0x14000012 RID: 18
-	// (add) Token: 0x06001052 RID: 4178 RVA: 0x0000E404 File Offset: 0x0000C604
-	// (remove) Token: 0x06001053 RID: 4179 RVA: 0x0000E41B File Offset: 0x0000C61B
-	public static event Action OnDashEvent
-	{
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		add
-		{
-			SeinDashAttack.OnDashEvent = (Action)Delegate.Combine(SeinDashAttack.OnDashEvent, value);
-		}
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		remove
-		{
-			SeinDashAttack.OnDashEvent = (Action)Delegate.Remove(SeinDashAttack.OnDashEvent, value);
-		}
-	}
+	// (add) Token: 0x06001058 RID: 4184
+	// (remove) Token: 0x06001059 RID: 4185
+	public static event Action OnDashEvent;
 
 	// Token: 0x14000013 RID: 19
-	// (add) Token: 0x06001054 RID: 4180 RVA: 0x0000E432 File Offset: 0x0000C632
-	// (remove) Token: 0x06001055 RID: 4181 RVA: 0x0000E449 File Offset: 0x0000C649
-	public static event Action OnWallDashEvent
-	{
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		add
-		{
-			SeinDashAttack.OnWallDashEvent = (Action)Delegate.Combine(SeinDashAttack.OnWallDashEvent, value);
-		}
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		remove
-		{
-			SeinDashAttack.OnWallDashEvent = (Action)Delegate.Remove(SeinDashAttack.OnWallDashEvent, value);
-		}
-	}
+	// (add) Token: 0x0600105A RID: 4186
+	// (remove) Token: 0x0600105B RID: 4187
+	public static event Action OnWallDashEvent;
 
 	// Token: 0x170002A9 RID: 681
-	// (get) Token: 0x06001056 RID: 4182
+	// (get) Token: 0x0600105C RID: 4188
 	public bool HasEnoughEnergy
 	{
 		get
 		{
-			float reduction = RandomizerBonus.ChargeDashEfficiency() ? 0.5f : 0f;
-			return this.m_sein.Energy.CanAfford(this.EnergyCost - reduction);
+			float num = RandomizerBonus.ChargeDashEfficiency() ? 0.5f : 0f;
+			return this.m_sein.Energy.CanAfford(this.EnergyCost - num);
 		}
 	}
 
-	// Token: 0x06001057 RID: 4183 RVA: 0x0000E478 File Offset: 0x0000C678
+	// Token: 0x0600105D RID: 4189
 	public override void Serialize(Archive ar)
 	{
 		if (ar.Reading)
@@ -73,20 +48,20 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001058 RID: 4184 RVA: 0x0000E48B File Offset: 0x0000C68B
+	// Token: 0x0600105E RID: 4190
 	public override void OnExit()
 	{
 		this.ReturnToNormal();
 		base.OnExit();
 	}
 
-	// Token: 0x06001059 RID: 4185 RVA: 0x0000E499 File Offset: 0x0000C699
+	// Token: 0x0600105F RID: 4191
 	public void OnDisable()
 	{
 		this.Exit();
 	}
 
-	// Token: 0x0600105A RID: 4186 RVA: 0x00061AC4 File Offset: 0x0005FCC4
+	// Token: 0x06001060 RID: 4192
 	public void ReturnToNormal()
 	{
 		if (this.CurrentState != SeinDashAttack.State.Normal)
@@ -108,35 +83,35 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600105B RID: 4187
+	// Token: 0x06001061 RID: 4193
 	public void SpendEnergy()
 	{
-		float reduction = RandomizerBonus.ChargeDashEfficiency() ? 0.5f : 0f;
-		this.m_sein.Energy.Spend(this.EnergyCost - reduction);
+		float num = RandomizerBonus.ChargeDashEfficiency() ? 0.5f : 0f;
+		this.m_sein.Energy.Spend(this.EnergyCost - num);
 	}
 
-	// Token: 0x0600105C RID: 4188
+	// Token: 0x06001062 RID: 4194
 	public void RestoreEnergy()
 	{
-		float reduction = RandomizerBonus.ChargeDashEfficiency() ? 0.5f : 0f;
-		this.m_sein.Energy.Gain(this.EnergyCost - reduction);
+		float num = RandomizerBonus.ChargeDashEfficiency() ? 0.5f : 0f;
+		this.m_sein.Energy.Gain(this.EnergyCost - num);
 	}
 
-	// Token: 0x0600105D RID: 4189 RVA: 0x0000E4D1 File Offset: 0x0000C6D1
+	// Token: 0x06001063 RID: 4195
 	public void SetReferenceToSein(SeinCharacter sein)
 	{
 		this.m_sein = sein;
 		sein.Abilities.Dash = this;
 	}
 
-	// Token: 0x0600105E RID: 4190 RVA: 0x0000E4E6 File Offset: 0x0000C6E6
+	// Token: 0x06001064 RID: 4196
 	public override void UpdateCharacterState()
 	{
 		this.UpdateState();
 	}
 
 	// Token: 0x170002AA RID: 682
-	// (get) Token: 0x0600105F RID: 4191 RVA: 0x0000E4EE File Offset: 0x0000C6EE
+	// (get) Token: 0x06001065 RID: 4197
 	public bool IsDashingOrChangeDashing
 	{
 		get
@@ -149,7 +124,7 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001060 RID: 4192 RVA: 0x0000E527 File Offset: 0x0000C727
+	// Token: 0x06001066 RID: 4198
 	public void ChangeState(SeinDashAttack.State state)
 	{
 		this.CurrentState = state;
@@ -158,21 +133,21 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 	}
 
 	// Token: 0x170002AB RID: 683
-	// (get) Token: 0x06001061 RID: 4193 RVA: 0x00061BA8 File Offset: 0x0005FDA8
+	// (get) Token: 0x06001067 RID: 4199
 	public IChargeDashAttackable FindClosestAttackable
 	{
 		get
 		{
 			IChargeDashAttackable result = null;
-			float num = 3.40282347E+38f;
-			foreach (IAttackable current in Targets.Attackables)
+			float num = float.MaxValue;
+			foreach (IAttackable attackable in Targets.Attackables)
 			{
-				if (current as Component && current.CanBeChargeDashed() && current is IChargeDashAttackable)
+				if (attackable as Component && attackable.CanBeChargeDashed() && attackable is IChargeDashAttackable)
 				{
-					IChargeDashAttackable chargeDashAttackable = (IChargeDashAttackable)current;
-					if (UI.Cameras.Current.IsOnScreen(current.Position))
+					IChargeDashAttackable chargeDashAttackable = (IChargeDashAttackable)attackable;
+					if (UI.Cameras.Current.IsOnScreen(attackable.Position))
 					{
-						float magnitude = (current.Position - this.m_sein.Position).magnitude;
+						float magnitude = (attackable.Position - this.m_sein.Position).magnitude;
 						if (magnitude < num && magnitude < this.ChargeDashTargetMaxDistance)
 						{
 							result = chargeDashAttackable;
@@ -185,40 +160,35 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001062 RID: 4194 RVA: 0x00061C88 File Offset: 0x0005FE88
+	// Token: 0x06001068 RID: 4200
 	public void AttackNearbyEnemies()
 	{
-		for (int i = 0; i < Targets.Attackables.Count; i++)
+		int i = 0;
+		while (i < Targets.Attackables.Count)
 		{
 			IAttackable attackable = Targets.Attackables[i];
-			if (!InstantiateUtility.IsDestroyed(attackable as Component))
+			if (!InstantiateUtility.IsDestroyed(attackable as Component) && !this.m_attackablesIgnore.Contains(attackable) && attackable.CanBeChargeFlamed() && (attackable.Position - this.m_sein.PlatformBehaviour.PlatformMovement.HeadPosition).magnitude <= 3f)
 			{
-				if (!this.m_attackablesIgnore.Contains(attackable))
+				this.m_attackablesIgnore.Add(attackable);
+				Vector3 v = (!this.m_chargeDashAtTarget) ? (((!this.m_faceLeft) ? Vector3.right : Vector3.left) * 3f) : (this.m_chargeDashDirection * 3f);
+				new Damage((float)this.Damage, v, this.m_sein.Position, DamageType.ChargeFlame, base.gameObject).DealToComponents(((Component)attackable).gameObject);
+				this.m_hasHitAttackable = true;
+				if (this.ExplosionEffect && Time.time - this.m_timeOfLastExplosionEffect > 0.1f)
 				{
-					if (attackable.CanBeChargeFlamed())
-					{
-						float magnitude = (attackable.Position - this.m_sein.PlatformBehaviour.PlatformMovement.HeadPosition).magnitude;
-						if (magnitude <= 3f)
-						{
-							this.m_attackablesIgnore.Add(attackable);
-							Vector3 v = (!this.m_chargeDashAtTarget) ? (((!this.m_faceLeft) ? Vector3.right : Vector3.left) * 3f) : (this.m_chargeDashDirection * 3f);
-							Damage damage = new Damage((float)this.Damage, v, this.m_sein.Position, DamageType.ChargeFlame, base.gameObject);
-							damage.DealToComponents(((Component)attackable).gameObject);
-							this.m_hasHitAttackable = true;
-							if (this.ExplosionEffect && Time.time - this.m_timeOfLastExplosionEffect > 0.1f)
-							{
-								this.m_timeOfLastExplosionEffect = Time.time;
-								InstantiateUtility.Instantiate(this.ExplosionEffect, Vector3.Lerp(base.transform.position, attackable.Position, 0.5f), Quaternion.identity);
-							}
-							break;
-						}
-					}
+					this.m_timeOfLastExplosionEffect = Time.time;
+					InstantiateUtility.Instantiate(this.ExplosionEffect, Vector3.Lerp(base.transform.position, attackable.Position, 0.5f), Quaternion.identity);
+					return;
 				}
+				break;
+			}
+			else
+			{
+				i++;
 			}
 		}
 	}
 
-	// Token: 0x06001063 RID: 4195
+	// Token: 0x06001069 RID: 4201
 	private void PerformDash(TextureAnimationWithTransitions dashAnimation, SoundProvider dashSound)
 	{
 		this.m_sein.Mortality.DamageReciever.ResetInviciblity();
@@ -272,7 +242,7 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		this.m_sein.PlatformBehaviour.PlatformMovement.LocalSpeedY = -this.DashDownwardSpeed;
 	}
 
-	// Token: 0x06001064 RID: 4196 RVA: 0x0006205C File Offset: 0x0006025C
+	// Token: 0x0600106A RID: 4202
 	public void PerformDash()
 	{
 		this.m_chargeDashAtTarget = false;
@@ -284,7 +254,7 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		SeinDashAttack.OnDashEvent();
 	}
 
-	// Token: 0x06001065 RID: 4197 RVA: 0x000620D4 File Offset: 0x000602D4
+	// Token: 0x0600106B RID: 4203
 	public void PerformWallDash()
 	{
 		this.m_chargeDashAtTarget = false;
@@ -295,7 +265,7 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		SeinDashAttack.OnWallDashEvent();
 	}
 
-	// Token: 0x06001066 RID: 4198 RVA: 0x00062128 File Offset: 0x00060328
+	// Token: 0x0600106C RID: 4204
 	public void PerformDashIntoWall()
 	{
 		this.m_lastPressTime = 0f;
@@ -304,13 +274,13 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		Sound.Play(this.DashIntoWallSound.GetSound(null), this.m_sein.Position, null);
 	}
 
-	// Token: 0x06001067 RID: 4199 RVA: 0x0000E546 File Offset: 0x0000C746
+	// Token: 0x0600106D RID: 4205
 	public bool KeepDashIntoWallAnimationPlaying()
 	{
 		return this.AgainstWall() && this.m_sein.IsOnGround;
 	}
 
-	// Token: 0x06001068 RID: 4200 RVA: 0x00062194 File Offset: 0x00060394
+	// Token: 0x0600106E RID: 4206
 	public void PerformChargeDash()
 	{
 		this.m_hasHitAttackable = false;
@@ -337,25 +307,25 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		this.UpdateChargeDashing();
 	}
 
-	// Token: 0x06001069 RID: 4201 RVA: 0x0000E561 File Offset: 0x0000C761
+	// Token: 0x0600106F RID: 4207
 	private bool HasChargeDashSkill()
 	{
 		return this.m_sein.PlayerAbilities.ChargeDash.HasAbility;
 	}
 
-	// Token: 0x0600106A RID: 4202 RVA: 0x0000E578 File Offset: 0x0000C778
+	// Token: 0x06001070 RID: 4208
 	private bool HasAirDashSkill()
 	{
 		return this.m_sein.PlayerAbilities.AirDash.HasAbility;
 	}
 
-	// Token: 0x0600106B RID: 4203 RVA: 0x0000E58F File Offset: 0x0000C78F
+	// Token: 0x06001071 RID: 4209
 	private bool CanChargeDash()
 	{
-		return this.HasChargeDashSkill() && Core.Input.ChargeJump.Pressed && this.m_chargeJumpWasReleased;
+		return this.HasChargeDashSkill() && Core.Input.ChargeJump.Pressed && this.m_chargeJumpWasReleased && !Characters.Sein.Abilities.Swimming.IsSwimming;
 	}
 
-	// Token: 0x0600106C RID: 4204 RVA: 0x0000E5B4 File Offset: 0x0000C7B4
+	// Token: 0x06001072 RID: 4210
 	public void CompleteChargeEffect()
 	{
 		if (this.m_sein.Abilities.ChargeJumpCharging)
@@ -364,7 +334,7 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600106D RID: 4205 RVA: 0x000622A0 File Offset: 0x000604A0
+	// Token: 0x06001073 RID: 4211
 	private void UpdateTargetHighlight(IChargeDashAttackable target)
 	{
 		if (this.m_lastTarget == target)
@@ -382,33 +352,33 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600106E RID: 4206 RVA: 0x0000E5E5 File Offset: 0x0000C7E5
+	// Token: 0x06001074 RID: 4212
 	public bool KeepDashAnimationPlaying()
 	{
 		return !this.m_stopAnimation && !this.m_sein.Abilities.WallSlide.IsOnWall && base.Active;
 	}
 
-	// Token: 0x0600106F RID: 4207 RVA: 0x0000E615 File Offset: 0x0000C815
+	// Token: 0x06001075 RID: 4213
 	public bool KeepChargeDashAnimationPlaying()
 	{
 		return this.KeepDashAnimationPlaying();
 	}
 
-	// Token: 0x06001070 RID: 4208 RVA: 0x00062304 File Offset: 0x00060504
+	// Token: 0x06001076 RID: 4214
 	public bool AgainstWall()
 	{
 		PlatformMovement platformMovement = this.m_sein.PlatformBehaviour.PlatformMovement;
 		return (platformMovement.HasWallLeft && this.m_sein.FaceLeft) || (platformMovement.HasWallRight && !this.m_sein.FaceLeft);
 	}
 
-	// Token: 0x06001071 RID: 4209 RVA: 0x00062360 File Offset: 0x00060560
+	// Token: 0x06001077 RID: 4215
 	public bool CanPerformNormalDash()
 	{
-		return (this.HasAirDashSkill() || this.m_sein.IsOnGround) && (!this.AgainstWall() && this.DashHasCooledDown) && !this.m_hasDashed;
+		return	((this.HasAirDashSkill() || this.m_sein.IsOnGround || (RandomizerBonus.GravitySuit() &&  Characters.Sein.Abilities.Swimming.IsSwimming)) && !this.AgainstWall() && this.DashHasCooledDown && !this.m_hasDashed);
 	}
 
 	// Token: 0x170002AC RID: 684
-	// (get) Token: 0x06001072 RID: 4210 RVA: 0x0000E61D File Offset: 0x0000C81D
+	// (get) Token: 0x06001078 RID: 4216
 	private bool DashHasCooledDown
 	{
 		get
@@ -417,25 +387,24 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001073 RID: 4211 RVA: 0x0000E632 File Offset: 0x0000C832
+	// Token: 0x06001079 RID: 4217
 	public bool CanPerformDashIntoWall()
 	{
 		return this.m_sein.IsOnGround && this.AgainstWall() && this.DashHasCooledDown;
 	}
 
-	// Token: 0x06001074 RID: 4212 RVA: 0x000623AC File Offset: 0x000605AC
+	// Token: 0x0600107A RID: 4218
 	public bool CanWallDash()
 	{
 		PlatformMovement platformMovement = this.m_sein.PlatformBehaviour.PlatformMovement;
-		bool flag = (platformMovement.HasWallLeft && this.m_sein.Input.Horizontal >= 0f) || (platformMovement.HasWallRight && this.m_sein.Input.Horizontal <= 0f);
-		return flag && !this.m_sein.IsOnGround && this.m_sein.PlayerAbilities.AirDash.HasAbility;
+		return ((platformMovement.HasWallLeft && this.m_sein.Input.Horizontal >= 0f) || (platformMovement.HasWallRight && this.m_sein.Input.Horizontal <= 0f)) && !this.m_sein.IsOnGround && this.m_sein.PlayerAbilities.AirDash.HasAbility;
 	}
 
-	// Token: 0x06001075 RID: 4213
+	// Token: 0x0600107B RID: 4219
 	public void UpdateNormal()
 	{
 		float num = Time.time - this.m_lastPressTime;
-		if (this.m_sein.IsOnGround)
+		if (this.m_sein.IsOnGround || (RandomizerBonus.GravitySuit() && Characters.Sein.Abilities.Swimming.IsSwimming))
 		{
 			this.m_hasDashed = false;
 			RandomizerBonus.DoubleAirDashUsed = false;
@@ -450,16 +419,16 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 				platformMovement.LocalSpeedX = Mathf.Sign(platformMovement.LocalSpeedX) * num2;
 			}
 		}
-		IChargeDashAttackable arg_B0_;
+		IChargeDashAttackable target;
 		if (this.CanChargeDash())
 		{
-			arg_B0_ = this.FindClosestAttackable;
+			target = this.FindClosestAttackable;
 		}
 		else
 		{
-			arg_B0_ = null;
+			target = null;
 		}
-		this.UpdateTargetHighlight(arg_B0_);
+		this.UpdateTargetHighlight(target);
 		if (Core.Input.RightShoulder.Pressed && num < 0.15f)
 		{
 			if (this.CanChargeDash())
@@ -494,7 +463,7 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001076 RID: 4214 RVA: 0x0000E658 File Offset: 0x0000C858
+	// Token: 0x0600107C RID: 4220
 	private void ShowNotEnoughEnergy()
 	{
 		UI.SeinUI.ShakeEnergyOrbBar();
@@ -504,12 +473,22 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001077 RID: 4215 RVA: 0x000625A4 File Offset: 0x000607A4
+	// Token: 0x0600107D RID: 4221
 	public void UpdateDashing()
 	{
 		PlatformMovement platformMovement = this.m_sein.PlatformBehaviour.PlatformMovement;
 		UI.Cameras.Current.ChaseTarget.CameraSpeedMultiplier.x = Mathf.Clamp01(this.m_stateCurrentTime / this.DashTime);
-		platformMovement.LocalSpeedX = (float)((!this.m_faceLeft) ? 1 : -1) * this.DashSpeedOverTime.Evaluate(this.m_stateCurrentTime);
+		float velocity = this.DashSpeedOverTime.Evaluate(this.m_stateCurrentTime);
+		velocity *= 1.0f + .2f*RandomizerBonus.Velocity();
+		if ((RandomizerBonus.GravitySuit() && Characters.Sein.Abilities.Swimming.IsSwimming))
+		{
+			Vector2 newSpeed = new Vector2(velocity, 0f);
+			platformMovement.LocalSpeed = newSpeed.Rotate(this.m_sein.Abilities.Swimming.SwimAngle);
+		}
+		else
+		{
+			platformMovement.LocalSpeedX = (float)((!this.m_faceLeft) ? 1 : -1) * velocity;
+		}
 		this.m_sein.FaceLeft = this.m_faceLeft;
 		if (this.AgainstWall())
 		{
@@ -546,14 +525,12 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		if (this.RaycastTest() && this.m_isOnGround)
 		{
 			this.StickOntoGround();
+			return;
 		}
-		else
-		{
-			this.m_isOnGround = false;
-		}
+		this.m_isOnGround = false;
 	}
 
-	// Token: 0x06001078 RID: 4216 RVA: 0x00062790 File Offset: 0x00060990
+	// Token: 0x0600107E RID: 4222
 	private void StickOntoGround()
 	{
 		PlatformMovement platformMovement = this.m_sein.PlatformBehaviour.PlatformMovement;
@@ -570,19 +547,21 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		platformMovement.Position = vector;
 	}
 
-	// Token: 0x06001079 RID: 4217 RVA: 0x000627F8 File Offset: 0x000609F8
+	// Token: 0x0600107F RID: 4223
 	public void UpdateChargeDashing()
 	{
 		PlatformMovement platformMovement = this.m_sein.PlatformBehaviour.PlatformMovement;
 		this.AttackNearbyEnemies();
 		this.m_sein.Mortality.DamageReciever.MakeInvincibleToEnemies(1f);
+		float velocity = this.ChargeDashSpeedOverTime.Evaluate(this.m_stateCurrentTime);
+		velocity *= 1.0f + .2f*RandomizerBonus.Velocity();
 		if (this.m_chargeDashAtTarget)
 		{
-			platformMovement.LocalSpeed = this.m_chargeDashDirection * this.ChargeDashSpeedOverTime.Evaluate(this.m_stateCurrentTime);
+			platformMovement.LocalSpeed = this.m_chargeDashDirection * velocity;
 		}
 		else
 		{
-			platformMovement.LocalSpeedX = (float)((!this.m_faceLeft) ? 1 : -1) * this.ChargeDashSpeedOverTime.Evaluate(this.m_stateCurrentTime);
+			platformMovement.LocalSpeedX = (float)((!this.m_faceLeft) ? 1 : -1) * velocity;
 		}
 		if (this.m_hasHitAttackable)
 		{
@@ -619,14 +598,12 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		if (this.RaycastTest() && this.m_isOnGround && !this.m_chargeDashAtTarget)
 		{
 			this.StickOntoGround();
+			return;
 		}
-		else
-		{
-			this.m_isOnGround = false;
-		}
+		this.m_isOnGround = false;
 	}
 
-	// Token: 0x0600107A RID: 4218 RVA: 0x00062A0C File Offset: 0x00060C0C
+	// Token: 0x06001080 RID: 4224
 	public void UpdateState()
 	{
 		UI.Cameras.Current.ChaseTarget.CameraSpeedMultiplier.x = 1f;
@@ -653,17 +630,16 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		this.m_stateCurrentTime += Time.deltaTime;
 	}
 
-	// Token: 0x0600107B RID: 4219 RVA: 0x00062AB4 File Offset: 0x00060CB4
+	// Token: 0x06001081 RID: 4225
 	public void StopDashing()
 	{
-		PlatformMovement platformMovement = this.m_sein.PlatformBehaviour.PlatformMovement;
-		platformMovement.LocalSpeed = Vector2.zero;
+		this.m_sein.PlatformBehaviour.PlatformMovement.LocalSpeed = Vector2.zero;
 		this.ChangeState(SeinDashAttack.State.Normal);
 		this.m_stopAnimation = true;
 		this.m_chargeDashAtTarget = false;
 	}
 
-	// Token: 0x0600107C RID: 4220 RVA: 0x00062AF4 File Offset: 0x00060CF4
+	// Token: 0x06001082 RID: 4226
 	private bool RaycastTest()
 	{
 		Vector3 a = Vector3.Cross(this.m_sein.PlatformBehaviour.PlatformMovement.GroundRayNormal, Vector3.forward);
@@ -675,7 +651,7 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		return this.m_sein.Controller.RayTest(vector, vector2, out raycastHit);
 	}
 
-	// Token: 0x0600107D RID: 4221
+	// Token: 0x06001083 RID: 4227
 	public void ResetDashLimit()
 	{
 		this.m_hasDashed = false;
@@ -788,7 +764,7 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 	private bool m_isOnGround;
 
 	// Token: 0x04000FAF RID: 4015
-	public static bool RainbowDashActivated = false;
+	public static bool RainbowDashActivated;
 
 	// Token: 0x04000FB0 RID: 4016
 	private bool m_hasDashed;
@@ -829,7 +805,7 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 	// Token: 0x04000FBC RID: 4028
 	private Vector3 m_chargeDashAtTargetPosition;
 
-	// Token: 0x02000319 RID: 793
+	// Token: 0x0200031C RID: 796
 	public enum State
 	{
 		// Token: 0x04000FC2 RID: 4034

@@ -1,3 +1,116 @@
+
+v2.6.7
+
+-Removed an impossible path, expecting climb-only access to swamp from the grotto teleporter area
+-Accessing the spider sac energy cell from grove with wall interaction and glide is now in standard (when the rest of the spider sac area is still inaccessible)
+
+v2.6.6
+
+-Remove the microledge cjump from the grotto teleporter area up to swamp and grove from standard (was present in error)
+-Climb+Glide is now sufficient to access iceless from grotto
+
+v2.6.5
+
+-Fix an error that was preventing the generation of daily seeds
+
+v2.6.4
+
+-Removed some impossible paths (spirit tree and death gauntlet with no wall interaction)
+
+v2.6.3
+
+-Added a copy of grenade to the plant at the end of the forlorn escape
+
+v2.6.2
+
+-Luring a fronkey into the spirit caverns to access the lower 3 pickups with only bash is now in standard
+-Clean water can no longer appear on the final escape in standard
+-Added several master paths:
+    Bash+CFlame access to the CFlame tree
+    Bashless Horu climb
+    Iceless
+
+v2.6.1
+
+-Wall Jump and Charge Flame now give access to the valley entry plant in expert
+-Forlorn now requires some form of verticality to clear in standard (since you might drop the orb off before clearing the rest)
+-Going over the blackroot boulder no longer requires verticality in standard -- it is assumed that if you know how to glitch the boulder to break it without stomp, you know to get the teleporter before doing so and getting stuck on the low ground
+
+v2.6
+
+DLL changes:
+
+-Added OriDERandoDecoder.dll to decrypt tournament seeds. Place this in the same directory as Assembly-CSharp.dll
+-When activating a skill tree, seed progress is now shown automatically
+-Sein now follows Ori when using Alt+R
+-Added RandomizerSettings.txt (created automatically on launch). Currently, the only setting is choosing the deadzone for controller bashing (a number between 0 and 1, higher = more deadzone). Alt+L after changing this setting will make it take effect.
+
+Seed generator changes:
+
+-Clues mode is now the default selection on the web seed generator
+-Inputting "daily" (no quotes, case insensitive) into the seed field will now use the current day to seed the generator
+-Inputting "vanilla" (no quotes, case insensitive) into the seed field will return a seed with everything in its vanilla location
+
+
+v2.5
+
+To update to v2.5, please delete RandomizerRebindings.txt in steamapps/common/Ori DE. A new default file will automatically be created. Note: to experiment with new binds, reloading the seed will also reload your binds (you don't have to restart the game).
+
+-Reworked the rebinding system to support multiple binds, combination binds, and actions as well as keys
+-Added a double bash bind - when the bind specified is held at the end of a bash, a double bash will occur
+-Set the default fill method to "balanced"
+
+
+v2.4
+
+-add entrance randomizer
+
+
+v2.3
+
+DLL changes:
+
+-Fixed bugs with sync starting and sending data
+-Fixed a bug where the clue auto-display would overwrite "show last pickup"
+-Trying to enter the final escape without visiting all trees in force trees mode will now display a hint
+
+
+v2.2
+
+DLL changes:
+
+-Added support for sync seeds -- see http://orirandocoopserver.appspot.com/ (thanks Eiko)
+-In clues mode, a message will now appear every time a clue is unlocked
+
+Generator changes:
+
+-Options for creating synced seeds have been added
+-Seed files and spoilers are now downloaded separately
+-An option has been added to select between different fill algorithms: "classic" and "balanced". Balanced fill has less of a tendency to place progression in newly-accessible one-off locations than the classic fill.
+
+v2.1
+
+Generator changes:
+
+-2 extra mapstones are now in the drop pool. Mapstone 8 is now considered to require 9 mapstones to access, and mapstone 9 is considered to require 11.
+-Rocket jumping to the cell left of ginso (the "stomp cell") has been moved from cdash to cdash-farming
+-A new path category, "speed-lure", has been added. This contains the more difficult enemy manipulations used in the speedrun -- sorrow bash and the frog break into swamp. The presets containing "speed-lure" are expert, master, and glitched.
+
+DLL changes:
+
+-Clean water visual effects are now activated by having clean water (thanks to Kirefel!)
+-Raised the Alt+R position slightly to reduce the chances of falling into blackroot on a slow load
+-Alt+R now returns the forlorn orb to the start of the dungeon
+-Alt+P now displays mapstone progress and total pickup progress
+-Reloading a seed now shows the version number
+-Removed a case where duplicating bonus pickups could cause an overflow
+-Reduced the chance for a teleportation effect to appear in chaos mode; as a result, the approximate chance of finishing the game while holding right has increased from 30% to 50%
+-Changed the default bind for chaos mode to Alt+K
+-Added a new command, "Color Shift" (default: Alt+C) when toggled on, this performs a random color change every time a pickup is acquired
+
+Note: due to the new command, the expected format of steamapps/common/Ori DE/RandomizerRebinding.txt has changed. To update, delete this file. Launching the randomizer will create a new default version, which you can edit binds in once again.
+
+
 v2.0
 
 Logic changes:

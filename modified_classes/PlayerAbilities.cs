@@ -44,13 +44,13 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 		{
 			if (this.UltraSplitFlame.HasAbility)
 			{
-				return 4 + RandomizerBonus.SpiritFlameTargets();
+				return 4 + RandomizerBonus.SpiritFlameLevel();
 			}
 			if (this.SplitFlameUpgrade.HasAbility)
 			{
-				return 2 + RandomizerBonus.SpiritFlameTargets();
+				return 2 + RandomizerBonus.SpiritFlameLevel();
 			}
-			return 1 + RandomizerBonus.SpiritFlameTargets();
+			return 1 + RandomizerBonus.SpiritFlameLevel();
 		}
 	}
 
@@ -170,7 +170,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 			}
 			else
 			{
-				Randomizer.getSkill();
+				Randomizer.getSkill(4);
 			}
 			break;
 		case AbilityType.ChargeFlame:
@@ -180,7 +180,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 			}
 			else
 			{
-				Randomizer.getSkill();
+				Randomizer.getSkill(2);
 			}
 			break;
 		case AbilityType.WallJump:
@@ -190,7 +190,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 			}
 			else
 			{
-				Randomizer.getSkill();
+				Randomizer.getSkill(1);
 			}
 			break;
 		case AbilityType.Stomp:
@@ -200,7 +200,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 			}
 			else
 			{
-				Randomizer.getSkill();
+				Randomizer.getSkill(5);
 			}
 			break;
 		case AbilityType.DoubleJump:
@@ -210,7 +210,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 			}
 			else
 			{
-				Randomizer.getSkill();
+				Randomizer.getSkill(3);
 			}
 			break;
 		case AbilityType.ChargeJump:
@@ -220,7 +220,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 			}
 			else
 			{
-				Randomizer.getSkill();
+				Randomizer.getSkill(8);
 			}
 			break;
 		case AbilityType.Magnet:
@@ -236,7 +236,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 			}
 			else
 			{
-				Randomizer.getSkill();
+				Randomizer.getSkill(7);
 			}
 			break;
 		case AbilityType.Glide:
@@ -246,10 +246,11 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 			}
 			else
 			{
-				Randomizer.getSkill();
+				Randomizer.getSkill(6);
 			}
 			break;
 		case AbilityType.SpiritFlame:
+			RandomizerTrackedDataManager.SetTree(0);
 			this.SpiritFlame.HasAbility = value;
 			Characters.Ori.MoveOriToPlayer();
 			break;
@@ -338,7 +339,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 			}
 			else
 			{
-				Randomizer.getSkill();
+				Randomizer.getSkill(10);
 			}
 			break;
 		case AbilityType.Grenade:
@@ -348,7 +349,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 			}
 			else
 			{
-				Randomizer.getSkill();
+				Randomizer.getSkill(9);
 			}
 			break;
 		case AbilityType.GrenadeUpgrade:

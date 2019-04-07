@@ -1,0 +1,160 @@
+0 - Mega Health*
+1 - Mega Energy*
+2 - Forceably Alt+R*
+
+0 - Pickup Count
+
+6 - Attack Upgrade
+8 - Explosion Power Upgrade (deprecated)
+9 - Spirit Light Efficiency
+10 - Extra Air Dash
+11 - Charge Dash Efficiency
+12 - Extra Double Jump
+13 - Health Regeneration
+15 - Energy Regeneration
+17 - Water Vein Shard
+19 - Gumon Seal Shard
+21 - Sunstone Shard
+
+23 - Progressive Mapstone Count
+28 - Warmth Fragment
+
+30 - Bleeding
+31 - Lifesteal
+32 - Manavamp
+33 - Skill Velocity Upgrade
+34 - Disable Alt+R
+35 - Enable Alt+R
+36 - Gravity Suit
+
+40 - Lose Wall Jump
+41 - Lose Charge Flame
+42 - Lose Double Jump
+43 - Lose Bash
+44 - Lose Stomp
+45 - Lose Glide
+46 - Lose Climb
+47 - Lose Charge Jump
+48 - Lose Dash
+49 - Lose Grenade
+
+80 - Spent AP Counter
+81 - Stomp/Grenade Hint
+82 - Move Nightberry
+83 - Active Bonus Skill
+84 - Last AltR x position
+85 - Last AltR y position
+86 - Last Soul Link x position
+86 - Last Soul Link y position
+
+101 - Polarity Shift
+102 - Gravity Swap
+103 - Extreme Speed
+104 - Roose's Wind
+105 - Respawn Without Dying
+106 - Respec
+107 - Level Explosion
+
+
+1000 - plant tracking for map markers
+1001 - tree field for tracker
+1002 - relic field for tracker
+1003 - mapstone field for tracker
+
+1024 - shard ginso TP
+1025 - shard forlorn TP
+1026 - shard horu TP
+
+
+==== Begin Persists Through Death Zone ===
+1500 - Deaths
+1501 - Deaths in Glades
+1502 - Deaths in Grove
+1503 - Deaths in Grotto
+1504 - Deaths in Blackroot
+1505 - Deaths in Swamp
+1506 - Deaths in Ginso
+1507 - Deaths in Valley
+1508 - Deaths in Misty
+1509 - Deaths in Forlorn
+1510 - Deaths in Sorrow
+1511 - Deaths in Horu
+1512 - Deaths in Final Escape
+
+1515 - Deaths since last save
+1516 - Time since last death
+1517 - Time since last death or save
+1518 - Pickups since last death or save
+
+1520 - Time spent everywhere
+1521 - Time spent in Glades
+1522 - Time spent in Grove
+1523 - Time spent in Grotto
+1524 - Time spent in Blackroot
+1525 - Time spent in Swamp
+1526 - Time spent in Ginso
+1527 - Time spent in Valley
+1528 - Time spent in Misty
+1529 - Time spent in Forlorn
+1530 - Time spent in Sorrow
+1531 - Time spent in Horu
+1532 - Time spent in Final Escape
+1533 - Time spent (misc)
+
+1535 - Most deaths at one save
+1536 - Longest time between deaths 
+1537 - Most time lost to death
+1538 - Most pickups lost to death
+
+1540 - Wall Jump Time+Zone
+1541 - Charge Flame Time+Zone
+1542 - Double Jump Time+Zone
+1543 - Bash Time+Zone
+1544 - Stomp Time+Zone
+1545 - Glide Time+Zone
+1546 - Climb Time+Zone
+1547 - Charge Jump Time+Zone
+1548 - Dash Time+Zone
+1549 - Grenade Time+Zone
+1550 - Water Vein Time+Zone
+1551 - Clean Water Time+Zone
+1552 - Gumon Seal Time+Zone
+1553 - Wind Restored Time+Zone
+1554 - Sunstone Time+Zone
+1555 - Warmth Returned Time+Zone
+
+1570 - Saves
+1571 - sum(shoof)
+1575 - Max PPM
+1576 - Time of Max PPM
+1577 - Count at Max PPM
+1578 - Reloads
+1579 - Alt+R Count
+1580 - Teleporter Count
+1581 - Time since last pickup
+1582 - Longest drought
+1583 - Longest drought end time
+
+==== End Persists Through Death Zone ===
+
+1600 - Pickups found everywhere
+1601 - Pickups found in Glades
+1602 - Pickups found in Grove
+1603 - Pickups found in Grotto
+1604 - Pickups found in Blackroot
+1605 - Pickups found in Swamp
+1606 - Pickups found in Ginso
+1607 - Pickups found in Valley
+1608 - Pickups found in Misty
+1609 - Pickups found in Forlorn
+1610 - Pickups found in Sorrow
+1611 - Pickups found in Horu
+1612 - Mapstones
+
+1650 - LevelUpKills
+1651 - EnemiesKilled
+1652 - ExpGained
+1653 - ExpBonus
+
+
+2000-2256 - reserved IDs for Sense pickups

@@ -8,8 +8,13 @@ public class SeinPickupProcessor : SaveSerialize, ISeinReceiver, IPickupCollecto
 	// Token: 0x06003322 RID: 13090 RVA: 0x000D333C File Offset: 0x000D153C
 	public void OnCollectSkillPointPickup(SkillPointPickup skillPointPickup)
 	{
+		int repeatable = Randomizer.RepeatableCheck(skillPointPickup.Bounds.center);
+		if(repeatable != 1)
+			Randomizer.getPickup(skillPointPickup.Bounds.center);
+		if(repeatable > 0)
+			return;
+
 		skillPointPickup.Collected();
-		Randomizer.getPickup(skillPointPickup.Bounds.center);
 		if (GameWorld.Instance.CurrentArea != null)
 		{
 			GameWorld.Instance.CurrentArea.DirtyCompletionAmount();
@@ -42,8 +47,12 @@ public class SeinPickupProcessor : SaveSerialize, ISeinReceiver, IPickupCollecto
 	// Token: 0x06003324 RID: 13092 RVA: 0x000D333C File Offset: 0x000D153C
 	public void OnCollectMaxEnergyContainerPickup(MaxEnergyContainerPickup energyContainerPickup)
 	{
+		int repeatable = Randomizer.RepeatableCheck(energyContainerPickup.Bounds.center);
+		if(repeatable != 1)
+			Randomizer.getPickup(energyContainerPickup.Bounds.center);
+		if(repeatable > 0)
+			return;
 		energyContainerPickup.Collected();
-		Randomizer.getPickup(energyContainerPickup.Bounds.center);
 		if (GameWorld.Instance.CurrentArea != null)
 		{
 			GameWorld.Instance.CurrentArea.DirtyCompletionAmount();
@@ -53,24 +62,25 @@ public class SeinPickupProcessor : SaveSerialize, ISeinReceiver, IPickupCollecto
 	// Token: 0x06003325 RID: 13093
 	public void OnCollectExpOrbPickup(ExpOrbPickup expOrbPickup)
 	{
-		int num = expOrbPickup.Amount * ((!this.Sein.PlayerAbilities.SoulEfficiency.HasAbility) ? 1 : 2);
-		if (RandomizerBonus.ExpEfficiency())
-		{
-			num *= 2;
-		}
-		expOrbPickup.Collected();
+		int num = RandomizerBonus.ExpWithBonuses(expOrbPickup.Amount);
 		if (expOrbPickup.MessageType != ExpOrbPickup.ExpOrbMessageType.None)
 		{
-			Randomizer.getPickup(expOrbPickup.Bounds.center);
+			int repeatable = Randomizer.RepeatableCheck(expOrbPickup.Bounds.center);
+			if(repeatable != 1)
+				Randomizer.getPickup(expOrbPickup.Bounds.center);
+			if(repeatable > 0)
+				return;
 			if (GameWorld.Instance.CurrentArea != null)
 			{
 				GameWorld.Instance.CurrentArea.DirtyCompletionAmount();
 			}
+			expOrbPickup.Collected();
 			return;
 		}
-		if (Randomizer.ZeroXP)
+		expOrbPickup.Collected();
+		if (Randomizer.IgnoreEnemyExp)
 		{
-			this.Sein.Mortality.DamageReciever.OnRecieveDamage(new Damage(9999f, default(Vector2), default(Vector3), DamageType.Water, null));
+			return;
 		}
 		this.Sein.Level.GainExperience(num);
 		if (this.m_expText && this.m_expText.gameObject.activeInHierarchy)
@@ -91,8 +101,12 @@ public class SeinPickupProcessor : SaveSerialize, ISeinReceiver, IPickupCollecto
 	// Token: 0x06003326 RID: 13094 RVA: 0x000D333C File Offset: 0x000D153C
 	public void OnCollectKeystonePickup(KeystonePickup keystonePickup)
 	{
+		int repeatable = Randomizer.RepeatableCheck(keystonePickup.Bounds.center);
+		if(repeatable != 1)
+			Randomizer.getPickup(keystonePickup.Bounds.center);
+		if(repeatable > 0)
+			return;
 		keystonePickup.Collected();
-		Randomizer.getPickup(keystonePickup.Bounds.center);
 		if (GameWorld.Instance.CurrentArea != null)
 		{
 			GameWorld.Instance.CurrentArea.DirtyCompletionAmount();
@@ -102,8 +116,12 @@ public class SeinPickupProcessor : SaveSerialize, ISeinReceiver, IPickupCollecto
 	// Token: 0x06003327 RID: 13095 RVA: 0x000D333C File Offset: 0x000D153C
 	public void OnCollectMaxHealthContainerPickup(MaxHealthContainerPickup maxHealthContainerPickup)
 	{
+		int repeatable = Randomizer.RepeatableCheck(maxHealthContainerPickup.Bounds.center);
+		if(repeatable != 1)
+			Randomizer.getPickup(maxHealthContainerPickup.Bounds.center);
+		if(repeatable > 0)
+			return;
 		maxHealthContainerPickup.Collected();
-		Randomizer.getPickup(maxHealthContainerPickup.Bounds.center);
 		if (GameWorld.Instance.CurrentArea != null)
 		{
 			GameWorld.Instance.CurrentArea.DirtyCompletionAmount();
@@ -126,8 +144,12 @@ public class SeinPickupProcessor : SaveSerialize, ISeinReceiver, IPickupCollecto
 	// Token: 0x06003329 RID: 13097 RVA: 0x000D333C File Offset: 0x000D153C
 	public void OnCollectMapStonePickup(MapStonePickup mapStonePickup)
 	{
+		int repeatable = Randomizer.RepeatableCheck(mapStonePickup.Bounds.center);
+		if(repeatable != 1)
+			Randomizer.getPickup(mapStonePickup.Bounds.center);
+		if(repeatable > 0)
+			return;
 		mapStonePickup.Collected();
-		Randomizer.getPickup(mapStonePickup.Bounds.center);
 		if (GameWorld.Instance.CurrentArea != null)
 		{
 			GameWorld.Instance.CurrentArea.DirtyCompletionAmount();

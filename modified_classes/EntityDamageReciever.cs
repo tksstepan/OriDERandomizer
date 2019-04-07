@@ -58,6 +58,11 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 	// Token: 0x060017AC RID: 6060 RVA: 0x0007AAFC File Offset: 0x00078CFC
 	public override void OnRecieveDamage(Damage damage)
 	{
+		bool terrain = (damage.Type == DamageType.Crush || damage.Type == DamageType.Spikes || damage.Type == DamageType.Lava || damage.Type == DamageType.Laser);
+		if (this.Entity is Enemy && !(terrain || damage.Type == DamageType.Projectile || damage.Type == DamageType.Enemy))
+		{
+			RandomizerBonus.DamageDealt(Math.Max(Math.Min(this.Health / 4f, damage.Amount), 0f));
+		}
 		this.OnModifyDamage(damage);
 		if (damage.Type == DamageType.Enemy)
 		{
@@ -91,7 +96,7 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 					AchievementsLogic.Instance.OnEnemyKilledAnotherEnemy();
 				}
 			}
-			if (damage.Type == DamageType.Crush || damage.Type == DamageType.Spikes || damage.Type == DamageType.Lava || damage.Type == DamageType.Laser)
+			if (terrain)
 			{
 				Type type = this.Entity.GetType();
 				if (type != typeof(DropSlugEnemy) && type != typeof(KamikazeSootEnemy) && !base.gameObject.name.ToLower().Contains("wall"))
@@ -101,6 +106,7 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 			}
 			if (this.Entity is Enemy)
 			{
+				RandomizerStatsManager.OnKill(damage.Type);
 				if (damage.Type == DamageType.ChargeFlame)
 				{
 					if (Characters.Sein && Characters.Sein.Abilities.Dash)
@@ -135,6 +141,7 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 			if (this.Entity is PetrifiedPlant)
 			{
 				Randomizer.getPickup(this.Entity.Position);
+				RandomizerPlantManager.DestroyPlant(this.Entity.MoonGuid);
 			}
 		}
 	}

@@ -63,24 +63,22 @@ public class GrenadeBurst : MonoBehaviour, IPooled, ISuspendable
 	public void DealDamage()
 	{
 		Vector3 position = base.transform.position;
-		IAttackable[] array = Targets.Attackables.ToArray();
-		for (int i = 0; i < array.Length; i++)
+		foreach (IAttackable attackable in Targets.Attackables.ToArray())
 		{
-			IAttackable attackable = array[i];
 			if (!InstantiateUtility.IsDestroyed(attackable as Component) && !this.m_damageAttackables.Contains(attackable) && attackable.CanBeGrenaded())
 			{
 				Vector3 position2 = attackable.Position;
 				Vector3 vector = position2 - position;
-				if (vector.magnitude <= (RandomizerBonus.ExplosionPower() ? (this.BurstRadius + 2f) : this.BurstRadius))
+				if (vector.magnitude <= this.BurstRadius + (float)RandomizerBonus.SpiritFlameLevel())
 				{
 					this.m_damageAttackables.Add(attackable);
 					GameObject gameObject = ((Component)attackable).gameObject;
-					new Damage(RandomizerBonus.ExplosionPower() ? (this.DamageAmount * 2f) : this.DamageAmount, vector.normalized * 3f, position, DamageType.Grenade, base.gameObject).DealToComponents(gameObject);
+					new Damage(this.DamageAmount + (float)(3 * RandomizerBonus.SpiritFlameLevel()), vector.normalized * 3f, position, DamageType.Grenade, base.gameObject).DealToComponents(gameObject);
 					if (!attackable.IsDead())
 					{
-						GameObject expr_106 = (GameObject)InstantiateUtility.Instantiate(this.BurstImpactEffectPrefab, position2, Quaternion.identity);
-						expr_106.transform.eulerAngles = new Vector3(0f, 0f, MoonMath.Angle.AngleFromVector(vector.normalized));
-						expr_106.GetComponent<FollowPositionRotation>().SetTarget(gameObject.transform);
+						GameObject gameObject2 = (GameObject)InstantiateUtility.Instantiate(this.BurstImpactEffectPrefab, position2, Quaternion.identity);
+						gameObject2.transform.eulerAngles = new Vector3(0f, 0f, MoonMath.Angle.AngleFromVector(vector.normalized));
+						gameObject2.GetComponent<FollowPositionRotation>().SetTarget(gameObject.transform);
 					}
 				}
 			}

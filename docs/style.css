@@ -69,17 +69,30 @@ td {
     width: 128px;
 }
 
+.dropdown_small {
+    background-color: white;
+    border: none;
+    border-radius: 1px;
+    color: black;
+    height: 36px;
+    padding: 0px 8px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    width: 64px;
+}
+
 .section {
     text-align: left;
     font-size: 24px;
 }
 
 .var_column {
-    width: 300px;
+    width: 333px;
 }
 
 .logic_column {
-    width: 180px;
+    width: 250px;
 }
 
 .seed {
@@ -95,13 +108,43 @@ td {
     width: 192px;
 }
 
-.button {
+.gen_button {
     background-color: #00AA66;
     border: none;
     border-radius: 8px;
     color: white;
     padding: 8px 0px;
     width: 512px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.inactive_button {
+    background-color: #D3D3D3;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 8px 0px;
+    width: 256px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.active_button {
+    background-color: #00AA66;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 8px 0px;
+    width: 256px;
     text-align: center;
     text-decoration: none;
     display: inline-block;

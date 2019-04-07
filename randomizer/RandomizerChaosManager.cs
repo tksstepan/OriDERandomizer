@@ -5,18 +5,18 @@ using UnityEngine;
 // Token: 0x020009F2 RID: 2546
 public static class RandomizerChaosManager
 {
-	// Token: 0x06003759 RID: 14169
+	// Token: 0x0600375E RID: 14174
 	public static void initialize()
 	{
 		RandomizerChaosManager.Countdown = UnityEngine.Random.Range(300, 1800);
 		RandomizerChaosManager.Effects = new List<RandomizerChaosEffect>();
 		RandomizerChaosManager.Frequencies = new List<int>();
 		RandomizerChaosManager.Effects.Add(new RandomizerChaosMovementSpeed());
-		RandomizerChaosManager.Frequencies.Add(17);
+		RandomizerChaosManager.Frequencies.Add(19);
 		RandomizerChaosManager.Effects.Add(new RandomizerChaosGravity());
 		RandomizerChaosManager.Frequencies.Add(13);
 		RandomizerChaosManager.Effects.Add(new RandomizerChaosTeleport());
-		RandomizerChaosManager.Frequencies.Add(8);
+		RandomizerChaosManager.Frequencies.Add(5);
 		RandomizerChaosManager.Effects.Add(new RandomizerChaosZoom());
 		RandomizerChaosManager.Frequencies.Add(5);
 		RandomizerChaosManager.Effects.Add(new RandomizerChaosPoison());
@@ -26,10 +26,10 @@ public static class RandomizerChaosManager
 		RandomizerChaosManager.Effects.Add(new RandomizerChaosDamageModifier());
 		RandomizerChaosManager.Frequencies.Add(5);
 		RandomizerChaosManager.Effects.Add(new RandomizerChaosVelocityVector());
-		RandomizerChaosManager.Frequencies.Add(10);
+		RandomizerChaosManager.Frequencies.Add(11);
 	}
 
-	// Token: 0x0600375A RID: 14170
+	// Token: 0x0600375F RID: 14175 RVA: 0x000E1414 File Offset: 0x000DF614
 	public static void Update()
 	{
 		RandomizerChaosManager.Countdown--;
@@ -44,7 +44,7 @@ public static class RandomizerChaosManager
 		}
 	}
 
-	// Token: 0x0600375B RID: 14171
+	// Token: 0x06003760 RID: 14176 RVA: 0x000E1474 File Offset: 0x000DF674
 	public static void ClearEffects()
 	{
 		for (int i = 0; i < RandomizerChaosManager.Effects.Count; i++)
@@ -53,7 +53,7 @@ public static class RandomizerChaosManager
 		}
 	}
 
-	// Token: 0x0600375C RID: 14172
+	// Token: 0x06003761 RID: 14177 RVA: 0x000E14A8 File Offset: 0x000DF6A8
 	public static void SpawnEffect()
 	{
 		int num = 0;
@@ -69,12 +69,12 @@ public static class RandomizerChaosManager
 		}
 	}
 
-	// Token: 0x04003230 RID: 12848
+	// Token: 0x04003241 RID: 12865
 	public static int Countdown;
 
-	// Token: 0x04003231 RID: 12849
+	// Token: 0x04003242 RID: 12866
 	public static List<RandomizerChaosEffect> Effects;
 
-	// Token: 0x04003232 RID: 12850
+	// Token: 0x04003243 RID: 12867
 	public static List<int> Frequencies;
 }
