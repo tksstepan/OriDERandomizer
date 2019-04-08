@@ -538,6 +538,8 @@ home: DeathGauntlet
 		casual-core DoubleJump
 		master-lure Bash
 		master-lure Dash Ability=6 Energy=1
+	conn: MoonGrottoAboveTeleporter
+		master-lure Bash
 home: DeathGauntletRoof
 	-- anchor: above death gauntlet, next to the health cell
 	pickup: DeathGauntletRoofHealthCell
