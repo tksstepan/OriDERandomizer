@@ -3178,8 +3178,6 @@ home: ValleyTeleporter
 		casual-core Climb ChargeJump Glide
 		casual-core WallJump DoubleJump Glide
 		casual-core Climb DoubleJump Glide
-		standard-core Dash Glide DoubleJump WallJump
-		standard-core Dash Glide DoubleJump Climb
 		expert-dboost WallJump DoubleJump Health=4
 		expert-dboost Climb DoubleJump Health=4
 		expert-dboost WallJump Glide Health=4
@@ -3204,7 +3202,6 @@ home: ValleyTeleporter
 	conn: ValleyStompless
 		casual-core Glide Wind OpenWorld
 		casual-core Climb ChargeJump OpenWorld
-		standard-core Climb ChargeJump OpenWorld
 		expert-core Climb Bash Grenade OpenWorld
 		expert-core WallJump Bash Grenade OpenWorld
 		expert-abilities Dash Ability=6 OpenWorld
@@ -3858,7 +3855,6 @@ home: LowerSorrow
 		expert-abilities Dash Energy=2 Ability=6
 		expert-abilities Dash Stomp Ability=6
 		expert-abilities Dash Bash Ability=6
-		expert-abilities Dash DoubleJump Ability=6
 		dbash Bash
 		master-dboost Glide Health=4 Ability=12
 		master-abilities DoubleJump Ability=12
@@ -4024,7 +4020,6 @@ home: LeftSorrowMiddleDoor
 		master-abilities Bash Dash Stomp Ability=6
 		master-abilities Bash Dash ChargeJump Climb Ability=6
 		master-dboost Bash Climb ChargeJump DoubleJump Health=4 Ability=12
-		master-dboost Bash Stomp ChargeJump DoubleJump Health=4 Ability=12
 		glitched Dash
 home: MiddleSorrow
 -- anchored above the breakable floor in the main shaft
@@ -4357,7 +4352,6 @@ home: MistyPostMortarCorridor
 		standard-core Climb DoubleJump
 		standard-core WallJump ChargeJump
 		standard-core Climb ChargeJump
-		expert-abilities Bash Dash Ability=6
 		master-core DoubleJump
 		master-abilities Dash Ability=6
 home: MistyPrePlantLedge
@@ -4374,7 +4368,6 @@ home: MistyPrePlantLedge
 		standard-core Climb DoubleJump
 		expert-core WallJump Bash
 		expert-core Climb Bash
-		expert-dboost ChargeJump Health=7
 		master-core DoubleJump
 		master-core Bash
 home: MistyPreClimb
@@ -4388,7 +4381,6 @@ home: MistyPreClimb
 		expert-core Bash Grenade Climb DoubleJump
 		master-core DoubleJump Stomp
 		master-core Bash Grenade DoubleJump
-		gjump Grenade Climb ChargeJump
 	conn: ForlornTeleporter
 		glitched Dash
 	conn: RightForlorn
@@ -4407,9 +4399,7 @@ home: MistySpikeCave
 	conn: MistyKeystone3Ledge
 		casual-core WallJump Climb DoubleJump
 		standard-core Bash Glide DoubleJump
-		expert-dboost ChargeJump Glide DoubleJump Health=4
 		expert-core DoubleJump
-		expert-dboost ChargeJump DoubleJump Health=4
 		master-core Bash
 		master-dboost ChargeJump Health=4
 home: MistyKeystone3Ledge
@@ -4439,15 +4429,12 @@ home: MistyPreLasers
 		expert-core Bash Grenade
 		master-core DoubleJump
 		master-core Bash
-		master-abilities WallJump Dash Ability=6
-		master-abilities Climb Dash Ability=6
 		--you know what these are oriLurk
 home: MistyPostLasers
 	--anchor point: on the ledge after the climb puzzle wall
 	pickup: MistyPostClimbSpikeCave
 		casual-core Bash Glide DoubleJump
 		standard-core Bash Glide
-		standard-abilities Bash Glide Dash Ability=3
 		expert-dboost Glide Health=4
 		master-dboost Bash Health=4
 		master-dboost DoubleJump Health=11
