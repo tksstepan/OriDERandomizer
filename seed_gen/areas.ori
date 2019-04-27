@@ -765,8 +765,10 @@ home: SpiritTreeRefined
 		master-core ChargeFlame DoubleJump
 		master-core Grenade DoubleJump
 		master-abilities Dash DoubleJump Ability=6
-home: SpiderSacTetherArea
-	-- anchor: on the rock just below where the spider sac is attached
+home: SpiderCellHealthCellWall
+	-- anchor: on the rock just below where the spider sac is attached.
+	-- In the same physical place as SpiderSacTetherArea, but logically
+    -- different due to the falling spider sac changing paths here.
 	pickup: SpiderSacHealthCell
 		casual-core ChargeFlame WallJump
 		casual-core ChargeFlame DoubleJump
@@ -776,10 +778,11 @@ home: SpiderSacTetherArea
 		casual-core Grenade Climb ChargeJump
 		casual-dboost ChargeFlame
 		casual-dboost Grenade
+		standard-abilities Grenade Dash Ability=3
+		standard-abilities ChargeFlame Dash Ability=3
 		expert-abilities Dash Ability=6
-		master-core ChargeFlame DoubleJump
-		master-core Grenade DoubleJump
-		master-abilities Dash DoubleJump Ability=6
+home: SpiderSacTetherArea
+	-- anchor: on the rock just below where the spider sac is attached
 	pickup: SpiderSacEnergyDoor
 		casual-core Energy=4
 		timed-level Energy=2
@@ -823,7 +826,25 @@ home: SpiderSacArea
 		casual-core Climb
 		casual-core ChargeJump
 		casual-core Bash Grenade
+		expert-lure Bash DoubleJump Stomp
+		expert-lure Bash DoubleJump ChargeFlame
+		expert-abilities Dash Ability=6
 		master-core DoubleJump
+	conn: SpiderSacHealthCellWall
+        casual-core Climb DoubleJump
+		casual-core WallJump DoubleJump
+		casual-core Climb Glide
+		casual-core WallJump Glide
+		casual-core Bash Grenade
+		casual-core ChargeJump
+		standard-core Climb Dash
+		standard-core WallJump Dash
+		expert-lure Bash DoubleJump Stomp
+		expert-lure Bash DoubleJump ChargeFlame
+		expert-dboost WallJump Health=2
+        expert-dboost Climb Health=2      
+        expert-abilities Dash Ability=6
+        master-core DoubleJump
 	conn: SpiderWaterArea
 		casual-core DoubleJump
 		casual-core Glide
@@ -843,6 +864,10 @@ home: SpiderSacArea
 		casual-core Stomp WallJump
 		casual-core Stomp Climb
 		casual-core Stomp ChargeJump
+		standard-core Stomp Bash DoubleJump
+		standard-core ChargeFlame Bash DoubleJump
+		expert-core ChargeFlame Bash
+		expert-abilities Dash Ability=6
 		master-core ChargeFlame DoubleJump
 		master-core Grenade DoubleJump
 		master-core Stomp DoubleJump
