@@ -831,7 +831,7 @@ home: SpiderSacArea
 		expert-abilities Dash Ability=6
 		master-core DoubleJump
 	conn: SpiderSacHealthCellWall
-        casual-core Climb DoubleJump
+		casual-core Climb DoubleJump
 		casual-core WallJump DoubleJump
 		casual-core Climb Glide
 		casual-core WallJump Glide
@@ -842,9 +842,9 @@ home: SpiderSacArea
 		expert-lure Bash DoubleJump Stomp
 		expert-lure Bash DoubleJump ChargeFlame
 		expert-dboost WallJump Health=2
-        expert-dboost Climb Health=2      
-        expert-abilities Dash Ability=6
-        master-core DoubleJump
+		expert-dboost Climb Health=2      
+		expert-abilities Dash Ability=6
+		master-core DoubleJump
 	conn: SpiderWaterArea
 		casual-core DoubleJump
 		casual-core Glide
