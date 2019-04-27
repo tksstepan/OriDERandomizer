@@ -2010,14 +2010,26 @@ home: LeftGumoHideout
 		expert-abilities WallJump Dash Ability=6
 		expert-abilities Climb Dash Ability=6
 		expert-abilities ChargeJump Dash Ability=6
+		master-abilities DoubleJump Dash Ability=6
 	pickup: FarLeftGumoHideoutExp
 		casual-core WallJump DoubleJump
 		casual-core Climb ChargeJump
 		casual-core Climb DoubleJump Glide
 		standard-core Climb Bash Grenade
+		standard-core WallJump Glide
 		standard-abilities WallJump Dash Ability=3
 		standard-abilities Climb Dash Ability=3
+		expert-core DoubleJump Climb
+		expert-core Climb Glide
+		expert-dboost ChargeJump Glide Health=4
+		expert-dboost ChargeJump DoubleJump Health=4
+		expert-dboost ChargeJump Dash Health=4 Ability=3
+		expert-dboost ChargeJump Bash Grenade Health=4
 		master-core Bash
+		master-core DoubleJump Glide
+		master-dboost DoubleJump Health=4
+		master-dboost ChargeJump Health=7
+		master-abilities DoubleJump Dash Ability=3
 	conn: LowerLeftGumoHideout
 	conn: WaterVeinArea
 		casual-core WallJump DoubleJump
@@ -2028,6 +2040,7 @@ home: LeftGumoHideout
 		standard-core Climb DoubleJump
 		standard-abilities WallJump Dash Ability=3
 		standard-abilities Climb Dash Ability=3
+		expert-core DoubleJump ChargeJump
 		master-core DoubleJump
 		master-core WallJump Dash
 home: LowerLeftGumoHideout
