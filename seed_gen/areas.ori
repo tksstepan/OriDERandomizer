@@ -768,7 +768,7 @@ home: SpiritTreeRefined
 home: SpiderCellHealthCellWall
 	-- anchor: on the rock just below where the spider sac is attached.
 	-- In the same physical place as SpiderSacTetherArea, but logically
-    -- different due to the falling spider sac changing paths here.
+	-- different due to the falling spider sac changing paths here.
 	pickup: SpiderSacHealthCell
 		casual-core ChargeFlame WallJump
 		casual-core ChargeFlame DoubleJump
