@@ -71,7 +71,7 @@ public static class RandomizerBonusSkill
 
     public static void ActivateBonusSkill(int ab)
     {
-        if (!Characters.Sein || Characters.Sein.IsSuspended || ab == 0)
+        if (!Characters.Sein || Characters.Sein.IsSuspended || ab == 0 || RandomizerBonusSkill.get(ab) == 0)
         {
             return;
         }
@@ -221,7 +221,27 @@ public static class RandomizerBonusSkill
                 return;                
             }
         break;
-
+        case 111:
+                Characters.Sein.Mortality.DamageReciever.OnRecieveDamage(new Damage(9000f, new Vector2(0, 0), Characters.Sein.Position, DamageType.Lava, Characters.Sein.GameObject));
+        break;
+        case 112:
+            Randomizer.WarpTo(new Vector3(-2478,-593, 0), 0);
+            GameController.Instance.RemoveGameplayObjects();
+            RandomizerStatsManager.Active = false;
+            RandomizerCreditsManager.Initialize();
+        break;
+        case 113:
+            if (!Characters.Sein.Controller.CanMove || !Characters.Sein.Active)
+                return;
+            if (IsActive(ab))
+            {
+                Deactivate(ab);
+                BonusSkillText("Bash/Stomp Damage on");
+            } else {
+                Activate(ab);
+                BonusSkillText("Bash/Stomp Damage off");
+            }
+        break;
         default:
             return;
         }
@@ -278,12 +298,13 @@ public static class RandomizerBonusSkill
     // Token: 0x06003801 RID: 14337
     public static void FoundBonusSkill(int ID)
     {
+        bool psuedo = (ID == 108 || ID == 112);
         if(get(ID) > 0) {
-            if(ID != 108)
+            if(!psuedo)
                 Randomizer.showHint(RandomizerBonusSkill.BonusSkillNames[ID] + " (duplicate)");
             return;
         }
-        if(ID != 108)
+        if(!psuedo)
             Randomizer.showHint("Unlocked Bonus Skill: " + RandomizerBonusSkill.BonusSkillNames[ID]);
         int offset = 0;
         Dictionary<int, int> ubs = new Dictionary<int, int>(UnlockedBonusSkills);
@@ -452,7 +473,10 @@ public static class RandomizerBonusSkill
         { 107, "Level Explosion" },
         { 108, "Toggle Skill Velocity" },
         { 109, "Timewarp" },
-        { 110, "Invincibility" }
+        { 110, "Invincibility" },
+        { 111, "Wither" },
+        { 112, "Warp to Credits" },
+        { 113, "Toggle Bash/Stomp Damage" },
     };
     public static Dictionary <int, float> DrainRates = new Dictionary<int, float>
     {
@@ -461,6 +485,12 @@ public static class RandomizerBonusSkill
         { 109, 0.00112f },
         { 110, 0.01667f },
     };
+
+    public static float AbilityDamage(float orig) {
+        if(IsActive(113))
+            return 0;
+        return orig;
+    }
 
     public static float TimewarpFactor = 0.5f;
 
@@ -483,6 +513,17 @@ public static class RandomizerBonusSkill
     }
     public static void BonusSkillText(string text) {
         Randomizer.Print(text, 3, false, false, false, true);
+    }
+
+    public static bool UnlockCreditWarp(string message) {
+        if(get(112) > 0)
+            return false;
+        FoundBonusSkill(112);
+        ActiveBonus = 112;
+        message += "\nPress " + RandomizerRebinding.BonusToggle.FirstBindName() + " to warp to credits";
+        Randomizer.Print(message, 10, false, true, false, false);
+        RandomizerStatsManager.WriteStatsFile();
+        return true;
     }
 
 

@@ -54,6 +54,95 @@
 105 - Respawn Without Dying
 106 - Respec
 107 - Level Explosion
+108 - Toggle Skill Velocity
+109 - Timewarp
+110 - Invincibility
+111 - Wither
+112 - Warp to Credits
+113 - Toggle Bash/Stomp Damage
+
+200 - Quick Flame
+201 - Spark Flame
+202 - Charge Flame Burn
+203 - Split Flame
+204 - Ultra Light Burst
+205 - Cinder Flame
+206 - Ultra Stomp
+207 - Rapid Flame
+208 - Charge Flame Blast
+209 - Ultra Split Flame
+210 - Spirit Magnet
+211 - Map Markers
+212 - Life Efficiency
+213 - Ultra Spirit Magnet
+214 - Energy Efficiency
+215 - Ability Markers
+216 - Spirit Efficiency
+217 - Life Markers
+218 - Energy Markers
+219 - Sense
+220 - Rekindle
+221 - Regroup
+222 - Charge Flame Efficiency
+223 - Air Dash
+224 - Ultra Soul Link
+225 - Charge Dash
+226 - Water Breath
+227 - Soul Link Efficiency
+228 - Triple Jump
+229 - Ultra Defense
+230 - Remove Quick Flame
+231 - Remove Spark Flame
+232 - Remove Charge Flame Burn
+233 - Remove Split Flame
+234 - Remove Ultra Light Burst
+235 - Remove Cinder Flame
+236 - Remove Ultra Stomp
+237 - Remove Rapid Flame
+238 - Remove Charge Flame Blast
+239 - Remove Ultra Split Flame
+240 - Remove Spirit Magnet
+241 - Remove Map Markers
+242 - Remove Life Efficiency
+243 - Remove Ultra Spirit Magnet
+244 - Remove Energy Efficiency
+245 - Remove Ability Markers
+246 - Remove Spirit Efficiency
+247 - Remove Life Markers
+248 - Remove Energy Markers
+249 - Remove Sense
+250 - Remove Rekindle
+251 - Remove Regroup
+252 - Remove Charge Flame Efficiency
+253 - Remove Air Dash
+254 - Remove Ultra Soul Link
+255 - Remove Charge Dash
+256 - Remove Water Breath
+257 - Remove Soul Link Efficiency
+258 - Remove Triple Jump
+259 - Remove Ultra Defense
+
+900 - Wall Jump Tree Prog
+901 - Charge Flame Tree Prog
+902 - Double Jump Tree Prog
+903 - Bash Tree Prog
+904 - Stomp Tree Prog
+905 - Glide Tree Prog
+906 - Climb Tree Prog
+907 - Charge Jump Tree Prog
+908 - Dash Tree Prog
+909 - Grenade Tree Prog
+911 - Glades Relic Prog
+912 - Grove Relic Prog
+913 - Grotto Relic Prog
+914 - Blackroot Relic Prog
+915 - Swamp Relic Prog
+916 - Ginso Relic Prog
+917 - Valley Relic Prog
+918 - Misty Relic Prog
+919 - Forlorn Relic Prog
+920 - Sorrow Relic Prog
+921 - Horu Relic Prog
 
 
 1000 - plant tracking for map markers

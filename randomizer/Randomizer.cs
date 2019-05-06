@@ -11,7 +11,7 @@ using UnityEngine;
 // Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
-	public static string VERSION = "3.1";
+	public static string VERSION = "3.2";
 	public static void initialize()
 	{
 		try {
@@ -99,6 +99,7 @@ public static class Randomizer
 			Randomizer.StompZone = "MIA";
 			Randomizer.RepeatablePickupIds = new Dictionary<int, int>();
 			Randomizer.StompTriggers = false;
+			Randomizer.GoalModeFinish = false;
 			Randomizer.SpawnWith = "";
 			Randomizer.IgnoreEnemyExp = false;
 			Randomizer.RelicCountOverride = false;
@@ -227,19 +228,7 @@ public static class Randomizer
 		if(Characters.Sein.Abilities.Carry.IsCarrying)
 			Characters.Sein.Abilities.Carry.CurrentCarryable.Drop();
 		if(Randomizer.CanWarp > 0) {
-			if(RandomizerSyncManager.DoCreditWarp) {
-				GameController.Instance.CreateCheckpoint();
-				RandomizerStatsManager.OnSave(false);
-				GameController.Instance.SaveGameController.PerformSave();
-				Randomizer.WarpTo(new Vector3(-2478,-593, 0), 0);
-				GameController.Instance.RemoveGameplayObjects();
-				RandomizerStatsManager.Active = false;
-				RandomizerCreditsManager.Initialize();
-				RandomizerSyncManager.DoCreditWarp = false;
-				Randomizer.CanWarp = 0;
-				return;
-			}
-			else if(Vector3.Distance(Randomizer.WarpSource, Characters.Sein.Position) < 7) {
+			if(Vector3.Distance(Randomizer.WarpSource, Characters.Sein.Position) < 7) {
 				Randomizer.WarpTo(Randomizer.WarpTarget, 15);
 				Randomizer.CanWarp = 0;
 				return;
@@ -319,7 +308,6 @@ public static class Randomizer
 
 	public static void getSkill()
 	{
-		Characters.Sein.Inventory.IncRandomizerItem(27, 1);
 		Randomizer.getPickup();
 		Randomizer.showProgress();
 	}
@@ -789,33 +777,43 @@ public static class Randomizer
 
 	public static bool canFinalEscape()
 	{
+		return Randomizer.canFinalEscape(true);
+	}
+
+	public static bool canFinalEscape(bool verbose)
+	{
 		if (Randomizer.fragsEnabled && RandomizerBonus.WarmthFrags() < Randomizer.fragKeyFinish)
 		{
-			Randomizer.printInfo(string.Concat(new string[]
-			{
-				"Frags: (",
-				RandomizerBonus.WarmthFrags().ToString(),
-				"/",
-				Randomizer.fragKeyFinish.ToString(),
-				")"
-			}));
+			if(verbose)
+				Randomizer.printInfo(string.Concat(new string[]
+				{
+					"Frags: (",
+					RandomizerBonus.WarmthFrags().ToString(),
+					"/",
+					Randomizer.fragKeyFinish.ToString(),
+					")"
+				}));
 			return false;
 		}
 		if (Randomizer.WorldTour) {
 			int relics = Characters.Sein.Inventory.GetRandomizerItem(302);
 			if(relics < Randomizer.RelicCount) {
-				Randomizer.printInfo("Relics (" + relics.ToString() + "/" + Randomizer.RelicCount.ToString() + ")");
+				if(verbose)
+					Randomizer.printInfo("Relics (" + relics.ToString() + "/" + Randomizer.RelicCount.ToString() + ")");
 				return false;
 			}
 		}
 		if (Randomizer.ForceTrees && RandomizerBonus.SkillTreeProgression() < 10)
 		{
-			Randomizer.printInfo("Trees (" + RandomizerBonus.SkillTreeProgression().ToString() + "/10)");
+
+			if(verbose)
+				Randomizer.printInfo("Trees (" + RandomizerBonus.SkillTreeProgression().ToString() + "/10)");
 			return false;
 		}
 		if (Randomizer.ForceMaps && RandomizerBonus.MapStoneProgression() < 9)
 		{
-			Randomizer.printInfo("Maps (" + RandomizerBonus.MapStoneProgression().ToString() + "/9)");
+			if(verbose)
+				Randomizer.printInfo("Maps (" + RandomizerBonus.MapStoneProgression().ToString() + "/9)");
 			return false;
 		}
 		return true;
@@ -958,8 +956,6 @@ public static class Randomizer
 				if(CanWarp > 0)
 				{
 					CanWarp--;
-					if(RandomizerSyncManager.DoCreditWarp && CanWarp == 0)
-						RandomizerSyncManager.DoCreditWarp = false;
 				}
 				if(RepeatableCooldown > 0)
 					RepeatableCooldown--;
@@ -1032,6 +1028,10 @@ public static class Randomizer
 					}
 					if(!Characters.Sein.IsSuspended && Scenes.Manager.CurrentScene != null)
 					{
+						if(GoalModeFinish && Randomizer.canFinalEscape(false))
+						{
+							RandomizerBonusSkill.UnlockCreditWarp("Goal mode(s) completed!");
+						}
 						ResetTrackerCount = 0;
 						RandomizerTrackedDataManager.UpdateBitfields();
 						RandomizerColorManager.UpdateHotColdTarget();
@@ -1229,6 +1229,10 @@ public static class Randomizer
 			if (flag == "stomptriggers")
 			{
 				Randomizer.StompTriggers = true;
+			}
+			if (flag == "goalmodefinish")
+			{
+				Randomizer.GoalModeFinish = true;
 			}
 		}
 		if(doBingo)
@@ -1432,4 +1436,6 @@ public static class Randomizer
 	public static Vector3 WarpSource;
 
 	public static int CanWarp;
+
+	public static bool GoalModeFinish;
 }

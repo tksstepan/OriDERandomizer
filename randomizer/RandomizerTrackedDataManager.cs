@@ -9,83 +9,100 @@ public static class RandomizerTrackedDataManager
 	public static void Initialize()
 	{
 		RandomizerTrackedDataManager.TreeBitfield = -559038737;
-		Trees = new Dictionary<int, string>();
-		Trees.Add(0, "Spirit Flame");
-		Trees.Add(1, "Wall Jump");
-		Trees.Add(2, "Charge Flame");
-		Trees.Add(3, "Double Jump");
-		Trees.Add(4, "Bash");
-		Trees.Add(5, "Stomp");
-		Trees.Add(6, "Glide");
-		Trees.Add(7, "Climb");
-		Trees.Add(8, "Charge Jump");
-		Trees.Add(9, "Grenade");
-		Trees.Add(10, "Dash");
+		Trees = new Dictionary<int, string>() {
+			{0, "Spirit Flame"},
+			{1, "Wall Jump"},
+			{2, "Charge Flame"},
+			{3, "Double Jump"},
+			{4, "Bash"},
+			{5, "Stomp"},
+			{6, "Glide"},
+			{7, "Climb"},
+			{8, "Charge Jump"},
+			{9, "Grenade"},
+			{10, "Dash"},
+		};
+		
+		Zones = new Dictionary<int, string>() {			
+			{0, "Glades"},
+			{1, "Grove"},
+			{2, "Grotto"},
+			{3, "Blackroot"},
+			{4, "Swamp"},
+			{5, "Ginso"},
+			{6, "Valley"},
+			{7, "Misty"},
+			{8, "Forlorn"},
+			{9, "Sorrow"},
+			{10, "Horu"},
+		};
 
-		RelicFound = new Dictionary<string, int>();
-		RelicFound.Add("Glades", 0);
-		RelicFound.Add("Grove", 1);
-		RelicFound.Add("Grotto", 2);
-		RelicFound.Add("Blackroot", 3);
-		RelicFound.Add("Swamp", 4);
-		RelicFound.Add("Ginso", 5);
-		RelicFound.Add("Valley", 6);
-		RelicFound.Add("Misty", 7);
-		RelicFound.Add("Forlorn", 8);
-		RelicFound.Add("Sorrow", 9);
-		RelicFound.Add("Horu", 10);
+		RelicFound = new Dictionary<string, int>() {			
+			{"Glades", 0},
+			{"Grove", 1},
+			{"Grotto", 2},
+			{"Blackroot", 3},
+			{"Swamp", 4},
+			{"Ginso", 5},
+			{"Valley", 6},
+			{"Misty", 7},
+			{"Forlorn", 8},
+			{"Sorrow", 9},
+			{"Horu", 10},
+		};
 
-		RelicExists = new Dictionary<string, int>();
-		RelicExists.Add("Glades", 11);
-		RelicExists.Add("Grove", 12);
-		RelicExists.Add("Grotto", 13);
-		RelicExists.Add("Blackroot", 14);
-		RelicExists.Add("Swamp", 15);
-		RelicExists.Add("Ginso", 16);
-		RelicExists.Add("Valley", 17);
-		RelicExists.Add("Misty", 18);
-		RelicExists.Add("Forlorn", 19);
-		RelicExists.Add("Sorrow", 20);
-		RelicExists.Add("Horu", 21);
+		RelicExists = new Dictionary<string, int>() {
+			{"Glades", 11},
+			{"Grove", 12},
+			{"Grotto", 13},
+			{"Blackroot", 14},
+			{"Swamp", 15},
+			{"Ginso", 16},
+			{"Valley", 17},
+			{"Misty", 18},
+			{"Forlorn", 19},
+			{"Sorrow", 20},
+			{"Horu", 21},
+		};
 
+		Pedistals = new Dictionary<string, MapstoneData>() {
+			{"sunkenGlades", new MapstoneData("Glades", 0)},
+			{"mangrove", new MapstoneData("Blackroot", 1)},
+			{"hollowGrove", new MapstoneData("Grove", 2)},
+			{"moonGrotto", new MapstoneData("Grotto", 3)},
+			{"thornfeltSwamp", new MapstoneData("Swamp", 4)},
+			{"valleyOfTheWind", new MapstoneData("Valley", 5)},
+			{"forlornRuins", new MapstoneData("Forlorn", 6)},
+			{"sorrowPass", new MapstoneData("Sorrow", 7)},
+			{"mountHoru", new MapstoneData("Horu", 8)},
+		};
 
-		Pedistals = new Dictionary<string, MapstoneData>();
-		Pedistals.Add("sunkenGlades", new MapstoneData("Glades", 0));
-		Pedistals.Add("mangrove", new MapstoneData("Blackroot", 1));
-		Pedistals.Add("hollowGrove", new MapstoneData("Grove", 2));
-		Pedistals.Add("moonGrotto", new MapstoneData("Grotto", 3));
-		Pedistals.Add("thornfeltSwamp", new MapstoneData("Swamp", 4));
-		Pedistals.Add("valleyOfTheWind", new MapstoneData("Valley", 5));
-		Pedistals.Add("forlornRuins", new MapstoneData("Forlorn", 6));
-		Pedistals.Add("sorrowPass", new MapstoneData("Sorrow", 7));
-		Pedistals.Add("mountHoru", new MapstoneData("Horu", 8));
+		Teleporters = new Dictionary<string, int>() {
+			{"Grove", 0},
+			{"Swamp", 1},
+			{"Grotto", 2},
+			{"Valley", 3},
+			{"Forlorn", 4},
+			{"Sorrow", 5},
+			{"Ginso", 6},
+			{"Horu", 7},
+			{"Blackroot", 8},
+			{"Glades", 9},
+		};
 
-		Teleporters = new Dictionary<string, int>();
-
-		Teleporters.Add("Grove", 0);
-		Teleporters.Add("Swamp", 1);
-		Teleporters.Add("Grotto", 2);
-		Teleporters.Add("Valley", 3);
-		Teleporters.Add("Forlorn", 4);
-		Teleporters.Add("Sorrow", 5);
-		Teleporters.Add("Ginso", 6);
-		Teleporters.Add("Horu", 7);
-		Teleporters.Add("Blackroot", 8);
-		Teleporters.Add("Glades", 9);
-
-		Skills = new Dictionary<int, AbilityType>();
-
-		Skills.Add(11, AbilityType.SpiritFlame);
-		Skills.Add(12, AbilityType.WallJump);
-		Skills.Add(13, AbilityType.ChargeFlame);
-		Skills.Add(14, AbilityType.DoubleJump);
-		Skills.Add(15, AbilityType.Bash);
-		Skills.Add(16, AbilityType.Stomp);
-		Skills.Add(17, AbilityType.Glide);
-		Skills.Add(18, AbilityType.Climb);
-		Skills.Add(19, AbilityType.ChargeJump);
-		Skills.Add(20, AbilityType.Grenade);
-		Skills.Add(21, AbilityType.Dash);
+		Skills = new Dictionary<int, AbilityType>() {
+			{11, AbilityType.SpiritFlame},
+			{12, AbilityType.WallJump},
+			{13, AbilityType.ChargeFlame},
+			{14, AbilityType.DoubleJump},
+			{15, AbilityType.Bash},
+			{16, AbilityType.Stomp},
+			{17, AbilityType.Glide},
+			{18, AbilityType.Climb},
+			{19, AbilityType.ChargeJump},
+			{20, AbilityType.Grenade},
+			{21, AbilityType.Dash},
+		};
 	}
 
 	public static void UpdateBitfields() {
@@ -179,9 +196,10 @@ public static class RandomizerTrackedDataManager
 				unowned.Add(tp.Key);
 			}
 		}
-		string ownedLine   = "TPs active: " + string.Join(", ", owned.ToArray());
-		string unownedLine = "remaining: " + string.Join(", ", unowned.ToArray());
-		Randomizer.printInfo(ownedLine + "\n" + unownedLine);
+		string output = "TPs active: " + string.Join(", ", owned.ToArray());
+		if(unowned.Count > 0)
+			output += "\nremaining: " + string.Join(", ", unowned.ToArray());
+		Randomizer.printInfo(output);
 	}
 
 	public static void ListTrees() {
@@ -198,27 +216,36 @@ public static class RandomizerTrackedDataManager
 				unowned.Add(tree.Value);
 			}
 		}
-		string ownedLine = "Trees active: " + string.Join(", ", owned.ToArray());
-		string unownedLine = "remaining: " + string.Join(", ", unowned.ToArray());
-		Randomizer.printInfo(ownedLine + "\n" + unownedLine);
+		string output = "Trees active: " + string.Join(", ", owned.ToArray());
+		if(unowned.Count > 0)
+			output += "\nremaining: " + string.Join(", ", unowned.ToArray());
+		Randomizer.printInfo(output);
 	}
 
 	public static void ListRelics() {
 		UpdateBitfields();
 		List<string> owned = new List<string>();
 		List<string> unowned = new List<string>();
+		List<string> no_relics = new List<string>();
 
 		foreach(KeyValuePair<string, int> relic in RelicFound) {
 			if(Randomizer.RelicZoneLookup.ContainsValue(relic.Key))
+			{
 				if((RelicBitfield >> relic.Value) % 2 == 1) {
 					owned.Add(relic.Key);
 				} else {
 					unowned.Add(relic.Key);
 				}
+			} else {
+				no_relics.Add(relic.Key);
+			}
 		}
-		string ownedLine = "Relics collected: " + string.Join(", ", owned.ToArray());
-		string unownedLine = "remaining: " + string.Join(", ", unowned.ToArray());
-		Randomizer.printInfo(ownedLine + "\n" + unownedLine);
+		string output = "Relics collected: " + string.Join(", ", owned.ToArray());
+		if(unowned.Count > 0)
+			output += "\nremaining: " + string.Join(", ", unowned.ToArray());
+		if(no_relics.Count > 0)
+			output += "\nrelicless: " + string.Join(", ", no_relics.ToArray());
+		Randomizer.printInfo(output);
 	}
 
 	public static void ListMapstones() {
@@ -232,26 +259,34 @@ public static class RandomizerTrackedDataManager
 				unowned.Add(data.Zone);
 			}
 		}
-		string ownedLine = "Maps active: " + string.Join(", ", owned.ToArray());
-		string unownedLine = "remaining: " + string.Join(", ", unowned.ToArray());
-		Randomizer.printInfo(ownedLine + "\n" + unownedLine);
+		string output = "Maps active: " + string.Join(", ", owned.ToArray());
+		if(unowned.Count > 0)
+			output += "\nremaining: " + string.Join(", ", unowned.ToArray());
+		Randomizer.printInfo(output);
 	}
 
 
-	public static void SetTree(int treeNum) {
+	public static bool SetTree(int treeNum) {
 		if(!GetTree(treeNum)) {
 			TreeBitfield = Characters.Sein.Inventory.IncRandomizerItem(1001, 1 << treeNum);
+			if(treeNum != 0)
+				Characters.Sein.Inventory.IncRandomizerItem(27, 1);
+			return true;
 		}
+		return false;
 	}
 
 	public static bool GetTree(int treeNum) {
 		return (TreeBitfield >> treeNum) % 2 == 1;
 	}
 
-	public static void SetRelic(string zone) {
+	public static bool SetRelic(string zone) {
 		if(!GetRelic(zone)) {
+            Characters.Sein.Inventory.IncRandomizerItem(302, 1);
 			RelicBitfield = Characters.Sein.Inventory.IncRandomizerItem(1002, 1 << RelicFound[zone]);
+			return true;
 		}
+		return false;
 	}
 
 	public static bool GetRelic(string zone) {
@@ -291,6 +326,8 @@ public static class RandomizerTrackedDataManager
 
 	// Token: 0x040032E2 RID: 13026
 	public static Dictionary<int, string> Trees;
+
+	public static Dictionary<int, string> Zones;
 
 	public static Dictionary<string, int> RelicFound;
 

@@ -17,7 +17,6 @@ public static class RandomizerSyncManager
 		webClient.DownloadStringCompleted += RetryOnFail;
 		getClient = new WebClient();
 		getClient.DownloadStringCompleted += CheckPickups;
-		DoCreditWarp = false;
 		if (JustFound == null)
 			JustFound = new HashSet<String>();
 		if (CurrentSignals == null)
@@ -178,8 +177,20 @@ public static class RandomizerSyncManager
 						int id = int.Parse(splitpair[0]);
 						int cnt = int.Parse(splitpair[1]);
 						if(id >= 100) {
-							if(!RandomizerBonusSkill.UnlockedBonusSkills.ContainsValue(id) && cnt > 0)
+							if(id >= 900) {
+								if(id < 910) {
+									int tree = id-899;
+									string treeName =  RandomizerTrackedDataManager.Trees[tree];
+									if(RandomizerTrackedDataManager.SetTree(tree))
+										Randomizer.showHint(treeName +  " tree (collected by teammate)");
+								} else if(id < 922) {
+									string relicZone = RandomizerTrackedDataManager.Zones[id-911];
+									if(RandomizerTrackedDataManager.SetRelic(relicZone))
+										Randomizer.showHint("#" + relicZone + " relic# (found by teammate)", 300);
+								}
+							} else if(!RandomizerBonusSkill.UnlockedBonusSkills.ContainsValue(id) && cnt > 0) {
 								RandomizerBonus.UpgradeID(id);
+							}
 						} else if(RandomizerBonus.UpgradeCount(id) < cnt) {
 							RandomizerBonus.UpgradeID(id);
 						} else if(!JustFound.Contains("RB"+splitpair[0]) && RandomizerBonus.UpgradeCount(id) > cnt) {
@@ -214,10 +225,11 @@ public static class RandomizerSyncManager
 						}
 						else if (text.StartsWith("win:"))
 						{
-							Randomizer.Print(text.Substring(4)+"\n (Press Alt+R to warp to credits)", 10, false, true, false, false);
-							Randomizer.CanWarp = 10;
-							DoCreditWarp = true;
-							RandomizerStatsManager.WriteStatsFile();
+							if(!RandomizerBonusSkill.UnlockCreditWarp(text.Substring(4)))
+							{
+								Randomizer.Print(text.Substring(4), 10, false, true, false, false);
+								RandomizerStatsManager.WriteStatsFile();
+							}
 						}
 						else if (text.StartsWith("pickup:"))
 						{
@@ -318,6 +330,11 @@ public static class RandomizerSyncManager
 		}
 	}
 
+	public static void FoundTP(string identifier) {
+		if(TPIds.ContainsKey(identifier))
+			FoundPickup(TPIds[identifier], -1);
+	}
+
 	// Token: 0x0600379D RID: 14237
 	public static bool isTeleporterActivated(string identifier)
 	{
@@ -378,7 +395,16 @@ public static class RandomizerSyncManager
 
 	public static HashSet<string> CurrentSignals;
 
-	public static bool DoCreditWarp;
+	public static Dictionary<string, RandomizerAction> TPIds = new Dictionary<string, RandomizerAction>() {
+		{"swamp", new RandomizerAction("TP", "Swamp")},
+		{"sorrowPass", new RandomizerAction("TP", "Valley")},
+		{"moonGrotto", new RandomizerAction("TP", "Grotto")},
+		{"valleyOfTheWind", new RandomizerAction("TP", "Sorrow")},
+		{"spiritTree", new RandomizerAction("TP", "Grove")},
+		{"ginsoTree", new RandomizerAction("TP", "Ginso")},
+		{"forlorn", new RandomizerAction("TP", "Forlorn")},
+		{"mountHoru", new RandomizerAction("TP", "Horu")},
+	};
 
 	// Token: 0x02000A00 RID: 2560
 	public class Pickup

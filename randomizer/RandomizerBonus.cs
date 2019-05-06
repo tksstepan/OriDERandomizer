@@ -14,9 +14,19 @@ public static class RandomizerBonus
         {
             ID = -ID;
         }
-        if (ID >= 100)
+        if (RandomizerBonusSkill.BonusSkillNames.ContainsKey(ID))
         {
             RandomizerBonusSkill.FoundBonusSkill(ID);
+            return;
+        }
+        if(ID >= 200 && ID < 260)
+        {
+            int abilityId = (ID - 200) % 30;
+            Ability ability = abilities[abilityId];
+            if (ID < 230)
+                ability.Found();
+            else
+                ability.Lost();
             return;
         }
         switch (ID)
@@ -284,16 +294,16 @@ public static class RandomizerBonus
             int vel = Characters.Sein.Inventory.GetRandomizerItem(33);
             if (!flag)
             {
-                Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
-                Randomizer.showHint("Skill Velocity Upgrade x" + RandomizerBonus.Velocity().ToString());
+                int v = Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
+                Randomizer.showHint("Skill Velocity Upgrade x" + v.ToString());
                 if(vel == 0) 
                     RandomizerBonusSkill.FoundBonusSkill(108);
                 return;
             }
             if (RandomizerBonus.Velocity() > 0)
             {
-                Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
-                Randomizer.showHint("Skill Velocity Upgrade x" + RandomizerBonus.Velocity().ToString());
+                int v = Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
+                Randomizer.showHint("Skill Velocity Upgrade x" + v.ToString());
                 return;
             }
             break;
@@ -601,7 +611,68 @@ public static class RandomizerBonus
     {
         return Characters.Sein.Inventory.GetRandomizerItem(34) == 1;
     }
-
     // Token: 0x04003262 RID: 12898
     public static bool DoubleAirDashUsed;
+    // Token: 0x04003285 RID: 12933
+    private static RandomizerBonus.Ability[] abilities = new RandomizerBonus.Ability[]
+    {
+        new RandomizerBonus.Ability("Quick Flame", (PlayerAbilities p) => p.QuickFlame),
+        new RandomizerBonus.Ability("Spark Flame", (PlayerAbilities p) => p.SparkFlame),
+        new RandomizerBonus.Ability("Charge Flame Burn", (PlayerAbilities p) => p.ChargeFlameBurn),
+        new RandomizerBonus.Ability("Split Flame", (PlayerAbilities p) => p.SplitFlameUpgrade),
+        new RandomizerBonus.Ability("Ultra Light Burst", (PlayerAbilities p) => p.GrenadeUpgrade),
+        new RandomizerBonus.Ability("Cinder Flame", (PlayerAbilities p) => p.CinderFlame),
+        new RandomizerBonus.Ability("Ultra Stomp", (PlayerAbilities p) => p.StompUpgrade),
+        new RandomizerBonus.Ability("Rapid Flame", (PlayerAbilities p) => p.RapidFire),
+        new RandomizerBonus.Ability("Charge Flame Blast", (PlayerAbilities p) => p.ChargeFlameBlast),
+        new RandomizerBonus.Ability("Ultra Split Flame", (PlayerAbilities p) => p.UltraSplitFlame),
+        new RandomizerBonus.Ability("Spirit Magnet", (PlayerAbilities p) => p.Magnet),
+        new RandomizerBonus.Ability("Map Markers", (PlayerAbilities p) => p.MapMarkers),
+        new RandomizerBonus.Ability("Life Efficiency", (PlayerAbilities p) => p.HealthEfficiency),
+        new RandomizerBonus.Ability("Ultra Spirit Magnet", (PlayerAbilities p) => p.UltraMagnet),
+        new RandomizerBonus.Ability("Energy Efficiency", (PlayerAbilities p) => p.EnergyEfficiency),
+        new RandomizerBonus.Ability("Ability Markers", (PlayerAbilities p) => p.AbilityMarkers),
+        new RandomizerBonus.Ability("Spirit Efficiency", (PlayerAbilities p) => p.SoulEfficiency),
+        new RandomizerBonus.Ability("Life Markers", (PlayerAbilities p) => p.HealthMarkers),
+        new RandomizerBonus.Ability("Energy Markers", (PlayerAbilities p) => p.EnergyMarkers),
+        new RandomizerBonus.Ability("Sense", (PlayerAbilities p) => p.Sense),
+        new RandomizerBonus.Ability("Rekindle", (PlayerAbilities p) => p.Rekindle),
+        new RandomizerBonus.Ability("Regroup", (PlayerAbilities p) => p.Regroup),
+        new RandomizerBonus.Ability("Charge Flame Efficiency", (PlayerAbilities p) => p.ChargeFlameEfficiency),
+        new RandomizerBonus.Ability("Air Dash", (PlayerAbilities p) => p.AirDash),
+        new RandomizerBonus.Ability("Ultra Soul Link", (PlayerAbilities p) => p.UltraSoulFlame),
+        new RandomizerBonus.Ability("Charge Dash", (PlayerAbilities p) => p.ChargeDash),
+        new RandomizerBonus.Ability("Water Breath", (PlayerAbilities p) => p.WaterBreath),
+        new RandomizerBonus.Ability("Soul Link Efficiency", (PlayerAbilities p) => p.SoulFlameEfficiency),
+        new RandomizerBonus.Ability("Triple Jump", (PlayerAbilities p) => p.DoubleJumpUpgrade),
+        new RandomizerBonus.Ability("Ultra Defense", (PlayerAbilities p) => p.UltraDefense)
+    };
+    private class Ability
+    {
+        public Ability(string name, Func<PlayerAbilities, CharacterAbility> selector)
+        {
+            this.name = name;
+            this.selector = selector;
+        }
+        public void Found()
+        {
+            if (!Characters.Sein)
+            {
+                return;
+            }
+            Randomizer.showHint("$" + this.name + "$", 240);
+            this.selector(Characters.Sein.PlayerAbilities).HasAbility = true;
+        }
+        public void Lost()
+        {
+            if (!Characters.Sein)
+            {
+                return;
+            }
+            Randomizer.showHint("@" + this.name + " Lost!!@", 240);
+            this.selector(Characters.Sein.PlayerAbilities).HasAbility = false;
+        }
+        private string name;
+        private Func<PlayerAbilities, CharacterAbility> selector;
+    }
 }

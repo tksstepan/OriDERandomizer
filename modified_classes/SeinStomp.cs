@@ -152,9 +152,9 @@ public class SeinStomp : CharacterState, ISeinReceiver
 		{
 			if (this.Sein.PlayerAbilities.StompUpgrade.HasAbility)
 			{
-				return this.UpgradedDamage;
+				return RandomizerBonusSkill.AbilityDamage(this.UpgradedDamage);
 			}
-			return this.Damage;
+			return RandomizerBonusSkill.AbilityDamage(this.Damage);
 		}
 	}
 
