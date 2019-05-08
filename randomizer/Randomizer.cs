@@ -1003,7 +1003,7 @@ public static class Randomizer
 					{
 						foreach (SceneManagerScene sms in Scenes.Manager.ActiveScenes)
 						{
-							if (sms.MetaData.Scene == "creditsScreen" && sms.CurrentState == SceneManagerScene.State.Loading)
+							if (sms.MetaData.Scene == "creditsScreen" && (sms.CurrentState == SceneManagerScene.State.Loading || sms.CurrentState == SceneMangerScene.Loaded))
 							{
 								RandomizerStatsManager.Finish();
 								RandomizerCreditsManager.Initialize();
