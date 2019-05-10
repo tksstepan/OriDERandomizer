@@ -331,27 +331,48 @@ public static class RandomizerSyncManager
 	}
 
 	public static void FoundTP(string identifier) {
-		if(TPIds.ContainsKey(identifier))
-			FoundPickup(TPIds[identifier], -1);
+		try
+		{
+			if(TPIds.ContainsKey(identifier) && !isTeleporterActivated(identifier, false))
+				FoundPickup(TPIds[identifier], -1);
+		}
+		catch (Exception e)
+		{
+			Randomizer.LogError("FoundTP: " + e.Message);
+		}
 	}
 
 	// Token: 0x0600379D RID: 14237
 	public static bool isTeleporterActivated(string identifier)
 	{
-		if(identifier == "Ginso" && Characters.Sein.Inventory.GetRandomizerItem(1024) == 1)
-			return true;
-		if(identifier == "Forlorn" && Characters.Sein.Inventory.GetRandomizerItem(1025) == 1)
-			return true;
-		if(identifier == "Horu" && Characters.Sein.Inventory.GetRandomizerItem(1026) == 1)
-			return true;
-
-
-		foreach (GameMapTeleporter gameMapTeleporter in TeleporterController.Instance.Teleporters)
-		{
-			if (gameMapTeleporter.Identifier == Randomizer.TeleportTable[identifier].ToString())
+		return isTeleporterActivated(identifier, true);
+	}
+	// Token: 0x0600379D RID: 14237
+	public static bool isTeleporterActivated(string identifier, bool translate)
+	{
+		if(translate)
+			identifier = Randomizer.TeleportTable[identifier].ToString();
+		try{
+			if(Characters.Sein && Characters.Sein.Inventory)
 			{
-				return gameMapTeleporter.Activated;
+				if(identifier == "Ginso" && Characters.Sein.Inventory.GetRandomizerItem(1024) == 1)
+					return true;
+				if(identifier == "Forlorn" && Characters.Sein.Inventory.GetRandomizerItem(1025) == 1)
+					return true;
+				if(identifier == "Horu" && Characters.Sein.Inventory.GetRandomizerItem(1026) == 1)
+					return true;			
 			}
+			foreach (GameMapTeleporter gameMapTeleporter in TeleporterController.Instance.Teleporters)
+			{
+				if (gameMapTeleporter.Identifier == identifier)
+				{
+					return gameMapTeleporter.Activated;
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Randomizer.LogError("IsTPActive: " + identifier + " " + e.Message +". Not criticial unless repeating.");
 		}
 		return false;
 	}

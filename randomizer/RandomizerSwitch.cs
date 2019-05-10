@@ -178,7 +178,7 @@ public static class RandomizerSwitch
             Randomizer.showHint(colorChar + "Broken " + Value + " teleporter\nCollect " + shardPart + colorChar, 300);
             return;
         }
-        TeleporterController.Activate(Randomizer.TeleportTable[Value].ToString());
+        TeleporterController.Activate(Randomizer.TeleportTable[Value].ToString(), false);
         Randomizer.showHint(colorChar + Value + " teleporter activated" + colorChar);
     }
     
