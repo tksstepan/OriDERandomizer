@@ -8,7 +8,7 @@ using Sein.World;
 
 public static class BingoController
 {
-    public static string BINGO_VERSION = "0.3.0";
+    public static string BINGO_VERSION = "0.3.1";
     private static string scene() {
         return Scenes.Manager.CurrentScene != null ? Scenes.Manager.CurrentScene.Scene : "" ;
     }
@@ -233,6 +233,11 @@ public static class BingoController
     public static void OnExp(int exp){
         if(!Active) return;
         IntGoals["GainExperience"].Value += exp;
+    }
+
+    public static void OnTree(int treeNum){
+        if(!Active) return;
+        set(2566+treeNum, 1);
     }
 
     public static void OnActivateTeleporter(string identifier) {
@@ -599,7 +604,7 @@ public static class BingoController
                     new BoolGoal("Doorwarp Lava", 1593),
                     new BoolGoal("Ginso Escape Fronkey", 1592),
                     new BoolGoal("Blackroot Teleporter Crushers", 1591),
-                    new BoolGoal("NoobSpikes", 1590), // 1589 used by bonus skill!
+                    new BoolGoal("NoobSpikes", 1590), // 1589 and 1587 are being used by bonus skill
                     new BoolGoal("Right Forlorn Laser", 1588)
                 });
 
@@ -658,16 +663,16 @@ public static class BingoController
                     new BoolLocGoal("ForlornEscapePlant", 2566, -12320248)
                 });
                 MultiBoolGoal.mk("VisitTree", new List<BoolGoal>() {
-                    new BoolLocGoal("Wall Jump", 2567, -3160308), 
-                    new BoolLocGoal("Charge Flame", 2568, -560160), 
-                    new BoolLocGoal("Double Jump", 2569, 7839588), 
-                    new BoolLocGoal("Bash", 2570, 5320328), 
-                    new BoolLocGoal("Stomp", 2571, 8599904), 
-                    new BoolLocGoal("Glide", 2572, -4600020), 
-                    new BoolLocGoal("Climb", 2573, -11880100), 
-                    new BoolLocGoal("Charge Jump", 2574, -6959592), 
-                    new BoolLocGoal("Grenade", 2575, 719620), 
-                    new BoolLocGoal("Dash", 2576, 2919744)
+                    new BoolGoal("Wall Jump", 2567), 
+                    new BoolGoal("Charge Flame", 2568), 
+                    new BoolGoal("Double Jump", 2569), 
+                    new BoolGoal("Bash", 2570), 
+                    new BoolGoal("Stomp", 2571), 
+                    new BoolGoal("Glide", 2572), 
+                    new BoolGoal("Climb", 2573), 
+                    new BoolGoal("Charge Jump", 2574), 
+                    new BoolGoal("Grenade", 2575), 
+                    new BoolGoal("Dash", 2576)
                 });
                 MultiBoolGoal.mk("GetAbility", new List<BoolGoal>() {
                     new BoolGoal("Ultra Defense", 2577), 

@@ -270,7 +270,10 @@ public static class RandomizerTrackedDataManager
 		if(!GetTree(treeNum)) {
 			TreeBitfield = Characters.Sein.Inventory.IncRandomizerItem(1001, 1 << treeNum);
 			if(treeNum != 0)
+			{
+				BingoController.OnTree(treeNum);
 				Characters.Sein.Inventory.IncRandomizerItem(27, 1);
+			}
 			return true;
 		}
 		return false;

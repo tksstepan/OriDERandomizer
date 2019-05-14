@@ -224,15 +224,15 @@ public static class RandomizerBonusSkill
         case 111:
                 Characters.Sein.Mortality.DamageReciever.OnRecieveDamage(new Damage(9000f, new Vector2(0, 0), Characters.Sein.Position, DamageType.Lava, Characters.Sein.GameObject));
         break;
-        case 112:
+        case 1587:
+            if (!Characters.Sein.Controller.CanMove || !Characters.Sein.Active)
+                return;
             Randomizer.WarpTo(new Vector3(-2478,-593, 0), 0);
             GameController.Instance.RemoveGameplayObjects();
             RandomizerStatsManager.Active = false;
             RandomizerCreditsManager.Initialize();
         break;
         case 113:
-            if (!Characters.Sein.Controller.CanMove || !Characters.Sein.Active)
-                return;
             if (IsActive(ab))
             {
                 Deactivate(ab);
@@ -475,7 +475,7 @@ public static class RandomizerBonusSkill
         { 109, "Timewarp" },
         { 110, "Invincibility" },
         { 111, "Wither" },
-        { 112, "Warp to Credits" },
+        { 1587, "Warp to Credits" },
         { 113, "Toggle Bash/Stomp Damage" },
     };
     public static Dictionary <int, float> DrainRates = new Dictionary<int, float>
@@ -516,10 +516,10 @@ public static class RandomizerBonusSkill
     }
 
     public static bool UnlockCreditWarp(string message) {
-        if(get(112) > 0)
+        if(get(1587) > 0)
             return false;
-        FoundBonusSkill(112);
-        ActiveBonus = 112;
+        FoundBonusSkill(1587);
+        ActiveBonus = 1587;
         message += "\nPress " + RandomizerRebinding.BonusToggle.FirstBindName() + " to warp to credits";
         Randomizer.Print(message, 10, false, true, false, false);
         RandomizerStatsManager.WriteStatsFile();

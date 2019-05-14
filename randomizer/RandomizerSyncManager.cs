@@ -182,7 +182,7 @@ public static class RandomizerSyncManager
 									int tree = id-899;
 									string treeName =  RandomizerTrackedDataManager.Trees[tree];
 									if(RandomizerTrackedDataManager.SetTree(tree))
-										Randomizer.showHint(treeName +  " tree (collected by teammate)");
+										Randomizer.showHint(treeName +  " tree (activated by teammate)");
 								} else if(id < 922) {
 									string relicZone = RandomizerTrackedDataManager.Zones[id-911];
 									if(RandomizerTrackedDataManager.SetRelic(relicZone))
