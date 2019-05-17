@@ -1,4 +1,5 @@
-This repository contains the client code (distributed as a modified Assembly-CSharp.dll) for the OriDE randomizer. The website, seed generator, bingo and other web tools are hosted at https://github.com/turntekGodhead/ori_rando_server
+This repository contains the client code (distributed as a modified Assembly-CSharp.dll) for the OriDE randomizer. 
+The website, seed generator, bingo and other web tools are hosted at https://github.com/turntekGodhead/ori_rando_server
 
 The Ori Randomizer is built on top of sigmasin's incredible work.
 
