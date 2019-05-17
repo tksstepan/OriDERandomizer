@@ -1,7 +1,10 @@
 This repository contains the client code (distributed as a modified Assembly-CSharp.dll) for the OriDE randomizer. 
+
 The website, seed generator, bingo and other web tools are hosted at https://github.com/turntekGodhead/ori_rando_server
 
-The Ori Randomizer is built on top of sigmasin's incredible work.
+Built on top of sigmasin's incredible work.
+
+----------------------------
 
 Setup (more detailed instructions available at https://orirando.com/faq):
 
@@ -44,8 +47,6 @@ Standard: For people who have run All Skills. It is assumed that all tricks used
 Expert: For people who have played a fair amount of the randomizer. Tricks involving out-of-the-box uses of abilities may be required. Damage boosting may be required, but every spike patch can be crossed with only a single instance of damage. Double bashing is not required.
 
 Master: For people who want to struggle. Everything except going OOB or using TA is fair game. Paths requiring triple jump may be required. Extended damage boosting with ultra defense may be required.
-
-
 
 CHAOS MODE?
 
