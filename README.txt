@@ -1,6 +1,6 @@
-Setup:
+Setup (more detailed instructions available at https://orirando.com/faq):
 
-Put Assembly-CSharp.dll and OriDERandoDecoder.dll in Steam/steamapps/common/Ori DE/oriDE_Data/Managed
+Put Assembly-CSharp.dll in Steam/steamapps/common/Ori DE/oriDE_Data/Managed
 Use https://orirando.com to generate seeds.
 Generated seeds should be placed in Steam/steamapps/common/Ori DE and named "randomizer.dat"
 
@@ -11,12 +11,12 @@ Alt+T               Replay last pickup message
 Alt+R:              Teleport Ori to the start of the game
                     Warning: using this in locked rooms can potentially softlock
 Alt+L:              Reload the seed file (use to change seeds without restarting the game)
+Alt+P:              Display current skill tree and shard progress
+Alt+C:              Toggle color shifting
 Alt+K:              Toggle Chaos Mode
 Alt+V:              Within Chaos Mode, toggle messages
 Alt+F:              Within Chaos Mode, force an effect to spawn
-Alt+P:              Display current skill tree and shard progress
-Alt+C:              Toggle color shifting
-Grenade:			Double bash
+Grenade:            Double bash
 
 The double bash bind exists to create parity between playing randomizer on controller and keyboard+mouse. If any of the binds specified are held when a bash ends, a double bash will automatically occur. To also make any of the binds specified end a bash on their own, add "Tap" as a bind for the double bash function.
 
@@ -24,11 +24,9 @@ RandomizerSettings.txt can be used to set the bash deadzone on controller. Valid
 
 If you get stuck, use Alt+R to send yourself back to glades. Wall jump, double jump, and post ginso escape are all possible sticking points (you will be able to get into swamp without doing the ginso escape, at some point). Don't use Alt+R while you're in a locked room (sein fronkey fight, ginso miniboss, etc.) or you will probably be softlocked.
 
-Shards, limitkeys, and clues all simplify the hunt for dungeon keys in various ways. Limitkeys forces all dungeon keys to appear at skill trees or world events (getting any of the dungeon keys, finishing the ginso escape, or starting the forlorn escape). Shards places 5 fragments of each key around the world -- upon finding 3, you are able to enter the corresponding dungeon. Clues mode provides general locations for a new key for each 3 trees visited, viewable with Alt+P.
+Shards, limitkeys, and clues all simplify the hunt for dungeon keys in various ways. Limitkeys forces all dungeon keys to appear at skill trees or world events (getting any of the dungeon keys, finishing the ginso escape, or starting the forlorn escape). Shards places 5 fragments of each key around the world -- upon finding 3, you are able to enter the corresponding dungeon. Clues mode provides general locations for a new key for each 3 trees visited, viewable with Alt+P. For new players, Clues is recommended.
 
-A guide on randomizer terminology and routing is available here: https://docs.google.com/document/d/1g7mSMY5IzORo7mrkmfb0cxLmiw2FD8rfkplIJUDLy-4/edit#heading=h.kiiklir95dur
-
-Pickup location statistics for version 2.0 are available here: https://goo.gl/qvYhEU
+An (outdated) guide on randomizer terminology and routing is available here: https://docs.google.com/document/d/1g7mSMY5IzORo7mrkmfb0cxLmiw2FD8rfkplIJUDLy-4/edit#heading=h.kiiklir95dur
 
 Difficulty Guide
 
