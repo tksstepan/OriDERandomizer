@@ -1767,33 +1767,50 @@ home: MoonGrottoAboveTeleporter
 	pickup: LeftGrottoTeleporterExp
 		casual-core WallJump DoubleJump
 		casual-core Climb DoubleJump ChargeJump
+		standard-abilities DoubleJump Dash Ability=3
 		expert-core Grenade Bash
 		expert-core Climb ChargeJump
+		expert-core DoubleJump Dash
 		expert-dboost ChargeJump Health=4
 		expert-dboost WallJump Glide Health=4
 		expert-dboost Climb Glide Health=4
 		expert-dboost DoubleJump Glide Health=4
 		expert-dboost WallJump Health=7
 		expert-dboost Climb Health=7
+		expert-dboost Climb DoubleJump Health=4
+		expert-dboost Climb Dash Ability=3 Health=4
+		expert-dboost WallJump Dash Ability=3 Health=4
+		expert-dboost Dash Ability=6 Health=4
 		master-lure Bash
 		master-dboost DoubleJump Health=4
+		master-abilities DoubleJump Ability=12
+		master-abilities Dash Ability=6
 	conn: UpperGrotto
 		casual-core WallJump
 		casual-core Climb DoubleJump
 		casual-core Climb ChargeJump
 		standard-core Bash Grenade
+		standard-abilities Climb Dash Ability=3
 		expert-core Climb Glide
 		master-core DoubleJump
-		master-core Bash Dash Ability=3
+		master-abilities Bash Dash Ability=3
 	conn: MoonGrottoStompPlantAccess
 		expert-core ChargeFlame
 	conn: MoonGrottoSwampAccessArea
 		casual-core ChargeJump DoubleJump
 		casual-core Bash
-		casual-dboost DoubleJump
+		casual-core ChargeJump Glide
+		standard-dboost DoubleJump Health=3
 		standard-dboost ChargeJump Health=3
+		standard-dboost Dash Health=4 Ability=3
+		standard-abilities Dash DoubleJump Ability=3
+		standard-abilities ChargeJump Dash Ability=3
+		expert-core DoubleJump Glide
 		expert-dboost Dash Health=4
+		expert-dboost Dash Health=3 Ability=3
+		expert-dboost Glide Health=3
 		expert-abilities Dash Ability=6
+		master-dboost Health=7
 		gjump ChargeJump Climb Grenade
 	conn: MoonGrotto
 	conn: DeathGauntletRoof
