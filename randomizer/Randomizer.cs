@@ -11,7 +11,7 @@ using UnityEngine;
 // Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
-	public static string VERSION = "3.2.1";
+	public static string VERSION = "3.2.2";
 	public static void initialize()
 	{
 		try {
@@ -1003,7 +1003,7 @@ public static class Randomizer
 					{
 						foreach (SceneManagerScene sms in Scenes.Manager.ActiveScenes)
 						{
-							if (sms.MetaData.Scene == "creditsScreen" && (sms.CurrentState == SceneManagerScene.State.Loading || sms.CurrentState == SceneMangerScene.Loaded))
+							if (sms.MetaData.Scene == "creditsScreen" && (sms.CurrentState == SceneManagerScene.State.Loading || sms.CurrentState == SceneManagerScene.State.Loaded))
 							{
 								RandomizerStatsManager.Finish();
 								RandomizerCreditsManager.Initialize();

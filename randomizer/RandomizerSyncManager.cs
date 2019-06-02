@@ -36,6 +36,7 @@ public static class RandomizerSyncManager
 		TeleportInfos.Add(new TeleportInfoLine("Sorrow", 5));
 		TeleportInfos.Add(new TeleportInfoLine("Ginso", 6));
 		TeleportInfos.Add(new TeleportInfoLine("Horu", 7));
+		TeleportInfos.Add(new TeleportInfoLine("Blackroot", 8));
 		SkillInfos.Add(new SkillInfoLine(0, 0, AbilityType.Bash));
 		SkillInfos.Add(new SkillInfoLine(2, 1, AbilityType.ChargeFlame));
 		SkillInfos.Add(new SkillInfoLine(3, 2, AbilityType.WallJump));
@@ -331,6 +332,8 @@ public static class RandomizerSyncManager
 	}
 
 	public static void FoundTP(string identifier) {
+		if(!Randomizer.Sync)
+			return;
 		try
 		{
 			if(TPIds.ContainsKey(identifier) && !isTeleporterActivated(identifier, false))
@@ -355,11 +358,11 @@ public static class RandomizerSyncManager
 		try{
 			if(Characters.Sein && Characters.Sein.Inventory)
 			{
-				if(identifier == "Ginso" && Characters.Sein.Inventory.GetRandomizerItem(1024) == 1)
+				if(identifier == "ginsoTree" && Characters.Sein.Inventory.GetRandomizerItem(1024) == 1)
 					return true;
-				if(identifier == "Forlorn" && Characters.Sein.Inventory.GetRandomizerItem(1025) == 1)
+				if(identifier == "forlorn" && Characters.Sein.Inventory.GetRandomizerItem(1025) == 1)
 					return true;
-				if(identifier == "Horu" && Characters.Sein.Inventory.GetRandomizerItem(1026) == 1)
+				if(identifier == "mountHoru" && Characters.Sein.Inventory.GetRandomizerItem(1026) == 1)
 					return true;			
 			}
 			foreach (GameMapTeleporter gameMapTeleporter in TeleporterController.Instance.Teleporters)

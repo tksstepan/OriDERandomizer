@@ -224,6 +224,49 @@ public static class RandomizerBonusSkill
         case 111:
                 Characters.Sein.Mortality.DamageReciever.OnRecieveDamage(new Damage(9000f, new Vector2(0, 0), Characters.Sein.Position, DamageType.Lava, Characters.Sein.GameObject));
         break;
+        case 112:
+            if(CapturedEnemy == null)
+            {
+                BonusSkillNames[112] = "Pokeball (empty)";
+                Characters.Sein.Abilities.SpiritFlameTargetting.UpdateClosestAttackables();
+                foreach(ISpiritFlameAttackable target in Characters.Sein.Abilities.SpiritFlameTargetting.ClosestAttackables)
+                {
+                    string logMessage = target.GetType().ToString();
+                    if(target is EntityTargetting)
+                    {
+                        var enemyTarget = target as EntityTargetting;
+                        var entity = enemyTarget.Entity;
+                        if(entity is JumperEnemy) 
+                            CapturedName = "Fronkey";
+                        else if(entity is FishEnemy)
+                            CapturedName = "Fish";
+                        else if(entity is SpitterEnemy)
+                            CapturedName = "Frog";
+                        else if(entity is KamikazeSootEnemy)
+                            CapturedName = "Baneling";
+                        else if(entity is DashOwlEnemy)
+                            CapturedName = "Bird";
+                        else
+                            return;
+                        CapturedEnemy = entity as Enemy;
+                        Randomizer.LogError(CapturedEnemy.BoundingBox.ToString());
+                        CapturedOffset = CapturedEnemy.PositionToPlayerPosition;
+                        CapturedLeft = Characters.Sein.FaceLeft;
+                        CapturedEnemy.gameObject.SetActiveRecursively(false);
+                        //Events.Scheduler.OnSceneRootDisabled.Remove(new Action<SceneRoot>(CapturedEnemy.OnSceneUnloaded));
+                        BonusSkillNames[112] = "Pokeball ("+CapturedName+")";
+                        
+                    }
+                }
+            } else {
+                    if(CapturedLeft != Characters.Sein.FaceLeft)
+                        CapturedOffset.x *= -1;
+                    CapturedEnemy.Position = Characters.Sein.Position + CapturedOffset;
+                    CapturedEnemy.gameObject.SetActiveRecursively(true);
+                    CapturedEnemy = null;
+                    BonusSkillNames[112] = "Pokeball (empty)";
+            }
+        break;
         case 1587:
             if (!Characters.Sein.Controller.CanMove || !Characters.Sein.Active)
                 return;
@@ -286,12 +329,26 @@ public static class RandomizerBonusSkill
     // Token: 0x060037FD RID: 14333
     public static void OnSave()
     {
+        SaveEnemy = CapturedEnemy;
+        SaveOffset = CapturedOffset;
+        SaveLeft = CapturedLeft;
+        SaveName = CapturedName;
+
         UpdateDrain();
     }
 
     // Token: 0x060037FE RID: 14334
     public static void OnDeath()
     {
+        CapturedEnemy = SaveEnemy;
+        CapturedOffset = SaveOffset;
+        CapturedLeft = SaveLeft;
+        CapturedName = SaveName;
+        if(CapturedName != null)
+            BonusSkillNames[112] = "Pokeball ("+CapturedName+")";
+        else
+            BonusSkillNames[112] = "Pokeball (empty)";
+
         UpdateDrain();
     }
 
@@ -475,8 +532,9 @@ public static class RandomizerBonusSkill
         { 109, "Timewarp" },
         { 110, "Invincibility" },
         { 111, "Wither" },
-        { 1587, "Warp to Credits" },
+        { 112, "Pokeball" },
         { 113, "Toggle Bash/Stomp Damage" },
+        { 1587, "Warp to Credits" },
     };
     public static Dictionary <int, float> DrainRates = new Dictionary<int, float>
     {
@@ -514,7 +572,6 @@ public static class RandomizerBonusSkill
     public static void BonusSkillText(string text) {
         Randomizer.Print(text, 3, false, false, false, true);
     }
-
     public static bool UnlockCreditWarp(string message) {
         if(get(1587) > 0)
             return false;
@@ -525,6 +582,12 @@ public static class RandomizerBonusSkill
         RandomizerStatsManager.WriteStatsFile();
         return true;
     }
-
-
+    public static Enemy SaveEnemy;
+    public static Vector3 SaveOffset;
+    public static bool SaveLeft;
+    public static string SaveName;
+    public static Enemy CapturedEnemy;
+    public static Vector3 CapturedOffset;
+    public static bool CapturedLeft;
+    public static string CapturedName;
 }
