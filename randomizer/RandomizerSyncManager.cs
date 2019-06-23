@@ -255,11 +255,6 @@ public static class RandomizerSyncManager
 	{
 		try
 		{
-			if(SendingPickup == null)
-			{
-				Randomizer.log("Error: no sending pickup found!");
-				return;
-			}
 			if (e.Cancelled || e.Error != null)
 			{
 				if (e.Error.GetType().Name == "WebException")
@@ -274,12 +269,7 @@ public static class RandomizerSyncManager
 						webClient.DownloadStringAsync(SendingPickup.GetURL());
 						return;
 					}
-					JustFound.Remove(SendingPickup.type+SendingPickup.id);
-					SendingPickup = null;
-					return;
 				}
-				if(e.Error != null)
-					Randomizer.log("RetryOnFail got non-web excpetion: " + e.Error.ToString());
 			}
 			JustFound.Remove(SendingPickup.type+SendingPickup.id);
 			SendingPickup = null;
