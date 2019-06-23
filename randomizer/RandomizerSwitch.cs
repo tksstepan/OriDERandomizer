@@ -178,98 +178,96 @@ public static class RandomizerSwitch
             Randomizer.showHint(colorChar + "Broken " + Value + " teleporter\nCollect " + shardPart + colorChar, 300);
             return;
         }
-        TeleporterController.Activate(Randomizer.TeleportTable[Value].ToString());
+        TeleporterController.Activate(Randomizer.TeleportTable[Value].ToString(), false);
         Randomizer.showHint(colorChar + Value + " teleporter activated" + colorChar);
     }
     
     public static void GivePickup(RandomizerAction Action, int coords, bool found_locally=true)
     {
-        try {
-        if (found_locally && Randomizer.Sync)
-        {
-            RandomizerSyncManager.FoundPickup(Action, coords);
-        }
-        BingoController.OnItem(Action, coords);
-        
-        switch (Action.Action) {
-            case "RP":
-            case "MU":
-                string[] pieces = ((string)Action.Value).Split('/');
-                for(int i = 0; i < pieces.Length; i+=2)
-                {
-                    string code = pieces[i];
-                    if(Randomizer.StringKeyPickupTypes.Contains(code)) {
-                        RandomizerSwitch.GivePickup(new RandomizerAction(code, pieces[i+1]), coords, found_locally);
-                    } else {
-                        int id;
-                        int.TryParse(pieces[i+1], out id);
-                        RandomizerSwitch.GivePickup(new RandomizerAction(code, id), coords, found_locally);
+        try {       
+            switch (Action.Action) {
+                case "RP":
+                case "MU":
+                    string[] pieces = ((string)Action.Value).Split('/');
+                    for(int i = 0; i < pieces.Length; i+=2)
+                    {
+                        string code = pieces[i];
+                        if(Randomizer.StringKeyPickupTypes.Contains(code)) {
+                            RandomizerSwitch.GivePickup(new RandomizerAction(code, pieces[i+1]), coords, false);
+                        } else {
+                            int id;
+                            int.TryParse(pieces[i+1], out id);
+                            RandomizerSwitch.GivePickup(new RandomizerAction(code, id), coords, false);
+                        }
                     }
-                }
-                break;
-            case "AC":
-                SkillPointPickup();
-                break;
-            case "EC":
-                MaxEnergyContainerPickup();
-                break;
-            case "EX":
-                ExpOrbPickup((int)Action.Value);
-                break;
-            case "KS":
-                KeystonePickup();
-                break;
-            case "HC":
-                MaxHealthContainerPickup();
-                break;
-            case "MS":
-                MapStonePickup();
-                break;
-            case "SK":
-                AbilityPickup((int)Action.Value);
-                break;
-            case "EV":
-                EventPickup((int)Action.Value);
-                break;
-            case "RB":
-                RandomizerBonus.UpgradeID((int)Action.Value);
-                break;
-            case "TP":
-                TeleportPickup((string)Action.Value);
-                break;
-            case "SH":
-                Randomizer.showHint((string)Action.Value);
-                break;
-            case "WT":
-                Characters.Sein.Inventory.IncRandomizerItem(302, 1);
-                int relics = Characters.Sein.Inventory.GetRandomizerItem(302);
-                RandomizerTrackedDataManager.SetRelic(Randomizer.RelicZoneLookup[(string)Action.Value]);
-                string relicStr = "\n("+relics.ToString() + "/" + Randomizer.RelicCount.ToString() + ")";
-                if(relics >= Randomizer.RelicCount) {
-                    relicStr = "$" + relicStr + "$";
-                }
-                Randomizer.showHint((string)Action.Value + relicStr, 480);
-                break;
-            case "WS":
-            case "WP":
-                Randomizer.SaveAfterWarp = Action.Action == "WS";
-                string[] xy = ((string)Action.Value).Split(',');
-                if(xy.Length > 2 && xy[2] == "force") {
-                    Randomizer.WarpTo(new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1])), 15);
-                }
-                else {
-                    Randomizer.WarpTarget = new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1]));
-                    Randomizer.WarpSource = Characters.Sein.Position;
-                    Randomizer.CanWarp = 6;
-	            }
-                break;
-            case "NO":
-                break;
-        }
-        RandomizerTrackedDataManager.UpdateBitfields();
+                    break;
+                case "AC":
+                    SkillPointPickup();
+                    break;
+                case "EC":
+                    MaxEnergyContainerPickup();
+                    break;
+                case "EX":
+                    ExpOrbPickup((int)Action.Value);
+                    break;
+                case "KS":
+                    KeystonePickup();
+                    break;
+                case "HC":
+                    MaxHealthContainerPickup();
+                    break;
+                case "MS":
+                    MapStonePickup();
+                    break;
+                case "SK":
+                    AbilityPickup((int)Action.Value);
+                    break;
+                case "EV":
+                    EventPickup((int)Action.Value);
+                    break;
+                case "RB":
+                    RandomizerBonus.UpgradeID((int)Action.Value);
+                    break;
+                case "TP":
+                    TeleportPickup((string)Action.Value);
+                    break;
+                case "SH":
+                    string message = (string)Action.Value;
+                    Randomizer.showHint(message.Replace("AltR", RandomizerRebinding.ReturnToStart.FirstBindName()));
+                    break;
+                case "WT":
+                    RandomizerTrackedDataManager.SetRelic(Randomizer.RelicZoneLookup[(string)Action.Value]);
+                    int relics = Characters.Sein.Inventory.GetRandomizerItem(302);
+                    string relicStr = "\n("+relics.ToString() + "/" + Randomizer.RelicCount.ToString() + ")";
+                    if(relics >= Randomizer.RelicCount) {
+                        relicStr = "$" + relicStr + "$";
+                    }
+                    Randomizer.showHint((string)Action.Value + relicStr, 480);
+                    break;
+                case "WS":
+                case "WP":
+                    Randomizer.SaveAfterWarp = Action.Action == "WS";
+                    string[] xy = ((string)Action.Value).Split(',');
+                    if(xy.Length > 2 && xy[2] == "force") {
+                        Randomizer.WarpTo(new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1])), 15);
+                    }
+                    else {
+                        Randomizer.WarpTarget = new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1]));
+                        Randomizer.WarpSource = Characters.Sein.Position;
+                        Randomizer.CanWarp = 7;
+                    }
+                    break;
+                case "NO":
+                    break;
+            }
+            BingoController.OnItem(Action, coords);
+            RandomizerTrackedDataManager.UpdateBitfields();
         }
         catch(Exception e) {
-            Randomizer.LogError("Give Pickup: " + e.Message);
+            Randomizer.LogError("Give Pickup(" + Action.ToString() + ", " + coords.ToString() + "): " + e.Message);
         }
+        if(found_locally && Randomizer.Sync)
+            RandomizerSyncManager.FoundPickup(Action, coords);
     }
+
 }

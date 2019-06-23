@@ -111,10 +111,11 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		}
 		return true;
 	}
-
 	// Token: 0x06002CE9 RID: 11497 RVA: 0x000C3C3C File Offset: 0x000C1E3C
-	public static void Activate(string identifier)
+	public static void Activate(string identifier, bool natural)
 	{
+		if(natural)
+			RandomizerSyncManager.FoundTP(identifier);
 		BingoController.OnActivateTeleporter(identifier);
 		foreach (GameMapTeleporter gameMapTeleporter in TeleporterController.Instance.Teleporters)
 		{
@@ -123,6 +124,13 @@ public class TeleporterController : SaveSerialize, ISuspendable
 				gameMapTeleporter.Activated = true;
 			}
 		}
+
+	}
+
+	// Token: 0x06002CE9 RID: 11497 RVA: 0x000C3C3C File Offset: 0x000C1E3C
+	public static void Activate(string identifier)
+	{
+		Activate(identifier, true);
 	}
 
 	// Token: 0x06002CEA RID: 11498

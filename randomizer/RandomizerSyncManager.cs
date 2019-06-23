@@ -19,6 +19,8 @@ public static class RandomizerSyncManager
 		getClient.DownloadStringCompleted += CheckPickups;
 		if (JustFound == null)
 			JustFound = new HashSet<String>();
+		if (CurrentSignals == null)
+			CurrentSignals = new HashSet<String>();
 		if (PickupQueue == null)
 			PickupQueue = new Queue<Pickup>();
 		SeedSent = false;
@@ -34,6 +36,7 @@ public static class RandomizerSyncManager
 		TeleportInfos.Add(new TeleportInfoLine("Sorrow", 5));
 		TeleportInfos.Add(new TeleportInfoLine("Ginso", 6));
 		TeleportInfos.Add(new TeleportInfoLine("Horu", 7));
+		TeleportInfos.Add(new TeleportInfoLine("Blackroot", 8));
 		SkillInfos.Add(new SkillInfoLine(0, 0, AbilityType.Bash));
 		SkillInfos.Add(new SkillInfoLine(2, 1, AbilityType.ChargeFlame));
 		SkillInfos.Add(new SkillInfoLine(3, 2, AbilityType.WallJump));
@@ -84,7 +87,7 @@ public static class RandomizerSyncManager
 				getClient.DownloadStringAsync(uri);
 			}
 		} catch(Exception e) {
-			Randomizer.LogError("UploadSeed: " + e.Message);
+			Randomizer.LogError("RSM.Update: " + e.Message);
 		}
 
 	}
@@ -126,128 +129,150 @@ public static class RandomizerSyncManager
 	// Token: 0x06003798 RID: 14232
 	public static void CheckPickups(object sender, DownloadStringCompletedEventArgs e)
 	{
-		if (e.Error != null)
+		try
 		{
-			if(e.Error is System.NullReferenceException)
-				return;
-			Randomizer.LogError("CheckPickups: " + e.Error.ToString());
-		}
-		if (!e.Cancelled && e.Error == null)
-		{
-			string[] array = e.Result.Split(new char[]
+			if (e.Error != null)
 			{
-				','
-			});
-			int bf = int.Parse(array[0]);
-			foreach (SkillInfoLine skillInfoLine in SkillInfos)
-			{
-				if (getBit(bf, skillInfoLine.bit) && !Characters.Sein.PlayerAbilities.HasAbility(skillInfoLine.skill))
-				{
-					RandomizerSwitch.GivePickup(new RandomizerAction("SK", skillInfoLine.id), 0, false);
-				}
+				if(e.Error is System.NullReferenceException)
+					return;
+				Randomizer.LogError("CheckPickups got error: " + e.Error.ToString());
 			}
-			int bf2 = int.Parse(array[1]);
-			foreach (EventInfoLine eventInfoLine in EventInfos)
+			if (!e.Cancelled && e.Error == null)
 			{
-				if (getBit(bf2, eventInfoLine.bit) && !eventInfoLine.checker())
+				if(!Characters.Sein)
+					return;
+				string[] array = e.Result.Split(new char[]
 				{
-					RandomizerSwitch.GivePickup(new RandomizerAction("EV", eventInfoLine.id), 0, false);
-				}
-			}
-			int bf4 = int.Parse(array[2]);
-			foreach (TeleportInfoLine teleportInfoLine in TeleportInfos)
-			{
-				if (getBit(bf4, teleportInfoLine.bit) && !isTeleporterActivated(teleportInfoLine.id))
+					','
+				});
+				int bf = int.Parse(array[0]);
+				foreach (SkillInfoLine skillInfoLine in SkillInfos)
 				{
-					RandomizerSwitch.GivePickup(new RandomizerAction("TP", teleportInfoLine.id), 0, false);
-				}
-			}
-			if(array[3] != "")
-				{
-				string[] upgrades = array[3].Split(';');
-				foreach(string rawUpgrade in upgrades)
-				{
-					string[] splitpair = rawUpgrade.Split('x');
-					int id = int.Parse(splitpair[0]);
-					int cnt = int.Parse(splitpair[1]);
-					if(RandomizerBonus.UpgradeCount(id) < cnt) {
-						RandomizerBonus.UpgradeID(id);
-					} else if(!JustFound.Contains("RB"+splitpair[0]) && RandomizerBonus.UpgradeCount(id) > cnt) {
-						RandomizerBonus.UpgradeID(-id);					
+					if (getBit(bf, skillInfoLine.bit) && !Characters.Sein.PlayerAbilities.HasAbility(skillInfoLine.skill))
+					{
+						RandomizerSwitch.GivePickup(new RandomizerAction("SK", skillInfoLine.id), 0, false);
 					}
 				}
-			}
-			if(array[4] != "")
+				int bf2 = int.Parse(array[1]);
+				foreach (EventInfoLine eventInfoLine in EventInfos)
 				{
-				string[] hints = array[4].Split(';');
-				foreach(string rawHint in hints)
-				{
-					string[] splitpair = rawHint.Split(':');
-					int coords = int.Parse(splitpair[0]);
-					int player = int.Parse(splitpair[1]);
-					Hints[coords] = player;
+					if (getBit(bf2, eventInfoLine.bit) && !eventInfoLine.checker())
+					{
+						RandomizerSwitch.GivePickup(new RandomizerAction("EV", eventInfoLine.id), 0, false);
+					}
 				}
-			}
-			if (array.Length > 5)
-			{
-				foreach (string text in array[5].Split(new char[] { '|' }))
+				int bf4 = int.Parse(array[2]);
+				foreach (TeleportInfoLine teleportInfoLine in TeleportInfos)
 				{
-					if (text == "stop")
+					if (getBit(bf4, teleportInfoLine.bit) && !isTeleporterActivated(teleportInfoLine.id))
 					{
-						RandomizerChaosManager.ClearEffects();
+						RandomizerSwitch.GivePickup(new RandomizerAction("TP", teleportInfoLine.id), 0, false);
 					}
-					else if (text.StartsWith("msg:"))
+				}
+				if(array[3] != "")
 					{
-						Randomizer.printInfo(text.Substring(4), 360);
-					}
-					else if (text.StartsWith("win:"))
+					string[] upgrades = array[3].Split(';');
+					foreach(string rawUpgrade in upgrades)
 					{
-						Randomizer.Print(text.Substring(4), 10, false, true, false, false);
-						RandomizerStatsManager.WriteStatsFile();
-					}
-					else if (text.StartsWith("pickup:"))
-					{
-						string[] parts = text.Substring(7).Split(new char[] { '|' });
-						RandomizerAction action;
-						if(Randomizer.StringKeyPickupTypes.Contains(parts[0])) {
-							 action = new RandomizerAction(parts[0], parts[1]);
-						} else {
-							int pickup_id;
-							int.TryParse(parts[1], out pickup_id);
-							action = new RandomizerAction(parts[0], pickup_id);
+						string[] splitpair = rawUpgrade.Split('x');
+						int id = int.Parse(splitpair[0]);
+						int cnt = int.Parse(splitpair[1]);
+						if(id >= 100) {
+							if(id >= 900) {
+								if(id < 910) {
+									int tree = id-899;
+									string treeName =  RandomizerTrackedDataManager.Trees[tree];
+									if(RandomizerTrackedDataManager.SetTree(tree))
+										Randomizer.showHint(treeName +  " tree (activated by teammate)");
+								} else if(id < 922) {
+									string relicZone = RandomizerTrackedDataManager.Zones[id-911];
+									if(RandomizerTrackedDataManager.SetRelic(relicZone))
+										Randomizer.showHint("#" + relicZone + " relic# (found by teammate)", 300);
+								}
+							} else if(!RandomizerBonusSkill.UnlockedBonusSkills.ContainsValue(id) && cnt > 0) {
+								RandomizerBonus.UpgradeID(id);
+							}
+						} else if(RandomizerBonus.UpgradeCount(id) < cnt) {
+							RandomizerBonus.UpgradeID(id);
+						} else if(!JustFound.Contains("RB"+splitpair[0]) && RandomizerBonus.UpgradeCount(id) > cnt) {
+							RandomizerBonus.UpgradeID(-id);
 						}
-						RandomizerSwitch.GivePickup(action, 0, false);
 					}
-					else if (text == "spawnChaos")
-					{
-						Randomizer.ChaosVerbose = true;
-						RandomizerChaosManager.SpawnEffect();
-						ChaosTimeoutCounter = 3600;
-					}
-					var client = new WebClient();
-					client.DownloadStringAsync(new Uri(RootUrl + "/callback/" + text));
 				}
+				if(array[4] != "")
+					{
+					string[] hints = array[4].Split(';');
+					foreach(string rawHint in hints)
+					{
+						string[] splitpair = rawHint.Split(':');
+						int coords = int.Parse(splitpair[0]);
+						int player = int.Parse(splitpair[1]);
+						Hints[coords] = player;
+					}
+				}
+				if (array.Length > 5)
+				{
+					foreach (string text in array[5].Split(new char[] { '|' }))
+					{
+						if(CurrentSignals.Contains(text))
+							continue;
+						if (text == "stop")
+						{
+							RandomizerChaosManager.ClearEffects();
+						}
+						else if (text.StartsWith("msg:"))
+						{
+							Randomizer.printInfo(text.Substring(4), 360);
+						}
+						else if (text.StartsWith("win:"))
+						{
+							if(!RandomizerBonusSkill.UnlockCreditWarp(text.Substring(4)))
+							{
+								Randomizer.Print(text.Substring(4), 10, false, true, false, false);
+								RandomizerStatsManager.WriteStatsFile();
+							}
+						}
+						else if (text.StartsWith("pickup:"))
+						{
+							string[] parts = text.Substring(7).Split(new char[] { '|' });
+							RandomizerAction action;
+							if(Randomizer.StringKeyPickupTypes.Contains(parts[0])) {
+								 action = new RandomizerAction(parts[0], parts[1]);
+							} else {
+								int pickup_id;
+								int.TryParse(parts[1], out pickup_id);
+								action = new RandomizerAction(parts[0], pickup_id);
+							}
+							RandomizerSwitch.GivePickup(action, 0, false);
+						}
+						else if (text == "spawnChaos")
+						{
+							Randomizer.ChaosVerbose = true;
+							RandomizerChaosManager.SpawnEffect();
+							ChaosTimeoutCounter = 3600;
+						}
+						var client = new WebClient();
+						client.DownloadStringAsync(new Uri(RootUrl + "/callback/" + text));
+						CurrentSignals.Add(text);
+					}
+				} else {
+					CurrentSignals.Clear();
+				}
+				return;
 			}
-			return;
+			if (e.Error.GetType().Name == "WebException" && ((HttpWebResponse)((WebException)e.Error).Response).StatusCode == HttpStatusCode.PreconditionFailed)
+			{
+				if(Randomizer.SyncMode == 1)
+					Randomizer.printInfo("Co-op server error, try reloading the seed (Alt+L)");
+				else
+					Randomizer.LogError("Co-op server error, try reloading the seed (Alt+L)");
+				return;
+			}
 		}
-		if (e.Error.GetType().Name == "WebException" && ((HttpWebResponse)((WebException)e.Error).Response).StatusCode == HttpStatusCode.PreconditionFailed)
+		catch (Exception e2)
 		{
-			if(Randomizer.SyncMode == 1)
-				Randomizer.printInfo("Co-op server error, try reloading the seed (Alt+L)");
-			else
-				Randomizer.LogError("Co-op server error, try reloading the seed (Alt+L)");
-			return;
+			Randomizer.LogError("CheckPickups threw error: " + e2.Message);
 		}
-	}
-
-	// Token: 0x06003799 RID: 14233
-	public static void onSave()
-	{
-	}
-
-	// Token: 0x0600379A RID: 14234
-	public static void onDeath()
-	{
 	}
 
 	// Token: 0x0600379B RID: 14235
@@ -316,23 +341,51 @@ public static class RandomizerSyncManager
 		}
 	}
 
+	public static void FoundTP(string identifier) {
+		if(!Randomizer.Sync)
+			return;
+		try
+		{
+			if(TPIds.ContainsKey(identifier) && !isTeleporterActivated(identifier, false))
+				FoundPickup(TPIds[identifier], -1);
+		}
+		catch (Exception e)
+		{
+			Randomizer.LogError("FoundTP: " + e.Message);
+		}
+	}
+
 	// Token: 0x0600379D RID: 14237
 	public static bool isTeleporterActivated(string identifier)
 	{
-        if(identifier == "Ginso" && Characters.Sein.Inventory.GetRandomizerItem(1024) == 1)
-        	return true;
-        if(identifier == "Forlorn" && Characters.Sein.Inventory.GetRandomizerItem(1025) == 1)
-        	return true;
-        if(identifier == "Horu" && Characters.Sein.Inventory.GetRandomizerItem(1026) == 1)
-        	return true;
-
-
-		foreach (GameMapTeleporter gameMapTeleporter in TeleporterController.Instance.Teleporters)
-		{
-			if (gameMapTeleporter.Identifier == Randomizer.TeleportTable[identifier].ToString())
+		return isTeleporterActivated(identifier, true);
+	}
+	// Token: 0x0600379D RID: 14237
+	public static bool isTeleporterActivated(string identifier, bool translate)
+	{
+		if(translate)
+			identifier = Randomizer.TeleportTable[identifier].ToString();
+		try{
+			if(Characters.Sein && Characters.Sein.Inventory)
 			{
-				return gameMapTeleporter.Activated;
+				if(identifier == "ginsoTree" && Characters.Sein.Inventory.GetRandomizerItem(1024) == 1)
+					return true;
+				if(identifier == "forlorn" && Characters.Sein.Inventory.GetRandomizerItem(1025) == 1)
+					return true;
+				if(identifier == "mountHoru" && Characters.Sein.Inventory.GetRandomizerItem(1026) == 1)
+					return true;			
 			}
+			foreach (GameMapTeleporter gameMapTeleporter in TeleporterController.Instance.Teleporters)
+			{
+				if (gameMapTeleporter.Identifier == identifier)
+				{
+					return gameMapTeleporter.Activated;
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Randomizer.LogError("IsTPActive: " + identifier + " " + e.Message +". Not criticial unless repeating.");
 		}
 		return false;
 	}
@@ -373,6 +426,19 @@ public static class RandomizerSyncManager
 	public static bool SeedSent;
 
 	public static Dictionary<int, int> Hints;
+
+	public static HashSet<string> CurrentSignals;
+
+	public static Dictionary<string, RandomizerAction> TPIds = new Dictionary<string, RandomizerAction>() {
+		{"swamp", new RandomizerAction("TP", "Swamp")},
+		{"sorrowPass", new RandomizerAction("TP", "Valley")},
+		{"moonGrotto", new RandomizerAction("TP", "Grotto")},
+		{"valleyOfTheWind", new RandomizerAction("TP", "Sorrow")},
+		{"spiritTree", new RandomizerAction("TP", "Grove")},
+		{"ginsoTree", new RandomizerAction("TP", "Ginso")},
+		{"forlorn", new RandomizerAction("TP", "Forlorn")},
+		{"mountHoru", new RandomizerAction("TP", "Horu")},
+	};
 
 	// Token: 0x02000A00 RID: 2560
 	public class Pickup

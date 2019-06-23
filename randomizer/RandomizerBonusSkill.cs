@@ -71,7 +71,7 @@ public static class RandomizerBonusSkill
 
     public static void ActivateBonusSkill(int ab)
     {
-        if (!Characters.Sein || Characters.Sein.IsSuspended || ab == 0)
+        if (!Characters.Sein || Characters.Sein.IsSuspended || ab == 0 || RandomizerBonusSkill.get(ab) == 0)
         {
             return;
         }
@@ -90,15 +90,15 @@ public static class RandomizerBonusSkill
             return;
         case 102:
         case 103:
+        case 109:
             if (IsActive(ab))
             {
                 Deactivate(ab);
-                Randomizer.printInfo(BonusSkillNames[ab] + " off");
+                BonusSkillText(BonusSkillNames[ab] + " off");
                 RandomizerBonusSkill.EnergyDrainRate -= DrainRates[ab];
-            } else if (Characters.Sein.Energy.Current > DrainRates[ab])
-            {
+            } else if (Characters.Sein.Energy.Current > 5*DrainRates[ab]) {
                 Activate(ab);
-                Randomizer.printInfo(BonusSkillNames[ab] + " on");
+                BonusSkillText(BonusSkillNames[ab] + " on");
                 RandomizerBonusSkill.EnergyDrainRate += DrainRates[ab];
             } else {
                 UI.SeinUI.ShakeEnergyOrbBar();
@@ -109,7 +109,7 @@ public static class RandomizerBonusSkill
                 if(IsActive(ab) || Characters.Sein.Abilities.Carry.IsCarrying)
                     Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle += 180f;
                 else
-                    Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle = 0f;                   
+                    Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityAngle = 0f;
                 Characters.Sein.PlatformBehaviour.LeftRightMovement.PlatformMovement.LocalSpeedX *= -1;
             }
             break;
@@ -140,11 +140,16 @@ public static class RandomizerBonusSkill
         case 106:
             if (!Characters.Sein.SoulFlame.InsideCheckpointMarker)
             {
-                Randomizer.Print("You can only Respec at a Soul Link!",  3, false, false, false, true);
+                BonusSkillText("You can only Respec on a Soul Link!");
                 return;
             }
             {
                 int apToGain = RandomizerBonus.ResetAP();
+                if(apToGain == 0) {
+                    BonusSkillText("No AP to refund");
+                    return;
+                }
+                BonusSkillText("Respec successful. " + apToGain.ToString() + " AP refunded!");
                 CharacterAbility[] abilities = Characters.Sein.PlayerAbilities.Abilities;
                 List<CharacterAbility> actuallySkills = new List<CharacterAbility>() {
                     Characters.Sein.PlayerAbilities.WallJump,
@@ -190,25 +195,25 @@ public static class RandomizerBonusSkill
             if (IsActive(ab))
             {
                 Deactivate(ab);
-                Randomizer.printInfo("Skill Velocity on");
+                BonusSkillText("Skill Velocity on");
             }
             else
             {
                 Activate(ab);
-                Randomizer.printInfo("Skill Velocity off");
+                BonusSkillText("Skill Velocity off");
             }
             return;
         case 110:
             if (IsActive(ab))
             {
                 Deactivate(ab);
-                Randomizer.printInfo(BonusSkillNames[ab] + " off");
+                BonusSkillText(BonusSkillNames[ab] + " off");
                 RandomizerBonusSkill.EnergyDrainRate -= DrainRates[ab];
             } else if (Characters.Sein.Energy.Current > 1f)
             {
                 Activate(ab);
                 Characters.Sein.Energy.Spend(0.5f);
-                Randomizer.printInfo(BonusSkillNames[ab] + " on");
+                BonusSkillText(BonusSkillNames[ab] + " on");
                 RandomizerBonusSkill.EnergyDrainRate += DrainRates[ab];
             } else {
                 UI.SeinUI.ShakeEnergyOrbBar();
@@ -216,7 +221,70 @@ public static class RandomizerBonusSkill
                 return;                
             }
         break;
-
+        case 111:
+                Characters.Sein.Mortality.DamageReciever.OnRecieveDamage(new Damage(9000f, new Vector2(0, 0), Characters.Sein.Position, DamageType.Lava, Characters.Sein.GameObject));
+        break;
+        case 112:
+            if(CapturedEnemy == null)
+            {
+                BonusSkillNames[112] = "Pokeball (empty)";
+                Characters.Sein.Abilities.SpiritFlameTargetting.UpdateClosestAttackables();
+                foreach(ISpiritFlameAttackable target in Characters.Sein.Abilities.SpiritFlameTargetting.ClosestAttackables)
+                {
+                    string logMessage = target.GetType().ToString();
+                    if(target is EntityTargetting)
+                    {
+                        var enemyTarget = target as EntityTargetting;
+                        var entity = enemyTarget.Entity;
+                        if(entity is JumperEnemy) 
+                            CapturedName = "Fronkey";
+                        else if(entity is FishEnemy)
+                            CapturedName = "Fish";
+                        else if(entity is SpitterEnemy)
+                            CapturedName = "Frog";
+                        else if(entity is KamikazeSootEnemy)
+                            CapturedName = "Baneling";
+                        else if(entity is DashOwlEnemy)
+                            CapturedName = "Bird";
+                        else
+                            return;
+                        CapturedEnemy = entity as Enemy;
+                        Randomizer.LogError(CapturedEnemy.BoundingBox.ToString());
+                        CapturedOffset = CapturedEnemy.PositionToPlayerPosition;
+                        CapturedLeft = Characters.Sein.FaceLeft;
+                        CapturedEnemy.gameObject.SetActiveRecursively(false);
+                        //Events.Scheduler.OnSceneRootDisabled.Remove(new Action<SceneRoot>(CapturedEnemy.OnSceneUnloaded));
+                        BonusSkillNames[112] = "Pokeball ("+CapturedName+")";
+                        
+                    }
+                }
+            } else {
+                    if(CapturedLeft != Characters.Sein.FaceLeft)
+                        CapturedOffset.x *= -1;
+                    CapturedEnemy.Position = Characters.Sein.Position + CapturedOffset;
+                    CapturedEnemy.gameObject.SetActiveRecursively(true);
+                    CapturedEnemy = null;
+                    BonusSkillNames[112] = "Pokeball (empty)";
+            }
+        break;
+        case 1587:
+            if (!Characters.Sein.Controller.CanMove || !Characters.Sein.Active)
+                return;
+            Randomizer.WarpTo(new Vector3(-2478,-593, 0), 0);
+            GameController.Instance.RemoveGameplayObjects();
+            RandomizerStatsManager.Active = false;
+            RandomizerCreditsManager.Initialize();
+        break;
+        case 113:
+            if (IsActive(ab))
+            {
+                Deactivate(ab);
+                BonusSkillText("Bash/Stomp Damage on");
+            } else {
+                Activate(ab);
+                BonusSkillText("Bash/Stomp Damage off");
+            }
+        break;
         default:
             return;
         }
@@ -249,6 +317,7 @@ public static class RandomizerBonusSkill
                         Characters.Sein.PlatformBehaviour.LeftRightMovement.PlatformMovement.LocalSpeedX *= -1;
                     }
                 }
+                BonusSkillText("Out of energy! Bonus skills disabled.");
                 UpdateDrain();
                 return;
             }
@@ -260,27 +329,44 @@ public static class RandomizerBonusSkill
     // Token: 0x060037FD RID: 14333
     public static void OnSave()
     {
+        SaveEnemy = CapturedEnemy;
+        SaveOffset = CapturedOffset;
+        SaveLeft = CapturedLeft;
+        SaveName = CapturedName;
+
         UpdateDrain();
     }
 
     // Token: 0x060037FE RID: 14334
     public static void OnDeath()
     {
+        CapturedEnemy = SaveEnemy;
+        CapturedOffset = SaveOffset;
+        CapturedLeft = SaveLeft;
+        CapturedName = SaveName;
+        if(CapturedName != null)
+            BonusSkillNames[112] = "Pokeball ("+CapturedName+")";
+        else
+            BonusSkillNames[112] = "Pokeball (empty)";
+
         UpdateDrain();
     }
 
     // Token: 0x06003801 RID: 14337
     public static void FoundBonusSkill(int ID)
     {
+        bool psuedo = (ID == 108 || ID == 112);
         if(get(ID) > 0) {
+            if(!psuedo)
+                Randomizer.showHint(RandomizerBonusSkill.BonusSkillNames[ID] + " (duplicate)");
             return;
         }
-        if(ID != 108)
+        if(!psuedo)
             Randomizer.showHint("Unlocked Bonus Skill: " + RandomizerBonusSkill.BonusSkillNames[ID]);
         int offset = 0;
         Dictionary<int, int> ubs = new Dictionary<int, int>(UnlockedBonusSkills);
         if(ubs.Count > 0) 
-        offset = (1+UnlockedBonusSkills.Keys.Max()) << 2;
+        offset = (1+ubs.Keys.Max()) << 2;
         set(ID, offset+1);
         if(ActiveBonus == 0)
             ActiveBonus = ID;
@@ -391,6 +477,8 @@ public static class RandomizerBonusSkill
     public static float EnergyDrainRate;
     public static bool IsActive(int id) {
         try {
+            if(!Characters.Sein)
+                return false;
             return (get(id) >> 1) % 2 == 1;
         }
         catch(Exception e)
@@ -420,7 +508,7 @@ public static class RandomizerBonusSkill
     {
         get {
             HashSet<int> ads = new HashSet<int>();
-            foreach(int id in DrainSkills) {
+            foreach(int id in DrainRates.Keys) {
                 if(IsActive(id))
                     ads.Add(id);
             }
@@ -441,14 +529,65 @@ public static class RandomizerBonusSkill
         { 106, "Respec" },
         { 107, "Level Explosion" },
         { 108, "Toggle Skill Velocity" },
-        { 110, "Invincibility" }
+        { 109, "Timewarp" },
+        { 110, "Invincibility" },
+        { 111, "Wither" },
+        { 112, "Pokeball" },
+        { 113, "Toggle Bash/Stomp Damage" },
+        { 1587, "Warp to Credits" },
     };
     public static Dictionary <int, float> DrainRates = new Dictionary<int, float>
     {
         { 102, 0.00112f },
         { 103, 0.00112f },
-        { 110, 0.0112f },
+        { 109, 0.00112f },
+        { 110, 0.01667f },
     };
 
-    public static HashSet<int> DrainSkills = new HashSet<int> { 102, 103, 110 };
+    public static float AbilityDamage(float orig) {
+        if(IsActive(113))
+            return 0;
+        return orig;
+    }
+
+    public static float TimewarpFactor = 0.5f;
+
+    public static float TimeScale(float orig)
+    {
+        return IsActive(109) ? orig * TimewarpFactor : orig;
+    }
+
+    public static Vector3 TimeScale(Vector3 orig)
+    {
+        return orig * TimeScale(1.0f);
+    }
+    public static Vector2 TimeScale(Vector2 orig)
+    {
+        return orig * TimeScale(1.0f);
+    }
+    public static void TimeScale(Animator animator)
+    {
+        animator.speed = TimeScale(1.0f);
+    }
+    public static void BonusSkillText(string text) {
+        Randomizer.Print(text, 3, false, false, false, true);
+    }
+    public static bool UnlockCreditWarp(string message) {
+        if(get(1587) > 0)
+            return false;
+        FoundBonusSkill(1587);
+        ActiveBonus = 1587;
+        message += "\nPress " + RandomizerRebinding.BonusToggle.FirstBindName() + " to warp to credits";
+        Randomizer.Print(message, 10, false, true, false, false);
+        RandomizerStatsManager.WriteStatsFile();
+        return true;
+    }
+    public static Enemy SaveEnemy;
+    public static Vector3 SaveOffset;
+    public static bool SaveLeft;
+    public static string SaveName;
+    public static Enemy CapturedEnemy;
+    public static Vector3 CapturedOffset;
+    public static bool CapturedLeft;
+    public static string CapturedName;
 }

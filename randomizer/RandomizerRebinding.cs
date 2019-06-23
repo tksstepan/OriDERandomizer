@@ -194,7 +194,7 @@ public static class RandomizerRebinding {
 		{
 			','
 		});
-		ArrayList arrayList = new ArrayList();
+		List<List<Bind>> bindSets = new List<List<Bind>>();
 		string[] array2 = array3;
 		for (int i = 0; i < array2.Length; i++)
 		{
@@ -202,7 +202,7 @@ public static class RandomizerRebinding {
 			{
 				'+'
 			});
-			ArrayList arrayList2 = new ArrayList();
+			List<Bind> bindSet = new List<Bind>();
 			foreach (string text in array4)
 			{
 				if (text.Trim().ToLower() == "tap")
@@ -211,15 +211,15 @@ public static class RandomizerRebinding {
 				}
 				else
 				{
-					arrayList2.Add(new RandomizerRebinding.Bind(text));
+					bindSet.Add(new RandomizerRebinding.Bind(text));
 				}
 			}
-			if (arrayList2.Count > 0)
+			if (bindSet.Count > 0)
 			{
-				arrayList.Add(arrayList2);
+				bindSets.Add(bindSet);
 			}
 		}
-		return new RandomizerRebinding.BindSet(arrayList);
+		return new RandomizerRebinding.BindSet(bindSets);
 	}
 
 	public static Hashtable ActionMap;
@@ -265,6 +265,13 @@ public static class RandomizerRebinding {
 			this.Key = RandomizerRebinding.StringToKeyBinding(input);
 		}
 
+		public override string ToString() {
+			if(this.ActionBind)
+				return this.Action.ToString();
+			else
+				return this.Key.ToString();
+		}
+
 		// Token: 0x060037BA RID: 14266
 		public bool IsPressed()
 		{
@@ -289,22 +296,34 @@ public static class RandomizerRebinding {
 	public class BindSet
 	{
 		// Token: 0x060037BB RID: 14267
-		public BindSet(ArrayList binds)
+		public BindSet(List<List<Bind>> binds)
 		{
 			this.binds = binds;
 			this.wasPressed = true;
 		}
 
+		public string FirstBindName() {
+			if(this.binds.Count > 0)
+			{
+				string output = "";
+				foreach(Bind bind in this.binds[0]){
+					output += bind.ToString() + "+";
+				}
+				return output.Substring(0, output.Length-1);
+			} else {
+				return "<NO BIND>";
+			}
+		}
+
 		// Token: 0x060037BC RID: 14268
 		public bool IsPressed()
 		{
-			foreach (object obj in this.binds)
+			foreach (List<Bind> bindGroup in this.binds)
 			{
-				ArrayList arrayList = (ArrayList)obj;
 				bool flag = true;
-				for (int i = 0; i < arrayList.Count; i++)
+				foreach(Bind bind in bindGroup)
 				{
-					if (!((RandomizerRebinding.Bind)arrayList[i]).IsPressed())
+					if (!bind.IsPressed())
 					{
 						flag = false;
 						break;
@@ -325,7 +344,7 @@ public static class RandomizerRebinding {
 		}
 
 		// Token: 0x04003289 RID: 12937
-		public ArrayList binds;
+		public List<List<Bind>> binds;
 
 		// Token: 0x0400328A RID: 12938
 		public bool wasPressed;
