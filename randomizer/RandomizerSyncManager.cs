@@ -100,7 +100,7 @@ public static class RandomizerSyncManager
 			array[0] = array[0].Replace(',', '|');
 			NameValueCollection nvc = new NameValueCollection();
 			nvc.Set("seed", string.Join(",", array).Replace("#",""));
-			nvc.Set("version", BingoController.BINGO_VERSION);
+			nvc.Set("version", Randomizer.VERSION);
 			var client = new WebClient();
 			client.UploadValuesAsync(new Uri(RootUrl + "/setSeed"), nvc);
 			SeedSent = true;			

@@ -11,7 +11,7 @@ using UnityEngine;
 // Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
-	public static string VERSION = "3.2.2";
+	public static string VERSION = "3.2.3";
 	public static void initialize()
 	{
 		try {
@@ -460,7 +460,11 @@ public static class Randomizer
 		{
 			Randomizer.initialize();
 			if(RandomizerSettings.Dev)
+			{
 				Randomizer.log("Reset and loaded seed: " + SeedMeta);
+				if(BingoController.Active)
+					Randomizer.log("Current bingo state: \n"+BingoController.GetJson());
+			}
 			Randomizer.showSeedInfo();
 			return;
 		}
@@ -723,8 +727,6 @@ public static class Randomizer
 	{
 
 		string seedInfo = "v" + Randomizer.VERSION;
-		if(BingoController.Active)
-			seedInfo += " (Bingo v" + BingoController.BINGO_VERSION  + ")";
 		seedInfo += "- seed loaded: " + Randomizer.SeedMeta;
 		Randomizer.printInfo(seedInfo);
 	}

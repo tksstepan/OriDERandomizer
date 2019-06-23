@@ -599,6 +599,7 @@ public static class RandomizerBonus
     public static int ResetAP() {
         int refund = Characters.Sein.Inventory.GetRandomizerItem(80);
         Characters.Sein.Inventory.SetRandomizerItem(80, 0);
+        BingoController.OnResetAP();
         return refund;
     }
 

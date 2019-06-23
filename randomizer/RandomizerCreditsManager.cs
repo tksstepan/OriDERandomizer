@@ -17,7 +17,7 @@ Developed by:
 Sigmasin
 *Eiko*  #Meldon#  @Vulajin@
 
-Bingo (" + BingoController.BINGO_VERSION + ") by *Eiko*", 14));
+Bingo by *Eiko*", 14));
 		else
 			Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_7.5_2_Ori DE Randomizer (" + Randomizer.VERSION + @")

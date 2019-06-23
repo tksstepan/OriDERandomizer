@@ -8,7 +8,6 @@ using Sein.World;
 
 public static class BingoController
 {
-    public static string BINGO_VERSION = "0.3.1";
     private static string scene() {
         return Scenes.Manager.CurrentScene != null ? Scenes.Manager.CurrentScene.Scene : "" ;
     }
@@ -170,9 +169,13 @@ public static class BingoController
                     if(damage.Type == DamageType.Spikes && damage.Amount > 1000) 
                         MultiBoolGoals["DieTo"]["Forlorn Void"] = true;
                     break;
+                case "mistyWoodsLaserFlipPlatforms":
+                    if(damage.Type == DamageType.Laser || damage.Type == DamageType.Lava)
+                        MultiBoolGoals["DieTo"]["Misty Vertical Lasers"] = true;
+                    break;
             }
-            log_out += " with damage (" + damage.Type.ToString() + ", " + damage.Amount.ToString() + ")" + locStr();
-//            if(RandomizerSettings.Dev) Randomizer.log(log_out);
+            // log_out += " with damage (" + damage.Type.ToString() + ", " + damage.Amount.ToString() + ")" + locStr();
+            // if(RandomizerSettings.Dev) Randomizer.log(log_out);
         } catch(Exception e) {
             Randomizer.LogError("OnDeath: " + e.Message);
         }
@@ -256,6 +259,13 @@ public static class BingoController
         } catch(Exception e) {
             Randomizer.LogError("OnTouchMapstone: " + e.Message);
         }
+    }
+
+    public static void OnResetAP() {
+        if(!Active) return;
+        MultiBoolGoals["GetAbility"]["Spirit Light Efficiency"] = false;
+        MultiBoolGoals["GetAbility"]["Ultra Defense"] = false;
+        MultiBoolGoals["GetAbility"]["Ultra Stomp"] = false;
     }
     
     public static void OnGainAbility(AbilityType ability) {
@@ -546,7 +556,7 @@ public static class BingoController
                 IntGoal.mk("UnspentKeystones", 2509);
                 IntLocsGoal.mk("BreakPlants", 2510, new HashSet<int> {-11040068, -12320248, -1800088, -4680068, -4799416, -6080316, -6319752, -8160268, 1240020, 3119768, 3160244, 3279920, 3399820, 3639880, 399844, 4319860, 4359656, 4439632, 4919600, 5119900, 5359824, 5399780, 5400100, 6080608, 6279880});
                 IntGoal.mk("TotalPickups", 1600);            // already tracked by stats C:
-                IntLocsGoal.mk("UnderwaterPickups", 2511, new HashSet<int>() {1839836, 3559792, -5160280, -3600088, 39756, 3959588, 4199724, 7679852, 5919864, 7959788, 3359784, -3200164, -400240, 559720, 7599824, 6839792, 7639816, 8719856, 5239456});
+                IntLocsGoal.mk("UnderwaterPickups", 2511, new HashSet<int>() {1839836, 3559792, -5160280, -3600088, 39756, 3959588, 4199724, 7679852, 5919864, 7959788, 3359784, -3200164, -400240, 559720, 7599824, 6839792, 7639816, 8719856, 5239456, 3519820});
                 IntLocsGoal.mk("HealthCellLocs", 2512, new HashSet<int>() {-6119704, -6280316, -800192, 1479880, 1599920, 2599880, 3199820, 3919624, 3919688, 4239780, 5399808, 5799932});
                 IntLocsGoal.mk("EnergyCellLocs", 2513, new HashSet<int>() {-1560188, -280256, -3200164, -3360288, -400240, -6279608, 1720000, 2480400, 2719900, 4199828, 5119556, 5360432, 5439640, 599844, 7199904});
                 IntLocsGoal.mk("AbilityCellLocs", 2514, new HashSet<int>() {-10760004, -1680140, -2080116, -2160176, -2919980, -3520100, -3559936, -4160080, -4600188, -480168, -5119796, -6479528, -6719712, 1759964, 1799708, 2079568, 2519668, 2759624, 3319936, 3359784, 3519820, 3879576, 4079964, 4479568, 4479704, 4559492, 4999892, 5239456, 639888, 6399872, 6999916, 799804, 919908 } );
@@ -605,7 +615,11 @@ public static class BingoController
                     new BoolGoal("Ginso Escape Fronkey", 1592),
                     new BoolGoal("Blackroot Teleporter Crushers", 1591),
                     new BoolGoal("NoobSpikes", 1590), // 1589 and 1587 are being used by bonus skill
-                    new BoolGoal("Right Forlorn Laser", 1588)
+                    new BoolGoal("Right Forlorn Laser", 1588),
+                    new BoolGoal("Misty Vertical Lasers", 1586)  
+
+                    // 1584 and below are taken
+
                 });
 
                 MultiBoolGoal.mk("CompleteEscape", new List<BoolGoal>() {
@@ -631,7 +645,7 @@ public static class BingoController
 
                 MultiBoolGoal.mk("EnterArea", new List<BoolGoal>() {
                     new BoolMultiSceneGoal("Lost Grove", 2543, new HashSet<string>() { "southMangroveFallsStoryRoomA", "southMangroveFallsGrenadeEscalationB", "southMangroveFallsGrenadeEscalationBR"}),
-                    new BoolSceneGoal("Misty Woods", 2544, "sorrowPassForestB"),
+                    new BoolMultiSceneGoal("Misty Woods", 2544,  new HashSet<string>() { "sorrowPassForestB", "mistyWoodsGetTorch", "mistyWoodsIntro" }),
                     new BoolMultiSceneGoal("Forlorn Ruins", 2545, new HashSet<string>() {"forlornRuinsGravityRoomA", "forlornRuinsGetNightberry", "forlornRuinsGetIceB"}),
                     new BoolMultiSceneGoal("Sorrow Pass", 2546, new HashSet<string>() {"valleyOfTheWindEArt", "valleyOfTheWindLaserShaft", "valleyOfTheWindGauntlet", "valleyOfTheWindTop", "valleyOfTheWindHubR"}),
                     new BoolMultiSceneGoal("Mount Horu", 2547, new HashSet<string>() {"mountHoruHubBottom", "mountHoruHubMid"}),
@@ -680,19 +694,20 @@ public static class BingoController
                     new BoolGoal("Ultra Stomp", 2579)
                 });
                 MultiBoolGoal.mk("StompPeg", new List<BoolGoal>() {
-                    new BoolGuidSwitchGoal("BlackrootTeleporter" , 2580, new MoonGuid(-896629726, 1267685881, 1301835908, 1482947216)), 
-                    new BoolGuidSwitchGoal("SwampPostStomp" , 2581, new MoonGuid(-1973919964, 1235174309, 1801441926, 1977910307)), 
-                    new BoolGuidSwitchGoal("GroveMapstoneTree" , 2582, new MoonGuid(-1664353560, 1216217354, 845171129, -1310424046)), 
-                    new BoolGuidSwitchGoal("HoruFieldsTPAccess" , 2583, new MoonGuid(938332473, 1306647788, 243261569, 1200294177)), 
+                    new BoolGuidSwitchGoal("BlackrootTeleporter", 2580, new MoonGuid(-896629726, 1267685881, 1301835908, 1482947216)), 
+                    new BoolGuidSwitchGoal("SwampPostStomp", 2581, new MoonGuid(-1973919964, 1235174309, 1801441926, 1977910307)), 
+                    new BoolGuidSwitchGoal("GroveMapstoneTree", 2582, new MoonGuid(-1664353560, 1216217354, 845171129, -1310424046)), 
+                    new BoolGuidSwitchGoal("HoruFieldsTPAccess", 2583, new MoonGuid(938332473, 1306647788, 243261569, 1200294177)), 
                     new BoolGuidSwitchGoal("SorrowLasersArea", 2620, new MoonGuid(-344918519, 1287316567, 75338928, 233490553)),
-                    new BoolGuidSwitchGoal("L1" , 2584, new MoonGuid(-931451667, 1186606623, -1576090735, 604062528)),
-                    new BoolGuidSwitchGoal("R2" , 2585, new MoonGuid(-1449971991, 1203470121, 209341883, 254513811)), 
-                    new BoolGuidSwitchGoal("L2" , 2586, new MoonGuid(1123382356, 1244294063, 1435789238, 1593458155)), 
-                    new BoolGuidSwitchGoal("L4Fire" , 2589, new MoonGuid(-338506493, 1267621739, -966392693, -623848418)), 
-                    new BoolGuidSwitchGoal("L4Drain" , 2590, new MoonGuid(2098905692, 1318113199, 1820486584, 962123723)), 
-                    new BoolGuidSwitchGoal("SpiderLake" , 2591, new MoonGuid(-859228674, 1320898488, 1858384318, 1959278247)), 
-                    new BoolGuidSwitchGoal("GroveGrottoUpper" , 2592, new MoonGuid(-550813708, 1106430997, -1135517261, -531706068)), 
-                    new BoolGuidSwitchGoal("GroveGrottoLower" , 2593, new MoonGuid(1980402418, 1183311360, -882091623, 275381859))
+                    new BoolGuidSwitchGoal("L1", 2584, new MoonGuid(-931451667, 1186606623, -1576090735, 604062528)),
+                    new BoolGuidSwitchGoal("R2", 2585, new MoonGuid(-1449971991, 1203470121, 209341883, 254513811)), 
+                    new BoolGuidSwitchGoal("L2", 2586, new MoonGuid(1123382356, 1244294063, 1435789238, 1593458155)), 
+                    new BoolGuidSwitchGoal("L4Fire", 2589, new MoonGuid(-338506493, 1267621739, -966392693, -623848418)), 
+                    new BoolGuidSwitchGoal("L4Drain", 2590, new MoonGuid(2098905692, 1318113199, 1820486584, 962123723)), 
+                    new BoolGuidSwitchGoal("SpiderLake", 2591, new MoonGuid(-859228674, 1320898488, 1858384318, 1959278247)), 
+                    new BoolGuidSwitchGoal("GroveGrottoUpper", 2592, new MoonGuid(-550813708, 1106430997, -1135517261, -531706068)), 
+                    new BoolGuidSwitchGoal("GroveGrottoLower", 2593, new MoonGuid(1980402418, 1183311360, -882091623, 275381859)),
+                    new BoolGuidSwitchGoal("ForlornLaserPeg", 2625, new MoonGuid(970409280, 1324809336, 1682715272, 1648746300))
                 });
                 MultiBoolGoal.mk("HuntEnemies", new List<BoolGoal>() {
                     new BoolGuidSwitchGoal("Misty Miniboss", 2596, new MoonGuid(-1042451585, 1166751436, 1922297510, -83736415)), 
@@ -840,7 +855,7 @@ public static class BingoController
     public static void PostUpdate() {
         NameValueCollection values = new NameValueCollection();
         values["bingoData"] = GetJson();
-        values["version"] = BINGO_VERSION;
+        values["version"] = Randomizer.VERSION;
         if(!UpdateClient.IsBusy)
         {
             UpdateClient.UploadValuesAsync(new Uri(UpdateUrl), values);
