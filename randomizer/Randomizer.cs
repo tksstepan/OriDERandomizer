@@ -11,7 +11,7 @@ using UnityEngine;
 // Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
-	public static string VERSION = "3.2.3";
+	public static string VERSION = "3.2.4";
 	public static void initialize()
 	{
 		try {
@@ -103,6 +103,7 @@ public static class Randomizer
 			Randomizer.SpawnWith = "";
 			Randomizer.IgnoreEnemyExp = false;
 			Randomizer.RelicCountOverride = false;
+			Randomizer.FixCutscenePickup = -1;
 			try {
 				if(File.Exists("randomizer.dat")) {
 					string[] allLines = File.ReadAllLines("randomizer.dat");
@@ -462,8 +463,6 @@ public static class Randomizer
 			if(RandomizerSettings.Dev)
 			{
 				Randomizer.log("Reset and loaded seed: " + SeedMeta);
-				if(BingoController.Active)
-					Randomizer.log("Current bingo state: \n"+BingoController.GetJson());
 			}
 			Randomizer.showSeedInfo();
 			return;
@@ -473,7 +472,9 @@ public static class Randomizer
 			if (RandomizerRebinding.ShowStats.IsPressed())
 			{
 				RandomizerStatsManager.ShowStats(10);
-				return;
+				if(BingoController.Active)
+					Randomizer.log("Current bingo state: \n"+BingoController.GetJson());
+			return;
 			}
 			if (RandomizerRebinding.ListTrees.IsPressed())
 			{
@@ -767,6 +768,7 @@ public static class Randomizer
 
 	public static void OnDeath()
 	{
+		FixCutscenePickup = -1;
 		RandomizerBonusSkill.OnDeath();
 		RandomizerTrackedDataManager.UpdateBitfields();
 		RandomizerStatsManager.OnDeath();
@@ -1046,18 +1048,15 @@ public static class Randomizer
 							Characters.Sein.Position = new Vector3(750f, -120f);
 							return;
 						}
-						if (Scenes.Manager.CurrentScene.Scene == "catAndMouseResurrectionRoom" && !Randomizer.canFinalEscape())
-						{
-							if (Randomizer.Entrance)
-							{
+						if (Scenes.Manager.CurrentScene.Scene == "catAndMouseResurrectionRoom" && !Randomizer.canFinalEscape()) {
+							if (Randomizer.Entrance) {
 								Randomizer.EnterDoor(new Vector3(-242f, 489f));
 								return;
 							}
 							Characters.Sein.Position = new Vector3(20f, 105f);
 							return;
 						}
-						else if (!Characters.Sein.Controller.CanMove && Scenes.Manager.CurrentScene.Scene == "moonGrottoGumosHideoutB")
-						{
+						else if (!Characters.Sein.Controller.CanMove && Scenes.Manager.CurrentScene.Scene == "moonGrottoGumosHideoutB") {
 							Randomizer.LockedCount++;
 							if (Randomizer.LockedCount >= 4)
 							{
@@ -1065,8 +1064,10 @@ public static class Randomizer
 								return;
 							}
 						}
-						else
-						{
+						else if(FixCutscenePickup > 0) {
+							RandomizerSwitch.SilentAbility(FixCutscenePickup);
+						} 
+						else {
 							Randomizer.LockedCount = 0;
 						}
 					}
@@ -1237,8 +1238,10 @@ public static class Randomizer
 				Randomizer.GoalModeFinish = true;
 			}
 		}
-		if(doBingo)
+		if(doBingo) {
+			Randomizer.Message = "Good luck on your bingo!";
 			BingoController.Init();
+		}
 		else
 			BingoController.Active = false;
 
@@ -1440,4 +1443,8 @@ public static class Randomizer
 	public static int CanWarp;
 
 	public static bool GoalModeFinish;
+
+	public static int FixCutscenePickup;
+
+	public static HashSet<int> CutscenePickupLocs = new HashSet<int> {-1639664, -199724, -919624, -959848, 1720288, 2160192, 2640380, 3040304, 5480952};
 }

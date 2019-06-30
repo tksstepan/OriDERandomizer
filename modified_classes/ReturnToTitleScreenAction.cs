@@ -10,6 +10,7 @@ public class ReturnToTitleScreenAction : ActionMethod
 		{
 			Randomizer.Returning = false;
 			Randomizer.Warping = 0;
+			Randomizer.FixCutscenePickup = -1;
 			RandomizerStatsManager.OnReturnToMenu();
 		}
 		catch (Exception e)

@@ -56,7 +56,6 @@ public static class RandomizerSwitch
         Randomizer.showHint("Map Stone");
         Characters.Sein.Inventory.MapStones++;
     }
-    
     public static void AbilityPickup(int Ability) {
         Randomizer.GiveAbility = true;
         switch (Ability)
@@ -108,6 +107,79 @@ public static class RandomizerSwitch
         }
         Randomizer.GiveAbility = false;
         RandomizerStatsManager.FoundSkill(Ability);
+    }
+    
+    public static void SilentAbility(int Ability) {
+        bool success = false;
+        try {
+            Randomizer.GiveAbility = true;
+            switch (Ability)
+            {
+            case 0:
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Bash, false);
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Bash, true);
+                success = Characters.Sein.Abilities.Bash.Active;
+                break;
+            case 2:
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.ChargeFlame, false);
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.ChargeFlame, true);
+                success = Characters.Sein.Abilities.ChargeFlame.Active;
+                break;
+            case 3:
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.WallJump, false);
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.WallJump, true);
+                success = Characters.Sein.Abilities.WallJump.Active;
+                break;
+            case 4:
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Stomp, false);
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Stomp, true);
+                success = Characters.Sein.Abilities.Stomp.Active;
+                break;
+            case 5:
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.DoubleJump, false);
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.DoubleJump, true);
+                success = Characters.Sein.Abilities.Stomp.Active;
+                break;
+            case 8:
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.ChargeJump, false);
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.ChargeJump, true);
+                success = Characters.Sein.Abilities.ChargeJump.Active;
+                break;
+            case 12:
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Climb, false);
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Climb, true);
+                success = Characters.Sein.Abilities.GrabWall.Active;
+                break;
+            case 14:
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Glide, false);
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Glide, true);
+                success = Characters.Sein.Abilities.Glide.Active;
+                break;
+            case 15:
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.SpiritFlame, false);
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.SpiritFlame, true);
+                success = Characters.Sein.Abilities.SpiritFlame.Active;
+                break;
+            case 50:
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Dash, false);
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Dash, true);
+                success = Characters.Sein.Abilities.Dash.Active;
+                break;
+            case 51:
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Grenade, false);
+                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Grenade, true);
+                success = Characters.Sein.Abilities.Grenade.Active;
+                break;
+            }
+        } catch (Exception e) {
+            
+        }
+        finally {
+            
+        Randomizer.GiveAbility = false;
+        if(success)
+            Randomizer.FixCutscenePickup = -1;
+        }
     }
     public static void EventPickup(int Value) 
     {
@@ -220,6 +292,8 @@ public static class RandomizerSwitch
                     MapStonePickup();
                     break;
                 case "SK":
+                    if(Randomizer.CutscenePickupLocs.Contains(coords))
+                        Randomizer.FixCutscenePickup = (int)Action.Value;
                     AbilityPickup((int)Action.Value);
                     break;
                 case "EV":

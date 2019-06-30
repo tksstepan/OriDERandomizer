@@ -438,6 +438,7 @@ public static class RandomizerSyncManager
 		{"ginsoTree", new RandomizerAction("TP", "Ginso")},
 		{"forlorn", new RandomizerAction("TP", "Forlorn")},
 		{"mountHoru", new RandomizerAction("TP", "Horu")},
+		{"mangroveFalls", new RandomizerAction("TP", "Blackroot")},
 	};
 
 	// Token: 0x02000A00 RID: 2560
