@@ -26,10 +26,10 @@ Developed by:
 Sigmasin
 *Eiko*  #Meldon#  @Vulajin@", 14));
 
-
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_7.5_2_Major contributions by:
 DevilSquirrel
+Kirefel (rebindings)
 
 Community Contributions by:
 GreeZ  Hydra  Jitaenow  LusTher
@@ -38,15 +38,14 @@ Phant  Skulblaka  Terra  Xemsys", 14));
 @"ANCHORTOPPARAMS_20_12_2_Additional community contributions by:
 Athos213    AvengedRuler    Cereberon    Cleanfel
 CovertMuffin   Grimelios   iRobin   JHobz   Roryrai
-Jitaenow    Kirefel    madinsane    Mattermonkey
+Jitaenow    shedd    madinsane    Mattermonkey
 RainbowPoogle   UncleRonny   Wingheart   spinesheath
-SeaAverage   DireKrow   Eph   shedd   xaviershay", 14));
+SeaAverage   DireKrow   Eph   xaviershay", 14));
 
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_10_2_Ori DE Randomizer inspired by:
 Chicken_Supreme's Ori 'remix'
-Link to the Past Randomizer", 10));
-
+A Link to the Past Randomizer", 10));
 
 		Credits.Add(new KeyValuePair<string, int>(
 @"ALIGNLEFTANCHORTOPPARAMS_20_10_2_        Ori Randomizer Tournament Champions
@@ -59,7 +58,6 @@ Doubles:	That Is Faster (Sigmasin and IMRaziel)
 Singles:	Sigmasin
 Doubles:	That Is Still Faster (Sigmasin and IMRaziel)
 ", 14));
-
 
 		// Credits.Add(new KeyValuePair<string, int>("In memory of Grandma Irine", 5));
 		try {
