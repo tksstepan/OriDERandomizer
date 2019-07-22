@@ -12,6 +12,7 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 		this.layout = base.GetComponent<CleverMenuItemLayout>();
 		this.selectionManager = base.GetComponent<CleverMenuItemSelectionManager>();
 		this.group = base.GetComponent<CleverMenuItemGroup>();
+		this.group = base.GetComponent<CleverMenuItemGroup>();
 		this.layout.MenuItems.Clear();
 		this.selectionManager.MenuItems.Clear();
 		this.group.Options.Clear();
@@ -99,6 +100,8 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 
 	// Token: 0x04003358 RID: 13144
 	public CleverMenuItemSelectionManager selectionManager;
+
+	public CleverMenuItemTooltipController tooltipController;
 
 	// Token: 0x04003359 RID: 13145
 	public Transform pivot;

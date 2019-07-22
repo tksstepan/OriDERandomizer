@@ -251,6 +251,15 @@ public static class Randomizer
 		}
 	}
 
+	//  more reliable hook for game end / credit starts
+	public static void onNaruDestroyed() {
+		if (Scenes.Manager.CurrentScene.Scene == "theSacrifice" && RandomizerStatsManager.Active)
+			{
+				RandomizerStatsManager.Finish();
+				RandomizerCreditsManager.Initialize();
+			}
+	}
+
 	public static void getEvent(int ID)
 	{
 		RandomizerBonus.CollectPickup();
@@ -1001,17 +1010,6 @@ public static class Randomizer
 						if(!CreditsActive && !RandomizerCreditsManager.CreditsDone)
 						{
 							CreditsActive = true;
-						}
-					}
-					else if (scene == "theSacrifice" && RandomizerStatsManager.Active)
-					{
-						foreach (SceneManagerScene sms in Scenes.Manager.ActiveScenes)
-						{
-							if (sms.MetaData.Scene == "creditsScreen" && (sms.CurrentState == SceneManagerScene.State.Loading || sms.CurrentState == SceneManagerScene.State.Loaded))
-							{
-								RandomizerStatsManager.Finish();
-								RandomizerCreditsManager.Initialize();
-							}
 						}
 					}
 				}
