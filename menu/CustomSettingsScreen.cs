@@ -12,7 +12,6 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 		this.layout = base.GetComponent<CleverMenuItemLayout>();
 		this.selectionManager = base.GetComponent<CleverMenuItemSelectionManager>();
 		this.group = base.GetComponent<CleverMenuItemGroup>();
-		this.group = base.GetComponent<CleverMenuItemGroup>();
 		this.layout.MenuItems.Clear();
 		this.selectionManager.MenuItems.Clear();
 		this.group.Options.Clear();
@@ -20,6 +19,10 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 		foreach (object obj in this.pivot)
 		{
 			UnityEngine.Object.Destroy(((Transform)obj).gameObject);
+		}
+		foreach (object obj2 in base.transform.FindChild("highlightFade/legend"))
+		{
+			UnityEngine.Object.Destroy(((Transform)obj2).gameObject);
 		}
 		TransparencyAnimator[] componentsInChildren = base.GetComponentsInChildren<TransparencyAnimator>();
 		for (int i = 0; i < componentsInChildren.Length; i++)
@@ -30,6 +33,11 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 			}
 		}
 		this.InitScreen();
+		this.fakeTooltip = this.AddItem(this.DefaultTooltip);
+		foreach (object obj3 in this.fakeTooltip.transform.FindChild("text/stateText"))
+		{
+			UnityEngine.Object.Destroy(((Transform)obj3).gameObject);
+		}
 		this.selectionManager.SetCurrentItem(0);
 	}
 
@@ -39,9 +47,10 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 		CleverMenuItem cleverMenuItem = this.AddItem(label);
 		cleverMenuItem.gameObject.name = "Keybind (" + label + ")";
 		KeybindControl kc = cleverMenuItem.gameObject.AddComponent<KeybindControl>();
-		kc.Init(getKeys, setKeys);
+		kc.Init(getKeys, setKeys, this);
 		cleverMenuItem.PressedCallback += delegate
 		{
+			this.SetFakeTooltip("Backspace: remove bind\nEnter: finish editing");
 			kc.BeginEditing();
 		};
 	}
@@ -88,14 +97,20 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 		CleverMenuItem cleverMenuItem = this.AddItem(label);
 		cleverMenuItem.gameObject.name = "Controller Bind (" + label + ")";
 		ControllerBindControl kc = cleverMenuItem.gameObject.AddComponent<ControllerBindControl>();
-		kc.Init(getKeys, setKeys);
+		kc.Init(getKeys, setKeys, this);
 		cleverMenuItem.PressedCallback += delegate
 		{
+			this.SetFakeTooltip("Backspace: remove bind\nStart: finish editing");
 			kc.BeginEditing();
 		};
 	}
 
-	// Token: 0x04003357 RID: 13143
+	public void SetFakeTooltip(string label)
+	{
+		this.fakeTooltip.transform.Find("text/nameText").GetComponent<MessageBox>().SetMessage(new MessageDescriptor(label));
+	}
+
+	// Token: 0x04003357 RID: 13143ust 
 	public CleverMenuItemLayout layout;
 
 	// Token: 0x04003358 RID: 13144
@@ -108,4 +123,6 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 
 	// Token: 0x0400335A RID: 13146
 	public CleverMenuItemGroup group;
+	public CleverMenuItem fakeTooltip;
+	public string DefaultTooltip = "Click on an action to add or remove binds";
 }

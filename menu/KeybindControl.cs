@@ -41,6 +41,7 @@ public class KeybindControl : MonoBehaviour
 			this.SetKeys(this.currentKeys.ToArray());
 			PlayerInputRebinding.WriteKeyRebindSettings();
 			PlayerInput.Instance.RefreshControlScheme();
+			this.owner.SetFakeTooltip(this.owner.DefaultTooltip);
 			return;
 		}
 		if (Input.GetKeyDown(KeyCode.Backspace))
@@ -87,8 +88,9 @@ public class KeybindControl : MonoBehaviour
 	}
 
 	// Token: 0x0600389E RID: 14494 RVA: 0x0002BE79 File Offset: 0x0002A079
-	public void Init(Func<KeyCode[]> getKeys, Action<KeyCode[]> setKeys)
+	public void Init(Func<KeyCode[]> getKeys, Action<KeyCode[]> setKeys, CustomSettingsScreen owner)
 	{
+		this.owner = owner;
 		this.GetKeys = getKeys;
 		this.SetKeys = setKeys;
 		this.messageBox.SetMessage(new MessageDescriptor(KeybindControl.KeyBindingToString(getKeys())));
@@ -118,4 +120,5 @@ public class KeybindControl : MonoBehaviour
 
 	// Token: 0x0400336F RID: 13167
 	private int exit;
+	private CustomSettingsScreen owner;
 }

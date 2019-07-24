@@ -47,6 +47,7 @@ public class ControllerBindControl : MonoBehaviour
 			this.SetKeys(this.currentKeys.ToArray());
 			PlayerInputRebinding.WriteControllerRebindSettings();
 			PlayerInput.Instance.RefreshControlScheme();
+			this.owner.SetFakeTooltip(this.owner.DefaultTooltip);
 			return;
 		}
 		PlayerInputRebinding.ControllerButton? pressedButtonAsBind = this.GetPressedButtonAsBind();
@@ -81,13 +82,14 @@ public class ControllerBindControl : MonoBehaviour
 		return text;
 	}
 
-	// Token: 0x06003905 RID: 14597 RVA: 0x0002C3DD File Offset: 0x0002A5DD
-	public void Init(Func<PlayerInputRebinding.ControllerButton[]> getKeys, Action<PlayerInputRebinding.ControllerButton[]> setKeys)
+	public void Init(Func<PlayerInputRebinding.ControllerButton[]> getKeys, Action<PlayerInputRebinding.ControllerButton[]> setKeys, CustomSettingsScreen owner)
 	{
+		this.owner = owner;
 		this.GetKeys = getKeys;
 		this.SetKeys = setKeys;
 		this.messageBox.SetMessage(new MessageDescriptor(ControllerBindControl.KeyBindingToString(getKeys())));
 	}
+
 
 	// Token: 0x06003907 RID: 14599 RVA: 0x0002C449 File Offset: 0x0002A649
 	public void Reset()
@@ -220,4 +222,5 @@ public class ControllerBindControl : MonoBehaviour
 
 	// Token: 0x0400339C RID: 13212
 	private XboxControllerInput.Button[] allButtons;
+	private CustomSettingsScreen owner;
 }
