@@ -100,7 +100,7 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 		kc.Init(getKeys, setKeys, this);
 		cleverMenuItem.PressedCallback += delegate
 		{
-			this.SetFakeTooltip("Backspace: remove bind\nStart: finish editing");
+			this.SetFakeTooltip("Start: finish editing");
 			kc.BeginEditing();
 		};
 	}

@@ -29,7 +29,7 @@ Sigmasin
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_7.5_2_Major contributions by:
 DevilSquirrel
-Kirefel (rebindings)
+Kirefel
 
 Community Contributions by:
 GreeZ  Hydra  Jitaenow  LusTher
