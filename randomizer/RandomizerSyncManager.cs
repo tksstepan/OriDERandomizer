@@ -335,7 +335,7 @@ public static class RandomizerSyncManager
 				}
 			}
 			JustFound.Add(pickup.type+pickup.id);
-			PickupQueue.Enqueue(pickup);	
+			PickupQueue.Enqueue(pickup);
 		} catch(Exception e) {
 			Randomizer.LogError("FoundPickup: " + e.Message);
 		}
@@ -428,6 +428,10 @@ public static class RandomizerSyncManager
 	public static Dictionary<int, int> Hints;
 
 	public static HashSet<string> CurrentSignals;
+
+	public static bool NetworkFree {
+		get { return JustFound.Count == 0; }
+	}
 
 	public static Dictionary<string, RandomizerAction> TPIds = new Dictionary<string, RandomizerAction>() {
 		{"swamp", new RandomizerAction("TP", "Swamp")},

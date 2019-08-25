@@ -355,7 +355,7 @@ public static class RandomizerBonusSkill
     // Token: 0x06003801 RID: 14337
     public static void FoundBonusSkill(int ID)
     {
-        bool psuedo = (ID == 108 || ID == 112);
+        bool psuedo = (ID == 108 || ID == 1587);
         if(get(ID) > 0) {
             if(!psuedo)
                 Randomizer.showHint(RandomizerBonusSkill.BonusSkillNames[ID] + " (duplicate)");

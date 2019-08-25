@@ -174,11 +174,6 @@ public static class RandomizerBonus
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
                 Randomizer.showHint("*Water Vein Shard (" + RandomizerBonus.WaterVeinShards().ToString() + "/3)*", 300);
-                if (Characters.Sein.Inventory.GetRandomizerItem(1024) == 1 && RandomizerBonus.WaterVeinShards() == 2)
-                {
-                    TeleporterController.Activate(Randomizer.TeleportTable["Ginso"].ToString(), false);
-                    Randomizer.MessageQueue.Enqueue("*Ginso teleporter activated*");
-                }
             }
             Keys.GinsoTree = (RandomizerBonus.WaterVeinShards() >= 3);
             if(Keys.GinsoTree) 
@@ -201,11 +196,6 @@ public static class RandomizerBonus
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
                 Randomizer.showHint("#Gumon Seal Shard (" + RandomizerBonus.GumonSealShards().ToString() + "/3)#", 300);
-                if (Characters.Sein.Inventory.GetRandomizerItem(1025) == 1 && RandomizerBonus.GumonSealShards() == 2)
-                {
-                    TeleporterController.Activate(Randomizer.TeleportTable["Forlorn"].ToString(), false);
-                    Randomizer.MessageQueue.Enqueue("#Forlorn teleporter activated#");
-                }
             }
             Keys.ForlornRuins = (RandomizerBonus.GumonSealShards() >= 3);
             if(Keys.ForlornRuins) 
@@ -228,11 +218,6 @@ public static class RandomizerBonus
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
                 Randomizer.showHint("@Sunstone Shard (" + RandomizerBonus.SunstoneShards().ToString() + "/3)@", 300);
-                if (Characters.Sein.Inventory.GetRandomizerItem(1026) == 1 && RandomizerBonus.SunstoneShards() == 2)
-                {
-                    TeleporterController.Activate(Randomizer.TeleportTable["Horu"].ToString(), false);
-                    Randomizer.MessageQueue.Enqueue("@Horu teleporter activated@");
-                }
             }
             Keys.MountHoru = (RandomizerBonus.SunstoneShards() >= 3);
             if(Keys.MountHoru) 
