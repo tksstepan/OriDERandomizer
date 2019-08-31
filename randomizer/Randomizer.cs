@@ -11,7 +11,7 @@ using UnityEngine;
 // Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
-    public static string VERSION = "3.3.1";
+    public static string VERSION = "3.3.2";
     public static void initialize()
     {
         try {
@@ -145,6 +145,14 @@ public static class Randomizer
                                     Randomizer.RelicCount++;
                                 }
                             }
+                            if(CluesMode && lineParts[1] == "RP" || lineParts[1] == "MU") {
+                                if(lineParts[2].Contains("EV/0"))
+                                    RandomizerClues.AddClue(lineParts[3], 0);
+                                else if(lineParts[2].Contains("EV/2"))
+                                    RandomizerClues.AddClue(lineParts[3], 1);
+                                else if(lineParts[2].Contains("EV/4"))
+                                    RandomizerClues.AddClue(lineParts[3], 2);
+                            }
                             if(lineParts[1] == "RP") {
                                 Randomizer.RepeatablePickupIds[coords] = RepeatablePickupId;
                                 RepeatablePickupId++;
@@ -171,10 +179,8 @@ public static class Randomizer
                                         StompZone = lineParts[3];
                                     }
                                 }
-                                if (Randomizer.CluesMode && lineParts[1] == "EV" && id % 2 == 0)
-                                {
+                                if (CluesMode && lineParts[1] == "EV" && id % 2 == 0)
                                     RandomizerClues.AddClue(lineParts[3], id / 2);
-                                }
                             }
                         }
                     }

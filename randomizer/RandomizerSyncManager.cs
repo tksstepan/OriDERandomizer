@@ -430,7 +430,7 @@ public static class RandomizerSyncManager
 	public static HashSet<string> CurrentSignals;
 
 	public static bool NetworkFree {
-		get { return JustFound.Count == 0; }
+		get { return JustFound == null || JustFound.Count == 0; }
 	}
 
 	public static Dictionary<string, RandomizerAction> TPIds = new Dictionary<string, RandomizerAction>() {
