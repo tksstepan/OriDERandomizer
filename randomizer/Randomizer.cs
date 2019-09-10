@@ -11,7 +11,7 @@ using UnityEngine;
 // Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
-    public static string VERSION = "3.3.2";
+    public static string VERSION = "3.3.3";
     public static void initialize()
     {
         try {
@@ -106,18 +106,26 @@ public static class Randomizer
             Randomizer.FixCutscenePickup = -1;
             try {
                 if(File.Exists("randomizer.dat")) {
-                    string[] allLines = File.ReadAllLines("randomizer.dat");
-                    string[] flagLine = allLines[0].Split(new char[] { '|' });
+                    List<String> allLines = File.ReadAllLines("randomizer.dat").ToList();
+                    string[] flagLine = allLines[0].Split('|');
                     string s = flagLine[1];
-                    string[] flags = flagLine[0].Split(new char[] { ',' });
+                    string[] flags = flagLine[0].Split(',');
                     Randomizer.SeedMeta = allLines[0];
-                    Randomizer.ParseFlags(flags);
+                    bool doBingo = Randomizer.ParseFlags(flags);
+                    if(doBingo) {
+                        Randomizer.Message = "Good luck on your bingo!";
+                        BingoController.Init(allLines[allLines.Count-1]);
+                        allLines.RemoveAt(allLines.Count-1);
+                    }
+                    else
+                        BingoController.Active = false;
+
                     if(Randomizer.CluesMode) {
                         RandomizerClues.initialize();
                     }
-                    for (int i = 1; i < allLines.Length; i++)
+                    foreach (string line in allLines.Skip(1))
                     {
-                        string[] lineParts = allLines[i].Split(new char[] { '|' });
+                        string[] lineParts = line.Split('|');
                         int coords;
                         int.TryParse(lineParts[0], out coords);
                         if (coords == 2) {
@@ -1146,7 +1154,7 @@ public static class Randomizer
         return 0;
     }
 
-    public static void ParseFlags(string[] rawFlags) {
+    public static bool ParseFlags(string[] rawFlags) {
         bool doBingo = false;
 
         foreach (string rawFlag in rawFlags)
@@ -1265,12 +1273,7 @@ public static class Randomizer
                 Randomizer.GoalModeFinish = true;
             }
         }
-        if(doBingo) {
-            Randomizer.Message = "Good luck on your bingo!";
-            BingoController.Init();
-        }
-        else
-            BingoController.Active = false;
+        return doBingo;
 
     }
 
