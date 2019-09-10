@@ -197,6 +197,9 @@ public static class RandomizerStatsManager {
 		SceneToZone.Add("mountHoruHubBottom", "mountHoru");
 		SceneToZone.Add("mountHoruHubTop", "mountHoru");
 	}
+	public static string CurrentZone(bool pretty) {
+		return pretty ? ZonePrettyNames[CurrentZone()].Replace("\t","") : CurrentZone();
+	}
 
 	public static string CurrentZone() {
 		if(GameWorld.Instance && Characters.Sein)

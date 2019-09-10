@@ -113,18 +113,18 @@ public static class BingoController
         try {
             if(!Active) return;
             UpdateTimer = Math.Min(UpdateTimer, 3);
-            string log_out ="Killed by:" + damage.Sender.name + " ";
+            // string log_out ="Killed by:" + damage.Sender.name + " ";
             string currentScene = scene();
             Entity test = damage.Sender.FindComponent<Entity>();
-            if(test != null)
-                log_out += "(entity: " + test.MoonGuid + ")";
+            // if(test != null)
+            //     log_out += "(entity: " + test.MoonGuid + ")";
 
 
             GuidOwner owner = damage.Sender.FindComponent<GuidOwner>();
-            if(owner != null)
-            {
-                log_out += "(owner: " + owner.MoonGuid + ")";
-            }
+            // if(owner != null)
+            // {
+            //     log_out += "(owner: " + owner.MoonGuid + ")";
+            // }
             switch(currentScene)
             {
                 case "ginsoTreeWaterRisingBtm":
@@ -211,11 +211,12 @@ public static class BingoController
         foreach(LocListener listener in LocListeners) 
             listener.Handle(loc);
     }
-
     public static void OnItem(RandomizerAction action, int coords) {
         try
         {
             if(!Active) return;
+            if(Randomizer.RepeatablePickupIds.ContainsKey(coords) && get(Randomizer.RepeatablePickupIds[coords]) != 0)
+                return;
             if(coords == 2 && (action.Action == "HC" || action.Action == "EC" || action.Action == "AC"))
                 return;
             string itemCode = action.Action + "|" + action.Value.ToString();
@@ -227,6 +228,11 @@ public static class BingoController
             }
             if(SingleItemListeners.ContainsKey(itemCode))
                 SingleItemListeners[itemCode].Handle();
+
+            IntGoals["TotalPickups"].OnChange(1);
+            string piz = "PickupsIn"+RandomizerStatsManager.CurrentZone(true);
+            if(IntGoals.ContainsKey(piz))
+                IntGoals[piz].OnChange(1);
 
             foreach(ItemListener listener in ItemListeners) 
                 listener.Handle(itemCode);
@@ -285,6 +291,7 @@ public static class BingoController
             default:
                 break;
         }
+        IntGoals["SpendPoints"].OnChange(2);
     }
 
 
@@ -318,14 +325,18 @@ public static class BingoController
 
     public class BoolGoal : BingoGoal {
         public int ItemId;
-        public bool Owned = false;
+        public MultiBoolGoal Owner;
         public bool Completed {
             get { return get(this.ItemId) != 0; }
             set { 
                 bool prior = this.Completed;
                 set(this.ItemId, value ? 1 : 0);
-                if(!Owned && prior != value)
-                    GoalChanged(this.Name, 0);
+                if(prior != value)
+                    if(Owner == null)
+                        GoalChanged(this.Name, 0);
+                    else
+                        MultiGoalChanged(this.Owner.Name, this.Name);
+
             }
         }
         public BoolGoal(string name, int id) {
@@ -416,19 +427,14 @@ public static class BingoController
                 }
                 return this.Subgoals[key].Completed;
             }
-            set {
-                bool prior = this.Subgoals[key].Completed;
-                this.Subgoals[key].Completed = value; 
-                if(prior != value)
-                    MultiGoalChanged(this.Name, key);
-            }
+            set { this.Subgoals[key].Completed = value; }
         }
         public MultiBoolGoal(string name, List<BoolGoal> subgoals) {
             this.Name = name;
             this.Subgoals = new Dictionary<string, BoolGoal>();
             foreach(BoolGoal subgoal in subgoals)
             {
-                subgoal.Owned = true;
+                subgoal.Owner = this;
                 this.Subgoals[subgoal.Name] = subgoal;
             }
         }
@@ -453,18 +459,22 @@ public static class BingoController
         public int ItemId;
         public int Timeout = 1;
         public int Target = 0;
+        public void OnChange(int delta) {
+            int prior = this.Value - delta;
+            if(prior < this.Target)
+            {
+                if(this.Value >= this.Target)
+                    GoalChanged(this.Name, 0);
+                else
+                    GoalChanged(this.Name, this.Timeout);
+            }
+        }
         public int Value {
             get { return get(this.ItemId); }
             set { 
-                    int prior = this.Value;
+                    int delta = value - this.Value;
                     set(this.ItemId, value);
-                    if(prior < this.Target)
-                    {
-                        if(value >= this.Target)
-                            GoalChanged(this.Name, 0);
-                        else
-                            GoalChanged(this.Name, this.Timeout);
-                    }
+                    this.OnChange(delta);
                 }
         }
         public IntGoal(string name, int id) {
@@ -769,11 +779,14 @@ public static class BingoController
 
     public static void GoalChanged(string goalName, int timeout) {
         if(ActiveSingleGoals.Contains(goalName))
+        {
             UpdateTimer = Math.Min(timeout, UpdateTimer);
+        }
     }
 
 
     public static void MultiGoalChanged(string goalName, string subgoalName) {
+
     if(ActiveMultiGoals.ContainsKey(goalName) && (ActiveMultiGoals[goalName].Contains(subgoalName) || ActiveMultiGoals[goalName].Contains("COUNT")))
             UpdateTimer = 0;
     }
