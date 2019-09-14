@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -17,8 +18,6 @@ public static class RandomizerSyncManager
 		webClient.DownloadStringCompleted += RetryOnFail;
 		getClient = new WebClient();
 		getClient.DownloadStringCompleted += CheckPickups;
-		if (JustFound == null)
-			JustFound = new HashSet<String>();
 		if (CurrentSignals == null)
 			CurrentSignals = new HashSet<String>();
 		if (PickupQueue == null)
@@ -194,7 +193,7 @@ public static class RandomizerSyncManager
 							}
 						} else if(RandomizerBonus.UpgradeCount(id) < cnt) {
 							RandomizerBonus.UpgradeID(id);
-						} else if(!JustFound.Contains("RB"+splitpair[0]) && RandomizerBonus.UpgradeCount(id) > cnt) {
+						} else if(!PickupQueue.Where((Pickup p) => p.type == "RB" && p.id == splitpair[0]).Any() && RandomizerBonus.UpgradeCount(id) > cnt) {
 							RandomizerBonus.UpgradeID(-id);
 						}
 					}
@@ -299,14 +298,12 @@ public static class RandomizerSyncManager
 						webClient.DownloadStringAsync(SendingPickup.GetURL());
 						return;
 					}
-					JustFound.Remove(SendingPickup.type+SendingPickup.id);
 					SendingPickup = null;
 					return;
 				}
 				if(e.Error != null)
 					Randomizer.log("RetryOnFail got non-web excpetion: " + e.Error.ToString());
 			}
-			JustFound.Remove(SendingPickup.type+SendingPickup.id);
 			SendingPickup = null;
 		} catch(Exception ee) {
 			Randomizer.LogError("RetryOnFail: " + ee.Message);
@@ -334,7 +331,6 @@ public static class RandomizerSyncManager
 					Randomizer.showHint("@" + hintText + "@");
 				}
 			}
-			JustFound.Add(pickup.type+pickup.id);
 			PickupQueue.Enqueue(pickup);
 		} catch(Exception e) {
 			Randomizer.LogError("FoundPickup: " + e.Message);
@@ -418,8 +414,6 @@ public static class RandomizerSyncManager
 	// Token: 0x04003277 RID: 12919
 	public static int ChaosTimeoutCounter = 0;
 
-	public static HashSet<string> JustFound;
-
 	// Token: 0x04003278 RID: 12920
 	public static Queue<Pickup> PickupQueue;
 
@@ -430,7 +424,7 @@ public static class RandomizerSyncManager
 	public static HashSet<string> CurrentSignals;
 
 	public static bool NetworkFree {
-		get { return JustFound == null || JustFound.Count == 0; }
+		get { return Randomizer.SyncId == "" || (PickupQueue.Count == 0 && SendingPickup == null && !webClient.IsBusy()); }
 	}
 
 	public static Dictionary<string, RandomizerAction> TPIds = new Dictionary<string, RandomizerAction>() {

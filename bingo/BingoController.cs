@@ -229,10 +229,10 @@ public static class BingoController
             if(SingleItemListeners.ContainsKey(itemCode))
                 SingleItemListeners[itemCode].Handle();
 
-            IntGoals["TotalPickups"].OnChange(1);
+            IntGoals["TotalPickups"].OnChange(2);
             string piz = "PickupsIn"+RandomizerStatsManager.CurrentZone(true);
             if(IntGoals.ContainsKey(piz))
-                IntGoals[piz].OnChange(1);
+                IntGoals[piz].OnChange(2);
 
             foreach(ItemListener listener in ItemListeners) 
                 listener.Handle(itemCode);
