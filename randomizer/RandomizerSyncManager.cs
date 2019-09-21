@@ -424,7 +424,7 @@ public static class RandomizerSyncManager
 	public static HashSet<string> CurrentSignals;
 
 	public static bool NetworkFree {
-		get { return Randomizer.SyncId == "" || (PickupQueue.Count == 0 && SendingPickup == null && !webClient.IsBusy()); }
+		get { return Randomizer.SyncId == "" || (PickupQueue.Count == 0 && SendingPickup == null && !webClient.IsBusy); }
 	}
 
 	public static Dictionary<string, RandomizerAction> TPIds = new Dictionary<string, RandomizerAction>() {

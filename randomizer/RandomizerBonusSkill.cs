@@ -195,12 +195,12 @@ public static class RandomizerBonusSkill
             if (IsActive(ab))
             {
                 Deactivate(ab);
-                BonusSkillText("Skill Velocity on");
+                BonusSkillText("Movement Bonuses on");
             }
             else
             {
                 Activate(ab);
-                BonusSkillText("Skill Velocity off");
+                BonusSkillText("Movement Bonuses off");
             }
             return;
         case 110:
@@ -528,7 +528,7 @@ public static class RandomizerBonusSkill
         { 105, "Teleport to Soul Link" },
         { 106, "Respec" },
         { 107, "Level Explosion" },
-        { 108, "Toggle Skill Velocity" },
+        { 108, "Toggle Movement Bonuses" },
         { 109, "Timewarp" },
         { 110, "Invincibility" },
         { 111, "Wither" },

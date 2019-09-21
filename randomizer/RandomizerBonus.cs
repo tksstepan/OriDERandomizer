@@ -276,12 +276,11 @@ public static class RandomizerBonus
             break;
             break;
         case 33:
-            int vel = Characters.Sein.Inventory.GetRandomizerItem(33);
             if (!flag)
             {
                 int v = Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
                 Randomizer.showHint("Skill Velocity Upgrade x" + v.ToString());
-                if(vel == 0) 
+                if(Characters.Sein.Inventory.GetRandomizerItem(108) == 0) 
                     RandomizerBonusSkill.FoundBonusSkill(108);
                 return;
             }
@@ -303,6 +302,22 @@ public static class RandomizerBonus
         case 36:
             Randomizer.showHint("Underwater Skill Usage");
             Characters.Sein.Inventory.SetRandomizerItem(36, 1);
+            break;
+        case 37:
+            if (!flag)
+            {
+                int v = Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
+                Randomizer.showHint("Jump Upgrade x" + v.ToString());
+                if(Characters.Sein.Inventory.GetRandomizerItem(108) == 0) 
+                    RandomizerBonusSkill.FoundBonusSkill(108);
+                return;
+            }
+            if (RandomizerBonus.Jumpgrades() > 0)
+            {
+                int v = Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
+                Randomizer.showHint("Jump Upgrade x" + v.ToString());
+                return;
+            }
             break;
         case 40:
             if (!Characters.Sein || flag)
@@ -561,11 +576,28 @@ public static class RandomizerBonus
     // Token: 0x06003788 RID: 14216 RVA: 0x0002BBCA File Offset: 0x00029DCA
     public static int Velocity()
     {
-        if(RandomizerBonusSkill.IsActive(108))
+        try {
+            if(RandomizerBonusSkill.IsActive(108))
+                return 0;
+            return Characters.Sein.Inventory.GetRandomizerItem(33);            
+        }
+        catch(Exception e) {
             return 0;
-        return Characters.Sein.Inventory.GetRandomizerItem(33);
+        }
     }
-
+    public static int Jumpgrades()
+    {
+        try {
+            if(RandomizerBonusSkill.IsActive(108))
+                return 0;
+            return Characters.Sein.Inventory.GetRandomizerItem(37);            
+        }
+        catch(Exception e) {
+            return 0;
+        }
+    }
+    public static float Jumpscale {get {return 1f + .25f * Jumpgrades();}}
+    public static float Veloscale {get {return 1f + .20f * Velocity();}}
     public static bool GravitySuit()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(36) > 0;
