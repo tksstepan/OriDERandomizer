@@ -679,7 +679,7 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 	// Token: 0x06000178 RID: 376
 	public void SurfaceSwimJump()
 	{
-		this.PlatformMovement.LocalSpeedY = this.JumpOutOfWaterSpeed;
+		this.PlatformMovement.LocalSpeedY = this.JumpOutOfWaterSpeed * RandomizerBonus.Jumpscale;
 		if (this.m_sein.Input.NormalizedHorizontal == 0)
 		{
 			this.m_sein.PlatformBehaviour.Visuals.Animation.Play(this.Animations.JumpOutOfWater.Idle, 10, new Func<bool>(this.ShouldJumpOutOfWaterAnimationIdleKeepPlaying));

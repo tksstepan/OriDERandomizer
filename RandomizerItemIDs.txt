@@ -25,7 +25,8 @@
 33 - Skill Velocity Upgrade
 34 - Disable Alt+R
 35 - Enable Alt+R
-36 - Gravity Suit
+36 - Underwater Skill Usage
+37 - Jump Upgrade
 
 40 - Lose Wall Jump
 41 - Lose Charge Flame

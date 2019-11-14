@@ -130,8 +130,8 @@ public class SeinWallJump : CharacterState, ISeinReceiver
 			this.m_hasWallJumpedLeft = true;
 		}
 		this.m_hasWallJumpedRight = false;
-		this.PlatformMovement.LocalSpeedX = -this.JumpStrength.x;
-		this.PlatformMovement.LocalSpeedY = this.JumpStrength.y;
+		this.PlatformMovement.LocalSpeedX = -this.JumpStrength.x * RandomizerBonus.Jumpscale;
+		this.PlatformMovement.LocalSpeedY = this.JumpStrength.y * RandomizerBonus.Jumpscale;
 		Vector2 localSpeed = this.PlatformMovement.LocalSpeed;
 		this.ApplyImpulseToWall(localSpeed);
 		if (this.Sein.Input.NormalizedHorizontal < 0)
@@ -195,7 +195,7 @@ public class SeinWallJump : CharacterState, ISeinReceiver
 			}
 			if ((float)this.Sein.Input.NormalizedHorizontal == -i)
 			{
-				this.PlatformMovement.LocalSpeedX = this.JumpStrength.x * (float)((!left) ? -1 : 1);
+				this.PlatformMovement.LocalSpeedX = this.JumpStrength.x  * RandomizerBonus.Jumpscale * (float)((!left) ? -1 : 1);
 				this.CharacterSpriteMirror.FaceLeft = !left;
 				CharacterAnimationSystem.CharacterAnimationState state = this.Sein.PlatformBehaviour.Visuals.Animation.PlayRandom(this.AwayAnimation, 10, new Func<bool>(this.ShouldKeepPlayingWallJumpLeftAwayAnimation));
 				state.OnStopPlaying = new Action(this.OnAnimationEnd);
@@ -275,8 +275,8 @@ public class SeinWallJump : CharacterState, ISeinReceiver
 			this.m_hasWallJumpedRight = true;
 		}
 		this.m_hasWallJumpedLeft = false;
-		this.PlatformMovement.LocalSpeedX = this.JumpStrength.x;
-		this.PlatformMovement.LocalSpeedY = this.JumpStrength.y;
+		this.PlatformMovement.LocalSpeedX = this.JumpStrength.x  * RandomizerBonus.Jumpscale;
+		this.PlatformMovement.LocalSpeedY = this.JumpStrength.y  * RandomizerBonus.Jumpscale;
 		Vector2 localSpeed = this.PlatformMovement.LocalSpeed;
 		this.ApplyImpulseToWall(localSpeed);
 		if (this.Sein.Input.NormalizedHorizontal > 0)
@@ -444,3 +444,4 @@ public class SeinWallJump : CharacterState, ISeinReceiver
 	// Token: 0x04001173 RID: 4467
 	private bool m_spriteMirrorLock;
 }
+q
