@@ -17,13 +17,12 @@ public static class RandomizerSyncManager
 		webClient = new WebClient();
 		webClient.DownloadStringCompleted += RetryOnFail;
 		getClient = new WebClient();
-		getClient.DownloadStringCompleted += CheckPickups;
+		getClient.UploadValuesCompleted += CheckPickups;
 		if (CurrentSignals == null)
 			CurrentSignals = new HashSet<String>();
 		if (PickupQueue == null)
 			PickupQueue = new Queue<Pickup>();
 		SeedSent = false;
-		Hints = new Dictionary<int, int>();
 		SkillInfos = new List<SkillInfoLine>();
 		EventInfos = new List<EventInfoLine>();
 		TeleportInfos = new List<TeleportInfoLine>();
@@ -81,9 +80,16 @@ public static class RandomizerSyncManager
 			if (Countdown <= 0 && !getClient.IsBusy)
 			{
 				Countdown = 60 * PERIOD;
+				NameValueCollection nvc = new NameValueCollection();
 				Vector3 pos = Characters.Sein.Position;
-				Uri uri = new Uri(RootUrl + "/tick/" + pos.x.ToString() + "," + pos.y.ToString()); 
-				getClient.DownloadStringAsync(uri);
+				nvc["x"] = pos.x.ToString();
+				nvc["y"] = pos.y.ToString();
+				for(int i = 0; i < 8; i++) {
+					nvc["seen_" + i.ToString()] = Characters.Sein.Inventory.GetRandomizerItem(1560+i).ToString();
+					nvc["have_" + i.ToString()] = Characters.Sein.Inventory.GetRandomizerItem(930+i).ToString();
+				}
+				Uri uri = new Uri(RootUrl + "/tick/"); 
+				getClient.UploadValuesAsync(uri, nvc);
 			}
 		} catch(Exception e) {
 			Randomizer.LogError("RSM.Update: " + e.Message);
@@ -126,7 +132,7 @@ public static class RandomizerSyncManager
 	}
 
 	// Token: 0x06003798 RID: 14232
-	public static void CheckPickups(object sender, DownloadStringCompletedEventArgs e)
+	public static void CheckPickups(object sender, UploadValuesCompletedEventArgs e)
 	{
 		try
 		{
@@ -140,7 +146,7 @@ public static class RandomizerSyncManager
 			{
 				if(!Characters.Sein)
 					return;
-				string[] array = e.Result.Split(new char[]
+				string[] array = System.Text.Encoding.UTF8.GetString(e.Result).Split(new char[]
 				{
 					','
 				});
@@ -196,17 +202,6 @@ public static class RandomizerSyncManager
 						} else if(!PickupQueue.Where((Pickup p) => p.type == "RB" && p.id == splitpair[0]).Any() && RandomizerBonus.UpgradeCount(id) > cnt) {
 							RandomizerBonus.UpgradeID(-id);
 						}
-					}
-				}
-				if(array[4] != "")
-					{
-					string[] hints = array[4].Split(';');
-					foreach(string rawHint in hints)
-					{
-						string[] splitpair = rawHint.Split(':');
-						int coords = int.Parse(splitpair[0]);
-						int player = int.Parse(splitpair[1]);
-						Hints[coords] = player;
 					}
 				}
 				if (array.Length > 5)
@@ -315,22 +310,6 @@ public static class RandomizerSyncManager
 	{
 		try {
 			Pickup pickup = new Pickup(action, coords);
-			if(pickup.type == "HN") {
-				string[] hintParts = pickup.id.Split('-');
-				string name = hintParts[0];
-				string type = hintParts[1];
-				string owner = hintParts[2];
-				string hintText = type + " for " + owner;
-				if(Hints.ContainsKey(coords)) {
-					if(Hints[coords] > 0) {
-						Randomizer.showHint("$" + owner + " found "+ name + " here$");
-					} else {
-						Randomizer.showHint(hintText);
-					}
-				} else {
-					Randomizer.showHint("@" + hintText + "@");
-				}
-			}
 			PickupQueue.Enqueue(pickup);
 		} catch(Exception e) {
 			Randomizer.LogError("FoundPickup: " + e.Message);
@@ -419,8 +398,6 @@ public static class RandomizerSyncManager
 
 	public static bool SeedSent;
 
-	public static Dictionary<int, int> Hints;
-
 	public static HashSet<string> CurrentSignals;
 
 	public static bool NetworkFree {
@@ -459,12 +436,22 @@ public static class RandomizerSyncManager
 			return (this.type + this.id).GetHashCode() ^ this.coords.GetHashCode();
 		}
 
+		public void SetUrlGarbage()
+		{
+			this.urlGarbage = "";
+			for (int i = 0; i < 8; i++)
+			{
+				this.urlGarbage += "&s" + i.ToString() + "=" + Characters.Sein.Inventory.GetRandomizerItem(1560 + i).ToString();
+			}
+		}
+
 		// Token: 0x060037A0 RID: 14240
 		public Pickup(string _type, string _id, int _coords)
 		{
 			this.type = _type;
 			this.id = _id;
 			this.coords = _coords;
+			this.SetUrlGarbage();
 		}
 
 		// Token: 0x060037A1 RID: 14241
@@ -473,6 +460,7 @@ public static class RandomizerSyncManager
 			this.type = action.Action;
 			this.id = (Randomizer.StringKeyPickupTypes.Contains(this.type) ? ((string)action.Value) : ((int)action.Value).ToString());
 			this.coords = _coords;
+			this.SetUrlGarbage();
 		}
 
 		// Token: 0x060037A2 RID: 14242
@@ -482,7 +470,7 @@ public static class RandomizerSyncManager
 			if(cleaned_id.Contains("\\"))
 				cleaned_id = cleaned_id.Split('\\')[0];
 			string url = RootUrl + "/found/" + this.coords + "/" + this.type + "/" + cleaned_id;
-			url += "?zone=" + RandomizerStatsManager.CurrentZone();
+			url += "?zone=" + RandomizerStatsManager.CurrentZone() + this.urlGarbage;
 
 			return new Uri(url);
 		}
@@ -495,6 +483,7 @@ public static class RandomizerSyncManager
 
 		// Token: 0x0400327D RID: 12925
 		public int coords;
+		private string urlGarbage;
 	}
 
 	// Token: 0x02000A01 RID: 2561

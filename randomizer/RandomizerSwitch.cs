@@ -256,7 +256,7 @@ public static class RandomizerSwitch
     
     public static void GivePickup(RandomizerAction Action, int coords, bool found_locally=true)
     {
-        try {       
+        try {
             switch (Action.Action) {
                 case "RP":
                 case "MU":
@@ -342,6 +342,7 @@ public static class RandomizerSwitch
         }
         if(found_locally && Randomizer.Sync)
             RandomizerSyncManager.FoundPickup(Action, coords);
+        Randomizer.OnCoord(coords);
     }
 
 }

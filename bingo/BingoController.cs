@@ -201,9 +201,7 @@ public static class BingoController
     }
 
     public static void OnLoc(int loc) {
-        if(!Active)
-            return;
-        if(Randomizer.RepeatablePickupIds.ContainsKey(loc) && get(Randomizer.RepeatablePickupIds[loc]) != 0)
+        if(!Active || Randomizer.HaveCoord(loc))
             return;
         if(SingleLocListeners.ContainsKey(loc)) 
             foreach(SingleLocListener listener in SingleLocListeners[loc])
@@ -215,8 +213,6 @@ public static class BingoController
         try
         {
             if(!Active) return;
-            if(Randomizer.RepeatablePickupIds.ContainsKey(coords) && get(Randomizer.RepeatablePickupIds[coords]) != 0)
-                return;
             if(coords == 2 && (action.Action == "HC" || action.Action == "EC" || action.Action == "AC"))
                 return;
             string itemCode = action.Action + "|" + action.Value.ToString();
@@ -266,6 +262,15 @@ public static class BingoController
             MultiBoolGoals["TouchMapstone"][RandomizerStatsManager.CurrentZone()] = true;
         } catch(Exception e) {
             Randomizer.LogError("OnTouchMapstone: " + e.Message);
+        }
+    }
+
+    public static bool TouchedMapstone(string zone) {
+        try {
+            return MultiBoolGoals["TouchMapstone"][zone];
+        } catch(Exception e) {
+            Randomizer.LogError("TouchedMapstone: " + e.Message);
+            return false;
         }
     }
 
@@ -525,6 +530,11 @@ public static class BingoController
                 this.Value += 1;
         }
     }
+    public static void PostCallback(object sender, UploadValuesCompletedEventArgs e)
+    {
+        if((e.Cancelled || e.Error != null) && (e.Error.GetType().Name == "WebException"))
+            UpdateTimer = Math.Min(1, UpdateTimer);
+    }
 
     public static void Init(string goalLine) {
         try
@@ -539,6 +549,7 @@ public static class BingoController
             if(!Active)
             {
                 UpdateClient = new WebClient();
+                UpdateClient.UploadValuesCompleted += PostCallback; 
                 SingleLocListeners = new Dictionary<int, List<SingleLocListener>>();
                 SingleItemListeners = new Dictionary<string, SingleItemListener>();
                 SingleSceneListeners = new Dictionary<string, SingleSceneListener>();
@@ -909,7 +920,6 @@ public static class BingoController
             UpdateTimer = 15;
         }
     }
-
 
     public static MoonGuid StomplessRocks = new MoonGuid(-1118019250, 1080908127, 1929144468, -1515713832);
     public static MoonGuid Drain = new MoonGuid(1711549718, 1225123502, -2036372807, 248162391);

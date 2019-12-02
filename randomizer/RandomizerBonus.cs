@@ -489,12 +489,6 @@ public static class RandomizerBonus
         return total;
     }
 
-    // Token: 0x0600377C RID: 14204 RVA: 0x0002BAF5 File Offset: 0x00029CF5
-    public static void CollectPickup()
-    {
-        Characters.Sein.Inventory.IncRandomizerItem(0, 1);
-    }
-
     // Token: 0x0600377D RID: 14205 RVA: 0x0002BB08 File Offset: 0x00029D08
     public static int GetPickupCount()
     {
@@ -517,7 +511,6 @@ public static class RandomizerBonus
     public static void CollectMapstone()
     {
         Characters.Sein.Inventory.IncRandomizerItem(23, 1);
-        RandomizerBonus.CollectPickup();
     }
 
     // Token: 0x06003783 RID: 14211 RVA: 0x000E3050 File Offset: 0x000E1250

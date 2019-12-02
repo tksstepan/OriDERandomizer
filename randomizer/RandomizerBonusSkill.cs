@@ -267,6 +267,19 @@ public static class RandomizerBonusSkill
                     BonusSkillNames[112] = "Pokeball (empty)";
             }
         break;
+        case 114:
+            if (IsActive(ab))
+            {
+                Deactivate(ab);
+                BonusSkillText("Ori");
+            }
+            else
+            {
+                Activate(ab);
+                BonusSkillText("Naru");
+            }
+            return;
+        break;
         case 1587:
             if (!Characters.Sein.Controller.CanMove || !Characters.Sein.Active)
                 return;
@@ -534,6 +547,7 @@ public static class RandomizerBonusSkill
         { 111, "Wither" },
         { 112, "Pokeball" },
         { 113, "Toggle Bash/Stomp Damage" },
+        { 114, "Summon Mom" },
         { 1587, "Warp to Credits" },
     };
     public static Dictionary <int, float> DrainRates = new Dictionary<int, float>
@@ -542,6 +556,7 @@ public static class RandomizerBonusSkill
         { 103, 0.00112f },
         { 109, 0.00112f },
         { 110, 0.01667f },
+        { 114, 0f },
     };
 
     public static float AbilityDamage(float orig) {

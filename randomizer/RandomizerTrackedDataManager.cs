@@ -9,100 +9,6 @@ public static class RandomizerTrackedDataManager
 	public static void Initialize()
 	{
 		RandomizerTrackedDataManager.TreeBitfield = -559038737;
-		Trees = new Dictionary<int, string>() {
-			{0, "Spirit Flame"},
-			{1, "Wall Jump"},
-			{2, "Charge Flame"},
-			{3, "Double Jump"},
-			{4, "Bash"},
-			{5, "Stomp"},
-			{6, "Glide"},
-			{7, "Climb"},
-			{8, "Charge Jump"},
-			{9, "Grenade"},
-			{10, "Dash"},
-		};
-		
-		Zones = new Dictionary<int, string>() {			
-			{0, "Glades"},
-			{1, "Grove"},
-			{2, "Grotto"},
-			{3, "Blackroot"},
-			{4, "Swamp"},
-			{5, "Ginso"},
-			{6, "Valley"},
-			{7, "Misty"},
-			{8, "Forlorn"},
-			{9, "Sorrow"},
-			{10, "Horu"},
-		};
-
-		RelicFound = new Dictionary<string, int>() {			
-			{"Glades", 0},
-			{"Grove", 1},
-			{"Grotto", 2},
-			{"Blackroot", 3},
-			{"Swamp", 4},
-			{"Ginso", 5},
-			{"Valley", 6},
-			{"Misty", 7},
-			{"Forlorn", 8},
-			{"Sorrow", 9},
-			{"Horu", 10},
-		};
-
-		RelicExists = new Dictionary<string, int>() {
-			{"Glades", 11},
-			{"Grove", 12},
-			{"Grotto", 13},
-			{"Blackroot", 14},
-			{"Swamp", 15},
-			{"Ginso", 16},
-			{"Valley", 17},
-			{"Misty", 18},
-			{"Forlorn", 19},
-			{"Sorrow", 20},
-			{"Horu", 21},
-		};
-
-		Pedistals = new Dictionary<string, MapstoneData>() {
-			{"sunkenGlades", new MapstoneData("Glades", 0)},
-			{"mangrove", new MapstoneData("Blackroot", 1)},
-			{"hollowGrove", new MapstoneData("Grove", 2)},
-			{"moonGrotto", new MapstoneData("Grotto", 3)},
-			{"thornfeltSwamp", new MapstoneData("Swamp", 4)},
-			{"valleyOfTheWind", new MapstoneData("Valley", 5)},
-			{"forlornRuins", new MapstoneData("Forlorn", 6)},
-			{"sorrowPass", new MapstoneData("Sorrow", 7)},
-			{"mountHoru", new MapstoneData("Horu", 8)},
-		};
-
-		Teleporters = new Dictionary<string, int>() {
-			{"Grove", 0},
-			{"Swamp", 1},
-			{"Grotto", 2},
-			{"Valley", 3},
-			{"Forlorn", 4},
-			{"Sorrow", 5},
-			{"Ginso", 6},
-			{"Horu", 7},
-			{"Blackroot", 8},
-			{"Glades", 9},
-		};
-
-		Skills = new Dictionary<int, AbilityType>() {
-			{11, AbilityType.SpiritFlame},
-			{12, AbilityType.WallJump},
-			{13, AbilityType.ChargeFlame},
-			{14, AbilityType.DoubleJump},
-			{15, AbilityType.Bash},
-			{16, AbilityType.Stomp},
-			{17, AbilityType.Glide},
-			{18, AbilityType.Climb},
-			{19, AbilityType.ChargeJump},
-			{20, AbilityType.Grenade},
-			{21, AbilityType.Dash},
-		};
 	}
 
 	public static void UpdateBitfields() {
@@ -249,22 +155,34 @@ public static class RandomizerTrackedDataManager
 	}
 
 	public static void ListMapstones() {
-		UpdateBitfields();
-		List<string> owned = new List<string>();
-		List<string> unowned = new List<string>();
-		foreach(MapstoneData data in Pedistals.Values) {
-			if((MapstoneBitfield >> data.Bit) % 2 == 1) {
-				owned.Add(data.Zone);
-			} else {
-				unowned.Add(data.Zone);
+		try {
+			UpdateBitfields();
+			var owned = new List<string>();
+			var unowned = new List<string>();
+			var touched = new List<string>();
+			foreach(KeyValuePair<string, MapstoneData> d in Pedistals) {
+				var data = d.Value;
+				if((MapstoneBitfield >> data.Bit) % 2 == 1) {
+					owned.Add(data.Zone);
+				} else {
+					if(BingoController.Active && BingoController.TouchedMapstone(d.Key))
+						touched.Add(data.Zone);
+					else
+						unowned.Add(data.Zone);
+				}
 			}
-		}
-		string output = "Maps active: " + string.Join(", ", owned.ToArray());
-		if(unowned.Count > 0)
-			output += "\nremaining: " + string.Join(", ", unowned.ToArray());
-		Randomizer.printInfo(output);
+			string output = "Maps active: " + string.Join(", ", owned.ToArray());
+			if(touched.Count > 0)
+			{
+				output += "\ntouched: " + string.Join(", ",touched.ToArray());
+			}
+			if(unowned.Count > 0)
+				output += "\nremaining: " + string.Join(", ", unowned.ToArray());
+			Randomizer.printInfo(output);			
+        } catch(Exception e) {
+            Randomizer.LogError("ListMapstones: " + e.Message);
+        }
 	}
-
 
 	public static bool SetTree(int treeNum) {
 		if(!GetTree(treeNum)) {
@@ -328,19 +246,103 @@ public static class RandomizerTrackedDataManager
 	public static int KeyEventBitfield;
 
 	// Token: 0x040032E2 RID: 13026
-	public static Dictionary<int, string> Trees;
 
-	public static Dictionary<int, string> Zones;
+	public static Dictionary<int, string> Trees = new Dictionary<int, string>() {
+			{0, "Spirit Flame"},
+			{1, "Wall Jump"},
+			{2, "Charge Flame"},
+			{3, "Double Jump"},
+			{4, "Bash"},
+			{5, "Stomp"},
+			{6, "Glide"},
+			{7, "Climb"},
+			{8, "Charge Jump"},
+			{9, "Grenade"},
+			{10, "Dash"},
+		};
+		
+	public static Dictionary<int, string> Zones = new Dictionary<int, string>() {			
+			{0, "Glades"},
+			{1, "Grove"},
+			{2, "Grotto"},
+			{3, "Blackroot"},
+			{4, "Swamp"},
+			{5, "Ginso"},
+			{6, "Valley"},
+			{7, "Misty"},
+			{8, "Forlorn"},
+			{9, "Sorrow"},
+			{10, "Horu"},
+		};
 
-	public static Dictionary<string, int> RelicFound;
+	public static Dictionary<string, int> RelicFound = new Dictionary<string, int>() {			
+			{"Glades", 0},
+			{"Grove", 1},
+			{"Grotto", 2},
+			{"Blackroot", 3},
+			{"Swamp", 4},
+			{"Ginso", 5},
+			{"Valley", 6},
+			{"Misty", 7},
+			{"Forlorn", 8},
+			{"Sorrow", 9},
+			{"Horu", 10},
+		};
 
-	public static Dictionary<string, int> RelicExists;
+	public static Dictionary<string, int> RelicExists = new Dictionary<string, int>() {
+			{"Glades", 11},
+			{"Grove", 12},
+			{"Grotto", 13},
+			{"Blackroot", 14},
+			{"Swamp", 15},
+			{"Ginso", 16},
+			{"Valley", 17},
+			{"Misty", 18},
+			{"Forlorn", 19},
+			{"Sorrow", 20},
+			{"Horu", 21},
+		};
 
-	public static Dictionary<string, int> Teleporters;
+	public static Dictionary<string, MapstoneData> Pedistals = new Dictionary<string, MapstoneData>() {
+			{"sunkenGlades", new MapstoneData("Glades", 0)},
+			{"mangrove", new MapstoneData("Blackroot", 1)},
+			{"hollowGrove", new MapstoneData("Grove", 2)},
+			{"moonGrotto", new MapstoneData("Grotto", 3)},
+			{"thornfeltSwamp", new MapstoneData("Swamp", 4)},
+			{"valleyOfTheWind", new MapstoneData("Valley", 5)},
+			{"forlornRuins", new MapstoneData("Forlorn", 6)},
+			{"sorrowPass", new MapstoneData("Sorrow", 7)},
+			{"mountHoru", new MapstoneData("Horu", 8)},
+		};
 
-	public static Dictionary<int, AbilityType> Skills;
+	public static Dictionary<string, int> Teleporters = new Dictionary<string, int>() {
+			{"Grove", 0},
+			{"Swamp", 1},
+			{"Grotto", 2},
+			{"Valley", 3},
+			{"Forlorn", 4},
+			{"Sorrow", 5},
+			{"Ginso", 6},
+			{"Horu", 7},
+			{"Blackroot", 8},
+			{"Glades", 9},
+		};
 
-	public static Dictionary<string, MapstoneData> Pedistals;
+	public static Dictionary<int, AbilityType>  Skills = new Dictionary<int, AbilityType>() {
+			{11, AbilityType.SpiritFlame},
+			{12, AbilityType.WallJump},
+			{13, AbilityType.ChargeFlame},
+			{14, AbilityType.DoubleJump},
+			{15, AbilityType.Bash},
+			{16, AbilityType.Stomp},
+			{17, AbilityType.Glide},
+			{18, AbilityType.Climb},
+			{19, AbilityType.ChargeJump},
+			{20, AbilityType.Grenade},
+			{21, AbilityType.Dash},
+		};
+
+
 	// Token: 0x02000A1B RID: 2587
 	public class MapstoneData
 	{
@@ -354,4 +356,16 @@ public static class RandomizerTrackedDataManager
 		public int Bit;
 		public string Zone;
 	}
+
+	public static Dictionary<int, int> CoordsMap = new Dictionary<int, int>() {
+		{ -10120036, 0 }, { -10440008, 1 }, { -10759968, 2 }, { -10760004, 3 }, { -10839992, 4 }, { -11040068, 5 }, { -11880100, 6 }, { -120208, 7 }, { -12320248, 8 }, { -1560188, 9 }, { -1560272, 10 }, { -160096, 11 }, { -1639664, 12 }, { -1680104, 13 }, { -1680140, 14 }, { -1800088, 15 }, { -1800156, 16 }, { -1840196, 17 }, { -1840228, 18 }, { -1919808, 19 }, { -199724, 20 }, { -2080116, 21 }, { -2160176, 22 }, { -2200148, 23 }, { -2200184, 24 }, { -2240084, 25 }, { -2399488, 26 }, { -2400212, 27 }, { -2480208, 28 }, { -2480280, 29 }, { -280256, 30 }, { -2840236, 31 }, 
+		{ -2919980, 32 }, { -3160308, 33 }, { -319852, 34 }, { -3200164, 35 }, { -3360288, 36 }, { -3520100, 37 }, { -3559936, 38 }, { -3600088, 39 }, { -400240, 40 }, { -4159572, 41 }, { -4160080, 42 }, { -4199936, 43 }, { -4359680, 44 }, { -4440152, 45 }, { -4559584, 46 }, { -4600020, 47 }, { -4600188, 48 }, { -4600256, 49 }, { -4680068, 50 }, { -4799416, 51 }, { -480168, 52 }, { -4879680, 53 }, { -5039728, 54 }, { -5119796, 55 }, { -5159576, 56 }, { -5159700, 57 }, { -5160280, 58 }, { -5400104, 59 }, { -5400236, 60 }, { -5479592, 61 }, { -5479948, 62 }, { -5599400, 63 },
+		{ -560160, 64 }, { -5640092, 65 }, { -5719844, 66 }, { -5919556, 67 }, { -5959772, 68 }, { -600244, 69 }, { -6039640, 70 }, { -6079672, 71 }, { -6080316, 72 }, { -6119656, 73 }, { -6119704, 74 }, { -6159632, 75 }, { -6279608, 76 }, { -6280316, 77 }, { -6319752, 78 }, { -6479528, 79 }, { -6719712, 80 }, { -6720040, 81 }, { -6799732, 82 }, { -6800032, 83 }, { -6959592, 84 }, { -7040392, 85 }, { -7200024, 86 }, { -7320236, 87 }, { -7680144, 88 }, { -7960144, 89 }, { -800192, 90 }, { -8160268, 91 }, { -8240012, 92 }, { -8400124, 93 }, { -8440352, 94 }, { -8600356, 95 },
+		{ -8720256, 96 }, { -8880252, 97 }, { -8920328, 98 }, { -9120036, 99 }, { -919624, 100 }, { -959848, 101 }, { -9799980, 102 }, { 1040112, 103 }, { 120164, 104 }, { 1240020, 105 }, { 1280164, 106 }, { 1479880, 107 }, { 1480360, 108 }, { 1519708, 109 }, { 1599920, 110 }, { 1600136, 111 }, { 1719892, 112 }, { 1720000, 113 }, { 1720288, 114 }, { 1759964, 115 }, { 1799708, 116 }, { 1839836, 117 }, { 1880164, 118 }, { 1920384, 119 }, { 1959768, 120 }, { 2079568, 121 }, { 2160192, 122 }, { 2239640, 123 }, { 24, 124 }, { 2480400, 125 }, { 2519668, 126 }, { 2520192, 127 }, 
+		{ 2559800, 128 }, { 2599880, 129 }, { 2640380, 130 }, { 2719900, 131 }, { 2759624, 132 }, { 28, 133 }, { 2919744, 134 }, { 2999808, 135 }, { 2999904, 136 }, { 3039472, 137 }, { 3039696, 138 }, { 3040304, 139 }, { 3119768, 140 }, { 3160244, 141 }, { 3199820, 142 }, { 32, 143 }, { 3279644, 144 }, { 3279920, 145 }, { 3319936, 146 }, { 3359580, 147 }, { 3359784, 148 }, { 3399820, 149 }, { 3439744, 150 }, { 3519820, 151 }, { 3559792, 152 }, { 36, 153 }, { 3639880, 154 }, { 3639888, 155 }, { 3879576, 156 }, { 3919624, 157 }, { 3919688, 158 }, { 3959588, 159 }, 
+		{ 39756, 160 }, { 39804, 161 }, { 399844, 162 }, { 40, 163 }, { 4039612, 164 }, { 4079964, 165 }, { 4199724, 166 }, { 4199828, 167 }, { 4239780, 168 }, { 4319676, 169 }, { 4319860, 170 }, { 4319892, 171 }, { 4359656, 172 }, { 44, 173 }, { 4439632, 174 }, { 4479568, 175 }, { 4479704, 176 }, { 4479832, 177 }, { 4559492, 178 }, { 4560564, 179 }, { 4599508, 180 }, { 4639628, 181 }, { 4680612, 182 }, { 4759860, 183 }, { 48, 184 }, { 4919600, 185 }, { 4959628, 186 }, { 4999752, 187 }, { 4999892, 188 }, { 5039560, 189 }, { 5040476, 190 }, { 5080304, 191 }, 
+		{ 5080496, 192 }, { 5119556, 193 }, { 5119584, 194 }, { 5119900, 195 }, { 5160336, 196 }, { 5160384, 197 }, { 5160864, 198 }, { 52, 199 }, { 5200140, 200 }, { 5239456, 201 }, { 5280264, 202 }, { 5280296, 203 }, { 5280404, 204 }, { 5280500, 205 }, { 5320328, 206 }, { 5320488, 207 }, { 5320660, 208 }, { 5320824, 209 }, { 5359824, 210 }, { 5360432, 211 }, { 5360732, 212 }, { 5399780, 213 }, { 5399808, 214 }, { 5400100, 215 }, { 5400276, 216 }, { 5439640, 217 }, { 5480952, 218 }, { 5519856, 219 }, { 559720, 220 }, { 56, 221 }, { 5639752, 222 }, { 5719620, 223 }, 
+		{ 5799932, 224 }, { 5879616, 225 }, { 5919864, 226 }, { 599844, 227 }, { 6080608, 228 }, { 6159900, 229 }, { 6199596, 230 }, { 6279880, 231 }, { 6359836, 232 }, { 639888, 233 }, { 6399872, 234 }, { 6639952, 235 }, { 6839792, 236 }, { 6999916, 237 }, { 719620, 238 }, { 7199904, 239 }, { 7559600, 240 }, { 7599824, 241 }, { 7639816, 242 }, { 7679852, 243 }, { 7839588, 244 }, { 7959788, 245 }, { 799776, 246 }, { 799804, 247 }, { 8599904, 248 }, { 8719856, 249 }, { 8839900, 250 }, { 9119928, 251 }, { 919772, 252 }, { 919908, 253 }, { 959960, 254 }, { 960128, 255 }, 
+	};
+ 
 }

@@ -302,13 +302,9 @@ public static class RandomizerStatsManager {
 			}
 		}
 	}
-	public static void IncPickup (int loc) {
-        if(Randomizer.RepeatablePickupIds.ContainsKey(loc))
-        {   
-            if(get(Randomizer.RepeatablePickupIds[loc]) != 0)
-                return;
-            set(Randomizer.RepeatablePickupIds[loc], 1);
-        }
+	public static void IncPickup(int loc) {
+        if(Randomizer.HaveCoord(loc))
+        	return;
 	    IncPickup();
 	}
 
@@ -330,7 +326,6 @@ public static class RandomizerStatsManager {
 					set(PPM_max_count, count);
 				}
 			}
-
 			inc(Pickups + Offsets[CurrentZone()], 1);
 		}
 		catch(Exception e)

@@ -2,8 +2,6 @@
 1 - Mega Energy*
 2 - Forceably Alt+R*
 
-0 - Pickup Count
-
 6 - Attack Upgrade
 8 - Explosion Power Upgrade (deprecated)
 9 - Spirit Light Efficiency
@@ -145,6 +143,14 @@
 920 - Sorrow Relic Prog
 921 - Horu Relic Prog
 
+930 - Have Pickup Bitfield #1
+931 - Have Pickup Bitfield #2
+932 - Have Pickup Bitfield #3
+933 - Have Pickup Bitfield #4
+934 - Have Pickup Bitfield #5
+935 - Have Pickup Bitfield #6
+936 - Have Pickup Bitfield #7
+937 - Have Pickup Bitfield #8
 
 1000 - plant tracking for map markers
 1001 - tree field for tracker
@@ -213,6 +219,15 @@
 1554 - Sunstone Time+Zone
 1555 - Warmth Returned Time+Zone
 
+1560 - Seen Pickup Bitfield #1
+1561 - Seen Pickup Bitfield #2
+1562 - Seen Pickup Bitfield #3
+1563 - Seen Pickup Bitfield #4
+1564 - Seen Pickup Bitfield #5
+1565 - Seen Pickup Bitfield #6
+1566 - Seen Pickup Bitfield #7
+1567 - Seen Pickup Bitfield #8
+
 1570 - Saves
 1571 - sum(shoof)
 1575 - Max PPM
@@ -224,7 +239,14 @@
 1581 - Time since last pickup
 1582 - Longest drought
 1583 - Longest drought end time
+
+1586 - (Bingo) Die to Misty Vertical Lasers
+1587 - Warp to Credits Bonus Skill
+1588 - (Bingo) Die to Right Forlorn Lasers
+1589 - Currently Selected Bonus Skill
+1590-1598 - (Bingo) Die to goals
 1599 - Finished Horu Escape
+
 ==== End Persists Through Death Zone ===
 
 1600 - Pickups found everywhere

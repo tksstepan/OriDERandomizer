@@ -30,6 +30,8 @@ public static class RandomizerSettings
 			{"Cold Color", "0, 255, 255, 255"},
 			{"Hot Color", "255, 85, 0, 255"},
 			{"Invert Swim", "False"},
+			{"Disco Sense", "False"},
+			{"Cursor Lock", "False"},
 			{"Dev", "False"}
 		};
 		if (!File.Exists("RandomizerSettings.txt"))
@@ -61,11 +63,18 @@ public static class RandomizerSettings
 				writeList.Add(missing);
 			}
 			if(writeList.Count > 0) {
-				Randomizer.printInfo("Default Settings written for these missing settings: " + String.Join(", ", writeList.ToArray()), 480);
 				string writeText = "";
+				var nagList = new List<string>();
 				foreach(string writeKey in writeList) {
 					writeText += Environment.NewLine + writeKey+ ": " + DefaultSettings[writeKey];
+					if(writeKey != "Disco Sense" && writeKey != "Cursor Lock") // added these in 3.4, don't nag
+						nagList.Add(writeKey);
 				}
+				if(nagList.Count > 0) {
+						Randomizer.printInfo("Default Settings written for these missing settings: " + String.Join(", ", nagList.ToArray()), 480);
+				}
+
+
 				File.AppendAllText("RandomizerSettings.txt", writeText);
 			}
 		}
@@ -90,16 +99,22 @@ public static class RandomizerSettings
 					RandomizerSettings.GrenadeAimSpeed = float.Parse(value);
 					break;
 				case "Cold Color":
-				RandomizerSettings.ColdColor = RandomizerSettings.ParseColor(value);
+					RandomizerSettings.ColdColor = RandomizerSettings.ParseColor(value);
 					break;
 				case "Hot Color":
-				RandomizerSettings.HotColor = RandomizerSettings.ParseColor(value);
+					RandomizerSettings.HotColor = RandomizerSettings.ParseColor(value);
 					break;
 				case "Invert Swim":
 					RandomizerSettings.InvertSwim = (value.Trim().ToLower() == "true");
 					break;
 				case "Dev":
 					RandomizerSettings.Dev = (value.Trim().ToLower() == "true");
+					break;
+				case "Disco Sense":
+					RandomizerSettings.DiscoSense = (value.Trim().ToLower() == "true");
+					break;
+				case "Cursor Lock":
+					RandomizerSettings.CursorLock = (value.Trim().ToLower() == "true");
 					break;
 			}
 		} catch(Exception) {
@@ -162,6 +177,8 @@ public static class RandomizerSettings
 	public static Color HotColor;
 	public static bool InvertSwim;
 	public static bool Dev;
+	public static bool DiscoSense;
+	public static bool CursorLock;
 
 	public static Dictionary<string, string> DefaultSettings;
 }
