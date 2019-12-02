@@ -85,8 +85,8 @@ public static class RandomizerSyncManager
 				nvc["x"] = pos.x.ToString();
 				nvc["y"] = pos.y.ToString();
 				for(int i = 0; i < 8; i++) {
-					nvc["seen_" + i.ToString()] = Characters.Sein.Inventory.GetRandomizerItem(1560+i).ToString();
-					nvc["have_" + i.ToString()] = Characters.Sein.Inventory.GetRandomizerItem(930+i).ToString();
+					nvc["seen_" + i.ToString()] = fixInt(Characters.Sein.Inventory.GetRandomizerItem(1560+i));
+					nvc["have_" + i.ToString()] = fixInt(Characters.Sein.Inventory.GetRandomizerItem(930+i));
 				}
 				Uri uri = new Uri(RootUrl + "/tick/"); 
 				getClient.UploadValuesAsync(uri, nvc);
@@ -404,6 +404,14 @@ public static class RandomizerSyncManager
 		get { return Randomizer.SyncId == "" || (PickupQueue.Count == 0 && SendingPickup == null && !webClient.IsBusy); }
 	}
 
+	public static string fixInt(int stupidFuckingSignedInt) {
+		if(stupidFuckingSignedInt < 0) {
+			var unsignedVer = BitConverter.ToUInt32(BitConverter.GetBytes(stupidFuckingSignedInt), 0);
+			return unsignedVer.ToString();
+		}
+		return stupidFuckingSignedInt.ToString();
+	}
+
 	public static Dictionary<string, RandomizerAction> TPIds = new Dictionary<string, RandomizerAction>() {
 		{"swamp", new RandomizerAction("TP", "Swamp")},
 		{"sorrowPass", new RandomizerAction("TP", "Valley")},
@@ -441,7 +449,7 @@ public static class RandomizerSyncManager
 			this.urlGarbage = "";
 			for (int i = 0; i < 8; i++)
 			{
-				this.urlGarbage += "&s" + i.ToString() + "=" + Characters.Sein.Inventory.GetRandomizerItem(1560 + i).ToString();
+				this.urlGarbage += "&s" + i.ToString() + "=" + fixInt(Characters.Sein.Inventory.GetRandomizerItem(1560 + i));
 			}
 		}
 

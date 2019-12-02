@@ -11,7 +11,7 @@ using UnityEngine;
 // Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
-    public static string VERSION = "3.4.0";
+    public static string VERSION = "3.4.1";
     public static void initialize()
     {
         try {
