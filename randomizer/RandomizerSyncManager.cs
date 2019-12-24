@@ -444,22 +444,12 @@ public static class RandomizerSyncManager
 			return (this.type + this.id).GetHashCode() ^ this.coords.GetHashCode();
 		}
 
-		public void SetUrlGarbage()
-		{
-			this.urlGarbage = "";
-			for (int i = 0; i < 8; i++)
-			{
-				this.urlGarbage += "&s" + i.ToString() + "=" + fixInt(Characters.Sein.Inventory.GetRandomizerItem(1560 + i));
-			}
-		}
-
 		// Token: 0x060037A0 RID: 14240
 		public Pickup(string _type, string _id, int _coords)
 		{
 			this.type = _type;
 			this.id = _id;
 			this.coords = _coords;
-			this.SetUrlGarbage();
 		}
 
 		// Token: 0x060037A1 RID: 14241
@@ -468,7 +458,6 @@ public static class RandomizerSyncManager
 			this.type = action.Action;
 			this.id = (Randomizer.StringKeyPickupTypes.Contains(this.type) ? ((string)action.Value) : ((int)action.Value).ToString());
 			this.coords = _coords;
-			this.SetUrlGarbage();
 		}
 
 		// Token: 0x060037A2 RID: 14242
@@ -478,7 +467,7 @@ public static class RandomizerSyncManager
 			if(cleaned_id.Contains("\\"))
 				cleaned_id = cleaned_id.Split('\\')[0];
 			string url = RootUrl + "/found/" + this.coords + "/" + this.type + "/" + cleaned_id;
-			url += "?zone=" + RandomizerStatsManager.CurrentZone() + this.urlGarbage;
+			url += "?zone=" + RandomizerStatsManager.CurrentZone();
 
 			return new Uri(url);
 		}

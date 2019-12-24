@@ -342,7 +342,8 @@ public static class RandomizerSwitch
         }
         if(found_locally && Randomizer.Sync)
             RandomizerSyncManager.FoundPickup(Action, coords);
-        Randomizer.OnCoord(coords);
+        if(found_locally)
+            Randomizer.OnCoord(coords);
     }
 
 }
