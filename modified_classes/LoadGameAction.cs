@@ -18,5 +18,6 @@ public class LoadGameAction : ActionMethod
 		if (!GameController.Instance.SaveGameController.PerformLoad())
 		{
 		}
+		RandomizerBonusSkill.DelayDrainUpdate();
 	}
 }

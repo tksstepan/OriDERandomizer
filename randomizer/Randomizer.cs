@@ -11,7 +11,7 @@ using UnityEngine;
 // Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
-    public static string VERSION = "3.4.2";
+    public static string VERSION = "3.4.3";
     public static void initialize()
     {
         try {
@@ -770,8 +770,10 @@ public static class Randomizer
                 message = (string)queueItem;
                 Randomizer.MessageQueueTime = 60;
             }
-            Randomizer.MessageProvider.SetMessage(message);
-            UI.Hints.Show(Randomizer.MessageProvider, HintLayer.GameSaved, (float)Randomizer.MessageQueueTime / 30f + 1f);
+            if(message != "") {
+                Randomizer.MessageProvider.SetMessage(message);
+                UI.Hints.Show(Randomizer.MessageProvider, HintLayer.GameSaved, (float)Randomizer.MessageQueueTime / 30f + 1f);                
+            }
         }
         Randomizer.MessageQueueTime--;
     }

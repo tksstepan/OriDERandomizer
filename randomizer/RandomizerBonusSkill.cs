@@ -314,8 +314,10 @@ public static class RandomizerBonusSkill
     // Token: 0x060037FB RID: 14331
     public static void Update()
     {
-        if (!Characters.Sein.IsSuspended && Characters.Sein.Controller.CanMove && Characters.Sein.Active && RandomizerBonusSkill.EnergyDrainRate > 0f)
+        if (!Characters.Sein.IsSuspended && Characters.Sein.Controller.CanMove && Characters.Sein.Active)
         {
+            if(DrainNextUpdate)
+                UpdateDrain();
             if (RandomizerBonusSkill.EnergyDrainRate > Characters.Sein.Energy.Current)
             {
                 foreach(int ds in ActiveDrainSkills)
@@ -334,8 +336,9 @@ public static class RandomizerBonusSkill
                 UpdateDrain();
                 return;
             }
-            Characters.Sein.Energy.Spend(RandomizerBonusSkill.EnergyDrainRate);
-        }
+            if(RandomizerBonusSkill.EnergyDrainRate > 0f)
+                Characters.Sein.Energy.Spend(RandomizerBonusSkill.EnergyDrainRate);
+        } 
     }
 
     // Token: 0x060037FC RID: 14332
@@ -371,11 +374,11 @@ public static class RandomizerBonusSkill
         bool psuedo = (ID == 108 || ID == 1587);
         if(get(ID) > 0) {
             if(!psuedo)
-                Randomizer.showHint(RandomizerBonusSkill.BonusSkillNames[ID] + " (duplicate)");
+                RandomizerSwitch.PickupMessage(RandomizerBonusSkill.BonusSkillNames[ID] + " (duplicate)");
             return;
         }
         if(!psuedo)
-            Randomizer.showHint("Unlocked Bonus Skill: " + RandomizerBonusSkill.BonusSkillNames[ID]);
+            RandomizerSwitch.PickupMessage("Unlocked Bonus Skill: " + RandomizerBonusSkill.BonusSkillNames[ID]);
         int offset = 0;
         Dictionary<int, int> ubs = new Dictionary<int, int>(UnlockedBonusSkills);
         if(ubs.Count > 0) 
@@ -394,7 +397,7 @@ public static class RandomizerBonusSkill
     public static void UpdateDrain() {
         try
         {
-            if(!Characters.Sein || !Characters.Sein.Inventory)
+            if(!Characters.Sein || !Characters.Sein.Inventory || !Characters.Sein.PlatformBehaviour)
                 return;
             HashSet<int> ads = new HashSet<int>(ActiveDrainSkills);
 
@@ -418,6 +421,7 @@ public static class RandomizerBonusSkill
                 Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.Decceleration = 26f;
                 Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.MaxSpeed = 11.6666f;
             }
+            DrainNextUpdate = false;
         }
         catch(Exception e) {
             Randomizer.LogError("Update Drain: " + e.Message);
@@ -597,6 +601,10 @@ public static class RandomizerBonusSkill
         RandomizerStatsManager.WriteStatsFile();
         return true;
     }
+    public static void DelayDrainUpdate() {
+        DrainNextUpdate = true;
+    }
+    private static bool DrainNextUpdate = false;
     public static Enemy SaveEnemy;
     public static Vector3 SaveOffset;
     public static bool SaveLeft;

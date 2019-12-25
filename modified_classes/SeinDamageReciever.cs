@@ -319,6 +319,7 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 				GameController.Instance.SaveGameController.PerformSave();
 			}
 		}
+		RandomizerBonusSkill.UpdateDrain();
 	}
 
 	// Token: 0x06001039 RID: 4153 RVA: 0x00061818 File Offset: 0x0005FA18

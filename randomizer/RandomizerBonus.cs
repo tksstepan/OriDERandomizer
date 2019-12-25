@@ -35,7 +35,7 @@ public static class RandomizerBonus
             if (!flag)
             {
                 Characters.Sein.Mortality.Health.SetAmount((float)(Characters.Sein.Mortality.Health.MaxHealth + 20));
-                Randomizer.showHint("Mega Health");
+                RandomizerSwitch.PickupMessage("Mega Health");
                 return;
             }
             break;
@@ -43,13 +43,13 @@ public static class RandomizerBonus
             if (!flag)
             {
                 Characters.Sein.Energy.SetCurrent(Characters.Sein.Energy.Max + 5f);
-                Randomizer.showHint("Mega Energy");
+                RandomizerSwitch.PickupMessage("Mega Energy");
                 return;
             }
             break;
         case 2:
             Randomizer.returnToStart();
-            Randomizer.showHint("Go Home!");
+            RandomizerSwitch.PickupMessage("Go Home!");
             return;
         case 20:
             break;
@@ -57,18 +57,18 @@ public static class RandomizerBonus
             if (!flag)
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
-                Randomizer.showHint("Attack Upgrade (" + RandomizerBonus.SpiritFlameLevel().ToString() + ")");
+                RandomizerSwitch.PickupMessage("Attack Upgrade (" + RandomizerBonus.SpiritFlameLevel().ToString() + ")");
                 return;
             }
             if (RandomizerBonus.SpiritFlameLevel() > 0)
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
-                Randomizer.showHint("Attack Upgrade (" + RandomizerBonus.SpiritFlameLevel().ToString() + ")");
+                RandomizerSwitch.PickupMessage("Attack Upgrade (" + RandomizerBonus.SpiritFlameLevel().ToString() + ")");
                 return;
             }
             break;
         case 8:
-            Randomizer.showHint("Explosion Power Upgrade");
+            RandomizerSwitch.PickupMessage("Explosion Power Upgrade");
             if (!RandomizerBonus.ExplosionPower())
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
@@ -85,12 +85,12 @@ public static class RandomizerBonus
                 Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
             }
             if (Characters.Sein.Inventory.GetRandomizerItem(ID) == 1)
-                Randomizer.showHint("Spirit Light Efficiency");
+                RandomizerSwitch.PickupMessage("Spirit Light Efficiency");
             else
-                Randomizer.showHint("Spirit Light Efficiency (" + Characters.Sein.Inventory.GetRandomizerItem(ID).ToString() + ")");
+                RandomizerSwitch.PickupMessage("Spirit Light Efficiency (" + Characters.Sein.Inventory.GetRandomizerItem(ID).ToString() + ")");
             break;
         case 10:
-            Randomizer.showHint("Extra Air Dash");
+            RandomizerSwitch.PickupMessage("Extra Air Dash");
             if (!RandomizerBonus.DoubleAirDash())
             {
                 Characters.Sein.Inventory.SetRandomizerItem(ID, 1);
@@ -98,7 +98,7 @@ public static class RandomizerBonus
             }
             break;
         case 11:
-            Randomizer.showHint("Charge Dash Efficiency");
+            RandomizerSwitch.PickupMessage("Charge Dash Efficiency");
             if (!RandomizerBonus.ChargeDashEfficiency())
             {
                 Characters.Sein.Inventory.SetRandomizerItem(ID, 1);
@@ -111,10 +111,10 @@ public static class RandomizerBonus
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
                 if (RandomizerBonus.DoubleJumpUpgrades() == 1)
                 {
-                    Randomizer.showHint("Extra Double Jump");
+                    RandomizerSwitch.PickupMessage("Extra Double Jump");
                     return;
                 }
-                Randomizer.showHint("Extra Double Jump (" + RandomizerBonus.DoubleJumpUpgrades().ToString() + ")");
+                RandomizerSwitch.PickupMessage("Extra Double Jump (" + RandomizerBonus.DoubleJumpUpgrades().ToString() + ")");
                 return;
             }
             else if (RandomizerBonus.DoubleJumpUpgrades() > 0)
@@ -122,10 +122,10 @@ public static class RandomizerBonus
                 Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
                 if (RandomizerBonus.DoubleJumpUpgrades() == 1)
                 {
-                    Randomizer.showHint("Extra Double Jump");
+                    RandomizerSwitch.PickupMessage("Extra Double Jump");
                     return;
                 }
-                Randomizer.showHint("Extra Double Jump (" + RandomizerBonus.DoubleJumpUpgrades().ToString() + ")");
+                RandomizerSwitch.PickupMessage("Extra Double Jump (" + RandomizerBonus.DoubleJumpUpgrades().ToString() + ")");
                 return;
             }
             break;
@@ -133,13 +133,13 @@ public static class RandomizerBonus
             if (!flag)
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
-                Randomizer.showHint("Health Regeneration (" + RandomizerBonus.HealthRegeneration().ToString() + ")");
+                RandomizerSwitch.PickupMessage("Health Regeneration (" + RandomizerBonus.HealthRegeneration().ToString() + ")");
                 return;
             }
             if (RandomizerBonus.HealthRegeneration() > 0)
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
-                Randomizer.showHint("Health Regeneration (" + RandomizerBonus.HealthRegeneration().ToString() + ")");
+                RandomizerSwitch.PickupMessage("Health Regeneration (" + RandomizerBonus.HealthRegeneration().ToString() + ")");
                 return;
             }
             break;
@@ -147,13 +147,13 @@ public static class RandomizerBonus
             if (!flag)
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
-                Randomizer.showHint("Energy Regeneration (" + RandomizerBonus.EnergyRegeneration().ToString() + ")");
+                RandomizerSwitch.PickupMessage("Energy Regeneration (" + RandomizerBonus.EnergyRegeneration().ToString() + ")");
                 return;
             }
             if (RandomizerBonus.EnergyRegeneration() > 0)
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
-                Randomizer.showHint("Energy Regeneration (" + RandomizerBonus.EnergyRegeneration().ToString() + ")");
+                RandomizerSwitch.PickupMessage("Energy Regeneration (" + RandomizerBonus.EnergyRegeneration().ToString() + ")");
                 return;
             }
             break;
@@ -163,17 +163,17 @@ public static class RandomizerBonus
                 if (RandomizerBonus.WaterVeinShards() > 0)
                 {
                     Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
-                    Randomizer.showHint("*Water Vein Shard (" + RandomizerBonus.WaterVeinShards().ToString() + "/3)*");
+                    RandomizerSwitch.PickupMessage("*Water Vein Shard (" + RandomizerBonus.WaterVeinShards().ToString() + "/3)*");
                 }
             }
             else if (RandomizerBonus.WaterVeinShards() >= 3)
             {
-                Randomizer.showHint("*Water Vein Shard (extra)*");
+                RandomizerSwitch.PickupMessage("*Water Vein Shard (extra)*");
             }
             else
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
-                Randomizer.showHint("*Water Vein Shard (" + RandomizerBonus.WaterVeinShards().ToString() + "/3)*", 300);
+                RandomizerSwitch.PickupMessage("*Water Vein Shard (" + RandomizerBonus.WaterVeinShards().ToString() + "/3)*", 300);
             }
             Keys.GinsoTree = (RandomizerBonus.WaterVeinShards() >= 3);
             if(Keys.GinsoTree) 
@@ -185,17 +185,17 @@ public static class RandomizerBonus
                 if (RandomizerBonus.GumonSealShards() > 0)
                 {
                     Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
-                    Randomizer.showHint("#Gumon Seal Shard (" + RandomizerBonus.GumonSealShards().ToString() + "/3)#");
+                    RandomizerSwitch.PickupMessage("#Gumon Seal Shard (" + RandomizerBonus.GumonSealShards().ToString() + "/3)#");
                 }
             }
             else if (RandomizerBonus.GumonSealShards() >= 3)
             {
-                Randomizer.showHint("#Gumon Seal Shard (extra)#");
+                RandomizerSwitch.PickupMessage("#Gumon Seal Shard (extra)#");
             }
             else
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
-                Randomizer.showHint("#Gumon Seal Shard (" + RandomizerBonus.GumonSealShards().ToString() + "/3)#", 300);
+                RandomizerSwitch.PickupMessage("#Gumon Seal Shard (" + RandomizerBonus.GumonSealShards().ToString() + "/3)#", 300);
             }
             Keys.ForlornRuins = (RandomizerBonus.GumonSealShards() >= 3);
             if(Keys.ForlornRuins) 
@@ -207,17 +207,17 @@ public static class RandomizerBonus
                 if (RandomizerBonus.SunstoneShards() > 0)
                 {
                     Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
-                    Randomizer.showHint("@Sunstone Shard (" + RandomizerBonus.SunstoneShards().ToString() + "/3)@");
+                    RandomizerSwitch.PickupMessage("@Sunstone Shard (" + RandomizerBonus.SunstoneShards().ToString() + "/3)@");
                 }
             }
             else if (RandomizerBonus.SunstoneShards() >= 3)
             {
-                Randomizer.showHint("@Sunstone Shard (extra)@");
+                RandomizerSwitch.PickupMessage("@Sunstone Shard (extra)@");
             }
             else
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
-                Randomizer.showHint("@Sunstone Shard (" + RandomizerBonus.SunstoneShards().ToString() + "/3)@", 300);
+                RandomizerSwitch.PickupMessage("@Sunstone Shard (" + RandomizerBonus.SunstoneShards().ToString() + "/3)@", 300);
             }
             Keys.MountHoru = (RandomizerBonus.SunstoneShards() >= 3);
             if(Keys.MountHoru) 
@@ -233,10 +233,10 @@ public static class RandomizerBonus
             }
             if(Randomizer.fragKeyFinish < RandomizerBonus.WarmthFrags())
             {
-                Randomizer.showHint("@Warmth Fragment (extra)@", 300);
+                RandomizerSwitch.PickupMessage("@Warmth Fragment (extra)@", 300);
                 return;
             }
-            Randomizer.showHint(string.Concat(new object[] { "@Warmth Fragment (", RandomizerBonus.WarmthFrags().ToString(), "/", Randomizer.fragKeyFinish, ")@" }), 300);
+            RandomizerSwitch.PickupMessage(string.Concat(new object[] { "@Warmth Fragment (", RandomizerBonus.WarmthFrags().ToString(), "/", Randomizer.fragKeyFinish, ")@" }), 300);
             break;
         case 29:
             return;
@@ -244,13 +244,13 @@ public static class RandomizerBonus
             if (!flag)
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
-                Randomizer.showHint("Bleeding x" + RandomizerBonus.Bleeding().ToString());
+                RandomizerSwitch.PickupMessage("Bleeding x" + RandomizerBonus.Bleeding().ToString());
                 return;
             }
             if (RandomizerBonus.Bleeding() > 0)
             {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
-                Randomizer.showHint("Bleeding x" + RandomizerBonus.Bleeding().ToString());
+                RandomizerSwitch.PickupMessage("Bleeding x" + RandomizerBonus.Bleeding().ToString());
                 return;
             }
             break;
@@ -260,9 +260,9 @@ public static class RandomizerBonus
             else if (RandomizerBonus.Lifesteal() > 0)
                 Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
             if(Lifesteal() == 1)
-                Randomizer.showHint("Health Leech");
+                RandomizerSwitch.PickupMessage("Health Leech");
             else
-                Randomizer.showHint("Health Leech x" + RandomizerBonus.Lifesteal().ToString());
+                RandomizerSwitch.PickupMessage("Health Leech x" + RandomizerBonus.Lifesteal().ToString());
             break;
         case 32:
             if (!flag)
@@ -270,16 +270,16 @@ public static class RandomizerBonus
             else if (RandomizerBonus.Manavamp() > 0)
                 Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
             if(Manavamp() == 1)
-                Randomizer.showHint("Energy Leech");
+                RandomizerSwitch.PickupMessage("Energy Leech");
             else
-                Randomizer.showHint("Energy Leech x" + RandomizerBonus.Manavamp().ToString());
+                RandomizerSwitch.PickupMessage("Energy Leech x" + RandomizerBonus.Manavamp().ToString());
             break;
             break;
         case 33:
             if (!flag)
             {
                 int v = Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
-                Randomizer.showHint("Skill Velocity Upgrade x" + v.ToString());
+                RandomizerSwitch.PickupMessage("Skill Velocity Upgrade x" + v.ToString());
                 if(Characters.Sein.Inventory.GetRandomizerItem(108) == 0) 
                     RandomizerBonusSkill.FoundBonusSkill(108);
                 return;
@@ -287,27 +287,27 @@ public static class RandomizerBonus
             if (RandomizerBonus.Velocity() > 0)
             {
                 int v = Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
-                Randomizer.showHint("Skill Velocity Upgrade x" + v.ToString());
+                RandomizerSwitch.PickupMessage("Skill Velocity Upgrade x" + v.ToString());
                 return;
             }
             break;
         case 34:
             Characters.Sein.Inventory.SetRandomizerItem(34, 1);
-            Randomizer.showHint("Return to start disabled!");
+            RandomizerSwitch.PickupMessage("Return to start disabled!");
         break;
         case 35:
             Characters.Sein.Inventory.SetRandomizerItem(34, 0);
-            Randomizer.showHint("Return to start enabled!");
+            RandomizerSwitch.PickupMessage("Return to start enabled!");
         break;
         case 36:
-            Randomizer.showHint("Underwater Skill Usage");
+            RandomizerSwitch.PickupMessage("Underwater Skill Usage");
             Characters.Sein.Inventory.SetRandomizerItem(36, 1);
             break;
         case 37:
             if (!flag)
             {
                 int v = Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
-                Randomizer.showHint("Jump Upgrade x" + v.ToString());
+                RandomizerSwitch.PickupMessage("Jump Upgrade x" + v.ToString());
                 if(Characters.Sein.Inventory.GetRandomizerItem(108) == 0) 
                     RandomizerBonusSkill.FoundBonusSkill(108);
                 return;
@@ -315,69 +315,79 @@ public static class RandomizerBonus
             if (RandomizerBonus.Jumpgrades() > 0)
             {
                 int v = Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
-                Randomizer.showHint("Jump Upgrade x" + v.ToString());
+                RandomizerSwitch.PickupMessage("Jump Upgrade x" + v.ToString());
                 return;
             }
             break;
         case 40:
             if (!Characters.Sein || flag)
                 return;
-            Randomizer.showHint("@Wall Jump Lost!!@", 240);
+            RandomizerSwitch.PickupMessage("@Wall Jump Lost!!@", 240);
             Characters.Sein.PlayerAbilities.WallJump.HasAbility = false;
+            Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
             return;
         case 41:
             if (!Characters.Sein || flag)
                 return;
-            Randomizer.showHint("@ChargeFlame Lost!!@", 240);
+            RandomizerSwitch.PickupMessage("@ChargeFlame Lost!!@", 240);
             Characters.Sein.PlayerAbilities.ChargeFlame.HasAbility = false;
+            Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
             return;
         case 42:
             if (!Characters.Sein || flag)
                 return;
-            Randomizer.showHint("@DoubleJump Lost!!@", 240);
+            RandomizerSwitch.PickupMessage("@DoubleJump Lost!!@", 240);
             Characters.Sein.PlayerAbilities.DoubleJump.HasAbility = false;
+            Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
             return;
         case 43:
             if (!Characters.Sein || flag)
                 return;
-            Randomizer.showHint("@Bash Lost!!@", 240);
+            RandomizerSwitch.PickupMessage("@Bash Lost!!@", 240);
             Characters.Sein.PlayerAbilities.Bash.HasAbility = false;
+            Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
             return;
         case 44:
             if (!Characters.Sein || flag)
                 return;
-            Randomizer.showHint("@Stomp Lost!!@", 240);
+            RandomizerSwitch.PickupMessage("@Stomp Lost!!@", 240);
             Characters.Sein.PlayerAbilities.Stomp.HasAbility = false;
+            Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
             return;
         case 45:
             if (!Characters.Sein || flag)
                 return;
-            Randomizer.showHint("@Glide Lost!!@", 240);
+            RandomizerSwitch.PickupMessage("@Glide Lost!!@", 240);
             Characters.Sein.PlayerAbilities.Glide.HasAbility = false;
+            Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
             return;
         case 46:
             if (!Characters.Sein || flag)
                 return;
-            Randomizer.showHint("@Climb Lost!!@", 240);
+            RandomizerSwitch.PickupMessage("@Climb Lost!!@", 240);
             Characters.Sein.PlayerAbilities.Climb.HasAbility = false;
+            Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
             return;
         case 47:
             if (!Characters.Sein || flag)
                 return;
-            Randomizer.showHint("@Charge Jump Lost!!@", 240);
+            RandomizerSwitch.PickupMessage("@Charge Jump Lost!!@", 240);
             Characters.Sein.PlayerAbilities.ChargeJump.HasAbility = false;
+            Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
             return;
         case 48:
             if (!Characters.Sein || flag)
                 return;
-            Randomizer.showHint("@Dash Lost!!@", 240);
+            RandomizerSwitch.PickupMessage("@Dash Lost!!@", 240);
             Characters.Sein.PlayerAbilities.Dash.HasAbility = false;
+            Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
             return;
         case 49:
             if (!Characters.Sein || flag)
                 return;
-            Randomizer.showHint("@Grenade Lost!!@", 240);
+            RandomizerSwitch.PickupMessage("@Grenade Lost!!@", 240);
             Characters.Sein.PlayerAbilities.Grenade.HasAbility = false;
+            Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
             return;
         case 81:
             Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
@@ -387,7 +397,7 @@ public static class RandomizerBonus
                 s_color = "$";
             if(Characters.Sein.PlayerAbilities.HasAbility(AbilityType.Grenade))
                 g_color = "$";
-            Randomizer.showHint(s_color + "Stomp: " + Randomizer.StompZone + s_color + g_color+ "    Grenade: "+ Randomizer.GrenadeZone + g_color, 480);
+            RandomizerSwitch.PickupMessage(s_color + "Stomp: " + Randomizer.StompZone + s_color + g_color+ "    Grenade: "+ Randomizer.GrenadeZone + g_color, 480);
             break;
         default:
             return;
@@ -671,7 +681,7 @@ public static class RandomizerBonus
             {
                 return;
             }
-            Randomizer.showHint("$" + this.name + "$", 240);
+            RandomizerSwitch.PickupMessage("$" + this.name + "$", 240);
             this.selector(Characters.Sein.PlayerAbilities).HasAbility = true;
         }
         public void Lost()
@@ -680,7 +690,7 @@ public static class RandomizerBonus
             {
                 return;
             }
-            Randomizer.showHint("@" + this.name + " Lost!!@", 240);
+            RandomizerSwitch.PickupMessage("@" + this.name + " Lost!!@", 240);
             this.selector(Characters.Sein.PlayerAbilities).HasAbility = false;
         }
         private string name;

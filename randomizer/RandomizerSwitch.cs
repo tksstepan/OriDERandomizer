@@ -1,13 +1,14 @@
 using System;
 using Game;
 using Sein.World;
+using System.Linq;
 
 public static class RandomizerSwitch
 {
 
     public static void SkillPointPickup()
     {
-        Randomizer.showHint("Ability Cell");
+        PickupMessage("Ability Cell");
         if(Randomizer.ZeroXP)
         {
             return;
@@ -18,7 +19,7 @@ public static class RandomizerSwitch
     
     public static void MaxEnergyContainerPickup() 
     {
-        Randomizer.showHint("Energy Cell");
+        PickupMessage("Energy Cell");
         if (Characters.Sein.Energy.Max == 0f)
         {
             Characters.Sein.SoulFlame.FillSoulFlameBar();
@@ -32,7 +33,7 @@ public static class RandomizerSwitch
     
     public static void ExpOrbPickup(int Value)
     {
-        Randomizer.showHint(Value.ToString() + " experience");
+        PickupMessage(Value.ToString() + " experience");
         if(Randomizer.ZeroXP)
         {
             return;
@@ -41,19 +42,19 @@ public static class RandomizerSwitch
     }
     
     public static void KeystonePickup() {
-        Randomizer.showHint("Keystone");
+        PickupMessage("Keystone");
         Characters.Sein.Inventory.CollectKeystones(1);     
     }
     
     public static void MaxHealthContainerPickup() 
     {
-        Randomizer.showHint("Health Cell");
+        PickupMessage("Health Cell");
         Characters.Sein.Mortality.Health.GainMaxHeartContainer();
     }
     
     public static void MapStonePickup() 
     {
-        Randomizer.showHint("Map Stone");
+        PickupMessage("Map Stone");
         Characters.Sein.Inventory.MapStones++;
     }
     public static void AbilityPickup(int Ability) {
@@ -61,47 +62,47 @@ public static class RandomizerSwitch
         switch (Ability)
         {
         case 0:
-            Randomizer.showHint("$Bash$", 300);
+            PickupMessage("$Bash$", 300);
             Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Bash, true);
             break;
         case 2:
-            Randomizer.showHint("$Charge Flame$", 300);
+            PickupMessage("$Charge Flame$", 300);
             Characters.Sein.PlayerAbilities.SetAbility(AbilityType.ChargeFlame, true);
             break;
         case 3:
-            Randomizer.showHint("$Wall Jump$", 300);
+            PickupMessage("$Wall Jump$", 300);
             Characters.Sein.PlayerAbilities.SetAbility(AbilityType.WallJump, true);
             break;
         case 4:
-            Randomizer.showHint("$Stomp$", 300);
+            PickupMessage("$Stomp$", 300);
             Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Stomp, true);
             break;
         case 5:
-            Randomizer.showHint("$Double Jump$", 300);
+            PickupMessage("$Double Jump$", 300);
             Characters.Sein.PlayerAbilities.SetAbility(AbilityType.DoubleJump, true);
             break;
         case 8:
-            Randomizer.showHint("$Charge Jump$", 300);
+            PickupMessage("$Charge Jump$", 300);
             Characters.Sein.PlayerAbilities.SetAbility(AbilityType.ChargeJump, true);
             break;
         case 12:
-            Randomizer.showHint("$Climb$", 300);
+            PickupMessage("$Climb$", 300);
             Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Climb, true);
             break;
         case 14:
-            Randomizer.showHint("$Glide$", 300);
+            PickupMessage("$Glide$", 300);
             Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Glide, true);
             break;
         case 15:
-            Randomizer.showHint("$Spirit Flame$", 300);
+            PickupMessage("$Spirit Flame$", 300);
             Characters.Sein.PlayerAbilities.SetAbility(AbilityType.SpiritFlame, true);
             break;
         case 50:
-            Randomizer.showHint("$Dash$", 300);
+            PickupMessage("$Dash$", 300);
             Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Dash, true);
             break;
         case 51:
-            Randomizer.showHint("$Grenade$", 300);
+            PickupMessage("$Grenade$", 300);
             Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Grenade, true);
             break;
         }
@@ -175,10 +176,10 @@ public static class RandomizerSwitch
             
         }
         finally {
-            
-        Randomizer.GiveAbility = false;
-        if(success)
-            Randomizer.FixCutscenePickup = -1;
+            Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
+            Randomizer.GiveAbility = false;
+            if(success)
+                Randomizer.FixCutscenePickup = -1;
         }
     }
     public static void EventPickup(int Value) 
@@ -186,27 +187,27 @@ public static class RandomizerSwitch
         switch (Value)
         {
             case 0:
-                Randomizer.showHint("*Water Vein*", 300);
+                PickupMessage("*Water Vein*", 300);
                 Keys.GinsoTree = true;
                 break;
             case 1:
-                Randomizer.showHint("*Clean Water*#", 300);
+                PickupMessage("*Clean Water*#", 300);
                 Sein.World.Events.WaterPurified = true;
                 break;
             case 2:
-                Randomizer.showHint("#Gumon Seal#", 300);
+                PickupMessage("#Gumon Seal#", 300);
                 Keys.ForlornRuins = true;
                 break;
             case 3:
-                Randomizer.showHint("#Wind Restored#", 300);
+                PickupMessage("#Wind Restored#", 300);
                 Sein.World.Events.WindRestored = true;
                 break;
             case 4:
-                Randomizer.showHint("@Sunstone@", 300);
+                PickupMessage("@Sunstone@", 300);
                 Keys.MountHoru = true;
                 break;
             case 5:
-                Randomizer.showHint("@Warmth Returned@", 300);
+                PickupMessage("@Warmth Returned@", 300);
                 break;
         }
         RandomizerStatsManager.FoundEvent(Value);
@@ -247,11 +248,11 @@ public static class RandomizerSwitch
             else{
                 shardPart = "2 " + shardPart + " shards to activate";  
             }
-            Randomizer.showHint(colorChar + "Broken " + Value + " teleporter\nCollect " + shardPart + colorChar, 300);
+            PickupMessage(colorChar + "Broken " + Value + " teleporter\nCollect " + shardPart + colorChar, 300);
             return;
         }
         TeleporterController.Activate(Randomizer.TeleportTable[Value].ToString(), false);
-        Randomizer.showHint(colorChar + Value + " teleporter activated" + colorChar);
+        PickupMessage(colorChar + Value + " teleporter activated" + colorChar);
     }
     
     public static void GivePickup(RandomizerAction Action, int coords, bool found_locally=true)
@@ -272,6 +273,7 @@ public static class RandomizerSwitch
                             RandomizerSwitch.GivePickup(new RandomizerAction(code, id), coords, false);
                         }
                     }
+                    SilentMode = false;
                     break;
                 case "AC":
                     SkillPointPickup();
@@ -306,8 +308,24 @@ public static class RandomizerSwitch
                     TeleportPickup((string)Action.Value);
                     break;
                 case "SH":
-                    string message = (string)Action.Value;
-                    Randomizer.showHint(message.Replace("AltR", RandomizerRebinding.ReturnToStart.FirstBindName()));
+                    string message = ((string)Action.Value).Replace("AltR", RandomizerRebinding.ReturnToStart.FirstBindName());
+                    if(message.Length > 1 && message[1] == '=') {
+                        var parts = message.Split(',').ToList();
+                        var flags = parts.FindAll(ele => ele.Length >= 2 && ele[1] == '=');
+                        message = String.Join(",", parts.FindAll(ele => ele.Length < 2 || ele[1] != '=').ToArray());
+                        int duration = 120;
+                        foreach(var flag in flags) {
+                            var p = flag.Split('=');
+                            if(p.Length != 2)
+                                continue;
+                            if(p[0] == "d")
+                                int.TryParse(p[1], out duration);
+                            else if(p[0] == "s")
+                                SilentMode = (p[1].Trim().ToLower() == "true");
+                        }
+                        Randomizer.showHint(message, duration);
+                    } else 
+                        Randomizer.showHint(message);
                     break;
                 case "WT":
                     RandomizerTrackedDataManager.SetRelic(Randomizer.RelicZoneLookup[(string)Action.Value]);
@@ -316,7 +334,7 @@ public static class RandomizerSwitch
                     if(relics >= Randomizer.RelicCount) {
                         relicStr = "$" + relicStr + "$";
                     }
-                    Randomizer.showHint((string)Action.Value + relicStr, 480);
+                    PickupMessage((string)Action.Value + relicStr, 480);
                     break;
                 case "WS":
                 case "WP":
@@ -345,5 +363,14 @@ public static class RandomizerSwitch
         if(found_locally)
             Randomizer.OnCoord(coords);
     }
-
+    public static bool SilentMode = false;
+    public static void PickupMessage(string text, int frames=120) {
+        if(SilentMode)
+        {
+            if(RandomizerSettings.Dev)
+                Randomizer.log(text + " (squelched)");
+            return;
+        }
+        Randomizer.showHint(text, frames);
+    }
 }
