@@ -11,7 +11,7 @@ using UnityEngine;
 // Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
-    public static string VERSION = "3.4.3";
+    public static string VERSION = "3.4.4";
     public static void initialize()
     {
         try {
@@ -772,7 +772,7 @@ public static class Randomizer
             }
             if(message != "") {
                 Randomizer.MessageProvider.SetMessage(message);
-                UI.Hints.Show(Randomizer.MessageProvider, HintLayer.GameSaved, (float)Randomizer.MessageQueueTime / 30f + 1f);                
+                UI.Hints.Show(Randomizer.MessageProvider, HintLayer.GameSaved, (float)Randomizer.MessageQueueTime / 30f + 1f);
             }
         }
         Randomizer.MessageQueueTime--;
@@ -1278,7 +1278,7 @@ public static class Randomizer
             return false;
         }
         int locID = 1560 + RandomizerTrackedDataManager.CoordsMap[coord]/32;
-        return  1 == (get(locID) >> (RandomizerTrackedDataManager.CoordsMap[coord]%32)) % 2;
+        return  0 != (get(locID) >> (RandomizerTrackedDataManager.CoordsMap[coord]%32)) % 2;
     }
 
     public static bool HaveCoord(int coord) {
@@ -1289,7 +1289,7 @@ public static class Randomizer
             return false;
         }
         int locID = 930 + RandomizerTrackedDataManager.CoordsMap[coord]/32;
-        return  1 == (get(locID) >> (RandomizerTrackedDataManager.CoordsMap[coord]%32)) % 2;
+        return  0 != (get(locID) >> (RandomizerTrackedDataManager.CoordsMap[coord]%32)) % 2;
     }
 
     public static void OnCoord(int coord) {
