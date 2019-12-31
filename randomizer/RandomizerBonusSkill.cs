@@ -303,7 +303,7 @@ public static class RandomizerBonusSkill
         }
     }
     static bool CanWarpTo(Vector3 target) {
-        return !(Characters.Sein.Abilities.Carry.IsCarrying || !Characters.Sein.Controller.CanMove || !Characters.Sein.Active || (target.x == 0f && target.y == 0f));
+        return !((Characters.Sein.Abilities.Carry.IsCarrying && !Randomizer.AllowOrbWarps) || !Characters.Sein.Controller.CanMove || !Characters.Sein.Active || (target.x == 0f && target.y == 0f));
     }
     // Token: 0x060037FA RID: 14330
     static RandomizerBonusSkill()
@@ -316,7 +316,7 @@ public static class RandomizerBonusSkill
     {
         if (!Characters.Sein.IsSuspended && Characters.Sein.Controller.CanMove && Characters.Sein.Active)
         {
-            if(DrainNextUpdate)
+            if(DrainNextUpdate > 0)
                 UpdateDrain();
             if (RandomizerBonusSkill.EnergyDrainRate > Characters.Sein.Energy.Current)
             {
@@ -421,7 +421,7 @@ public static class RandomizerBonusSkill
                 Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.Decceleration = 26f;
                 Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.MaxSpeed = 11.6666f;
             }
-            DrainNextUpdate = false;
+            DrainNextUpdate -= 1;
         }
         catch(Exception e) {
             Randomizer.LogError("Update Drain: " + e.Message);
@@ -602,9 +602,9 @@ public static class RandomizerBonusSkill
         return true;
     }
     public static void DelayDrainUpdate() {
-        DrainNextUpdate = true;
+        DrainNextUpdate = 5;
     }
-    private static bool DrainNextUpdate = false;
+    private static int DrainNextUpdate = 0;
     public static Enemy SaveEnemy;
     public static Vector3 SaveOffset;
     public static bool SaveLeft;

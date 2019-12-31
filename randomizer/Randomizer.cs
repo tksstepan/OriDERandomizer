@@ -11,7 +11,7 @@ using UnityEngine;
 // Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
-    public static string VERSION = "3.4.4";
+    public static string VERSION = "3.4.5";
     public static void initialize()
     {
         try {
@@ -103,6 +103,7 @@ public static class Randomizer
             Randomizer.IgnoreEnemyExp = false;
             Randomizer.RelicCountOverride = false;
             Randomizer.FixCutscenePickup = -1;
+            Randomizer.AllowOrbWarps = false;
             try {
                 if(File.Exists("randomizer.dat")) {
                     List<String> allLines = File.ReadAllLines("randomizer.dat").ToList();
@@ -152,7 +153,7 @@ public static class Randomizer
                                     Randomizer.RelicCount++;
                                 }
                             }
-                            if(CluesMode && lineParts[1] == "RP" || lineParts[1] == "MU") {
+                            if(CluesMode && (lineParts[1] == "RP" || lineParts[1] == "MU")) {
                                 if(lineParts[2].Contains("EV/0"))
                                     RandomizerClues.AddClue(lineParts[3], 0);
                                 else if(lineParts[2].Contains("EV/2"))
@@ -221,7 +222,7 @@ public static class Randomizer
             DelayedWarp = true;
             return;
         }
-        if(Characters.Sein.Abilities.Carry.IsCarrying)
+        if(Characters.Sein.Abilities.Carry.IsCarrying && !AllowOrbWarps)
             Characters.Sein.Abilities.Carry.CurrentCarryable.Drop();
         if(Characters.Sein.Abilities.Dash && Characters.Sein.Abilities.Dash.IsDashingOrChangeDashing)
             Characters.Sein.Abilities.Dash.StopDashing();
@@ -240,7 +241,7 @@ public static class Randomizer
             return;
         if (Items.NightBerry != null)
             Items.NightBerry.transform.position = new Vector3(-755f, -400f);
-        if(Characters.Sein.Abilities.Carry.IsCarrying)
+        if(Characters.Sein.Abilities.Carry.IsCarrying && !AllowOrbWarps)
             Characters.Sein.Abilities.Carry.CurrentCarryable.Drop();
         RandomizerStatsManager.WarpedToStart();
         RandomizerBonusSkill.LastAltR = Characters.Sein.Position;
@@ -1263,6 +1264,10 @@ public static class Randomizer
             {
                 Randomizer.GoalModeFinish = true;
             }
+            if (flag == "orbwarp")
+            {
+                Randomizer.AllowOrbWarps = true;
+            }
         }
         return doBingo;
 
@@ -1510,6 +1515,8 @@ public static class Randomizer
     public static bool GoalModeFinish;
 
     public static int FixCutscenePickup;
+
+    public static bool AllowOrbWarps;
 
     public static HashSet<int> CutscenePickupLocs = new HashSet<int> {-1639664, -199724, -919624, -959848, 1720288, 2160192, 2640380, 3040304, 5480952};
 }
