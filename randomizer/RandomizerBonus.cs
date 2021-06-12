@@ -390,6 +390,8 @@ public static class RandomizerBonus
             Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
             return;
         case 81:
+        	if(Characters.Sein.Inventory.GetRandomizerItem(ID) > 0)
+        		return;
             Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
             string s_color = "";
             string g_color = "";

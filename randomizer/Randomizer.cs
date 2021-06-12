@@ -540,6 +540,26 @@ public static class Randomizer
                 RandomizerBonusSkill.BonusSkillSlot(4);
                 return;
             }
+            if (RandomizerRebinding.Bonus6.IsPressed())
+            {
+                RandomizerBonusSkill.BonusSkillSlot(5);
+                return;
+            }
+            if (RandomizerRebinding.Bonus7.IsPressed())
+            {
+                RandomizerBonusSkill.BonusSkillSlot(6);
+                return;
+            }
+            if (RandomizerRebinding.Bonus8.IsPressed())
+            {
+                RandomizerBonusSkill.BonusSkillSlot(7);
+                return;
+            }
+            if (RandomizerRebinding.Bonus9.IsPressed())
+            {
+                RandomizerBonusSkill.BonusSkillSlot(8);
+                return;
+            }
         }
 
         if (RandomizerRebinding.ReplayMessage.IsPressed())
