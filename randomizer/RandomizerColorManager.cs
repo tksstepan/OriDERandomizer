@@ -123,7 +123,7 @@ public static class RandomizerColorManager
 				if (Characters.Ori.InsideMapstone)
 				{
 					int currentMap = 20 + RandomizerBonus.MapStoneProgression() * 4;
-					using (List<int>.Enumerator enumerator = Randomizer.HotColdMaps.GetEnumerator())
+					using (List<int>.Enumerator enumerator = (RandomizerBonus.SenseFragsActive ? Randomizer.HotColdMapsWithFrags : Randomizer.HotColdMaps).GetEnumerator())
 					{
 						while (enumerator.MoveNext())
 						{
@@ -134,6 +134,9 @@ public static class RandomizerColorManager
 								break;
 							}
 						}
+					}
+					if(distance < scale && RandomizerBonus.SenseFragsEnabled && !RandomizerBonus.SenseFragsActive) {
+						RandomizerBonus.SenseFragsActive = true;
 					}
 				}
 				else
@@ -195,6 +198,19 @@ public static class RandomizerColorManager
 				}
 			}
 		}
+		if(RandomizerBonus.SenseFragsActive)
+			foreach (RandomizerHotColdItem target in Randomizer.HotColdFrags.Values) {
+				if (Characters.Sein.Inventory.GetRandomizerItem(target.Id) == 0)
+				{
+					float distance = Vector3.Distance(target.Position, Characters.Sein.Position);
+					if (distance < minimum)
+					{
+						minimum = distance;
+						HotColdTarget = target.Position;
+					}
+				}
+			}
+
 	}
 
 	// Token: 0x04003343 RID: 13123

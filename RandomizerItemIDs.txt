@@ -161,6 +161,8 @@
 1025 - shard forlorn TP
 1026 - shard horu TP
 
+1100 - Enable Frag-Sense variant
+1101 - Frag-Sense variant online
 
 ==== Begin Persists Through Death Zone ===
 1500 - Deaths

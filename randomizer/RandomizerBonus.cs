@@ -390,8 +390,8 @@ public static class RandomizerBonus
             Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
             return;
         case 81:
-        	if(Characters.Sein.Inventory.GetRandomizerItem(ID) > 0)
-        		return;
+            if(Characters.Sein.Inventory.GetRandomizerItem(ID) > 0)
+                return;
             Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
             string s_color = "";
             string g_color = "";
@@ -408,6 +408,12 @@ public static class RandomizerBonus
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
             return;
         }
+    }
+
+    public static bool SenseFragsEnabled => Characters.Sein.Inventory.GetRandomizerItem(1100) > 0;
+    public static bool SenseFragsActive {
+        get => SenseFragsEnabled && Characters.Sein.Inventory.GetRandomizerItem(1101) > 0;
+        set => Characters.Sein.Inventory.SetRandomizerItem(1101, value ? 1 : 0);
     }
 
     public static bool ForlornEscapeHint()

@@ -67,7 +67,9 @@ public static class Randomizer
             Randomizer.HotCold = false;
             Randomizer.HotColdTypes = new HashSet<string>() {"EV", "RB17", "RB19", "RB21", "RB28", "SK", "TPForlorn", "TPHoru", "TPGinso", "TPValley", "TPSorrow"};
             Randomizer.HotColdItems = new Dictionary<int, RandomizerHotColdItem>();
+            Randomizer.HotColdFrags = new Dictionary<int, RandomizerHotColdItem>();
             Randomizer.HotColdMaps = new List<int>();
+            Randomizer.HotColdMapsWithFrags = new List<int>();
             int HotColdSaveId = 2000;
             Randomizer.HoruScene = "";
             Randomizer.HoruMap = new Hashtable();
@@ -132,16 +134,20 @@ public static class Randomizer
                             SpawnWith = lineParts[1] + lineParts[2];
                             continue;
                         }
-                        if (Randomizer.HotColdTypes.Contains(lineParts[1]) || Randomizer.HotColdTypes.Any((string t) => (lineParts[1] + lineParts[2]).StartsWith(t)))
-                        {
-                            if (Math.Abs(coords) > 100)
-                            {
+                        if (Randomizer.HotColdTypes.Contains(lineParts[1]) || Randomizer.HotColdTypes.Any((string t) => (lineParts[1] + lineParts[2]).StartsWith(t))) {
+                            if (Math.Abs(coords) > 100) {
                                 Randomizer.HotColdItems.Add(coords, new RandomizerHotColdItem(Randomizer.HashKeyToVector(coords), HotColdSaveId));
                                 HotColdSaveId++;
-                            }
-                            else
-                            {
+                            } else {
                                 Randomizer.HotColdMaps.Add(coords);
+                                Randomizer.HotColdMapsWithFrags.Add(coords);
+                            }
+                        } else if(lineParts[1] == "MS") {
+                            if (Math.Abs(coords) > 100) {
+                                Randomizer.HotColdFrags.Add(coords, new RandomizerHotColdItem(Randomizer.HashKeyToVector(coords), HotColdSaveId));
+                                HotColdSaveId++; 
+                            } else {
+                                Randomizer.HotColdMapsWithFrags.Add(coords);
                             }
                         }
                         if (Randomizer.StringKeyPickupTypes.Contains(lineParts[1]))
@@ -192,6 +198,7 @@ public static class Randomizer
                         }
                     }
                     Randomizer.HotColdMaps.Sort();
+                    Randomizer.HotColdMapsWithFrags.Sort();
                     if (Randomizer.CluesMode) {
                         RandomizerClues.FinishClues();
                     }
@@ -366,9 +373,11 @@ public static class Randomizer
                 BingoController.OnLoc(hashKey);
                 RandomizerStatsManager.IncPickup(hashKey);
                 RandomizerSwitch.GivePickup(Randomizer.Table[hashKey], hashKey, true);
-                if (Randomizer.HotColdItems.ContainsKey(hashKey))
-                {
+                if (Randomizer.HotColdItems.ContainsKey(hashKey)) {
                     set(Randomizer.HotColdItems[hashKey].Id, 1);
+                    RandomizerColorManager.UpdateHotColdTarget();
+                } else if(Randomizer.HotColdFrags.ContainsKey(hashKey)) {
+                    set(Randomizer.HotColdFrags[hashKey].Id, 1);
                     RandomizerColorManager.UpdateHotColdTarget();
                 }
                 return;
@@ -1478,7 +1487,11 @@ public static class Randomizer
 
     public static Dictionary<int, RandomizerHotColdItem> HotColdItems;
 
+    public static Dictionary<int, RandomizerHotColdItem> HotColdFrags;
+
     public static List<int> HotColdMaps;
+
+    public static List<int> HotColdMapsWithFrags;
 
     public static Dictionary<string, string> RelicZoneLookup;
 
