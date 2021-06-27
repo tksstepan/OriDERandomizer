@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Game;
 using Sein.World;
 using UnityEngine;
@@ -273,7 +274,6 @@ public static class RandomizerBonus
                 RandomizerSwitch.PickupMessage("Energy Leech");
             else
                 RandomizerSwitch.PickupMessage("Energy Leech x" + RandomizerBonus.Manavamp().ToString());
-            break;
             break;
         case 33:
             if (!flag)
@@ -596,7 +596,7 @@ public static class RandomizerBonus
                 return 0;
             return Characters.Sein.Inventory.GetRandomizerItem(33);            
         }
-        catch(Exception e) {
+        catch(Exception) {
             return 0;
         }
     }
@@ -607,7 +607,7 @@ public static class RandomizerBonus
                 return 0;
             return Characters.Sein.Inventory.GetRandomizerItem(37);            
         }
-        catch(Exception e) {
+        catch(Exception) {
             return 0;
         }
     }
@@ -634,6 +634,37 @@ public static class RandomizerBonus
         BingoController.OnResetAP();
         return refund;
     }
+
+    public static void ListBonuses() {
+        List<string> bonuses = new List<string>();
+        foreach(var kv in BonusNames) {
+            var amnt = Characters.Sein.Inventory.GetRandomizerItem(kv.Key);
+            if(amnt == 0) continue;
+            if(amnt == 1)
+                bonuses.Add(kv.Value);
+            else
+                bonuses.Add($"{kv.Value} ({amnt})");
+        }
+        if(bonuses.Count > 0) {
+            var msg = $"ALIGNRIGHTANCHORTOPPARAMS_12_14_1_{string.Join("\n", bonuses.ToArray())}";
+            Randomizer.printInfo(msg);
+        } else Randomizer.printInfo("No bonus passives");
+    }
+
+    private static Dictionary<int, String> BonusNames = new Dictionary<int, String>() {
+        {6, "Attack Upgrade"},
+        {13, "Health Regeneration"},
+        {15, "Energy Regeneration"},
+        {12, "Extra Double Jump"},
+        {33, "Skill Velocity Upgrade"},
+        {37, "Jumpgrade"},
+        {31, "Health Leech"},
+        {32, "Energy Leech"},
+        {36, "Underwater Skill Usage"},
+        {10, "Extra Air Dash"},
+        {11, "Charge Dash Efficiency"},
+        {9, "Spirit Light Efficiency"},
+    };
 
     // Token: 0x06003789 RID: 14217 RVA: 0x0002BBDD File Offset: 0x00029DDD
     public static int WarmthFrags()

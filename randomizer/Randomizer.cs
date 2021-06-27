@@ -11,7 +11,7 @@ using UnityEngine;
 // Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
-    public static string VERSION = "3.4.6";
+    public static string VERSION = "3.5.0";
     public static void initialize()
     {
         try {
@@ -512,6 +512,10 @@ public static class Randomizer
             {
                 Randomizer.MessageQueueTime = 0;
                 RandomizerTrackedDataManager.ListTeleporters();
+                return;
+            }
+            if (RandomizerRebinding.ShowBonuses.IsPressed()) {
+                RandomizerBonus.ListBonuses();
                 return;
             }
             if (RandomizerRebinding.BonusSwitch.IsPressed())
@@ -1081,6 +1085,15 @@ public static class Randomizer
                             Characters.Sein.Position = new Vector3(750f, -120f);
                             return;
                         }
+                        if (Characters.Sein.Position.y > -225f && Scenes.Manager.CurrentScene.Scene == "forlornRuinsResurrection")
+                        {
+                            if (Characters.Sein.Abilities.Bash && Characters.Sein.Abilities.Bash.IsBashing)
+                            {
+                                Characters.Sein.Abilities.Bash.BashGameComplete(0f);
+                            }
+                            Characters.Sein.Position = new Vector3(-1350f, -420f);
+                            return;
+                        }                        
                         if (Scenes.Manager.CurrentScene.Scene == "catAndMouseResurrectionRoom" && !Randomizer.canFinalEscape()) {
                             if (Randomizer.Entrance) {
                                 Randomizer.EnterDoor(new Vector3(-242f, 489f));

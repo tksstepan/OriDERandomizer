@@ -52,6 +52,7 @@ public static class RandomizerRebinding {
 				{"Show Progress", "LeftAlt+P, RightAlt+P"},
 				{"Color Shift", "LeftAlt+C, RightAlt+C"},
 				{"Double Bash", "Grenade"},
+				{"Show Bonuses", "LeftAlt+B, RightAlt+B"},
 				{"Bonus Switch", "LeftAlt+Q, RightAlt+Q"},
 				{"Bonus Toggle", "LeftAlt+Mouse1, RightAlt+Mouse1"},
 				{"Reset Grenade Aim",""},
@@ -118,29 +119,31 @@ public static class RandomizerRebinding {
 	}
 	public static void AssignBind(string key, string bind, List<string> writeList) {
 		if(key == "Replay Message") {
-				RandomizerRebinding.ReplayMessage = ParseOrDefault(bind, key, writeList);
+			RandomizerRebinding.ReplayMessage = ParseOrDefault(bind, key, writeList);
 		} else if(key == "Return to Start") {
-				RandomizerRebinding.ReturnToStart = ParseOrDefault(bind, key, writeList);
+			RandomizerRebinding.ReturnToStart = ParseOrDefault(bind, key, writeList);
 		} else if(key == "Reload Seed") {
-				RandomizerRebinding.ReloadSeed = ParseOrDefault(bind, key, writeList);
+			RandomizerRebinding.ReloadSeed = ParseOrDefault(bind, key, writeList);
 		} else if(key == "Toggle Chaos") {
-				RandomizerRebinding.ToggleChaos = ParseOrDefault(bind, key, writeList);
+			RandomizerRebinding.ToggleChaos = ParseOrDefault(bind, key, writeList);
 		} else if(key == "Chaos Verbosity") {
-				RandomizerRebinding.ChaosVerbosity = ParseOrDefault(bind, key, writeList);
+			RandomizerRebinding.ChaosVerbosity = ParseOrDefault(bind, key, writeList);
 		} else if(key == "Force Chaos Effect") {
-				RandomizerRebinding.ForceChaosEffect = ParseOrDefault(bind, key, writeList);
+			RandomizerRebinding.ForceChaosEffect = ParseOrDefault(bind, key, writeList);
 		} else if(key == "Show Progress") {
-				RandomizerRebinding.ShowProgress = ParseOrDefault(bind, key, writeList);
+			RandomizerRebinding.ShowProgress = ParseOrDefault(bind, key, writeList);
 		} else if(key == "Color Shift") {
-				RandomizerRebinding.ColorShift = ParseOrDefault(bind, key, writeList);
+			RandomizerRebinding.ColorShift = ParseOrDefault(bind, key, writeList);
 		} else if(key == "Double Bash") {
-				RandomizerRebinding.DoubleBash = ParseOrDefault(bind, key, writeList);
+			RandomizerRebinding.DoubleBash = ParseOrDefault(bind, key, writeList);
+		} else if(key == "Show Bonuses") {
+			RandomizerRebinding.ShowBonuses = ParseOrDefault(bind, key, writeList);
 		} else if(key == "Bonus Switch") {
-				RandomizerRebinding.BonusSwitch = ParseOrDefault(bind, key, writeList);
+			RandomizerRebinding.BonusSwitch = ParseOrDefault(bind, key, writeList);
 		} else if(key == "Bonus Toggle") {
-				RandomizerRebinding.BonusToggle = ParseOrDefault(bind, key, writeList);
+			RandomizerRebinding.BonusToggle = ParseOrDefault(bind, key, writeList);
 		} else if(key == "Reset Grenade Aim") {
-				RandomizerRebinding.ResetGrenadeAim = ParseOrDefault(bind, key, writeList);
+			RandomizerRebinding.ResetGrenadeAim = ParseOrDefault(bind, key, writeList);
 		} else if(key == "List Trees") {
 			RandomizerRebinding.ListTrees = ParseOrDefault(bind, key, writeList);
 		} else if(key == "List Relics") {
@@ -246,6 +249,7 @@ public static class RandomizerRebinding {
 	public static RandomizerRebinding.BindSet ShowProgress;
 	public static RandomizerRebinding.BindSet ColorShift;
 	public static RandomizerRebinding.BindSet DoubleBash;
+	public static RandomizerRebinding.BindSet ShowBonuses;
 	public static RandomizerRebinding.BindSet BonusSwitch;
 	public static RandomizerRebinding.BindSet BonusToggle;
 	public static RandomizerRebinding.BindSet ResetGrenadeAim;
