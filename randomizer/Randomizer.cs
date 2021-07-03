@@ -11,7 +11,7 @@ using UnityEngine;
 // Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
-    public static string VERSION = "3.5.0";
+    public static string VERSION = "3.5.1";
     public static void initialize()
     {
         try {
@@ -113,7 +113,7 @@ public static class Randomizer
                     string s = flagLine[1];
                     string[] flags = flagLine[0].Split(',');
                     Randomizer.SeedMeta = allLines[0];
-                    bool doBingo = Randomizer.ParseFlags(flags);
+                    bool doBingo = Randomizer.ParseFlags(s, flags);
                     if(doBingo) {
                         Randomizer.Message = "Good luck on your bingo!";
                         BingoController.Init(allLines[allLines.Count-1]);
@@ -1188,7 +1188,9 @@ public static class Randomizer
         return 0;
     }
 
-    public static bool ParseFlags(string[] rawFlags) {
+    private static string cct(IEnumerable<char> cs) => new String(cs.ToArray());
+
+    public static bool ParseFlags(string seed, string[] rawFlags) {
         bool doBingo = false;
 
         foreach (string rawFlag in rawFlags)
@@ -1197,6 +1199,9 @@ public static class Randomizer
             if (flag == "ohko")
             {
                 Randomizer.OHKO = true;
+            }
+            if (flag == "race") {
+                SeedMeta = $"{String.Join(",", rawFlags.Select(f => f.ToLower().StartsWith("sync") ? "Sync" + cct(f.Skip(f.IndexOf('.') - 1)) : f).ToArray())}|{cct(seed.Skip(1).SkipWhile(c => Char.IsLower(c)))}"; // yeah that's right we're LINQ wizards baby anyways this is just a bit of censorship to make things a bit harder for people trying to cheat
             }
             if (flag.StartsWith("worldtour"))
             {
@@ -1215,10 +1220,7 @@ public static class Randomizer
             if (flag.StartsWith("frags/"))
             {
                 Randomizer.fragsEnabled = true;
-                string[] fragParams = flag.Split(new char[]
-                {
-                    '/'
-                });
+                string[] fragParams = flag.Split(new char[]{'/'});
                 Randomizer.maxFrags =  int.Parse(fragParams[2]);
                 Randomizer.fragKeyFinish = int.Parse(fragParams[1]);
             }
@@ -1359,124 +1361,46 @@ public static class Randomizer
             set(locID, current + (1 << offset));
     }
 
-    // Token: 0x0400322E RID: 12846
     public static Dictionary<int, RandomizerAction> Table;
-
-    // Token: 0x0400322F RID: 12847
     public static bool GiveAbility;
-
-    // Token: 0x04003230 RID: 12848
     public static double GridFactor;
-
-    // Token: 0x04003231 RID: 12849
     public static RandomizerMessageProvider MessageProvider;
-
-    // Token: 0x04003232 RID: 12850
     public static bool OHKO;
-
-    // Token: 0x04003233 RID: 12851
     public static bool ZeroXP;
-
-    // Token: 0x04003234 RID: 12852
     public static bool BonusActive;
-
-    // Token: 0x04003235 RID: 12853
     public static string Message;
-
-    // Token: 0x04003236 RID: 12854
     public static bool Chaos;
-
-    // Token: 0x04003237 RID: 12855
     public static bool ChaosVerbose;
-
-    // Token: 0x04003238 RID: 12856
     public static float DamageModifier;
-
-    // Token: 0x04003239 RID: 12857
     public static bool ProgressiveMapStones;
-
-    // Token: 0x0400323A RID: 12858
     public static bool ForceTrees;
-
-    // Token: 0x0400323B RID: 12859
     public static string SeedMeta;
-
-    // Token: 0x0400323C RID: 12860
     public static Hashtable TeleportTable;
-
-    // Token: 0x0400323D RID: 12861
     public static WorldEvents MistySim;
-
-    // Token: 0x0400323E RID: 12862
     public static bool Returning;
-
-    // Token: 0x0400323F RID: 12863
     public static bool CluesMode;
-
     public static bool Shards;
-
-    // Token: 0x04003240 RID: 12864
     public static bool ColorShift;
-
-    // Token: 0x04003241 RID: 12865
     public static Queue MessageQueue;
-
-    // Token: 0x04003242 RID: 12866
     public static int MessageQueueTime;
-
-    // Token: 0x04003243 RID: 12867
     public static bool Sync;
-
-    // Token: 0x04003244 RID: 12868
     public static string SyncId;
-
-    // Token: 0x04003245 RID: 12869
     public static int SyncMode;
-
-    // Token: 0x04003247 RID: 12871
     public static List<string> StringKeyPickupTypes;
-
-    // Token: 0x04003248 RID: 12872
     public static bool ForceMaps;
-
-    // Token: 0x0400324B RID: 12875
     public static bool Entrance;
-
-    // Token: 0x0400324C RID: 12876
     public static Hashtable DoorTable;
-
-    // Token: 0x0400324D RID: 12877
     public static bool QueueBash;
-
-    // Token: 0x0400324E RID: 12878
     public static bool BashWasQueued;
-
-    // Token: 0x0400324F RID: 12879
     public static bool BashTap;
-
     public static bool WorldTour;
-
-    // Token: 0x04003251 RID: 12881
     public static bool fragsEnabled;
-
     public static int fragKeyFinish;
-
-    // Token: 0x04003252 RID: 12882
     public static int maxFrags;
-
-    // Token: 0x04003258 RID: 12888
     public static ArrayList GinsoData;
-
-    // Token: 0x04003259 RID: 12889
     public static ArrayList ForlornData;
-
-    // Token: 0x0400325A RID: 12890
     public static ArrayList HoruData;
-
-    // Token: 0x0400325B RID: 12891
     public static bool OpenMode;
-
-    // Token: 0x04003300 RID: 13056
     public static string HoruScene;
 
     // Token: 0x04003301 RID: 13057
@@ -1510,10 +1434,8 @@ public static class Randomizer
 
     public static int RelicCount;
 
-    // Token: 0x0400337A RID: 13178
     public static ArrayList ValleyStompDoorData;
 
-    // Token: 0x0400337B RID: 13179
     public static ArrayList ValleyLeverDoorData;
 
     public static string GrenadeZone;
