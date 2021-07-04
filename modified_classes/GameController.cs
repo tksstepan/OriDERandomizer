@@ -367,7 +367,6 @@ public class GameController : SaveSerialize, ISuspendable
 			this.CurVsyncValue = QualitySettings.vSyncCount;
 			QualitySettings.vSyncCount = 0;
 		}
-		GameController.IsFocused = focusStatus;
 	}
 	
 	// Token: 0x06003431 RID: 13361 RVA: 0x000D6D78 File Offset: 0x000D4F78
