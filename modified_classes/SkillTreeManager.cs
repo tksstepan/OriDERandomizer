@@ -173,40 +173,16 @@ public class SkillTreeManager : MenuScreen
 		bool abilitiesRequirementMet = skillItem.AbilitiesRequirementMet;
 		StringBuilder stringBuilder = new StringBuilder(30);
 		stringBuilder.Append(" ");
-		for (int i = 0; i < skillItem.RequiredAbilities.Count; i++)
-		{
-			AbilityType ability = skillItem.RequiredAbilities[i];
-			if (abilitiesRequirementMet)
-			{
-				MessageProvider messageProvider = this.AbilityName(ability);
-				if (messageProvider)
-				{
-					stringBuilder.Append("$" + messageProvider + "$");
-				}
-			}
-			else
-			{
-				MessageProvider messageProvider2 = this.AbilityName(ability);
-				if (messageProvider2)
-				{
-					stringBuilder.Append("#" + messageProvider2 + "#");
-				}
-			}
-			if (i != skillItem.RequiredAbilities.Count - 1 || skillItem.RequiredItems.Count > 0)
-			{
-				stringBuilder.Append((!abilitiesRequirementMet) ? "@,@ " : "$,$ ");
-			}
-		}
 		for (int j = 0; j < skillItem.RequiredItems.Count; j++)
 		{
 			SkillItem skillItem2 = skillItem.RequiredItems[j];
 			if (abilitiesRequirementMet)
 			{
-				stringBuilder.Append("$" + skillItem2.NameMessageProvider + "$");
+				stringBuilder.Append("$" + skillItem2.Name + "$");
 			}
 			else
 			{
-				stringBuilder.Append("#" + skillItem2.NameMessageProvider + "#");
+				stringBuilder.Append("#" + skillItem2.Name + "#");
 			}
 			if (j != skillItem.RequiredItems.Count - 1)
 			{
@@ -226,8 +202,8 @@ public class SkillTreeManager : MenuScreen
 		this.CurrentSkillItem = this.NavigationManager.CurrentMenuItem.GetComponent<SkillItem>();
 		if (this.CurrentSkillItem)
 		{
-			this.AbilityTitle.SetMessageProvider(this.CurrentSkillItem.NameMessageProvider);
-			this.AbilityDescription.SetMessageProvider(this.CurrentSkillItem.DescriptionMessageProvider);
+			this.AbilityTitle.SetMessageProvider(this.CurrentSkillItem.Name);
+			this.AbilityDescription.SetMessageProvider(this.CurrentSkillItem.Description);
 			if (this.CurrentSkillItem.HasSkillItem)
 			{
 				this.RequirementsLineA.SetMessage(this.AbilityMastered);
@@ -247,13 +223,13 @@ public class SkillTreeManager : MenuScreen
 	{
 		if (skillItem.HasSkillItem)
 		{
-			return "$" + skillItem.NameMessageProvider + "$";
+			return "$" + skillItem.Name + "$";
 		}
 		if (skillItem.CanEarnSkill)
 		{
-			return "#" + skillItem.NameMessageProvider + "#";
+			return "#" + skillItem.Name + "#";
 		}
-		return "@" + skillItem.NameMessageProvider + "@";
+		return "@" + skillItem.Name + "@";
 	}
 
 	// Token: 0x06000520 RID: 1312

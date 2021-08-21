@@ -136,6 +136,22 @@ public class SkillItem : MonoBehaviour
 		}
 	}
 
+	public MessageProvider Name
+	{
+		get
+		{
+			return RandomizerText.GetAbilityName(this.Ability) ?? NameMessageProvider;
+		}
+	}
+
+	public MessageProvider Description
+	{
+		get
+		{
+			return RandomizerText.GetAbilityDescription(this.Ability) ?? DescriptionMessageProvider;
+		}
+	}
+
 	// Token: 0x040004A3 RID: 1187
 	public int RequiredSkillPoints = 1;
 
