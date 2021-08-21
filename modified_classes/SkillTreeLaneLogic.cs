@@ -31,14 +31,7 @@ public class SkillTreeLaneLogic : SaveSerialize
 		this.UpdateItems(true);
 		foreach (SkillItem skillItem in this.Skills)
 		{
-			if (skillItem.Ability == AbilityType.Sense)
-			{
-				skillItem.LargeIconColor = new Color(1f, 0.84f, 0f);
-			}
-			else
-			{
-				skillItem.LargeIconColor = this.LargeIconColor;
-			}
+			skillItem.LargeIconColor = this.LargeIconColor;
 		}
 	}
 
