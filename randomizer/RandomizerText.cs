@@ -36,7 +36,7 @@ public static class RandomizerText
 		},
 		{
 			AbilityType.ChargeDash,
-			new AbilityTextOverrides(null, "Allows Ori to Charge Dash ([ChargeDashCharge]) to attack enemies or break blue plants and walls")
+			new AbilityTextOverrides(null, "Allows Ori to Charge Dash ([ChargeJumpCharge]) to attack enemies or break blue plants and walls")
 		},
 		{
 			AbilityType.MapMarkers,
