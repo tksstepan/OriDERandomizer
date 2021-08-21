@@ -68,6 +68,9 @@ public static class RandomizerText
 		}
 	};
 
+	public static string CostsAbilityPoint = "Costs [Amount] Ability Point ([Total] Total)";
+	public static string CostsAbilityPoints = "Costs [Amount] Ability Points ([Total] Total)";
+
 	private class AbilityTextOverrides
 	{
 		public AbilityTextOverrides(string name, string description)

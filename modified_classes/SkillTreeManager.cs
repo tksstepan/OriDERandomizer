@@ -239,12 +239,14 @@ public class SkillTreeManager : MenuScreen
 		{
 			return string.Empty;
 		}
-		MessageProvider messageProvider = (skillItem.ActualRequiredSkillPoints != 1) ? this.AbilityPointsMessageProvider : this.AbilityPointMessageProvider;
-		if (skillItem.ActualRequiredSkillPoints <= Characters.Sein.Level.SkillPoints)
+		int requiredPoints = skillItem.ActualRequiredSkillPoints;
+		int totalRequiredPoints = skillItem.ActualTotalRequiredSkillPoints;
+		string costMessage = (requiredPoints != 1) ? RandomizerText.CostsAbilityPoints : RandomizerText.CostsAbilityPoint;
+		if (totalRequiredPoints <= Characters.Sein.Level.SkillPoints)
 		{
-			return "$" + messageProvider.ToString().Replace("[Amount]", skillItem.ActualRequiredSkillPoints.ToString()) + "$";
+			return "$" + costMessage.Replace("[Amount]", requiredPoints.ToString()).Replace("[Total]", totalRequiredPoints.ToString()) + "$";
 		}
-		return "@" + messageProvider.ToString().Replace("[Amount]", skillItem.ActualRequiredSkillPoints.ToString()) + "@";
+		return "@" + costMessage.Replace("[Amount]", requiredPoints.ToString()).Replace("[Total]", totalRequiredPoints.ToString()) + "@";
 	}
 
 	// Token: 0x06000521 RID: 1313

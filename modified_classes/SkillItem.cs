@@ -20,6 +20,42 @@ public class SkillItem : MonoBehaviour
 		}
 	}
 
+	public int ActualTotalRequiredSkillPoints
+	{
+		get
+		{
+			if (DifficultyController.Instance.Difficulty == DifficultyMode.Hard)
+			{
+				return this.TotalRequiredHardSkillPoints;
+			}
+			return this.TotalRequiredSkillPoints;
+		}
+	}
+
+	public int TotalRequiredHardSkillPoints
+	{
+		get
+		{
+			return this.m_totalRequiredHardPoints;
+		}
+		set
+		{
+			this.m_totalRequiredHardPoints = value;
+		}
+	}
+
+	public int TotalRequiredSkillPoints
+	{
+		get
+		{
+			return this.m_totalRequiredPoints;
+		}
+		set
+		{
+			this.m_totalRequiredPoints = value;
+		}
+	}
+
 	// Token: 0x170000C9 RID: 201
 	// (get) Token: 0x060004F8 RID: 1272 RVA: 0x00005EDE File Offset: 0x000040DE
 	// (set) Token: 0x060004F9 RID: 1273 RVA: 0x00005EE6 File Offset: 0x000040E6
@@ -190,4 +226,8 @@ public class SkillItem : MonoBehaviour
 
 	// Token: 0x040004AF RID: 1199
 	public bool HasSkillItem;
+
+	private int m_totalRequiredPoints = 0;
+
+	private int m_totalRequiredHardPoints = 0;
 }
