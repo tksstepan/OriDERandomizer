@@ -32,6 +32,11 @@ public static class RandomizerSettings
 			{"Invert Swim", "False"},
 			{"Disco Sense", "False"},
 			{"Cursor Lock", "False"},
+			{"Free Grenade Jump", "True"},
+			{"Wall Charge Mouse Aim", "True"},
+			{"Slow Climb Vault", "True"},
+			{"Autofire", "True"},
+			{"Improved Spirit Flame", "True"},
 			{"Dev", "False"}
 		};
 		if (!File.Exists("RandomizerSettings.txt"))
@@ -71,9 +76,8 @@ public static class RandomizerSettings
 						nagList.Add(writeKey);
 				}
 				if(nagList.Count > 0) {
-						Randomizer.printInfo("Default Settings written for these missing settings: " + String.Join(", ", nagList.ToArray()), 480);
+					Randomizer.printInfo("Default Settings written for these missing settings: " + String.Join(", ", nagList.ToArray()), 480);
 				}
-
 
 				File.AppendAllText("RandomizerSettings.txt", writeText);
 			}
@@ -116,6 +120,21 @@ public static class RandomizerSettings
 				case "Cursor Lock":
 					RandomizerSettings.CursorLock = (value.Trim().ToLower() == "true");
 					break;
+				case "Free Grenade Jump":
+					RandomizerSettings.FreeGrenadeJump = (value.Trim().ToLower() == "true");
+					break;
+				case "Wall Charge Mouse Aim":
+					RandomizerSettings.WallChargeMouseAim = (value.Trim().ToLower() == "true");
+					break;
+				case "Slow Climb Vault":
+					RandomizerSettings.SlowClimbVault = (value.Trim().ToLower() == "true");
+					break;
+				case "Autofire":
+					RandomizerSettings.Autofire = (value.Trim().ToLower() == "true");
+					break;
+				case "Improved Spirit Flame":
+					RandomizerSettings.ImprovedSpiritFlame = (value.Trim().ToLower() == "true");
+					break;
 			}
 		} catch(Exception) {
 			ParseSettingLine(setting, DefaultSettings[setting]);
@@ -137,17 +156,6 @@ public static class RandomizerSettings
 			return Core.Input.Jump.OnReleased;
 		else
 			return Core.Input.Jump.OnPressed;
-	}
-
-	// Token: 0x0600381D RID: 14365 RVA: 0x000E7FCC File Offset: 0x000E61CC
-	public static void LoadDefaultSettings()
-	{
-		RandomizerSettings.BashDeadzone = 0.5f;
-		RandomizerSettings.AbilityMenuOpacity = 0.5f;
-		RandomizerSettings.FastGrenadeAim = false;
-		RandomizerSettings.GrenadeAimSpeed = 1f;
-		RandomizerSettings.ColdColor = new Color(0f, 0.5f, 0.5f, 0.5f);
-		RandomizerSettings.HotColor = new Color(0.5f, 0.1666f, 0f, 0.5f);
 	}
 
 	// Token: 0x0600381E RID: 14366 RVA: 0x000E803C File Offset: 0x000E623C
@@ -179,6 +187,12 @@ public static class RandomizerSettings
 	public static bool Dev;
 	public static bool DiscoSense;
 	public static bool CursorLock;
+
+	public static bool FreeGrenadeJump;
+	public static bool WallChargeMouseAim;
+	public static bool SlowClimbVault;
+	public static bool Autofire;
+	public static bool ImprovedSpiritFlame;
 
 	public static Dictionary<string, string> DefaultSettings;
 }
