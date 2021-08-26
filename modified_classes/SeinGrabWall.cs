@@ -177,7 +177,8 @@ public class SeinGrabWall : CharacterState, ISeinReceiver
 			{
 				this.Sein.Abilities.Glide.NeedsRightTriggerReleased = true;
 			}
-			this.Sein.Abilities.EdgeClamber.PerformEdgeClamber();
+			float climbClamberFactor = RandomizerSettings.SlowClimbVault ? 0.225f : 0.65f;
+			this.Sein.Abilities.EdgeClamber.PerformEdgeClamber(climbClamberFactor);
 		}
 		if (!this.CanGrab)
 		{
