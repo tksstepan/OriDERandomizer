@@ -705,9 +705,9 @@ public static class Randomizer
             if (Randomizer.WorldTour && Characters.Sein) {
                 int relics = get(302);
                 if(relics < Randomizer.RelicCount) {
-                    text += "Relics (" + relics.ToString() + "/"+Randomizer.RelicCount.ToString() + ") ";
+                    text += "Relics (" + relics.ToString() + "/"+Randomizer.RelicCount.ToString() + ")  ";
                 } else {
-                    text += "$Relics (" + relics.ToString() + "/"+Randomizer.RelicCount.ToString() + ")$ ";
+                    text += "$Relics (" + relics.ToString() + "/"+Randomizer.RelicCount.ToString() + ")$  ";
                 }
             }
             if (RandomizerBonus.MapStoneProgression() == 9 && Randomizer.ForceMaps)
@@ -747,7 +747,7 @@ public static class Randomizer
                 }
                 else
                 {
-                    text = text + " @SS@ (" + RandomizerBonus.SunstoneShards().ToString() + "/3)";
+                    text = text + "@SS@ (" + RandomizerBonus.SunstoneShards().ToString() + "/3)";
                 }
             }
             if (Randomizer.fragsEnabled)
