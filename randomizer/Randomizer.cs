@@ -11,10 +11,11 @@ using UnityEngine;
 // Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
-    public static string VERSION = "3.5.2";
+    public static string VERSION = "4.BETA";
     public static void initialize()
     {
         try {
+            DebugMenuB.MakeDebugMenuExist();
             Randomizer.OHKO = false;
             Randomizer.ZeroXP = false;
             Randomizer.BonusActive = true;
@@ -60,6 +61,7 @@ public static class Randomizer
             Randomizer.QueueBash = false;
             Randomizer.BashWasQueued = false;
             Randomizer.BashTap = false;
+            Randomizer.GrenadeJumpQueued = false;
             Randomizer.fragsEnabled = false;
             Randomizer.LastTick = 10000000L;
             Randomizer.LockedCount = 0;
@@ -684,6 +686,7 @@ public static class Randomizer
     {
         try {
             string text = "";
+            text += "BETA BETA BETA BETA\n";
             if(Randomizer.ForceTrees || Randomizer.CluesMode)
             {
                 if (RandomizerBonus.SkillTreeProgression() == 10)
@@ -1485,6 +1488,8 @@ public static class Randomizer
     public static int FixCutscenePickup;
 
     public static bool AllowOrbWarps;
+    
+    public static bool GrenadeJumpQueued;
 
     public static HashSet<int> CutscenePickupLocs = new HashSet<int> {-1639664, -199724, -919624, -959848, 1720288, 2160192, 2640380, 3040304, 5480952};
 }
