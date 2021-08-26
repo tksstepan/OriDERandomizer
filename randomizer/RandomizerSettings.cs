@@ -35,7 +35,7 @@ public static class RandomizerSettings
 			{"Free Grenade Jump", "True"},
 			{"Wall Charge Mouse Aim", "True"},
 			{"Slow Climb Vault", "True"},
-			{"Autofire", "True"},
+			{"Hold Autofire", "True"},
 			{"Improved Spirit Flame", "True"},
 			{"Dev", "False"}
 		};
@@ -129,8 +129,8 @@ public static class RandomizerSettings
 				case "Slow Climb Vault":
 					RandomizerSettings.SlowClimbVault = (value.Trim().ToLower() == "true");
 					break;
-				case "Autofire":
-					RandomizerSettings.Autofire = (value.Trim().ToLower() == "true");
+				case "Hold Autofire":
+					RandomizerSettings.HoldAutofire = (value.Trim().ToLower() == "true");
 					break;
 				case "Improved Spirit Flame":
 					RandomizerSettings.ImprovedSpiritFlame = (value.Trim().ToLower() == "true");
@@ -191,7 +191,7 @@ public static class RandomizerSettings
 	public static bool FreeGrenadeJump;
 	public static bool WallChargeMouseAim;
 	public static bool SlowClimbVault;
-	public static bool Autofire;
+	public static bool HoldAutofire;
 	public static bool ImprovedSpiritFlame;
 
 	public static Dictionary<string, string> DefaultSettings;
