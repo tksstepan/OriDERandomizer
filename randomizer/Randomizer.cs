@@ -15,7 +15,6 @@ public static class Randomizer
     public static void initialize()
     {
         try {
-            DebugMenuB.MakeDebugMenuExist();
             Randomizer.OHKO = false;
             Randomizer.ZeroXP = false;
             Randomizer.BonusActive = true;
@@ -216,6 +215,11 @@ public static class Randomizer
         } catch(Exception e) {
             Randomizer.log("init: " + e.Message);
         }
+    }
+
+    public static void InitializeOnce()
+    {
+        Randomizer.UI = new GameObject("randomizerUI").AddComponent<RandomizerUI>();
     }
 
     public static void getPickup()
@@ -1492,4 +1496,6 @@ public static class Randomizer
     public static bool GrenadeJumpQueued;
 
     public static HashSet<int> CutscenePickupLocs = new HashSet<int> {-1639664, -199724, -919624, -959848, 1720288, 2160192, 2640380, 3040304, 5480952};
+
+    public static RandomizerUI UI;
 }
