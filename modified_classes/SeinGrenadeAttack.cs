@@ -295,7 +295,7 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 			return;
 		}
 		this.m_sein.Speed = Vector2.zero;
-		if (RandomizerRebinding.ResetGrenadeAim.IsPressed())
+		if (RandomizerRebinding.ResetGrenadeAim.OnPressed)
 		{
 			this.ResetAimToDefault();
 		}
@@ -548,7 +548,7 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 	// Token: 0x06001162 RID: 4450
 	public void UpdateNormal()
 	{
-		if (RandomizerRebinding.ResetGrenadeAim.IsPressed())
+		if (RandomizerRebinding.ResetGrenadeAim.OnPressed)
 		{
 			this.ResetAimToDefault();
 		}

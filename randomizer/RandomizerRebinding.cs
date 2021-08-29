@@ -5,26 +5,30 @@ using System.IO;
 using Core;
 using UnityEngine;
 
-// Token: 0x02000A02 RID: 2562
-public static class RandomizerRebinding {
-	// Token: 0x060037B4 RID: 14260
-	public static void WriteDefaultFile() {
+public static class RandomizerRebinding
+{
+	public static void WriteDefaultFile()
+	{
 		StreamWriter streamWriter = new StreamWriter("RandomizerRebinding.txt");
 		streamWriter.WriteLine("Bind syntax: Key1+Key2, Key1+Key3+Key4, ... Syntax errors will load default binds.");
 		streamWriter.WriteLine("Functions are unbound if there is no binding specified.");
 		streamWriter.WriteLine("Supported binds are Unity KeyCodes (https://docs.unity3d.com/ScriptReference/KeyCode.html) and the following actions:");
 		streamWriter.WriteLine("Jump, SpiritFlame, Bash, SoulFlame, ChargeJump, Glide, Dash, Grenade, Left, Right, Up, Down, LeftStick, RightStick, Start, Select");
 		streamWriter.WriteLine("");
-		foreach(KeyValuePair<string, string> lineparts in DefaultBinds) {
+		foreach(KeyValuePair<string, string> lineparts in DefaultBinds)
+		{
 			streamWriter.WriteLine(lineparts.Key + ": " + lineparts.Value);
 		}
 		streamWriter.Flush();
 		streamWriter.Close();
 	}
-	// Token: 0x060037B5 RID: 14261
-	public static void ParseRebinding() {
-		try {
-			ActionMap = new Hashtable(){
+
+	public static void ParseRebinding()
+	{
+		try
+		{
+			ActionMap = new Hashtable()
+			{
 				{"Jump", Core.Input.Jump},
 				{"SpiritFlame", Core.Input.SpiritFlame},
 				{"Bash", Core.Input.Bash},
@@ -42,7 +46,9 @@ public static class RandomizerRebinding {
 				{"Start", Core.Input.Start},
 				{"Select", Core.Input.Select}
 			};
-			DefaultBinds = new Dictionary<string, string>(){
+
+			DefaultBinds = new Dictionary<string, string>()
+			{
 				{"Replay Message", "LeftAlt+T, RightAlt+T"},
 				{"Return to Start","LeftAlt+R, RightAlt+R"},
 				{"Reload Seed", "LeftAlt+L, RightAlt+L"},
@@ -56,6 +62,7 @@ public static class RandomizerRebinding {
 				{"Bonus Switch", "LeftAlt+Q, RightAlt+Q"},
 				{"Bonus Toggle", "LeftAlt+Mouse1, RightAlt+Mouse1"},
 				{"Reset Grenade Aim",""},
+				{"Suppress Autofire","Grenade"},
 				{"List Trees", "LeftAlt+Alpha1, RightAlt+Alpha1"},
 				{"List Map Altars", "LeftAlt+Alpha2, RightAlt+Alpha2"},
 				{"List Teleporters", "LeftAlt+Alpha3, RightAlt+Alpha3"},
@@ -71,128 +78,105 @@ public static class RandomizerRebinding {
 				{"Bonus 8",""},
 				{"Bonus 9",""},
 			};
+
 			if (!File.Exists("RandomizerRebinding.txt"))
 			{
 				RandomizerRebinding.WriteDefaultFile();
 			}
+
 			string[] lines = File.ReadAllLines("RandomizerRebinding.txt");
 			ArrayList unseenBinds = new ArrayList(RandomizerRebinding.DefaultBinds.Keys);
 			List<string> writeList = new List<string>();
 			Hashtable binds = new Hashtable();
+
 			// parse step 1: read binds from file
-			foreach(string line in lines) {
-				if(!line.Contains(":")) {
+			foreach (string line in lines)
+			{
+				if (!line.Contains(":"))
+				{
 					continue;
 				}
 				string[] parts = line.Split(':');
 				string key = parts[0].Trim();
-				if(!DefaultBinds.ContainsKey(key)) {
+				if(!DefaultBinds.ContainsKey(key))
+				{
 					continue;
 				}
 				string bind = parts[1].Trim();
 				AssignBind(key, bind, writeList);
 				unseenBinds.Remove(key);
 			}
+
 			// parse step 2: load defaults for missing binds
-			foreach(string missingKey in unseenBinds) {
+			foreach (string missingKey in unseenBinds)
+			{
 				AssignBind(missingKey, null, writeList);
 			}
-			if(writeList.Count > 0) {
+
+			if (writeList.Count > 0)
+			{
 				List<string> warnList = new List<string>();
-				foreach(string writeKey in writeList)
+
+				foreach (string writeKey in writeList)
 				{
-					if(DefaultBinds[writeKey] != "")
+					if (DefaultBinds[writeKey] != "")
+					{
 						warnList.Add(writeKey);
+					}
 				}
-				if(warnList.Count > 0)
+
+				if (warnList.Count > 0)
+				{
 					Randomizer.printInfo("Default Binds written for these missing binds: " + String.Join(", ", warnList.ToArray()) + ".", 480);
+				}
+
 				string writeText = "";
-				foreach(string writeKey in writeList) {
+				foreach (string writeKey in writeList)
+				{
 					writeText += Environment.NewLine + writeKey+ ": " + DefaultBinds[writeKey];
 				}
+
 				File.AppendAllText("RandomizerRebinding.txt", writeText);
 			}
 		}
-		catch(Exception e) {
+		catch (Exception e)
+		{
 			Randomizer.LogError("Error parsing bindings: " + e.Message);
 		}
 	}
-	public static void AssignBind(string key, string bind, List<string> writeList) {
-		if(key == "Replay Message") {
-			RandomizerRebinding.ReplayMessage = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Return to Start") {
-			RandomizerRebinding.ReturnToStart = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Reload Seed") {
-			RandomizerRebinding.ReloadSeed = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Toggle Chaos") {
-			RandomizerRebinding.ToggleChaos = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Chaos Verbosity") {
-			RandomizerRebinding.ChaosVerbosity = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Force Chaos Effect") {
-			RandomizerRebinding.ForceChaosEffect = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Show Progress") {
-			RandomizerRebinding.ShowProgress = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Color Shift") {
-			RandomizerRebinding.ColorShift = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Double Bash") {
-			RandomizerRebinding.DoubleBash = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Show Bonuses") {
-			RandomizerRebinding.ShowBonuses = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Bonus Switch") {
-			RandomizerRebinding.BonusSwitch = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Bonus Toggle") {
-			RandomizerRebinding.BonusToggle = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Reset Grenade Aim") {
-			RandomizerRebinding.ResetGrenadeAim = ParseOrDefault(bind, key, writeList);
-		} else if(key == "List Trees") {
-			RandomizerRebinding.ListTrees = ParseOrDefault(bind, key, writeList);
-		} else if(key == "List Relics") {
-			RandomizerRebinding.ListRelics = ParseOrDefault(bind, key, writeList);
-		} else if(key == "List Map Altars") {
-			RandomizerRebinding.ListMapAltars = ParseOrDefault(bind, key, writeList);
-		} else if(key == "List Teleporters") {
-			RandomizerRebinding.ListTeleporters = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Show Stats") {
-			RandomizerRebinding.ShowStats = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Bonus 1") {
-			RandomizerRebinding.Bonus1 = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Bonus 2") {
-			RandomizerRebinding.Bonus2 = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Bonus 3") {
-			RandomizerRebinding.Bonus3 = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Bonus 4") {
-			RandomizerRebinding.Bonus4 = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Bonus 5") {
-			RandomizerRebinding.Bonus5 = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Bonus 6") {
-			RandomizerRebinding.Bonus6 = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Bonus 7") {
-			RandomizerRebinding.Bonus7 = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Bonus 8") {
-			RandomizerRebinding.Bonus8 = ParseOrDefault(bind, key, writeList);
-		} else if(key == "Bonus 9") {
-			RandomizerRebinding.Bonus9 = ParseOrDefault(bind, key, writeList);
+
+	public static void AssignBind(string key, string bind, List<string> writeList)
+	{
+		if (!rebindMap.ContainsKey(key))
+		{
+			return;
 		}
+
+		rebindMap[key].binds = ParseOrDefault(bind, key, writeList).binds;
 	}
 
-	public static BindSet ParseOrDefault(string bind, string key, List<string> writeList) {
+	public static BindSet ParseOrDefault(string bind, string key, List<string> writeList)
+	{
 		string defaultBind = DefaultBinds[key];
-		if(bind == null) {
+		if(bind == null)
+		{
 			bind = defaultBind;
 			writeList.Add(key);
 		}
-		try {
+
+		try
+		{
 			return ParseBinds(bind);
 		}
 		catch (Exception)
 		{
-			Randomizer.printInfo("@"+key+ ": failed to parse '" + bind + "'. Using default value: '"+defaultBind+"'@", 240);
+			Randomizer.printInfo("@" + key + ": failed to parse '" + bind + "'. Using default value: '" + defaultBind + "'@", 240);
 			bind = defaultBind;
 		}
+
 		return ParseBinds(bind);
 	}
 
-	// Token: 0x060037B6 RID: 14262
 	public static KeyCode StringToKeyBinding(string s)
 	{
 		if (s != "")
@@ -202,7 +186,6 @@ public static class RandomizerRebinding {
 		return KeyCode.None;
 	}
 
-	// Token: 0x060037B8 RID: 14264
 	public static RandomizerRebinding.BindSet ParseBinds(string binds)
 	{
 		string[] array3 = binds.Split(new char[]
@@ -240,38 +223,69 @@ public static class RandomizerRebinding {
 	public static Hashtable ActionMap;
 	public static Dictionary<string, string> DefaultBinds;
 
-	public static RandomizerRebinding.BindSet ReplayMessage;
-	public static RandomizerRebinding.BindSet ReturnToStart;
-	public static RandomizerRebinding.BindSet ReloadSeed;
-	public static RandomizerRebinding.BindSet ToggleChaos;
-	public static RandomizerRebinding.BindSet ChaosVerbosity;
-	public static RandomizerRebinding.BindSet ForceChaosEffect;
-	public static RandomizerRebinding.BindSet ShowProgress;
-	public static RandomizerRebinding.BindSet ColorShift;
-	public static RandomizerRebinding.BindSet DoubleBash;
-	public static RandomizerRebinding.BindSet ShowBonuses;
-	public static RandomizerRebinding.BindSet BonusSwitch;
-	public static RandomizerRebinding.BindSet BonusToggle;
-	public static RandomizerRebinding.BindSet ResetGrenadeAim;
-	public static RandomizerRebinding.BindSet ListTrees;
-	public static RandomizerRebinding.BindSet ListRelics;
-	public static RandomizerRebinding.BindSet ListMapAltars;
-	public static RandomizerRebinding.BindSet ListTeleporters;
-	public static RandomizerRebinding.BindSet ShowStats;
-	public static RandomizerRebinding.BindSet Bonus1;
-	public static RandomizerRebinding.BindSet Bonus2;
-	public static RandomizerRebinding.BindSet Bonus3;
-	public static RandomizerRebinding.BindSet Bonus4;
-	public static RandomizerRebinding.BindSet Bonus5;
-	public static RandomizerRebinding.BindSet Bonus6;
-	public static RandomizerRebinding.BindSet Bonus7;
-	public static RandomizerRebinding.BindSet Bonus8;
-	public static RandomizerRebinding.BindSet Bonus9;
+	public static RandomizerRebinding.BindSet ReplayMessage = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet ReturnToStart = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet ReloadSeed = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet ToggleChaos = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet ChaosVerbosity = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet ForceChaosEffect = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet ShowProgress = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet ColorShift = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet DoubleBash = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet ShowBonuses = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet BonusSwitch = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet BonusToggle = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet ResetGrenadeAim = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet SuppressAutofire = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet ListTrees = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet ListRelics = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet ListMapAltars = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet ListTeleporters = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet ShowStats = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet Bonus1 = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet Bonus2 = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet Bonus3 = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet Bonus4 = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet Bonus5 = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet Bonus6 = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet Bonus7 = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet Bonus8 = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet Bonus9 = new RandomizerRebinding.BindSet(new List<List<Bind>>());
 
-	// Token: 0x02000A03 RID: 2563
+	private static Dictionary<string, RandomizerRebinding.BindSet> rebindMap = new Dictionary<string, RandomizerRebinding.BindSet>
+	{
+		{"Replay Message", RandomizerRebinding.ReplayMessage},
+		{"Return to Start", RandomizerRebinding.ReturnToStart},
+		{"Reload Seed", RandomizerRebinding.ReloadSeed},
+		{"Toggle Chaos", RandomizerRebinding.ToggleChaos},
+		{"Chaos Verbosity", RandomizerRebinding.ChaosVerbosity},
+		{"Force Chaos Effect", RandomizerRebinding.ForceChaosEffect},
+		{"Show Progress", RandomizerRebinding.ShowProgress},
+		{"Color Shift", RandomizerRebinding.ColorShift},
+		{"Double Bash", RandomizerRebinding.DoubleBash},
+		{"Show Bonuses", RandomizerRebinding.ShowBonuses},
+		{"Bonus Switch", RandomizerRebinding.BonusSwitch},
+		{"Bonus Toggle", RandomizerRebinding.BonusToggle},
+		{"Reset Grenade Aim", RandomizerRebinding.ResetGrenadeAim},
+		{"Suppress Autofire", RandomizerRebinding.SuppressAutofire},
+		{"List Trees", RandomizerRebinding.ListTrees},
+		{"List Relics", RandomizerRebinding.ListRelics},
+		{"List Map Altars", RandomizerRebinding.ListMapAltars},
+		{"List Teleporters", RandomizerRebinding.ListTeleporters},
+		{"Show Stats", RandomizerRebinding.ShowStats},
+		{"Bonus 1", RandomizerRebinding.Bonus1},
+		{"Bonus 2", RandomizerRebinding.Bonus2},
+		{"Bonus 3", RandomizerRebinding.Bonus3},
+		{"Bonus 4", RandomizerRebinding.Bonus4},
+		{"Bonus 5", RandomizerRebinding.Bonus5},
+		{"Bonus 6", RandomizerRebinding.Bonus6},
+		{"Bonus 7", RandomizerRebinding.Bonus7},
+		{"Bonus 8", RandomizerRebinding.Bonus8},
+		{"Bonus 9", RandomizerRebinding.Bonus9}
+	};
+
 	public class Bind
 	{
-		// Token: 0x060037B9 RID: 14265
 		public Bind(string input)
 		{
 			input = input.Trim();
@@ -285,14 +299,18 @@ public static class RandomizerRebinding {
 			this.Key = RandomizerRebinding.StringToKeyBinding(input);
 		}
 
-		public override string ToString() {
-			if(this.ActionBind)
+		public override string ToString()
+		{
+			if (this.ActionBind)
+			{
 				return this.Action.ToString();
+			}
 			else
+			{
 				return this.Key.ToString();
+			}
 		}
 
-		// Token: 0x060037BA RID: 14266
 		public bool IsPressed()
 		{
 			if (this.ActionBind)
@@ -302,40 +320,86 @@ public static class RandomizerRebinding {
 			return MoonInput.GetKey(this.Key);
 		}
 
-		// Token: 0x04003286 RID: 12934
+		public bool OnPressed
+		{
+			get
+			{
+				if (this.ActionBind)
+				{
+					return this.Action.OnPressed;
+				}
+				return MoonInput.GetKeyDown(this.Key);
+			}
+		}
+
+		public bool Pressed
+		{
+			get
+			{
+				if (this.ActionBind)
+				{
+					return this.Action.Pressed;
+				}
+				return MoonInput.GetKey(this.Key);
+			}
+		}
+
+		public bool OnReleased
+		{
+			get
+			{
+				if (this.ActionBind)
+				{
+					return this.Action.OnReleased;
+				}
+				return MoonInput.GetKeyUp(this.Key);
+			}
+		}
+
+		public bool Released
+		{
+			get
+			{
+				if (this.ActionBind)
+				{
+					return this.Action.Released;
+				}
+				return !MoonInput.GetKey(this.Key);
+			}
+		}
+
 		public KeyCode Key;
 
-		// Token: 0x04003287 RID: 12935
 		public Core.Input.InputButtonProcessor Action;
 
-		// Token: 0x04003288 RID: 12936
 		public bool ActionBind;
 	}
 
-	// Token: 0x02000A04 RID: 2564
 	public class BindSet
 	{
-		// Token: 0x060037BB RID: 14267
 		public BindSet(List<List<Bind>> binds)
 		{
 			this.binds = binds;
 			this.wasPressed = true;
 		}
 
-		public string FirstBindName() {
-			if(this.binds.Count > 0)
+		public string FirstBindName()
+		{
+			if (this.binds.Count > 0)
 			{
 				string output = "";
-				foreach(Bind bind in this.binds[0]){
+				foreach (Bind bind in this.binds[0])
+				{
 					output += bind.ToString() + "+";
 				}
 				return output.Substring(0, output.Length-1);
-			} else {
+			}
+			else
+			{
 				return "<NO BIND>";
 			}
 		}
 
-		// Token: 0x060037BC RID: 14268
 		public bool IsPressed()
 		{
 			foreach (List<Bind> bindGroup in this.binds)
@@ -363,10 +427,136 @@ public static class RandomizerRebinding {
 			return false;
 		}
 
-		// Token: 0x04003289 RID: 12937
+		public bool OnPressedGroup(List<Bind> bindGroup)
+		{
+			bool onPressed = false;
+			foreach (Bind bind in bindGroup)
+			{
+				if (!bind.Pressed)
+				{
+					return false;
+				}
+				if (bind.OnPressed)
+				{
+					onPressed = true;
+				}
+			}
+			return onPressed;
+		}
+
+		public bool PressedGroup(List<Bind> bindGroup)
+		{
+			foreach (Bind bind in bindGroup)
+			{
+				if (!bind.Pressed)
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		public bool OnReleasedGroup(List<Bind> bindGroup)
+		{
+			bool onReleased = false;
+			foreach (Bind bind in bindGroup)
+			{
+				if (!bind.Released)
+				{
+					return false;
+				}
+				if (bind.OnReleased)
+				{
+					onReleased = true;
+				}
+			}
+			return onReleased;
+		}
+
+		public bool ReleasedGroup(List<Bind> bindGroup)
+		{
+			foreach (Bind bind in bindGroup)
+			{
+				if (!bind.Released)
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		public bool OnPressed
+		{
+			get
+			{
+				bool onPressed = false;
+				foreach (List<Bind> bindGroup in this.binds)
+				{
+					if (OnPressedGroup(bindGroup))
+					{
+						onPressed = true;
+					}
+					else if (PressedGroup(bindGroup) || OnReleasedGroup(bindGroup))
+					{
+						return false;
+					}
+				}
+				return onPressed;
+			}
+		}
+
+		public bool Pressed
+		{
+			get
+			{
+				foreach (List<Bind> bindGroup in this.binds)
+				{
+					if (PressedGroup(bindGroup))
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+
+		public bool OnReleased
+		{
+			get
+			{
+				bool onReleased = false;
+				foreach (List<Bind> bindGroup in this.binds)
+				{
+					if (OnReleasedGroup(bindGroup))
+					{
+						onReleased = true;
+					}
+					else if (ReleasedGroup(bindGroup) || OnPressedGroup(bindGroup))
+					{
+						return false;
+					}
+				}
+				return onReleased;
+			}
+		}
+
+		public bool Released
+		{
+			get
+			{
+				foreach (List<Bind> bindGroup in this.binds)
+				{
+					if (!ReleasedGroup(bindGroup))
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+
 		public List<List<Bind>> binds;
 
-		// Token: 0x0400328A RID: 12938
 		public bool wasPressed;
 	}
 }
