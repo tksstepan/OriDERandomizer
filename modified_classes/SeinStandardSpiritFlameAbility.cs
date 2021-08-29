@@ -40,19 +40,37 @@ public class SeinStandardSpiritFlameAbility : CharacterState, ISeinReceiver
 
 	private bool ProcessAutofire(bool pressed, bool held, bool released)
 	{
-		if (pressed)
+		switch (RandomizerSettings.Autofire)
 		{
-			this.m_lastAutofire = Mathf.Round(Time.time * 120f);
+		case RandomizerSettings.AutofireMode.Hold:
+			if (pressed)
+			{
+				this.m_lastAutofire = Mathf.Round(Time.time * 120f);
+				this.m_autofireSuppressed = RandomizerRebinding.SuppressAutofire.Pressed;
+			}
+
+			this.m_isAutofiring = held && !this.m_autofireSuppressed;
+			break;
+		case RandomizerSettings.AutofireMode.Toggle:
+			if (pressed)
+			{
+				this.m_lastAutofire = Mathf.Round(Time.time * 120f);
+				this.m_isAutofiring = (this.m_isAutofiring || RandomizerRebinding.SuppressAutofire.Pressed) ? false : true;
+
+				if (this.m_isAutofiring)
+				{
+					this.m_autofireBegan = this.m_lastAutofire;
+				}
+			}
+
+			if (held && Mathf.Round(Time.time * 120f) - this.m_autofireBegan >= 24f)
+			{
+				this.m_isAutofiring = false;
+			}
+			break;
 		}
 
-		bool autofire = RandomizerSettings.HoldAutofire && held;
-
-		if (this.m_sein.Abilities.ChargeFlame && this.m_sein.Abilities.ChargeFlame.IsCharging)
-		{
-			autofire = false;
-		}
-
-		if (autofire)
+		if (this.m_isAutofiring)
 		{
 			float scaledTime = Mathf.Round(Time.time * 120f);
 			if (scaledTime - this.m_lastAutofire >= 12f)
@@ -254,6 +272,12 @@ public class SeinStandardSpiritFlameAbility : CharacterState, ISeinReceiver
 	public float SpamShotSpeed = 10f;
 
 	private float m_lastAutofire = 0f;
+
+	private bool m_isAutofiring = false;
+
+	private float m_autofireBegan = 0f;
+
+	private bool m_autofireSuppressed = false;
 
 	[Serializable]
 	public class PoisonSettings
