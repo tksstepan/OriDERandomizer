@@ -4,10 +4,8 @@ using Game;
 using Sein.World;
 using UnityEngine;
 
-// Token: 0x02000037 RID: 55
 public class SeinSwimming : CharacterState, ISeinReceiver
 {
-	// Token: 0x0600014D RID: 333
 	public void ChangeState(SeinSwimming.State state)
 	{
 		if (this.CurrentState == SeinSwimming.State.SwimMovingUnderwater && this.UnderwaterSwimmingSoundProvider)
@@ -17,8 +15,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		this.CurrentState = state;
 	}
 
-	// Token: 0x1700003B RID: 59
-	// (get) Token: 0x0600014E RID: 334
 	public bool IsUpsideDown
 	{
 		get
@@ -27,13 +23,8 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x1700003C RID: 60
-	// (get) Token: 0x0600014F RID: 335
-	// (set) Token: 0x06000150 RID: 336
 	public float RemainingBreath { get; set; }
 
-	// Token: 0x1700003D RID: 61
-	// (get) Token: 0x06000151 RID: 337
 	public bool HasUnlimitedBreathingUnderwater
 	{
 		get
@@ -42,8 +33,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x1700003E RID: 62
-	// (get) Token: 0x06000152 RID: 338
 	public PlatformMovement PlatformMovement
 	{
 		get
@@ -52,8 +41,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x1700003F RID: 63
-	// (get) Token: 0x06000153 RID: 339
 	public CharacterLeftRightMovement LeftRightMovement
 	{
 		get
@@ -62,8 +49,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x17000040 RID: 64
-	// (get) Token: 0x06000154 RID: 340
 	public CharacterGravity Gravity
 	{
 		get
@@ -72,8 +57,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x17000041 RID: 65
-	// (get) Token: 0x06000155 RID: 341
 	public bool IsSwimming
 	{
 		get
@@ -82,8 +65,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x17000042 RID: 66
-	// (get) Token: 0x06000156 RID: 342
 	private float WaterSurfacePositionY
 	{
 		get
@@ -92,8 +73,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x17000043 RID: 67
-	// (get) Token: 0x06000157 RID: 343
 	public Rect WaterSurfaceBound
 	{
 		get
@@ -105,20 +84,14 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000158 RID: 344
 	public void SetReferenceToSein(SeinCharacter sein)
 	{
 		this.m_sein = sein;
 		this.m_sein.Abilities.Swimming = this;
 	}
 
-	// Token: 0x17000044 RID: 68
-	// (get) Token: 0x06000159 RID: 345
-	// (set) Token: 0x0600015A RID: 346
 	public bool IsSuspended { get; set; }
 
-	// Token: 0x17000045 RID: 69
-	// (get) Token: 0x0600015B RID: 347
 	public bool IsUnderwater
 	{
 		get
@@ -127,7 +100,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600015C RID: 348
 	public void HideBreathingUI()
 	{
 		for (int i = 0; i < this.m_breathingUIAnimators.Length; i++)
@@ -136,7 +108,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600015D RID: 349
 	public void ShowBreathingUI()
 	{
 		for (int i = 0; i < this.m_breathingUIAnimators.Length; i++)
@@ -145,7 +116,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600015E RID: 350
 	public override void Awake()
 	{
 		base.Awake();
@@ -153,13 +123,11 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		this.m_breathingUIAnimators = this.BreathingUI.GetComponentsInChildren<LegacyAnimator>();
 	}
 
-	// Token: 0x0600015F RID: 351
 	public void RestoreBreath()
 	{
 		this.RemainingBreath = this.Breath;
 	}
 
-	// Token: 0x06000160 RID: 352
 	public void UpdateDrowning()
 	{
 		if (!Sein.World.Events.WaterPurified && this.CurrentState != SeinSwimming.State.OutOfWater)
@@ -190,14 +158,12 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000161 RID: 353
 	public void Start()
 	{
 		this.LeftRightMovement.ModifyHorizontalPlatformMovementSettingsEvent += this.ModifyHorizontalPlatformMovementSettings;
 		this.Gravity.ModifyGravityPlatformMovementSettingsEvent += this.ModifyGravityPlatformMovementSettings;
 	}
 
-	// Token: 0x06000162 RID: 354
 	public override void OnDestroy()
 	{
 		base.OnDestroy();
@@ -206,7 +172,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		Game.Checkpoint.Events.OnPostRestore.Remove(new Action(this.OnRestoreCheckpoint));
 	}
 
-	// Token: 0x06000163 RID: 355
 	public override void Serialize(Archive ar)
 	{
 		this.CurrentState = (SeinSwimming.State)ar.Serialize((int)this.CurrentState);
@@ -218,13 +183,11 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		ar.Serialize(ref this.SmoothAngleDelta);
 	}
 
-	// Token: 0x06000164 RID: 356
 	public void OnRestoreCheckpoint()
 	{
 		this.RestoreBreath();
 	}
 
-	// Token: 0x06000165 RID: 357
 	public void ModifyHorizontalPlatformMovementSettings(HorizontalPlatformMovementSettings settings)
 	{
 		SeinSwimming.State currentState = this.CurrentState;
@@ -246,7 +209,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		settings.Ground.MaxSpeed = float.PositiveInfinity;
 	}
 
-	// Token: 0x06000166 RID: 358
 	public void ModifyGravityPlatformMovementSettings(GravityPlatformMovementSettings settings)
 	{
 		if (this.CurrentState == SeinSwimming.State.SwimmingOnSurface)
@@ -260,7 +222,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000167 RID: 359
 	public override void UpdateCharacterState()
 	{
 		if (this.m_drowningDelay >= 0f)
@@ -286,7 +247,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000168 RID: 360
 	public void GetOutOfWater()
 	{
 		Sound.Play(this.OutOfWaterSoundProvider.GetSound(null), this.m_sein.transform.position, null);
@@ -295,7 +255,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		this.RemainingBreath = this.Breath;
 	}
 
-	// Token: 0x06000169 RID: 361
 	public void SwimUnderwater()
 	{
 		this.ChangeState(SeinSwimming.State.SwimMovingUnderwater);
@@ -320,7 +279,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600016A RID: 362
 	public void RemoveUnderwaterSounds()
 	{
 		if (this.m_ambienceLayer != null)
@@ -331,7 +289,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600016B RID: 363
 	public void UpdateOutOfWaterState()
 	{
 		Vector3 headPosition = this.m_sein.PlatformBehaviour.PlatformMovement.HeadPosition;
@@ -365,7 +322,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600016C RID: 364
 	public void SwimOnSurface()
 	{
 		this.PlatformMovement.PositionY = this.WaterSurfacePositionY;
@@ -382,13 +338,11 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		this.HideBreathingUI();
 	}
 
-	// Token: 0x0600016D RID: 365
 	public void OnDisable()
 	{
 		this.RemoveUnderwaterSounds();
 	}
 
-	// Token: 0x0600016E RID: 366
 	public void UpdateSwimmingOnSurfaceState()
 	{
 		if (!Sein.World.Events.WaterPurified)
@@ -432,7 +386,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		this.GetOutOfWater();
 	}
 
-	// Token: 0x0600016F RID: 367
 	public void HorizontalFlip()
 	{
 		this.m_swimMovingTime = 0f;
@@ -442,7 +395,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		this.m_sein.PlatformBehaviour.Visuals.Animation.Play(this.Animations.SwimFlipHorizontalAnimation, 10, new Func<bool>(this.ShouldSwimUnderwaterAnimationPlay));
 	}
 
-	// Token: 0x06000170 RID: 368
 	public void VerticalFlip()
 	{
 		this.m_boostAnimationRemainingTime = 0f;
@@ -451,7 +403,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		this.m_sein.PlatformBehaviour.Visuals.Animation.Play(this.Animations.SwimFlipVerticalAnimation, 10, new Func<bool>(this.ShouldSwimUnderwaterAnimationPlay));
 	}
 
-	// Token: 0x06000171 RID: 369
 	public void HorizontalVerticalFlip()
 	{
 		this.m_swimMovingTime = 0f;
@@ -460,7 +411,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		this.m_sein.PlatformBehaviour.Visuals.Animation.Play(this.Animations.SwimFlipHorizontalVerticalAnimation, 10, new Func<bool>(this.ShouldSwimUnderwaterAnimationPlay));
 	}
 
-	// Token: 0x06000172 RID: 370
 	public void OnBash(float angle)
 	{
 		if (this.IsUnderwater)
@@ -473,7 +423,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000173 RID: 371
 	public void ApplySwimmingUnderwaterStuff()
 	{
 		if (this.m_ambienceLayer == null)
@@ -484,7 +433,30 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06000174 RID: 372
+	public Vector2 GetAxisInput()
+	{
+		if (!this.m_sein.Controller.CanMove)
+		{
+			return Vector2.zero;
+		}
+
+		if (this.m_sein.Input.Axis.magnitude > 0.3f)
+		{
+			return this.m_sein.Input.Axis;
+		}
+
+		Vector2 oriScreenPos = UI.Cameras.Current.Camera.WorldToScreenPoint(this.PlatformMovement.Position);
+		Vector2 oriUIPos = UI.Cameras.System.GUICamera.Camera.ScreenToWorldPoint(oriScreenPos);
+		Vector2 cursorAxis = Core.Input.CursorPositionUI - oriUIPos;
+
+		if (cursorAxis.magnitude > 0.5f)
+		{
+			return cursorAxis;
+		}
+
+		return Vector2.zero;
+	}
+
 	public void UpdateSwimMovingUnderwaterState()
 	{
 		this.UpdateDrowning();
@@ -493,10 +465,10 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 			this.UnderwaterSwimmingSoundProvider.Play();
 		}
 		this.m_sein.PlatformBehaviour.PlatformMovement.ForceKeepInAir = true;
-		Vector2 vector = (!this.m_sein.Controller.CanMove) ? Vector2.zero : this.m_sein.Input.Axis;
+		Vector2 vector = this.GetAxisInput();
 		this.m_swimAccelerationTime += 2f * Time.deltaTime;
 		Vector2 vector2 = Vector3.down * this.MaxFallSpeed;
-		if (vector.magnitude > 0.3f)
+		if (vector != Vector2.zero)
 		{
 			this.m_swimIdleTime = 0f;
 			vector.Normalize();
@@ -603,13 +575,12 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		this.HandleLeavingWater();
 	}
 
-	// Token: 0x06000175 RID: 373
 	public void UpdateSwimIdleUnderwaterState()
 	{
 		this.UpdateDrowning();
-		Vector2 vector = (!this.m_sein.Controller.CanMove) ? Vector2.zero : this.m_sein.Input.Axis;
+		Vector2 vector = this.GetAxisInput();
 		this.m_swimAccelerationTime += Time.deltaTime;
-		if (vector.magnitude > 0.3f)
+		if (vector != Vector2.zero)
 		{
 			if (this.m_swimAccelerationTime > 0f)
 			{
@@ -629,7 +600,6 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		this.HandleLeavingWater();
 	}
 
-	// Token: 0x06000176 RID: 374
 	public void HandleLeavingWater()
 	{
 		Vector3 position = this.m_sein.PlatformBehaviour.PlatformMovement.Position;
@@ -670,13 +640,11 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		this.GetOutOfWater();
 	}
 
-	// Token: 0x06000177 RID: 375
 	public bool CanJump()
 	{
 		return this.CurrentState == SeinSwimming.State.SwimmingOnSurface || this.CurrentState == SeinSwimming.State.SwimMovingUnderwater;
 	}
 
-	// Token: 0x06000178 RID: 376
 	public void SurfaceSwimJump()
 	{
 		this.PlatformMovement.LocalSpeedY = this.JumpOutOfWaterSpeed * RandomizerBonus.Jumpscale;
@@ -692,254 +660,176 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 		this.GetOutOfWater();
 	}
 
-	// Token: 0x06000179 RID: 377
 	public bool ShouldSwimUnderwaterAnimationPlay()
 	{
 		return this.CurrentState == SeinSwimming.State.SwimMovingUnderwater;
 	}
 
-	// Token: 0x0600017A RID: 378
 	public bool ShouldIdleUnderwaterAnimationPlay()
 	{
 		return this.CurrentState == SeinSwimming.State.SwimIdleUnderwater;
 	}
 
-	// Token: 0x0600017B RID: 379
 	public bool ShouldSwimSurfaceAnimationPlay()
 	{
 		return this.CurrentState == SeinSwimming.State.SwimmingOnSurface;
 	}
 
-	// Token: 0x0600017C RID: 380
 	public bool ShouldJumpOutOfWaterAnimationIdleKeepPlaying()
 	{
 		return this.PlatformMovement.IsInAir && (!this.m_sein.Controller.CanMove || this.m_sein.Input.NormalizedHorizontal == 0) && (!this.IsSwimming || !this.PlatformMovement.Falling);
 	}
 
-	// Token: 0x0600017D RID: 381
 	public bool ShouldJumpOutOfWaterAnimationMovingKeepPlaying()
 	{
 		return this.PlatformMovement.IsInAir && (!this.m_sein.Controller.CanMove || this.m_sein.Input.NormalizedHorizontal != 0) && (!this.IsSwimming || !this.PlatformMovement.Falling);
 	}
 
-	// Token: 0x0400018E RID: 398
 	public SoundProvider SwimmingUnderwaterAmbience;
 
-	// Token: 0x0400018F RID: 399
 	public MixerSnapshot UnderwaterMixerSnapshot;
 
-	// Token: 0x04000190 RID: 400
 	public SeinSwimming.State CurrentState;
 
-	// Token: 0x04000191 RID: 401
 	public SeinSwimming.SwimmingAnimations Animations;
 
-	// Token: 0x04000192 RID: 402
 	public float Breath = 3f;
 
-	// Token: 0x04000193 RID: 403
 	public GameObject BreathingUI;
 
-	// Token: 0x04000194 RID: 404
 	public float DiveUnderwaterSpeed = 3f;
 
-	// Token: 0x04000195 RID: 405
 	public float DurationBetweenDrowningDamage = 1f;
 
-	// Token: 0x04000196 RID: 406
 	public SoundProvider InWaterSoundProvider;
 
-	// Token: 0x04000197 RID: 407
 	public SoundProvider BashIntoWaterSoundProvider;
 
-	// Token: 0x04000198 RID: 408
 	public SoundProvider StompIntoWaterSoundProvider;
 
-	// Token: 0x04000199 RID: 409
 	public float JumpOutOfWaterSpeed = 20f;
 
-	// Token: 0x0400019A RID: 410
 	public SoundProvider OutOfWaterSoundProvider;
 
-	// Token: 0x0400019B RID: 411
 	public float SkipSurfaceSpeedIn = 20f;
 
-	// Token: 0x0400019C RID: 412
 	public float SkipSurfaceSpeedOut = 10f;
 
-	// Token: 0x0400019D RID: 413
 	public SoundSource SurfaceSwimmingSoundProvider;
 
-	// Token: 0x0400019E RID: 414
 	public SoundSource UnderwaterSwimmingSoundProvider;
 
-	// Token: 0x0400019F RID: 415
 	public SoundProvider EmergeHighBreathSoundProvider;
 
-	// Token: 0x040001A0 RID: 416
 	public SoundProvider EmergeMedBreathSoundProvider;
 
-	// Token: 0x040001A1 RID: 417
 	public SoundProvider EmergeLowBreathSoundProvider;
 
-	// Token: 0x040001A2 RID: 418
 	public SoundProvider BoostSwimsoundProvider;
 
-	// Token: 0x040001A3 RID: 419
 	public float SwimGravity = 13f;
 
-	// Token: 0x040001A4 RID: 420
 	public float SwimSpeed = 6f;
 
-	// Token: 0x040001A5 RID: 421
 	public AnimationCurve SwimSpeedBoostCurve;
 
-	// Token: 0x040001A6 RID: 422
 	public float BoostPeakTime = 0.2f;
 
-	// Token: 0x040001A7 RID: 423
 	private float m_boostTime;
 
-	// Token: 0x040001A8 RID: 424
 	public float BoostDuration;
 
-	// Token: 0x040001A9 RID: 425
 	private bool m_isBoosting;
 
-	// Token: 0x040001AA RID: 426
 	public float SwimAngle;
 
-	// Token: 0x040001AB RID: 427
 	public float SwimAngleDeltaLimit = 100f;
 
-	// Token: 0x040001AC RID: 428
 	private float m_swimMovingTime;
 
-	// Token: 0x040001AD RID: 429
 	private float m_swimIdleTime;
 
-	// Token: 0x040001AE RID: 430
 	private float m_swimAccelerationTime;
 
-	// Token: 0x040001AF RID: 431
 	public float SwimUpwardsGravity = 13f;
 
-	// Token: 0x040001B0 RID: 432
 	public HorizontalPlatformMovementSettings.SpeedMultiplierSet SwimmingOnSurfaceHorizontalSpeed;
 
-	// Token: 0x040001B1 RID: 433
 	public GameObject WaterSplashPrefab;
 
-	// Token: 0x040001B2 RID: 434
 	private WaterZone m_currentWater;
 
-	// Token: 0x040001B3 RID: 435
 	private float m_drowningDelay;
 
-	// Token: 0x040001B4 RID: 436
 	private SeinCharacter m_sein;
 
-	// Token: 0x040001B5 RID: 437
 	private LegacyAnimator[] m_breathingUIAnimators;
 
-	// Token: 0x040001B6 RID: 438
 	public float DrownDamage = 5f;
 
-	// Token: 0x040001B7 RID: 439
 	private Ambience.Layer m_ambienceLayer;
 
-	// Token: 0x040001B8 RID: 440
 	public bool CanHorizontalSwimJump;
 
-	// Token: 0x040001B9 RID: 441
 	public float Deceleration = 10f;
 
-	// Token: 0x040001BA RID: 442
 	public float MaxFallSpeed = 4f;
 
-	// Token: 0x040001BB RID: 443
 	public float BashTime = 1f;
 
-	// Token: 0x040001BC RID: 444
 	public float SmoothAngleDelta;
 
-	// Token: 0x040001BD RID: 445
 	public AnimationCurve AccelerationOverTime;
 
-	// Token: 0x040001BE RID: 446
 	private float m_boostAnimationRemainingTime;
 
-	// Token: 0x040001BF RID: 447
 	public bool CanJumpUnderwater;
 
-	// Token: 0x040001C0 RID: 448
 	public bool HoldAToSwimLoop;
 
-	// Token: 0x040001C1 RID: 449
 	public float SwimJumpSpeedDelta = 100f;
 
-	// Token: 0x02000038 RID: 56
 	[Serializable]
 	public class MovingAndIdleAnimationPair
 	{
-		// Token: 0x040001C4 RID: 452
 		public TextureAnimationWithTransitions Idle;
 
-		// Token: 0x040001C5 RID: 453
 		public TextureAnimationWithTransitions Moving;
 	}
 
-	// Token: 0x02000039 RID: 57
 	public enum State
 	{
-		// Token: 0x040001C7 RID: 455
 		OutOfWater,
-		// Token: 0x040001C8 RID: 456
 		SwimmingOnSurface,
-		// Token: 0x040001C9 RID: 457
 		SwimMovingUnderwater,
-		// Token: 0x040001CA RID: 458
 		SwimIdleUnderwater
 	}
 
-	// Token: 0x0200003A RID: 58
 	[Serializable]
 	public class SwimmingAnimations
 	{
-		// Token: 0x040001CB RID: 459
 		public SeinSwimming.MovingAndIdleAnimationPair JumpOutOfWater;
 
-		// Token: 0x040001CC RID: 460
 		public SeinSwimming.MovingAndIdleAnimationPair SwimSurface;
 
-		// Token: 0x040001CD RID: 461
 		public TextureAnimationWithTransitions[] SwimHorizontal;
 
-		// Token: 0x040001CE RID: 462
 		public TextureAnimationWithTransitions[] SwimJumpLeft;
 
-		// Token: 0x040001CF RID: 463
 		public AnimationCurve AnimationFromBend;
 
-		// Token: 0x040001D0 RID: 464
 		public TextureAnimationWithTransitions SwimIdle;
 
-		// Token: 0x040001D1 RID: 465
 		public TextureAnimationWithTransitions SwimMiddleToIdleClockwise;
 
-		// Token: 0x040001D2 RID: 466
 		public TextureAnimationWithTransitions SwimMiddleToIdleAntiClockwise;
 
-		// Token: 0x040001D3 RID: 467
 		public TextureAnimationWithTransitions SwimIdleToSwimMiddle;
 
-		// Token: 0x040001D4 RID: 468
 		public TextureAnimationWithTransitions SwimFlipHorizontalAnimation;
 
-		// Token: 0x040001D5 RID: 469
 		public TextureAnimationWithTransitions SwimFlipVerticalAnimation;
 
-		// Token: 0x040001D6 RID: 470
 		public TextureAnimationWithTransitions SwimFlipHorizontalVerticalAnimation;
 	}
 }
