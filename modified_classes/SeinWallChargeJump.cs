@@ -234,23 +234,38 @@ public class SeinWallChargeJump : CharacterState, ISeinReceiver
 	// Token: 0x06001243 RID: 4675 RVA: 0x00069964 File Offset: 0x00067B64
 	public void UpdateAimElevation()
 	{
-		bool hasWallLeft = this.PlatformMovement.HasWallLeft;
+		float normalizedFacing = this.PlatformMovement.HasWallLeft ? 1 : -1;
 		Vector2 analogAxisLeft = Core.Input.AnalogAxisLeft;
+
 		if (analogAxisLeft.magnitude > 0.2f)
 		{
-			this.m_angularElevation = Mathf.Atan2(analogAxisLeft.y, analogAxisLeft.x * (float)((!hasWallLeft) ? -1 : 1)) * 57.29578f;
+			this.m_angularElevationSpeed = 0f;
+			this.m_angularElevation = Mathf.Atan2(analogAxisLeft.y, analogAxisLeft.x * normalizedFacing) * 57.29578f;
+			return;
 		}
 		else if (Core.Input.Up.Pressed && !Core.Input.Down.Pressed)
 		{
 			this.m_angularElevationSpeed = Mathf.Clamp(this.m_angularElevationSpeed + Time.deltaTime * 500f, 0f, 200f);
+			return;
 		}
 		else if (Core.Input.Down.Pressed)
 		{
 			this.m_angularElevationSpeed = Mathf.Clamp(this.m_angularElevationSpeed - Time.deltaTime * 500f, -200f, 0f);
+			return;
 		}
-		else
+
+		Vector2 arrowScreenPos = UI.Cameras.Current.Camera.WorldToScreenPoint(this.Arrow.transform.position);
+		Vector2 arrowWorldPos = UI.Cameras.System.GUICamera.Camera.ScreenToWorldPoint(arrowScreenPos);
+		Vector2 cursorAxis = Core.Input.CursorPositionUI - arrowWorldPos;
+		this.m_angularElevationSpeed = 0f;
+
+		if (Core.Input.CursorMoved && cursorAxis.magnitude > 1f && MoonMath.Float.Normalize(cursorAxis.x) == normalizedFacing)
 		{
-			this.m_angularElevationSpeed = 0f;
+			float axisElevation = Mathf.Atan2(cursorAxis.y, cursorAxis.x * normalizedFacing) * 57.29578f;
+			if (Mathf.Abs(axisElevation) <= 60f)
+			{
+				this.m_angularElevation = axisElevation;
+			}
 		}
 	}
 
