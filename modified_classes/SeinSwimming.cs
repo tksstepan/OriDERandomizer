@@ -445,13 +445,16 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 			return this.m_sein.Input.Axis;
 		}
 
-		Vector2 oriScreenPos = UI.Cameras.Current.Camera.WorldToScreenPoint(this.PlatformMovement.Position);
-		Vector2 oriUIPos = UI.Cameras.System.GUICamera.Camera.ScreenToWorldPoint(oriScreenPos);
-		Vector2 cursorAxis = Core.Input.CursorPositionUI - oriUIPos;
-
-		if (cursorAxis.magnitude > 0.5f)
+		if (RandomizerSettings.SwimmingMouseAim)
 		{
-			return cursorAxis;
+			Vector2 oriScreenPos = UI.Cameras.Current.Camera.WorldToScreenPoint(this.PlatformMovement.Position);
+			Vector2 oriUIPos = UI.Cameras.System.GUICamera.Camera.ScreenToWorldPoint(oriScreenPos);
+			Vector2 cursorAxis = Core.Input.CursorPositionUI - oriUIPos;
+
+			if (cursorAxis.magnitude > 0.5f)
+			{
+				return cursorAxis;
+			}
 		}
 
 		return Vector2.zero;

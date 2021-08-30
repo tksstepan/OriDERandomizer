@@ -254,17 +254,21 @@ public class SeinWallChargeJump : CharacterState, ISeinReceiver
 			return;
 		}
 
-		Vector2 arrowScreenPos = UI.Cameras.Current.Camera.WorldToScreenPoint(this.Arrow.transform.position);
-		Vector2 arrowWorldPos = UI.Cameras.System.GUICamera.Camera.ScreenToWorldPoint(arrowScreenPos);
-		Vector2 cursorAxis = Core.Input.CursorPositionUI - arrowWorldPos;
 		this.m_angularElevationSpeed = 0f;
 
-		if (Core.Input.CursorMoved && cursorAxis.magnitude > 1f && MoonMath.Float.Normalize(cursorAxis.x) == normalizedFacing)
+		if (RandomizerSettings.WallChargeMouseAim)
 		{
-			float axisElevation = Mathf.Atan2(cursorAxis.y, cursorAxis.x * normalizedFacing) * 57.29578f;
-			if (Mathf.Abs(axisElevation) <= 60f)
+			Vector2 arrowScreenPos = UI.Cameras.Current.Camera.WorldToScreenPoint(this.Arrow.transform.position);
+			Vector2 arrowWorldPos = UI.Cameras.System.GUICamera.Camera.ScreenToWorldPoint(arrowScreenPos);
+			Vector2 cursorAxis = Core.Input.CursorPositionUI - arrowWorldPos;
+
+			if (Core.Input.CursorMoved && cursorAxis.magnitude > 1f && MoonMath.Float.Normalize(cursorAxis.x) == normalizedFacing)
 			{
-				this.m_angularElevation = axisElevation;
+				float axisElevation = Mathf.Atan2(cursorAxis.y, cursorAxis.x * normalizedFacing) * 57.29578f;
+				if (Mathf.Abs(axisElevation) <= 60f)
+				{
+					this.m_angularElevation = axisElevation;
+				}
 			}
 		}
 	}
