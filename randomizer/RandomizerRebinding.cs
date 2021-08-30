@@ -154,6 +154,7 @@ public static class RandomizerRebinding
 		}
 
 		rebindMap[key].binds = ParseOrDefault(bind, key, writeList).binds;
+		rebindMap[key].wasPressed = true;
 	}
 
 	public static BindSet ParseOrDefault(string bind, string key, List<string> writeList)
