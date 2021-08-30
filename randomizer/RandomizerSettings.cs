@@ -29,7 +29,7 @@ public static class RandomizerSettings
 			{"Invert Swim", "False"},
 			{"Disco Sense", "False"},
 			{"Cursor Lock", "False"},
-			{"Free Grenade Jump", "True"},
+			{"Grenade Jump Mode", "Free"},
 			{"Wall Charge Mouse Aim", "True"},
 			{"Swimming Mouse Aim", "True"},
 			{"Slow Climb Vault", "True"},
@@ -118,8 +118,8 @@ public static class RandomizerSettings
 				case "Cursor Lock":
 					RandomizerSettings.CursorLock = (value.Trim().ToLower() == "true");
 					break;
-				case "Free Grenade Jump":
-					RandomizerSettings.FreeGrenadeJump = (value.Trim().ToLower() == "true");
+				case "Grenade Jump Mode":
+					RandomizerSettings.GrenadeJump = (RandomizerSettings.GrenadeJumpMode)Enum.Parse(typeof(RandomizerSettings.GrenadeJumpMode), value.Trim(), true);
 					break;
 				case "Wall Charge Mouse Aim":
 					RandomizerSettings.WallChargeMouseAim = (value.Trim().ToLower() == "true");
@@ -183,7 +183,7 @@ public static class RandomizerSettings
 	public static bool DiscoSense;
 	public static bool CursorLock;
 
-	public static bool FreeGrenadeJump;
+	public static RandomizerSettings.GrenadeJumpMode GrenadeJump;
 	public static bool WallChargeMouseAim;
 	public static bool SwimmingMouseAim;
 	public static bool SlowClimbVault;
@@ -197,5 +197,12 @@ public static class RandomizerSettings
 		Off,
 		Hold,
 		Toggle
+	}
+
+	public enum GrenadeJumpMode
+	{
+		Manual,
+		FreeBind,
+		Free
 	}
 }

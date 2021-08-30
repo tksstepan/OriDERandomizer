@@ -58,6 +58,7 @@ public static class RandomizerRebinding
 				{"Show Progress", "LeftAlt+P, RightAlt+P"},
 				{"Color Shift", "LeftAlt+C, RightAlt+C"},
 				{"Double Bash", "Grenade"},
+				{"Free Grenade Jump", ""},
 				{"Show Bonuses", "LeftAlt+B, RightAlt+B"},
 				{"Bonus Switch", "LeftAlt+Q, RightAlt+Q"},
 				{"Bonus Toggle", "LeftAlt+Mouse1, RightAlt+Mouse1"},
@@ -232,6 +233,7 @@ public static class RandomizerRebinding
 	public static RandomizerRebinding.BindSet ShowProgress = new RandomizerRebinding.BindSet(new List<List<Bind>>());
 	public static RandomizerRebinding.BindSet ColorShift = new RandomizerRebinding.BindSet(new List<List<Bind>>());
 	public static RandomizerRebinding.BindSet DoubleBash = new RandomizerRebinding.BindSet(new List<List<Bind>>());
+	public static RandomizerRebinding.BindSet FreeGrenadeJump = new RandomizerRebinding.BindSet(new List<List<Bind>>());
 	public static RandomizerRebinding.BindSet ShowBonuses = new RandomizerRebinding.BindSet(new List<List<Bind>>());
 	public static RandomizerRebinding.BindSet BonusSwitch = new RandomizerRebinding.BindSet(new List<List<Bind>>());
 	public static RandomizerRebinding.BindSet BonusToggle = new RandomizerRebinding.BindSet(new List<List<Bind>>());
@@ -263,6 +265,7 @@ public static class RandomizerRebinding
 		{"Show Progress", RandomizerRebinding.ShowProgress},
 		{"Color Shift", RandomizerRebinding.ColorShift},
 		{"Double Bash", RandomizerRebinding.DoubleBash},
+		{"Free Grenade Jump", RandomizerRebinding.FreeGrenadeJump},
 		{"Show Bonuses", RandomizerRebinding.ShowBonuses},
 		{"Bonus Switch", RandomizerRebinding.BonusSwitch},
 		{"Bonus Toggle", RandomizerRebinding.BonusToggle},
