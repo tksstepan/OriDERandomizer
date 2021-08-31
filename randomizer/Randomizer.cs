@@ -243,8 +243,8 @@ public static class Randomizer
         Characters.Sein.Speed = new Vector3(0f, 0f);
         Characters.Ori.Position = new Vector3(position.x, position.y+5);
         Scenes.Manager.SetTargetPositions(Characters.Sein.Position);
-        UI.Cameras.Current.CameraTarget.SetTargetPosition(Characters.Sein.Position);
-        UI.Cameras.Current.MoveCameraToTargetInstantly(true);
+        Game.UI.Cameras.Current.CameraTarget.SetTargetPosition(Characters.Sein.Position);
+        Game.UI.Cameras.Current.MoveCameraToTargetInstantly(true);
     }
 
 
@@ -263,8 +263,8 @@ public static class Randomizer
         Characters.Sein.Speed = new Vector3(0f, 0f);
         Characters.Ori.Position = new Vector3(190f, -210f);
         Scenes.Manager.SetTargetPositions(Characters.Sein.Position);
-        UI.Cameras.Current.CameraTarget.SetTargetPosition(Characters.Sein.Position);
-        UI.Cameras.Current.MoveCameraToTargetInstantly(true);
+        Game.UI.Cameras.Current.CameraTarget.SetTargetPosition(Characters.Sein.Position);
+        Game.UI.Cameras.Current.MoveCameraToTargetInstantly(true);
         int value = World.Events.Find(Randomizer.MistySim).Value;
         if (value != 1 && value != 8)
         {
@@ -813,7 +813,7 @@ public static class Randomizer
             }
             if(message != "") {
                 Randomizer.MessageProvider.SetMessage(message);
-                UI.Hints.Show(Randomizer.MessageProvider, HintLayer.GameSaved, (float)Randomizer.MessageQueueTime / 30f + 1f);
+                Game.UI.Hints.Show(Randomizer.MessageProvider, HintLayer.GameSaved, (float)Randomizer.MessageQueueTime / 30f + 1f);
             }
         }
         Randomizer.MessageQueueTime--;
