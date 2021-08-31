@@ -59,7 +59,7 @@ public static class RandomizerClues
 			"WV: ",
 			array[0],
 			text,
-			" ",
+			"  ",
 			text2,
 			"GS: ",
 			array[1],
