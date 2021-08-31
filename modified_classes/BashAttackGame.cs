@@ -199,8 +199,7 @@ internal class BashAttackGame : Suspendable, IPooled
 		{
 			this.GameFinished();
 		}
-		RandomizerRebinding.DoubleBash.wasPressed = false;
-		if (this.ButtonBash.Released || (RandomizerRebinding.DoubleBash.IsPressed() && Randomizer.BashTap))
+		if (this.ButtonBash.Released || (RandomizerRebinding.DoubleBash.OnPressed && Randomizer.BashTap))
 		{
 			this.GameFinished();
 		}
@@ -237,8 +236,7 @@ internal class BashAttackGame : Suspendable, IPooled
 		Sound.Play((!Characters.Sein.PlayerAbilities.BashBuff.HasAbility) ? Characters.Sein.Abilities.Bash.BashEndSound.GetSound(null) : Characters.Sein.Abilities.Bash.UpgradedBashEndSound.GetSound(null), base.transform.position, null);
 		this.BashGameComplete(this.Angle);
 		this.ChangeState(BashAttackGame.State.Disappearing);
-		RandomizerRebinding.DoubleBash.wasPressed = false;
-		if (RandomizerRebinding.DoubleBash.IsPressed() && !Randomizer.BashWasQueued)
+		if (RandomizerRebinding.DoubleBash.Pressed && !Randomizer.BashWasQueued)
 		{
 			Randomizer.QueueBash = true;
 		}

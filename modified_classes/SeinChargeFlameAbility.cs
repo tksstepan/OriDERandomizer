@@ -116,7 +116,15 @@ public class SeinChargeFlameAbility : CharacterState, ISeinReceiver
 		{
 			return;
 		}
-		if (this.ChargeFlameButton.OnPressed && !this.ChargeFlameButton.Used && this.m_sein.PlayerAbilities.ChargeFlame.HasAbility && !this.m_sein.Controller.InputLocked && !this.m_sein.Abilities.SpiritFlame.LockShootingSpiritFlame)
+
+		bool pressed = this.ChargeFlameButton.OnPressed && !this.ChargeFlameButton.Used;
+
+		if (RandomizerSettings.Autofire == RandomizerSettings.AutofireMode.Hold && !RandomizerRebinding.SuppressAutofire.Pressed)
+		{
+			pressed = false;
+		}
+
+		if (pressed && this.m_sein.PlayerAbilities.ChargeFlame.HasAbility && !this.m_sein.Controller.InputLocked && !this.m_sein.Abilities.SpiritFlame.LockShootingSpiritFlame)
 		{
 			this.Logic.ChangeState(this.State.Precharging);
 		}

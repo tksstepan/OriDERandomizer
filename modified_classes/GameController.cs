@@ -278,6 +278,7 @@ public class GameController : SaveSerialize, ISuspendable
 		}
 		GameController.Instance = this;
 		this.HandleTrialData();
+		Randomizer.InitializeOnce();
 		this.WarmUpResources();
 		base.Awake();
 		if (LoadingBootstrap.Instance)
