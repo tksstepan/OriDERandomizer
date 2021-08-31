@@ -972,7 +972,7 @@ public static class Randomizer
                 GameSettings.Instance.SoundEffectsVolume = 0f;
                 ResetVolume = 3;
             }
-            UI.Hints.Show(Randomizer.MessageProvider, HintLayer.GameSaved, (float)seconds);
+            Game.UI.Hints.Show(Randomizer.MessageProvider, HintLayer.GameSaved, (float)seconds);
             if(setMessage)
             {
                 Message = text;
