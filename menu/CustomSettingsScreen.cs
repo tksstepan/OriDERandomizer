@@ -84,6 +84,7 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 		{
 			this.selectionManager.MenuItems.Add(component);
 		}
+		component.Pressed = null;
 		this.layout.AddItem(component);
 		this.layout.Sort();
 		component.OnUnhighlight();
@@ -99,6 +100,15 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 		}
 		gameObject.transform.Find("text/nameText").GetComponent<MessageBox>().SetMessage(new MessageDescriptor(label));
 		return component;
+	}
+
+	public void AddToggle(string caption, string settingID, bool initialValue, Action<bool> set)
+	{
+		CleverMenuItem cleverMenuItem = this.AddItem(caption, true);
+		cleverMenuItem.name = string.Format("toggle ({0})", caption);
+		ToggleCustomSettingsAction toggle = cleverMenuItem.gameObject.AddComponent<ToggleCustomSettingsAction>();
+		toggle.Init(settingID, initialValue, set);
+		cleverMenuItem.PressedCallback += toggle.Toggle;
 	}
 
 	public CleverMenuItemLayout layout;
