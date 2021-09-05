@@ -38,17 +38,11 @@ public class AreaMapDebugNavigation : MonoBehaviour
 			Vector2 worldPosition = this.m_areaMapUi.Navigation.MapToWorldPosition(cursorPosition);
 			if (Characters.Sein != null)
 			{
-				Characters.Sein.Position = worldPosition;
+				Characters.Sein.Position = worldPosition + new Vector2(0f, 0.5f);
+				UI.Cameras.Current.MoveCameraToTargetInstantly(true);
 				UI.Menu.HideMenuScreen(true);
 				return;
 			}
-		}
-		if (!Core.Input.RightShoulder.IsPressed)
-		{
-			return;
-		}
-		if (!this.UndiscoveredMapVisible)
-		{
 		}
 	}
 
