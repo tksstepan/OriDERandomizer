@@ -377,8 +377,8 @@ public class SeinController : SaveSerialize, IDamageReciever, ISeinReceiver, ISu
 
 	public bool RayTest(GameObject target, Vector2 startOffset, Vector2 endOffset)
 	{
-		Vector3 vector = this.m_transform.position + startOffset;
-		Vector3 a = target.transform.position + endOffset;
+		Vector3 vector = this.m_transform.position + (Vector3)startOffset;
+		Vector3 a = target.transform.position + (Vector3)endOffset;
 		Vector3 vector2 = a - vector;
 		Rigidbody component = target.GetComponent<Rigidbody>();
 		RaycastHit raycastHit;
