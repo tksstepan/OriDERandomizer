@@ -31,14 +31,37 @@ public class InventoryManager : MenuScreen
 	public void Awake()
 	{
 		InventoryManager.Instance = this;
+		
 		CleverMenuItemSelectionManager navigationManager = this.NavigationManager;
 		navigationManager.OptionChangeCallback = (Action)Delegate.Combine(navigationManager.OptionChangeCallback, new Action(this.OnMenuItemChange));
-		CleverMenuItemSelectionManager navigationManager2 = this.NavigationManager;
-		navigationManager2.OptionPressedCallback = (Action)Delegate.Combine(navigationManager2.OptionPressedCallback, new Action(this.OnMenuItemPressed));
-		CleverMenuItemSelectionManager navigationManager3 = this.NavigationManager;
-		navigationManager3.OnBackPressedCallback = (Action)Delegate.Combine(navigationManager3.OnBackPressedCallback, new Action(this.OnBackPressed));
+		navigationManager.OptionPressedCallback = (Action)Delegate.Combine(navigationManager.OptionPressedCallback, new Action(this.OnMenuItemPressed));
+		navigationManager.OnBackPressedCallback = (Action)Delegate.Combine(navigationManager.OnBackPressedCallback, new Action(this.OnBackPressed));
+		
 		DifficultyController instance = DifficultyController.Instance;
 		instance.OnDifficultyChanged = (Action)Delegate.Combine(instance.OnDifficultyChanged, new Action(this.OnDifficultyChanged));
+
+		if (this.Difficulty)
+		{
+			DifficultyModeMessageProvider difficultyProvider = (DifficultyModeMessageProvider)this.Difficulty.MessageProvider;
+			difficultyProvider.Easy = RandomizerText.DifficultyOverrides.Easy.NameOverrideUpper;
+			difficultyProvider.Normal = RandomizerText.DifficultyOverrides.Normal.NameOverrideUpper;
+			difficultyProvider.Hard = RandomizerText.DifficultyOverrides.Hard.NameOverrideUpper;
+			difficultyProvider.OneLife = RandomizerText.DifficultyOverrides.OneLife.NameOverrideUpper;
+
+			ActionSequence difficultySequence = (ActionSequence)this.Difficulty.transform.parent.GetComponent<RunActionCondition>().Action;
+			InstantiateAction difficultyAction = (InstantiateAction)difficultySequence.Actions[0];
+			ChangeDifficultyScreen difficultyScreen = difficultyAction.Prefab.GetComponent<ChangeDifficultyScreen>();
+			difficultyScreen.Easy = RandomizerText.DifficultyOverrides.Easy.NameOverride;
+			difficultyScreen.Normal = RandomizerText.DifficultyOverrides.Normal.NameOverride;
+			difficultyScreen.Hard = RandomizerText.DifficultyOverrides.Hard.NameOverride;
+			difficultyScreen.OneLife = RandomizerText.DifficultyOverrides.OneLife.NameOverride;
+
+			CleverMenuItemSelectionManager changeDifficultyManager = difficultyAction.Prefab.GetComponent<CleverMenuItemSelectionManager>();
+			changeDifficultyManager.MenuItems[0].GetComponentInChildren<MessageBox>().SetMessageProvider(RandomizerText.DifficultyOverrides.Easy.NameOverrideUpper);
+			changeDifficultyManager.MenuItems[1].GetComponentInChildren<MessageBox>().SetMessageProvider(RandomizerText.DifficultyOverrides.Normal.NameOverrideUpper);
+			changeDifficultyManager.MenuItems[2].GetComponentInChildren<MessageBox>().SetMessageProvider(RandomizerText.DifficultyOverrides.Hard.NameOverrideUpper);
+		}
+
 		this.waterVeinClueText = UnityEngine.Object.Instantiate<MessageBox>(this.EnergyUpgradesText);
 		this.waterVeinClueText.transform.position = this.GinsoTreeKey.transform.position + Vector3.down * 0.55f;
 		this.waterVeinClueText.transform.SetParent(this.GinsoTreeKey.transform);
@@ -107,12 +130,12 @@ public class InventoryManager : MenuScreen
 		{
 			InventoryManager.Instance = null;
 		}
+
 		CleverMenuItemSelectionManager navigationManager = this.NavigationManager;
 		navigationManager.OptionChangeCallback = (Action)Delegate.Remove(navigationManager.OptionChangeCallback, new Action(this.OnMenuItemChange));
-		CleverMenuItemSelectionManager navigationManager2 = this.NavigationManager;
-		navigationManager2.OptionPressedCallback = (Action)Delegate.Remove(navigationManager2.OptionPressedCallback, new Action(this.OnMenuItemPressed));
-		CleverMenuItemSelectionManager navigationManager3 = this.NavigationManager;
-		navigationManager3.OnBackPressedCallback = (Action)Delegate.Remove(navigationManager3.OnBackPressedCallback, new Action(this.OnBackPressed));
+		navigationManager.OptionPressedCallback = (Action)Delegate.Remove(navigationManager.OptionPressedCallback, new Action(this.OnMenuItemPressed));
+		navigationManager.OnBackPressedCallback = (Action)Delegate.Remove(navigationManager.OnBackPressedCallback, new Action(this.OnBackPressed));
+
 		DifficultyController instance = DifficultyController.Instance;
 		instance.OnDifficultyChanged = (Action)Delegate.Remove(instance.OnDifficultyChanged, new Action(this.OnDifficultyChanged));
 	}

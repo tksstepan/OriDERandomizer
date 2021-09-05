@@ -10,7 +10,7 @@ public static class RandomizerText
 		{
 			return null;
 		}
-		return RandomizerText.m_abilityOverrides[ability].m_nameOverride;
+		return RandomizerText.m_abilityOverrides[ability].NameOverride;
 	}
 
 	public static RandomizerMessageProvider GetAbilityDescription(AbilityType ability)
@@ -19,7 +19,7 @@ public static class RandomizerText
 		{
 			return null;
 		}
-		return RandomizerText.m_abilityOverrides[ability].m_descriptionOverride;
+		return RandomizerText.m_abilityOverrides[ability].DescriptionOverride;
 	}
 
 	public static string GetObjectiveText()
@@ -45,6 +45,24 @@ public static class RandomizerText
 			return string.Format("Find all {0} #Warmth Fragments# hidden throughout Nibel", Randomizer.fragKeyFinish);
 		}
 		return "Continue to search for #Skills# and #Resources#";
+
+	}
+
+	public static RandomizerMessageProvider GetDifficultyName(DifficultyMode mode)
+	{
+		switch (mode)
+		{
+		case DifficultyMode.Easy:
+			return RandomizerText.DifficultyOverrides.Easy.NameOverride;
+		case DifficultyMode.Normal:
+			return RandomizerText.DifficultyOverrides.Normal.NameOverride;
+		case DifficultyMode.Hard:
+			return RandomizerText.DifficultyOverrides.Hard.NameOverride;
+		case DifficultyMode.OneLife:
+			return RandomizerText.DifficultyOverrides.OneLife.NameOverride;
+		default:
+			return null;
+		}
 	}
 
 	private static Dictionary<AbilityType, RandomizerText.AbilityTextOverrides> m_abilityOverrides = new Dictionary<AbilityType, RandomizerText.AbilityTextOverrides>
@@ -97,18 +115,42 @@ public static class RandomizerText
 		{
 			if (name != null)
 			{
-				this.m_nameOverride = (RandomizerMessageProvider)ScriptableObject.CreateInstance(typeof(RandomizerMessageProvider));
-				this.m_nameOverride.SetMessage(name);
+				this.NameOverride = (RandomizerMessageProvider)ScriptableObject.CreateInstance(typeof(RandomizerMessageProvider));
+				this.NameOverride.SetMessage(name);
 			}
+			
 			if (description != null)
 			{
-				this.m_descriptionOverride = (RandomizerMessageProvider)ScriptableObject.CreateInstance(typeof(RandomizerMessageProvider));
-				this.m_descriptionOverride.SetMessage(description);
+				this.DescriptionOverride = (RandomizerMessageProvider)ScriptableObject.CreateInstance(typeof(RandomizerMessageProvider));
+				this.DescriptionOverride.SetMessage(description);
 			}
 		}
 
-		public RandomizerMessageProvider m_nameOverride;
+		public RandomizerMessageProvider NameOverride;
+		public RandomizerMessageProvider DescriptionOverride;
+	}
 
-		public RandomizerMessageProvider m_descriptionOverride;
+	public class DifficultyOverrides
+	{
+		public DifficultyOverrides(string name, string description)
+		{
+			NameOverride = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+			NameOverride.SetMessage(name);
+
+			NameOverrideUpper = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+			NameOverrideUpper.SetMessage(name.ToUpper());
+
+			DescriptionOverride = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+			DescriptionOverride.SetMessage(description);
+		}
+
+		public RandomizerMessageProvider NameOverride;
+		public RandomizerMessageProvider NameOverrideUpper;
+		public RandomizerMessageProvider DescriptionOverride;
+
+		public static DifficultyOverrides Easy = new DifficultyOverrides("Relaxed", "Suitable for all players.");
+		public static DifficultyOverrides Normal = new DifficultyOverrides("Challenging", "Suitable for more competitive-minded players.");
+		public static DifficultyOverrides Hard = new DifficultyOverrides("Punishing", "Suitable for players with a thirst for danger.");
+		public static DifficultyOverrides OneLife = new DifficultyOverrides("One Life", "Suitable for those who are prepared to accept loss.");
 	}
 }
