@@ -104,16 +104,11 @@ public class RandomizerBootstrap
 		// make a clone of the physics system and set it as a sibling of the original
 		Transform alternateManager = CloneObject(sceneRoot, physicsManager, "physicsManagerRelaxed");
 
-		// add a NO condition for the original, and a YES condition for the clone
-		ActivateBasedOnCondition activation = darkPlatforms.gameObject.AddComponent<ActivateBasedOnCondition>();
-		activation.Activate = false;
+		// activate the clone if the condition is met, else activate the original
+		ActivationBasedOnCondition activation = darkPlatforms.gameObject.AddComponent<ActivationBasedOnCondition>();
 		activation.Condition = condition;
-		activation.Target = physicsManager.gameObject;
-
-		activation = darkPlatforms.gameObject.AddComponent<ActivateBasedOnCondition>();
-		activation.Activate = true;
-		activation.Condition = condition;
-		activation.Target = alternateManager.gameObject;
+		activation.TargetTrue = alternateManager.gameObject;
+		activation.TargetFalse = physicsManager.gameObject;
 
 		// force the scene to re-validate since we've added things
 		sceneRoot.OnValidate();
@@ -124,6 +119,26 @@ public class RandomizerBootstrap
 			if (child.position.x < 125f)
 			{
 				child.rotation *= Quaternion.Euler(0f, 0f, 60f);
+
+				// "unrotate" the swaying movement of the platforms back to Y-axis alignment
+				SinMovement componentInChildren = child.GetComponentInChildren<SinMovement>();
+				SinMovement.Affect affectorY = componentInChildren.Affectors[0];
+
+				Vector2 rotatedRange = MoonMath.Angle.Unrotate(new Vector2(0f, affectorY.Range / 2f), 60f);
+				Vector2 rotatedRangeRandom = MoonMath.Angle.Unrotate(new Vector2(0f, affectorY.Range / 2f), 60f);
+
+				affectorY.Range = rotatedRange.y;
+				affectorY.RangeRandom = rotatedRangeRandom.y;
+
+				SinMovement.Affect affectorX = new SinMovement.Affect();
+				affectorX.Type = SinMovement.Affect.AffectType.X;
+				affectorX.Offset = affectorY.Offset;
+				affectorX.OffsetRandom = affectorY.OffsetRandom;
+				affectorX.Period = affectorY.Period;
+				affectorX.PeriodRandom = affectorY.PeriodRandom;
+				affectorX.Range = rotatedRange.x;
+				affectorX.RangeRandom = rotatedRangeRandom.x;
+				componentInChildren.Affectors.Add(affectorX);
 			}
 			else if (child.position.x < 135f)
 			{
