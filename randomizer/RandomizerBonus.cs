@@ -4,10 +4,8 @@ using Game;
 using Sein.World;
 using UnityEngine;
 
-// Token: 0x020009F7 RID: 2551
 public static class RandomizerBonus
 {
-    // Token: 0x0600376D RID: 14189 RVA: 0x000E2764 File Offset: 0x000E0964
     public static void UpgradeID(int ID)
     {
         bool flag = ID < 0;
@@ -421,79 +419,65 @@ public static class RandomizerBonus
         return Characters.Sein.Inventory.GetRandomizerItem(81) > 0;
     }
 
-    // Token: 0x0600376E RID: 14190 RVA: 0x0002B9F1 File Offset: 0x00029BF1
     public static bool DoubleAirDash()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(10) > 0;
     }
 
-    // Token: 0x0600376F RID: 14191 RVA: 0x0002BA07 File Offset: 0x00029C07
     public static bool ChargeDashEfficiency()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(11) > 0;
     }
 
-    // Token: 0x06003770 RID: 14192 RVA: 0x0002BA1D File Offset: 0x00029C1D
     public static bool DoubleJumpUpgrade()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(12) > 0;
     }
 
-    // Token: 0x06003771 RID: 14193 RVA: 0x0002BA33 File Offset: 0x00029C33
     public static int HealthRegeneration()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(13);
     }
 
-    // Token: 0x06003772 RID: 14194 RVA: 0x0002BA46 File Offset: 0x00029C46
     public static int EnergyRegeneration()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(15);
     }
 
-    // Token: 0x06003774 RID: 14196 RVA: 0x0002BA59 File Offset: 0x00029C59
     public static int WaterVeinShards()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(17);
     }
 
-    // Token: 0x06003775 RID: 14197 RVA: 0x0002BA6C File Offset: 0x00029C6C
     public static int SunstoneShards()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(21);
     }
 
-    // Token: 0x06003776 RID: 14198 RVA: 0x0002BA7F File Offset: 0x00029C7F
     public static int GumonSealShards()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(19);
     }
 
-    // Token: 0x06003777 RID: 14199 RVA: 0x0002BA92 File Offset: 0x00029C92
     public static int SpiritFlameLevel()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(6);
     }
 
-    // Token: 0x06003778 RID: 14200 RVA: 0x0002BAA4 File Offset: 0x00029CA4
     public static int MapStoneProgression()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(23);
     }
 
-    // Token: 0x06003779 RID: 14201 RVA: 0x0002BAB7 File Offset: 0x00029CB7
     public static int SkillTreeProgression()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(27);
     }
 
-    // Token: 0x0600377A RID: 14202 RVA: 0x0002BACA File Offset: 0x00029CCA
     public static bool ExplosionPower()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(8) > 0;
     }
-
-    // Token: 0x0600377B RID: 14203 RVA: 0x0002BADF File Offset: 0x00029CDF
 
     public static int ExpWithBonuses(int baseExp, bool doTrack)
     {
@@ -511,47 +495,47 @@ public static class RandomizerBonus
         return total;
     }
 
-    // Token: 0x0600377D RID: 14205 RVA: 0x0002BB08 File Offset: 0x00029D08
     public static int GetPickupCount()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(0);
     }
 
-    // Token: 0x0600377E RID: 14206 RVA: 0x0002BB1A File Offset: 0x00029D1A
     public static int DoubleJumpUpgrades()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(12);
     }
 
-    // Token: 0x0600377F RID: 14207 RVA: 0x0002BB2D File Offset: 0x00029D2D
     public static int UpgradeCount(int ID)
     {
         return Characters.Sein.Inventory.GetRandomizerItem(ID);
     }
 
-    // Token: 0x06003780 RID: 14208 RVA: 0x0002BB3F File Offset: 0x00029D3F
     public static void CollectMapstone()
     {
         Characters.Sein.Inventory.IncRandomizerItem(23, 1);
     }
 
-    // Token: 0x06003783 RID: 14211 RVA: 0x000E3050 File Offset: 0x000E1250
     public static void Update()
     {
-        Characters.Sein.Mortality.Health.GainHealth((float)(RandomizerBonus.HealthRegeneration() + ((!Characters.Sein.PlayerAbilities.HealthMarkers.HasAbility) ? 0 : 2)) * 0.00112f);
-        if (RandomizerBonus.Bleeding() > 0)
+        int healthRegenLevel = RandomizerBonus.HealthRegeneration() + (Characters.Sein.PlayerAbilities.HealthMarkers.HasAbility ? 2 : 0) - RandomizerBonus.Bleeding();
+        int energyRegenLevel = RandomizerBonus.EnergyRegeneration() + (Characters.Sein.PlayerAbilities.EnergyMarkers.HasAbility ? 2 : 0);
+
+        if (healthRegenLevel > 0)
         {
-            Characters.Sein.Mortality.Health.LoseHealth((float)RandomizerBonus.Bleeding() * 0.00112f);
+            Characters.Sein.Mortality.Health.GainHealth((float)healthRegenLevel * RandomizerBonus.HealthRegenAmount * Time.deltaTime / RandomizerBonus.HealthRegenTimeSeconds);
+        }
+        else if (healthRegenLevel < 0)
+        {
+            Characters.Sein.Mortality.Health.LoseHealth((float)(-healthRegenLevel) * RandomizerBonus.HealthRegenAmount * Time.deltaTime / RandomizerBonus.HealthRegenTimeSeconds);
         }
         if (RandomizerBonus.Bleeding() > 0 && Characters.Sein.Mortality.Health.Amount <= 0f)
         {
             Characters.Sein.Mortality.DamageReciever.OnRecieveDamage(new Damage(1f, default(Vector2), default(Vector3), DamageType.Water, null));
         }
-        Characters.Sein.Energy.Gain((float)(RandomizerBonus.EnergyRegeneration() + ((!Characters.Sein.PlayerAbilities.EnergyMarkers.HasAbility) ? 0 : 2)) *  0.00028f);
+        Characters.Sein.Energy.Gain((float)energyRegenLevel * RandomizerBonus.EnergyRegenAmount * Time.deltaTime / RandomizerBonus.EnergyRegenTimeSeconds);
         RandomizerBonusSkill.Update();
     }
 
-    // Token: 0x06003784 RID: 14212 RVA: 0x000E314C File Offset: 0x000E134C
     public static void DamageDealt(float damage)
     {
         if (Characters.Sein)
@@ -565,7 +549,6 @@ public static class RandomizerBonus
         }
     }
 
-    // Token: 0x06003785 RID: 14213 RVA: 0x0002BB91 File Offset: 0x00029D91
     public static int Bleeding()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(30);
@@ -576,19 +559,16 @@ public static class RandomizerBonus
         return false;
     }
 
-    // Token: 0x06003786 RID: 14214 RVA: 0x0002BBA4 File Offset: 0x00029DA4
     public static int Lifesteal()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(31);
     }
 
-    // Token: 0x06003787 RID: 14215 RVA: 0x0002BBB7 File Offset: 0x00029DB7
     public static int Manavamp()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(32);
     }
 
-    // Token: 0x06003788 RID: 14216 RVA: 0x0002BBCA File Offset: 0x00029DCA
     public static int Velocity()
     {
         try {
@@ -666,18 +646,18 @@ public static class RandomizerBonus
         {9, "Spirit Light Efficiency"},
     };
 
-    // Token: 0x06003789 RID: 14217 RVA: 0x0002BBDD File Offset: 0x00029DDD
     public static int WarmthFrags()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(28);
     }
+
     public static bool AltRDisabled()
     {
         return Characters.Sein.Inventory.GetRandomizerItem(34) == 1;
     }
-    // Token: 0x04003262 RID: 12898
+
     public static bool DoubleAirDashUsed;
-    // Token: 0x04003285 RID: 12933
+
     private static RandomizerBonus.Ability[] abilities = new RandomizerBonus.Ability[]
     {
         new RandomizerBonus.Ability("Quick Flame", (PlayerAbilities p) => p.QuickFlame),
@@ -711,6 +691,15 @@ public static class RandomizerBonus
         new RandomizerBonus.Ability("Triple Jump", (PlayerAbilities p) => p.DoubleJumpUpgrade),
         new RandomizerBonus.Ability("Ultra Defense", (PlayerAbilities p) => p.UltraDefense)
     };
+
+    public static float HealthRegenAmount = 4f;
+
+    public static float HealthRegenTimeSeconds = 60f;
+
+    public static float EnergyRegenAmount = 1f;
+
+    public static float EnergyRegenTimeSeconds = 60f;
+
     private class Ability
     {
         public Ability(string name, Func<PlayerAbilities, CharacterAbility> selector)
