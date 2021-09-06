@@ -152,9 +152,15 @@ public class RandomizerBootstrap
 		}
 	}
 
+	private static void BootstrapSpiritTree(SceneRoot sceneRoot)
+	{
+		sceneRoot.transform.FindChild("mediumExpOrb").GetComponent<DestroyOnRestoreCheckpoint>().enabled = false;
+	}
+
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrap = new Dictionary<string, Action<SceneRoot>>
 	{
 		{ "titleScreenSwallowsNest", new Action<SceneRoot>(RandomizerBootstrap.BootstrapTitleScreen) },
-		{ "northMangroveFallsLanternIntro", new Action<SceneRoot>(RandomizerBootstrap.BootstrapBlackrootLanternRoom) }
+		{ "northMangroveFallsLanternIntro", new Action<SceneRoot>(RandomizerBootstrap.BootstrapBlackrootLanternRoom) },
+		{ "spiritTreeRefined", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSpiritTree) },
 	};
 }
