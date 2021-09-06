@@ -5,17 +5,14 @@ using Game;
 using SmartInput;
 using UnityEngine;
 
-// Token: 0x020002F8 RID: 760
 public class PlayerInput : MonoBehaviour
 {
-	// Token: 0x06000EA4 RID: 3748 RVA: 0x0005A5BC File Offset: 0x000587BC
 	public PlayerInput()
 	{
 		this.m_lastPressedButtonInput = -1;
 		this.m_lastPressedAxisInput = -1;
 	}
 
-	// Token: 0x06000EA5 RID: 3749 RVA: 0x0005A768 File Offset: 0x00058968
 	public void ClearControls()
 	{
 		this.HorizontalAnalogLeft.Clear();
@@ -55,12 +52,10 @@ public class PlayerInput : MonoBehaviour
 		this.Stomp.Clear();
 	}
 
-	// Token: 0x06000EA6 RID: 3750 RVA: 0x000028E7 File Offset: 0x00000AE7
 	public void AddXboxOneControls()
 	{
 	}
 
-	// Token: 0x06000EA7 RID: 3751 RVA: 0x0005A8F8 File Offset: 0x00058AF8
 	public void AddControllerControls()
 	{
 		this.HorizontalAnalogLeft.Add(new ControllerAxisInput(XboxControllerInput.Axis.LeftStickX));
@@ -119,7 +114,6 @@ public class PlayerInput : MonoBehaviour
 		this.AddControllerButtonsToButtonInput(controllerRebindings.Stomp, this.Stomp);
 	}
 
-	// Token: 0x06000EA8 RID: 3752 RVA: 0x0005AC6C File Offset: 0x00058E6C
 	public void AddKeyboardControls()
 	{
 		PlayerInputRebinding.KeyBindingSettings keyRebindings = PlayerInputRebinding.KeyRebindings;
@@ -170,7 +164,6 @@ public class PlayerInput : MonoBehaviour
 		this.AddKeyCodesToButtonInput(keyRebindings.Stomp, this.Stomp);
 	}
 
-	// Token: 0x06000EA9 RID: 3753 RVA: 0x0005AF50 File Offset: 0x00059150
 	private void AddKeyCodesToButtonInput(KeyCode[] keyCodes, CompoundButtonInput buttonInput)
 	{
 		foreach (KeyCode keyCode in keyCodes)
@@ -179,7 +172,6 @@ public class PlayerInput : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000EAA RID: 3754 RVA: 0x0005AF80 File Offset: 0x00059180
 	public void Awake()
 	{
 		PlayerInput.Instance = this;
@@ -257,13 +249,11 @@ public class PlayerInput : MonoBehaviour
 		};
 	}
 
-	// Token: 0x06000EAB RID: 3755 RVA: 0x0000CAAC File Offset: 0x0000ACAC
 	public float SimplifyAxis(float x)
 	{
 		return Utility.Round(x, 0.001f);
 	}
 
-	// Token: 0x06000EAC RID: 3756 RVA: 0x0000CAB9 File Offset: 0x0000ACB9
 	public void ApplyDeadzone(ref float x, ref float y)
 	{
 		if (x * x + y * y < 0.0400000028f)
@@ -273,7 +263,6 @@ public class PlayerInput : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000EAD RID: 3757 RVA: 0x0005B290 File Offset: 0x00059490
 	public void FixedUpdate()
 	{
 		if (!this.Active)
@@ -321,7 +310,6 @@ public class PlayerInput : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000EAE RID: 3758 RVA: 0x0005B490 File Offset: 0x00059690
 	public void RefreshControls()
 	{
 		Core.Input.Horizontal = Mathf.Clamp((float)Core.Input.HorizontalDigiPad + Core.Input.HorizontalAnalogLeft, -1f, 1f);
@@ -334,9 +322,9 @@ public class PlayerInput : MonoBehaviour
 		{
 			Core.Input.Buttons[i].Used = false;
 		}
+		RandomizerRebinding.FixedUpdate();
 	}
 
-	// Token: 0x06000EAF RID: 3759 RVA: 0x0000CADB File Offset: 0x0000ACDB
 	public void RefreshControlScheme()
 	{
 		this.ClearControls();
@@ -346,7 +334,6 @@ public class PlayerInput : MonoBehaviour
 		PlayerInputRebinding.RefreshControllerButtonRemappings();
 	}
 
-	// Token: 0x06000EB0 RID: 3760 RVA: 0x0005B54C File Offset: 0x0005974C
 	private void RefreshLastPressedButton()
 	{
 		this.m_lastPressedButtonInput = -1;
@@ -361,8 +348,6 @@ public class PlayerInput : MonoBehaviour
 		}
 	}
 
-	// Token: 0x1700022E RID: 558
-	// (get) Token: 0x06000EB1 RID: 3761 RVA: 0x0000CAFA File Offset: 0x0000ACFA
 	public bool WasKeyboardUsedLast
 	{
 		get
@@ -371,7 +356,6 @@ public class PlayerInput : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000EB2 RID: 3762 RVA: 0x0005B598 File Offset: 0x00059798
 	private bool KeyboardUsedLast(IButtonInput iButtonInput)
 	{
 		if (iButtonInput is KeyCodeButtonInput)
@@ -391,7 +375,6 @@ public class PlayerInput : MonoBehaviour
 		return iButtonInput is ControllerButtonInput && false;
 	}
 
-	// Token: 0x06000EB3 RID: 3763 RVA: 0x0005B5E8 File Offset: 0x000597E8
 	private bool KeyboardUsedLast(IAxisInput iAxisInput)
 	{
 		if (iAxisInput is ButtonAxisInput)
@@ -405,13 +388,11 @@ public class PlayerInput : MonoBehaviour
 		return iAxisInput is ControllerAxisInput && false;
 	}
 
-	// Token: 0x06000EB4 RID: 3764 RVA: 0x0005B634 File Offset: 0x00059834
 	private bool IsAnyStartPressed()
 	{
 		return XboxControllerInput.GetButton(XboxControllerInput.Button.Start, -1) || XboxControllerInput.GetButton(XboxControllerInput.Button.ButtonA, -1) || XboxControllerInput.GetButton(XboxControllerInput.Button.ButtonB, -1) || XboxControllerInput.GetButton(XboxControllerInput.Button.ButtonX, -1) || XboxControllerInput.GetButton(XboxControllerInput.Button.ButtonY, -1) || MoonInput.GetKey(KeyCode.Space) || MoonInput.GetKey(KeyCode.X) || MoonInput.GetKey(KeyCode.Mouse0) || MoonInput.GetKey(KeyCode.Return) || MoonInput.GetKey(KeyCode.Escape) || MoonInput.anyKey;
 	}
 
-	// Token: 0x06000EB5 RID: 3765 RVA: 0x0005B6A8 File Offset: 0x000598A8
 	public void AddControllerButtonsToButtonInput(PlayerInputRebinding.ControllerButton[] buttons, CompoundButtonInput buttonInput)
 	{
 		for (int i = 0; i < buttons.Length; i++)
@@ -420,8 +401,7 @@ public class PlayerInput : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000EB6 RID: 3766 RVA: 0x0005B6D4 File Offset: 0x000598D4
-	private IButtonInput ControllerButtonToButtonInput(PlayerInputRebinding.ControllerButton button)
+	public IButtonInput ControllerButtonToButtonInput(PlayerInputRebinding.ControllerButton button)
 	{
 		switch (button)
 		{
@@ -478,135 +458,91 @@ public class PlayerInput : MonoBehaviour
 		}
 	}
 
-	// Token: 0x04000DEC RID: 3564
 	public static PlayerInput Instance;
 
-	// Token: 0x04000DED RID: 3565
 	public bool Active = true;
 
-	// Token: 0x04000DEE RID: 3566
 	public CompoundAxisInput HorizontalAnalogLeft = new CompoundAxisInput();
 
-	// Token: 0x04000DEF RID: 3567
 	public CompoundAxisInput VerticalAnalogLeft = new CompoundAxisInput();
 
-	// Token: 0x04000DF0 RID: 3568
 	public CompoundAxisInput HorizontalAnalogRight = new CompoundAxisInput();
 
-	// Token: 0x04000DF1 RID: 3569
 	public CompoundAxisInput VerticalAnalogRight = new CompoundAxisInput();
 
-	// Token: 0x04000DF2 RID: 3570
 	public CompoundAxisInput HorizontalDigiPad = new CompoundAxisInput();
 
-	// Token: 0x04000DF3 RID: 3571
 	public CompoundAxisInput VerticalDigiPad = new CompoundAxisInput();
 
-	// Token: 0x04000DF4 RID: 3572
 	public CompoundButtonInput Jump = new CompoundButtonInput();
 
-	// Token: 0x04000DF5 RID: 3573
 	public CompoundButtonInput SpiritFlame = new CompoundButtonInput();
 
-	// Token: 0x04000DF6 RID: 3574
 	public CompoundButtonInput SoulFlame = new CompoundButtonInput();
 
-	// Token: 0x04000DF7 RID: 3575
 	public CompoundButtonInput Bash = new CompoundButtonInput();
 
-	// Token: 0x04000DF8 RID: 3576
 	public CompoundButtonInput ChargeJump = new CompoundButtonInput();
 
-	// Token: 0x04000DF9 RID: 3577
 	public CompoundButtonInput Glide = new CompoundButtonInput();
 
-	// Token: 0x04000DFA RID: 3578
 	public CompoundButtonInput Grab = new CompoundButtonInput();
 
-	// Token: 0x04000DFB RID: 3579
 	public CompoundButtonInput ZoomIn = new CompoundButtonInput();
 
-	// Token: 0x04000DFC RID: 3580
 	public CompoundButtonInput ZoomOut = new CompoundButtonInput();
 
-	// Token: 0x04000DFD RID: 3581
 	public CompoundButtonInput LeftShoulder = new CompoundButtonInput();
 
-	// Token: 0x04000DFE RID: 3582
 	public CompoundButtonInput RightShoulder = new CompoundButtonInput();
 
-	// Token: 0x04000DFF RID: 3583
 	public CompoundButtonInput Select = new CompoundButtonInput();
 
-	// Token: 0x04000E00 RID: 3584
 	public CompoundButtonInput Start = new CompoundButtonInput();
 
-	// Token: 0x04000E01 RID: 3585
 	public CompoundButtonInput LeftStick = new CompoundButtonInput();
 
-	// Token: 0x04000E02 RID: 3586
 	public CompoundButtonInput RightStick = new CompoundButtonInput();
 
-	// Token: 0x04000E03 RID: 3587
 	public CompoundButtonInput MenuDown = new CompoundButtonInput();
 
-	// Token: 0x04000E04 RID: 3588
 	public CompoundButtonInput MenuUp = new CompoundButtonInput();
 
-	// Token: 0x04000E05 RID: 3589
 	public CompoundButtonInput MenuLeft = new CompoundButtonInput();
 
-	// Token: 0x04000E06 RID: 3590
 	public CompoundButtonInput MenuRight = new CompoundButtonInput();
 
-	// Token: 0x04000E07 RID: 3591
 	public CompoundButtonInput MenuPageLeft = new CompoundButtonInput();
 
-	// Token: 0x04000E08 RID: 3592
 	public CompoundButtonInput MenuPageRight = new CompoundButtonInput();
 
-	// Token: 0x04000E09 RID: 3593
 	public CompoundButtonInput ActionButtonA = new CompoundButtonInput();
 
-	// Token: 0x04000E0A RID: 3594
 	public CompoundButtonInput Cancel = new CompoundButtonInput();
 
-	// Token: 0x04000E0B RID: 3595
 	public CompoundButtonInput Copy = new CompoundButtonInput();
 
-	// Token: 0x04000E0C RID: 3596
 	public CompoundButtonInput Delete = new CompoundButtonInput();
 
-	// Token: 0x04000E0D RID: 3597
 	public CompoundButtonInput Focus = new CompoundButtonInput();
 
-	// Token: 0x04000E0E RID: 3598
 	public CompoundButtonInput Filter = new CompoundButtonInput();
 
-	// Token: 0x04000E0F RID: 3599
 	public CompoundButtonInput Legend = new CompoundButtonInput();
 
-	// Token: 0x04000E10 RID: 3600
 	public IButtonInput LeftClick;
 
-	// Token: 0x04000E11 RID: 3601
 	public IButtonInput RightClick;
 
-	// Token: 0x04000E12 RID: 3602
 	public List<IButtonInput> m_allButtonInput;
 
-	// Token: 0x04000E13 RID: 3603
 	public List<Core.Input.InputButtonProcessor> m_allButtonProcessor;
 
-	// Token: 0x04000E14 RID: 3604
 	public List<IAxisInput> m_allAxisInput;
 
-	// Token: 0x04000E15 RID: 3605
 	private int m_lastPressedButtonInput;
 
-	// Token: 0x04000E16 RID: 3606
 	private int m_lastPressedAxisInput;
 
-	// Token: 0x04000E17 RID: 3607
 	public CompoundButtonInput Stomp = new CompoundButtonInput();
 }
