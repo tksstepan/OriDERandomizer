@@ -231,9 +231,6 @@ public class SeinController : SaveSerialize, IDamageReciever, ISeinReceiver, ISu
 				{
 					float num = this.Sein.Controller.InputCurve.Evaluate(Mathf.Abs(this.Sein.Input.Horizontal)) * Mathf.Sign(this.Sein.Input.Horizontal);
 					this.Sein.PlatformBehaviour.LeftRightMovement.HorizontalInput = 0f;
-					if (this.Sein.Controller.CanMove)
-					{
-					}
 					if (num == 0f)
 					{
 						this.m_horizontalInputDelay = 0.06666667f;
@@ -311,28 +308,32 @@ public class SeinController : SaveSerialize, IDamageReciever, ISeinReceiver, ISu
 		{
 			return;
 		}
-		bool allowGrenadeJump = (RandomizerSettings.GrenadeJump == RandomizerSettings.GrenadeJumpMode.Free);
-		if (RandomizerSettings.GrenadeJump != RandomizerSettings.GrenadeJumpMode.Manual && RandomizerRebinding.FreeGrenadeJump.Pressed)
+
+		bool grenadeJumpPressed = false;
+		bool grenadeJumpHeld = false;
+		if (RandomizerSettings.GrenadeJump == RandomizerSettings.GrenadeJumpMode.Free)
 		{
-			Core.Input.LeftShoulder.IsPressed = true;
-			Core.Input.Jump.IsPressed = true;
-			allowGrenadeJump = true;
+			grenadeJumpPressed = RandomizerRebinding.FreeGrenadeJump.OnPressed;
+			grenadeJumpHeld = RandomizerRebinding.FreeGrenadeJump.Pressed;
 		}
+
 		if (Randomizer.GrenadeJumpQueued)
 		{
 			Randomizer.GrenadeJumpQueued = false;
-			if (allowGrenadeJump && Core.Input.Jump.Pressed && CharacterState.IsActive(this.Sein.Abilities.WallChargeJump) && this.Sein.Abilities.GrabWall && this.Sein.Abilities.WallChargeJump.CanChargeJump && this.IsAimingGrenade)
+			if (grenadeJumpHeld && CharacterState.IsActive(this.Sein.Abilities.WallChargeJump) && this.Sein.Abilities.GrabWall && this.Sein.Abilities.WallChargeJump.CanChargeJump && this.IsAimingGrenade)
 			{
-				this.Sein.Abilities.WallChargeJump.PerformChargeJump();
-				return;
+				Core.Input.LeftShoulder.IsPressed = true;
+				Core.Input.Jump.IsPressed = true;
 			}
 		}
-		bool grenadeJumpInput = Core.Input.LeftShoulder.OnPressed && Core.Input.Jump.OnPressed;
-		if (allowGrenadeJump && grenadeJumpInput && CharacterState.IsActive(this.Sein.Abilities.WallChargeJump) && this.Sein.Abilities.GrabWall && this.Sein.Abilities.WallChargeJump.CanChargeJump)
+
+		if (grenadeJumpPressed && CharacterState.IsActive(this.Sein.Abilities.WallChargeJump) && this.Sein.Abilities.GrabWall && this.Sein.Abilities.WallChargeJump.CanChargeJump && this.Sein.Abilities.Grenade && this.Sein.Abilities.Grenade.CanAim)
 		{
 			Randomizer.GrenadeJumpQueued = true;
-			return;
+			Core.Input.LeftShoulder.IsPressed = true;
+			Core.Input.Jump.IsPressed = false;
 		}
+
 		if (Core.Input.Jump.OnPressed)
 		{
 			this.PerformJump();

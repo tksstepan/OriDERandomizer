@@ -33,7 +33,7 @@ public static class RandomizerSettings
 			{"Wall Charge Mouse Aim", "True"},
 			{"Swimming Mouse Aim", "True"},
 			{"Slow Climb Vault", "True"},
-			{"Autofire", "Hold"},
+			{"Autofire", "Toggle"},
 			{"Improved Spirit Flame", "True"},
 			{"Dev", "False"}
 		};
@@ -202,7 +202,6 @@ public static class RandomizerSettings
 	public enum GrenadeJumpMode
 	{
 		Manual,
-		FreeBind,
 		Free
 	}
 }
