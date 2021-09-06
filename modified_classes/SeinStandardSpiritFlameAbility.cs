@@ -189,7 +189,6 @@ public class SeinStandardSpiritFlameAbility : CharacterState, ISeinReceiver
 
 		if (this.m_improvedShotCombo.ProcessBuffer() && !this.LockShootingSpiritFlame)
 		{
-			Randomizer.log("SpiritFlame.Used");
 			SpiritFlame currentSpiritFlame = this.CurrentSpiritFlame;
 			this.m_sein.Abilities.SpiritFlame.ThrowSpiritFlames(currentSpiritFlame);
 		}
