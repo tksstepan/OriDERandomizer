@@ -157,10 +157,28 @@ public class RandomizerBootstrap
 		sceneRoot.transform.FindChild("mediumExpOrb").GetComponent<DestroyOnRestoreCheckpoint>().enabled = false;
 	}
 
+	private static void BootstrapValleyThreeBirdArea(SceneRoot sceneRoot)
+	{
+		if (Randomizer.OpenWorld)
+		{
+			Transform leverSetup = sceneRoot.transform.FindChild("*leverSetup");
+
+			// Just disconnect the lever from the door; leave the lever itself interact for Ori to play with if they want
+			ActionLeverSystem leverSystem = leverSetup.GetComponentInChildren<ActionLeverSystem>();
+			leverSystem.LeverLeftAction = null;
+			leverSystem.LeverRightAction = null;
+
+			// Force the door open
+			LegacyTranslateAnimator doorAnimator = transform.FindChild("platformBranchSetup").FindChild("sunkenGladesStompTree").GetComponent<LegacyTranslateAnimator>();
+			doorAnimator.TimeOffset = doorAnimator.TimeOfLastCurvePoint;
+		}
+	}
+
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrap = new Dictionary<string, Action<SceneRoot>>
 	{
 		{ "titleScreenSwallowsNest", new Action<SceneRoot>(RandomizerBootstrap.BootstrapTitleScreen) },
 		{ "northMangroveFallsLanternIntro", new Action<SceneRoot>(RandomizerBootstrap.BootstrapBlackrootLanternRoom) },
 		{ "spiritTreeRefined", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSpiritTree) },
+		{ "westGladesFireflyAreaA", new Action<SceneRoot>(RandomizerBootstrap.BootstrapValleyThreeBirdArea) }
 	};
 }

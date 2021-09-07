@@ -2020,17 +2020,6 @@ public static class RandomizerDataMaps
 	// Token: 0x06003888 RID: 14472
 	public static void LoadValleyData()
 	{
-		Randomizer.ValleyLeverDoorData = new ArrayList();
-		Randomizer.ValleyLeverDoorData.Add(new MoonGuid(-884657106, 90547188, 173222194, -1709968588));
-		ArrayList valleyLeverDoorData = Randomizer.ValleyLeverDoorData;
-		object[] array = new object[2];
-		array[0] = new MoonGuid(1278157257, 1311870159, -50118503, 598423583);
-		int num = 1;
-		byte[] array2 = new byte[256];
-		array2[3] = 64;
-		array2[4] = 1;
-		array[num] = array2;
-		valleyLeverDoorData.Add(array);
 		Randomizer.ValleyStompDoorData = new ArrayList();
 		Randomizer.ValleyStompDoorData.Add(new MoonGuid(-1888082719, 29676808, 980404922, 2060774650));
 		Randomizer.ValleyStompDoorData.Add(new object[]

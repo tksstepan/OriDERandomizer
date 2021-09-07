@@ -30,7 +30,6 @@ public class NewGameAction : ActionMethod
 		if (Randomizer.OpenWorld)
 		{
 			Game.Checkpoint.SaveGameData.LoadCustomData(Randomizer.GladesData);
-			Game.Checkpoint.SaveGameData.LoadCustomData(Randomizer.ValleyLeverDoorData);
 			Game.Checkpoint.SaveGameData.LoadCustomData(Randomizer.ValleyStompDoorData);
 		}
 		GameController.Instance.RequireInitialValues = true;

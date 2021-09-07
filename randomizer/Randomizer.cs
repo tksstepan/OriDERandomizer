@@ -1444,8 +1444,6 @@ public static class Randomizer
 
     public static ArrayList ValleyStompDoorData;
 
-    public static ArrayList ValleyLeverDoorData;
-
     public static string GrenadeZone;
     // welcome to the...
     public static string StompZone;
