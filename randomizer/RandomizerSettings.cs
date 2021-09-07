@@ -36,6 +36,7 @@ public static class RandomizerSettings
 			{"Slow Climb Vault", "True"},
 			{"Autofire", "Toggle"},
 			{"Improved Spirit Flame", "True"},
+			{"Blackroot Orb Room Climb Assist", "True"},
 			{"Dev", "False"}
 		};
 		if (!File.Exists("RandomizerSettings.txt"))
@@ -71,7 +72,7 @@ public static class RandomizerSettings
 				var nagList = new List<string>();
 				foreach(string writeKey in writeList) {
 					writeText += Environment.NewLine + writeKey+ ": " + DefaultSettings[writeKey];
-					if(writeKey != "Disco Sense" && writeKey != "Cursor Lock") // added these in 3.4, don't nag
+					if(writeKey != "Disco Sense" && writeKey != "Cursor Lock" && writeKey != "Blackroot Orb Room Climb Assist") // added these in 3.4, don't nag
 						nagList.Add(writeKey);
 				}
 				if(nagList.Count > 0) {
@@ -140,6 +141,9 @@ public static class RandomizerSettings
 				case "Improved Spirit Flame":
 					RandomizerSettings.ImprovedSpiritFlame = (value.Trim().ToLower() == "true");
 					break;
+				case "Blackroot Orb Room Climb Assist":
+					RandomizerSettings.BlackrootOrbRoomClimbAssist = (value.Trim().ToLower() == "true");
+					break;
 			}
 		} catch(Exception) {
 			ParseSettingLine(setting, DefaultSettings[setting]);
@@ -194,6 +198,7 @@ public static class RandomizerSettings
 	public static bool SlowClimbVault;
 	public static RandomizerSettings.AutofireMode Autofire;
 	public static bool ImprovedSpiritFlame;
+	public static bool BlackrootOrbRoomClimbAssist;
 
 	public static Dictionary<string, string> DefaultSettings;
 

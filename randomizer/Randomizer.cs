@@ -1369,6 +1369,39 @@ public static class Randomizer
             set(locID, current + (1 << offset));
     }
 
+    public static void ApplyGrabForgiveness()
+    {
+        if (!RandomizerSettings.BlackrootOrbRoomClimbAssist)
+        {
+            Randomizer.GrabForgivenessFrames = 0f;
+            return;
+        }
+
+        // XP orb jump in Blackroot lantern room, right side (initial crappy slope)
+        if (new Rect(152.26f, -298.6f, 0.02f, 0.7f).Contains(Characters.Sein.PlatformBehaviour.PlatformMovement.Position2D))
+        {
+            Randomizer.GrabForgivenessFrames = 4f;
+            return;
+        }
+
+        // XP orb jump in Blackroot lantern room, left side (*extra* crappy slope)
+        if (new Rect(147.2f, -296.5f, 0.1f, 1f).Contains(Characters.Sein.PlatformBehaviour.PlatformMovement.Position2D))
+        {
+            Randomizer.GrabForgivenessFrames = 8f;
+            return;
+        }
+
+        Randomizer.GrabForgivenessFrames = 0f;
+    }
+
+    public static bool DoesGrabForgivenessExpire(float time)
+    {
+        float scaledTime = Mathf.Round(time * 120f);
+        bool expires = Randomizer.GrabForgivenessFrames < scaledTime;
+        Randomizer.GrabForgivenessFrames -= Mathf.Min(Randomizer.GrabForgivenessFrames, Mathf.Round(time * 120f));
+        return expires;
+    }
+
     public static Dictionary<int, RandomizerAction> Table;
     public static bool GiveAbility;
     public static double GridFactor;
@@ -1493,6 +1526,8 @@ public static class Randomizer
     public static bool AllowOrbWarps;
     
     public static bool GrenadeJumpQueued;
+
+    public static float GrabForgivenessFrames;
 
     public static HashSet<int> CutscenePickupLocs = new HashSet<int> {-1639664, -199724, -919624, -959848, 1720288, 2160192, 2640380, 3040304, 5480952};
 }

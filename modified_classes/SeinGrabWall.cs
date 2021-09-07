@@ -159,8 +159,11 @@ public class SeinGrabWall : CharacterState, ISeinReceiver
 		}
 		if (!this.CanGrab)
 		{
-			this.IsGrabbing = false;
-			return;
+			if (Randomizer.DoesGrabForgivenessExpire(Time.deltaTime))
+			{
+				this.IsGrabbing = false;
+				return;
+			}
 		}
 		if (!this.WantToGrab)
 		{
@@ -227,6 +230,7 @@ public class SeinGrabWall : CharacterState, ISeinReceiver
 			}
 			if (this.CanGrab)
 			{
+				Randomizer.ApplyGrabForgiveness();
 				this.IsGrabbing = true;
 			}
 		}
