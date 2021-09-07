@@ -152,6 +152,7 @@ public class MapStone : SaveSerialize
 						this.CurrentState = MapStone.State.Activated;
 						Randomizer.getMapStone();
 						RandomizerTrackedDataManager.SetMapstone(this.WorldArea.AreaIdentifier);
+						GameWorld.Instance.CurrentArea.DirtyCompletionAmount();
 						return;
 					}
 					UI.SeinUI.ShakeMapstones();

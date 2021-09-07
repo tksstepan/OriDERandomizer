@@ -13,6 +13,7 @@ public class SetSeinWorldStateAction : ActionMethod
 	// Token: 0x06003592 RID: 13714
 	public override void Perform(IContext context)
 	{
+		GameWorld.Instance.CurrentArea.DirtyCompletionAmount();
 		switch (this.State)
 		{
 		case WorldState.WaterPurified:
