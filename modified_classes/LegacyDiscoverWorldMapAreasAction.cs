@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Game;
 using UnityEngine;
 
 [Category("World Map")]
@@ -7,10 +8,28 @@ public class LegacyDiscoverWorldMapAreasAction : ActionMethod
 {
 	public override void Perform(IContext context)
 	{
+		base.StartCoroutine(this.ShowWorldMap());
 	}
 
 	public IEnumerator ShowWorldMap()
 	{
+		yield return new WaitForFixedUpdate();
+		GameMapUI.Instance.SetRevealingMap();
+		RuntimeGameWorldArea currentArea = World.CurrentArea;
+		if (currentArea != null)
+		{
+			currentArea.DiscoverAllAreas();
+			AreaMapCanvas canvas = AreaMapUI.Instance.FindCanvas(currentArea.Area);
+			canvas.UpdateAreaMaskTextureB();
+			AreaMapUI.Instance.Navigation.UpdateScrollLimits();
+			GameMapUI.Instance.SetNormal();
+			AreaMapUI.Instance.IconManager.ShowAreaIcons();
+			base.StartCoroutine(this.ReleaseTexture(canvas));
+		}
+		if (this.OnClosedAction)
+		{
+			this.OnClosedAction.Perform(null);
+		}
 		yield break;
 	}
 
