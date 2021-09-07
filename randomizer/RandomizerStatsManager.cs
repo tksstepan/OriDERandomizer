@@ -302,6 +302,14 @@ public static class RandomizerStatsManager {
 			}
 		}
 	}
+
+	public static int GetObtainedPickupCount(string areaName)
+	{
+		if (!Game.Characters.Sein?.Inventory)
+			return 0;
+		return get(Pickups + Offsets[areaName]);
+	}
+
 	public static void IncPickup(int loc) {
         if(Randomizer.HaveCoord(loc))
         	return;
