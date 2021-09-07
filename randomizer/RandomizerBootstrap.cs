@@ -154,6 +154,8 @@ public class RandomizerBootstrap
 
 	private static void BootstrapSpiritTree(SceneRoot sceneRoot)
 	{
+		// Unlike most other pickups, which are permanent placeholders that spawn an object with a DestroyOnRestoreCheckpoint component,
+		// this one is *just* an object with a DestroyOnRestoreCheckpoint component. Disable that to prevent its untimely demise.
 		sceneRoot.transform.FindChild("mediumExpOrb").GetComponent<DestroyOnRestoreCheckpoint>().enabled = false;
 	}
 
