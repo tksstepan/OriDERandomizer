@@ -123,7 +123,17 @@ public class RuntimeGameWorldArea
 
 	public void UpdateCompletionAmount()
 	{
-		this.m_completionAmount = (float)RandomizerStatsManager.GetObtainedPickupCount(this.Area.AreaIdentifier) / (float)RandomizerStatsManager.PickupCounts[this.Area.AreaIdentifier];
+		int total = RandomizerStatsManager.PickupCounts[this.Area.AreaIdentifier];
+		int collected = RandomizerStatsManager.GetObtainedPickupCount(this.Area.AreaIdentifier);
+
+		if (RandomizerTrackedDataManager.Pedistals.ContainsKey(this.Area.AreaIdentifier))
+		{
+			total++;
+			if (RandomizerTrackedDataManager.GetMapstone(RandomizerTrackedDataManager.Pedistals[this.Area.AreaIdentifier]))
+				collected++;
+		}
+
+		this.m_completionAmount = (float)collected / (float)total;
 	}
 
 	public void VisitMapAreaAtPosition(Vector3 worldPosition)
