@@ -171,7 +171,7 @@ public class RandomizerBootstrap
 			leverSystem.LeverRightAction = null;
 
 			// Force the door open
-			LegacyTranslateAnimator doorAnimator = transform.FindChild("platformBranchSetup").FindChild("sunkenGladesStompTree").GetComponent<LegacyTranslateAnimator>();
+			LegacyTranslateAnimator doorAnimator = leverSetup.FindChild("platformBranchSetup").FindChild("sunkenGladesStompTree").GetComponent<LegacyTranslateAnimator>();
 			doorAnimator.TimeOffset = doorAnimator.TimeOfLastCurvePoint;
 		}
 	}
