@@ -27,6 +27,7 @@ public static class RandomizerSettings
 			{"Cold Color", "0, 255, 255, 255"},
 			{"Hot Color", "255, 85, 0, 255"},
 			{"Invert Swim", "False"},
+			{"Invert Climb", "False"},
 			{"Disco Sense", "False"},
 			{"Cursor Lock", "False"},
 			{"Grenade Jump Mode", "Free"},
@@ -109,6 +110,9 @@ public static class RandomizerSettings
 				case "Invert Swim":
 					RandomizerSettings.InvertSwim = (value.Trim().ToLower() == "true");
 					break;
+				case "Invert Climb":
+					RandomizerSettings.InvertClimb = (value.Trim().ToLower() == "true");
+					break;
 				case "Dev":
 					RandomizerSettings.Dev = (value.Trim().ToLower() == "true");
 					break;
@@ -179,6 +183,7 @@ public static class RandomizerSettings
 	public static Color ColdColor;
 	public static Color HotColor;
 	public static bool InvertSwim;
+	public static bool InvertClimb;
 	public static bool Dev;
 	public static bool DiscoSense;
 	public static bool CursorLock;
