@@ -491,6 +491,7 @@ public class GameController : SaveSerialize, ISuspendable
 	{
 		if (Scenes.Manager)
 		{
+			RandomizerBootstrap.FixedUpdate();
 			Scenes.Manager.CheckForScenesFinishedLoading();
 		}
 		if (!GameController.FreezeFixedUpdate)

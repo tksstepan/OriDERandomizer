@@ -10,10 +10,31 @@ public class RandomizerBootstrap
 		Events.Scheduler.OnSceneRootPreEnabled.Add(new Action<SceneRoot>(RandomizerBootstrap.BootstrapScene));
 	}
 
+	public static void FixedUpdate()
+	{
+		for (int i = 0; i < RandomizerBootstrap.s_bootstrappedScenes.Count; i++)
+		{
+			if (Core.Scenes.Manager.GetSceneManagerScene(RandomizerBootstrap.s_bootstrappedScenes[i]) != null)
+			{
+				i++;
+			}
+			else
+			{
+				RandomizerBootstrap.s_bootstrappedScenes.RemoveAt(i);
+			}
+		}
+	}
+
 	private static void BootstrapScene(SceneRoot sceneRoot)
 	{
+		if (RandomizerBootstrap.s_bootstrappedScenes.Contains(sceneRoot.name))
+		{
+			return;
+		}
+
 		if (RandomizerBootstrap.s_bootstrap.ContainsKey(sceneRoot.name))
 		{
+			RandomizerBootstrap.s_bootstrappedScenes.Add(sceneRoot.name);
 			RandomizerBootstrap.s_bootstrap[sceneRoot.name].Invoke(sceneRoot);
 		}
 	}
@@ -31,7 +52,7 @@ public class RandomizerBootstrap
 
 		if (owner is SaveSerialize)
 		{
-			((SaveSerialize)owner).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+			(owner as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
 		}
 	}
 
@@ -200,4 +221,6 @@ public class RandomizerBootstrap
 		{ "titleScreenSwallowsNest", new Action<SceneRoot>(RandomizerBootstrap.BootstrapTitleScreen) },
 		{ "westGladesFireflyAreaA", new Action<SceneRoot>(RandomizerBootstrap.BootstrapValleyThreeBirdArea) }
 	};
+
+	private static List<string> s_bootstrappedScenes = new List<string>();
 }
