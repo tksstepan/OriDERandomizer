@@ -176,11 +176,28 @@ public class RandomizerBootstrap
 		}
 	}
 
+	private static void BootstrapThornfeltSwampMain(SceneRoot sceneRoot)
+	{
+		// force the music to start up, dang it
+		ActionSequence musicSequence = sceneRoot.transform.FindChild("musicZones").FindChild("musicActivation").GetComponent<ActionSequence>();
+		OnSceneStartRunAction runAction = musicSequence.gameObject.AddComponent<OnSceneStartRunAction>();
+		runAction.ActionToRun = musicSequence;
+		runAction.TriggerOnce = true;
+		runAction.MoonGuid = new MoonGuid(new System.Guid("216b7973-bc11-4170-9975-1ca558737f10"));
+		(runAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+
+		// patch the post-Ginso cutscene to fix softlock when Sein's dialogue is auto-skipped
+		ActionSequence seinAnimationSequence = sceneRoot.transform.FindChild("*objectiveSetup").FindChild("objectiveSetupTrigger").FindChild("seinSpriteAction").GetComponent<ActionSequence>();
+		WaitAction waitAction = seinAnimationSequence.Actions[1] as WaitAction;
+		waitAction.Duration = 5.0f;
+	}
+
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrap = new Dictionary<string, Action<SceneRoot>>
 	{
-		{ "titleScreenSwallowsNest", new Action<SceneRoot>(RandomizerBootstrap.BootstrapTitleScreen) },
 		{ "northMangroveFallsLanternIntro", new Action<SceneRoot>(RandomizerBootstrap.BootstrapBlackrootLanternRoom) },
 		{ "spiritTreeRefined", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSpiritTree) },
+		{ "thornfeltSwampActTwoStart", new Action<SceneRoot>(RandomizerBootstrap.BootstrapThornfeltSwampMain) },
+		{ "titleScreenSwallowsNest", new Action<SceneRoot>(RandomizerBootstrap.BootstrapTitleScreen) },
 		{ "westGladesFireflyAreaA", new Action<SceneRoot>(RandomizerBootstrap.BootstrapValleyThreeBirdArea) }
 	};
 }
