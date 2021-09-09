@@ -673,7 +673,7 @@ public class CleverMenuItemSelectionManager : MonoBehaviour, ISuspendable
 
 	private bool m_isHighlightVisible = true;
 
-	public bool m_delayNavigation;
+	private bool m_delayNavigation;
 
 	private bool m_isPauseScreen;
 
