@@ -105,7 +105,6 @@ public static class Randomizer
             Randomizer.SpawnWith = "";
             Randomizer.IgnoreEnemyExp = false;
             Randomizer.RelicCountOverride = false;
-            Randomizer.FixCutscenePickup = -1;
             Randomizer.AllowOrbWarps = false;
             try {
                 if(File.Exists("randomizer.dat")) {
@@ -822,7 +821,6 @@ public static class Randomizer
 
     public static void OnDeath()
     {
-        FixCutscenePickup = -1;
         RandomizerBonusSkill.OnDeath();
         RandomizerTrackedDataManager.UpdateBitfields();
         RandomizerStatsManager.OnDeath();
@@ -1118,9 +1116,6 @@ public static class Randomizer
                                 return;
                             }
                         }
-                        else if(FixCutscenePickup > 0) {
-                            RandomizerSwitch.SilentAbility(FixCutscenePickup);
-                        } 
                         else {
                             Randomizer.LockedCount = 0;
                         }
@@ -1520,8 +1515,6 @@ public static class Randomizer
     public static int CanWarp;
 
     public static bool GoalModeFinish;
-
-    public static int FixCutscenePickup;
 
     public static bool AllowOrbWarps;
     
