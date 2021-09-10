@@ -12,7 +12,7 @@ public class RandomizerBootstrap
 
 	public static void FixedUpdate()
 	{
-		for (int i = 0; i < RandomizerBootstrap.s_bootstrappedScenes.Count; i++)
+		for (int i = 0; i < RandomizerBootstrap.s_bootstrappedScenes.Count;)
 		{
 			if (Core.Scenes.Manager.GetSceneManagerScene(RandomizerBootstrap.s_bootstrappedScenes[i]) != null)
 			{
@@ -213,8 +213,22 @@ public class RandomizerBootstrap
 		waitAction.Duration = 5.0f;
 	}
 
+	private static void BootstrapMoonGrottoBridge(SceneRoot sceneRoot)
+	{
+		if (RandomizerSettings.FixGrottoBridgeDrop)
+		{
+			// add an ActionSequenceSerializer to the bridge so that the sequence continues and activates the final colliders even after glitching it
+			GameObject bridgeSequence = sceneRoot.transform.FindChild("*gumoBridgeSetup").FindChild("group").FindChild("action").gameObject;
+			ActionSequenceSerializer serializer = bridgeSequence.AddComponent<ActionSequenceSerializer>();
+			serializer.OnValidate();
+			serializer.MoonGuid = new MoonGuid(new System.Guid("511e2b03-3146-461a-a61c-57c1dea2fb32"));
+			(serializer as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+		}
+	}
+
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrap = new Dictionary<string, Action<SceneRoot>>
 	{
+		{ "moonGrottoRopeBridge", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoBridge) },
 		{ "northMangroveFallsLanternIntro", new Action<SceneRoot>(RandomizerBootstrap.BootstrapBlackrootLanternRoom) },
 		{ "spiritTreeRefined", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSpiritTree) },
 		{ "thornfeltSwampActTwoStart", new Action<SceneRoot>(RandomizerBootstrap.BootstrapThornfeltSwampMain) },
