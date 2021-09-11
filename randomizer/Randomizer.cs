@@ -218,6 +218,7 @@ public static class Randomizer
 
     public static void InitializeOnce()
     {
+        RandomizerLocationManager.Initialize();
         RandomizerUI.Initialize();
         RandomizerBootstrap.Initialize();
     }
@@ -416,7 +417,6 @@ public static class Randomizer
             {
                 RandomizerColorManager.UpdateColors();
             }
-            Randomizer.UpdateHoruCutsceneStatus();
             if (get(82) > 0 && Items.NightBerry != null)
             {
                 Items.NightBerry.transform.position = new Vector3(-910f, -300f);
@@ -928,31 +928,6 @@ public static class Randomizer
         return num;
     }
 
-    // Token: 0x0600381D RID: 14365
-    public static void UpdateHoruCutsceneStatus()
-    {
-        if (!Characters.Sein.Controller.CanMove)
-        {
-            if (Randomizer.HoruScene != "")
-            {
-                if (Randomizer.HoruScene != Scenes.Manager.CurrentScene.Scene && Scenes.Manager.CurrentScene.Scene == "mountHoruHubMid")
-                {
-                    Randomizer.getPickup(new Vector3(0f, (float)((int)Randomizer.HoruMap[Randomizer.HoruScene])));
-                }
-                Randomizer.HoruScene = Scenes.Manager.CurrentScene.Scene;
-                return;
-            }
-            if (Scenes.Manager.CurrentScene.Scene.StartsWith("mountHoru"))
-            {
-                Randomizer.HoruScene = Scenes.Manager.CurrentScene.Scene;
-                return;
-            }
-        }
-        else
-        {
-            Randomizer.HoruScene = "";
-        }
-    } 
     public static void PrintImmediately(string text, int seconds, bool mute, bool setMessage, bool devOnly)
     {
         Print(text, seconds, mute, setMessage, devOnly, true);
