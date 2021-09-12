@@ -204,7 +204,7 @@ public class RandomizerBootstrap
 		OnSceneStartRunAction runAction = musicSequence.gameObject.AddComponent<OnSceneStartRunAction>();
 		runAction.ActionToRun = musicSequence;
 		runAction.TriggerOnce = true;
-		runAction.MoonGuid = new MoonGuid(new System.Guid("216b7973-bc11-4170-9975-1ca558737f10"));
+		runAction.MoonGuid = new MoonGuid(560691571, 1097907217, -1524861543, 276788056);
 		(runAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
 
 		// patch the post-Ginso cutscene to fix softlock when Sein's dialogue is auto-skipped
@@ -221,14 +221,100 @@ public class RandomizerBootstrap
 			GameObject bridgeSequence = sceneRoot.transform.FindChild("*gumoBridgeSetup").FindChild("group").FindChild("action").gameObject;
 			ActionSequenceSerializer serializer = bridgeSequence.AddComponent<ActionSequenceSerializer>();
 			serializer.OnValidate();
-			serializer.MoonGuid = new MoonGuid(new System.Guid("511e2b03-3146-461a-a61c-57c1dea2fb32"));
+			serializer.MoonGuid = new MoonGuid(1360931587, 1176121670, -1051255642, 855352030);
 			(serializer as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
 		}
+	}
+
+	private static void BootstrapMountHoruHub(SceneRoot sceneRoot)
+	{
+		// add randomized pickup actions for each end of room cutscene
+		Transform lavaDrainParent = sceneRoot.transform.FindChild("*doorSetups").FindChild("lavaDrainSetups");
+
+		// door1LavaDrain - (L3) mountHoruBreakyPathTop
+		ActionSequence doorSequence = lavaDrainParent.FindChild("*door1LavaDrains").FindChild("*door1LavaDrain").GetComponent<ActionSequence>();
+		RandomizerPickupAction pickupAction = RandomizerLocationManager.AddPickupAction(doorSequence.gameObject, "HoruL3");
+		(pickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+		doorSequence.Actions.Insert(3, pickupAction);
+		ActionSequence.Rename(doorSequence.Actions);
+
+		// door2LavaDrain - (R1) mountHoruStomperSystemsR
+		doorSequence = lavaDrainParent.FindChild("*door2LavaDrains").FindChild("*door2LavaDrain").GetComponent<ActionSequence>();
+		pickupAction = RandomizerLocationManager.AddPickupAction(doorSequence.gameObject, "HoruR1");
+		(pickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+		doorSequence.Actions.Insert(3, pickupAction);
+		ActionSequence.Rename(doorSequence.Actions);
+
+		// door3LavaDrain - (R2) mountHoruProjectileCorridor
+		doorSequence = lavaDrainParent.FindChild("*door3LavaDrains").FindChild("*door3LavaDrain").GetComponent<ActionSequence>();
+		pickupAction = RandomizerLocationManager.AddPickupAction(doorSequence.gameObject, "HoruR2");
+		(pickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+		doorSequence.Actions.Insert(3, pickupAction);
+		ActionSequence.Rename(doorSequence.Actions);
+
+		// door5LavaDrain - (R3) mountHoruMovingPlatform
+		doorSequence = lavaDrainParent.FindChild("*door5LavaDrains").FindChild("*door5LavaDrain").GetComponent<ActionSequence>();
+		pickupAction = RandomizerLocationManager.AddPickupAction(doorSequence.gameObject, "HoruR3");
+		(pickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+		doorSequence.Actions.Insert(3, pickupAction);
+		ActionSequence.Rename(doorSequence.Actions);
+
+		// door7LavaDrain - (L2) mountHoruBigPushBlock
+		doorSequence = lavaDrainParent.FindChild("*door7LavaDrains").FindChild("*door7LavaDrain").GetComponent<ActionSequence>();
+		pickupAction = RandomizerLocationManager.AddPickupAction(doorSequence.gameObject, "HoruL2");
+		(pickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+		doorSequence.Actions.Insert(3, pickupAction);
+		ActionSequence.Rename(doorSequence.Actions);
+
+		// door8LavaDrain - (L1) mountHoruBlockableLasers
+		doorSequence = lavaDrainParent.FindChild("*door8LavaDrains").FindChild("*door8LavaDrain").GetComponent<ActionSequence>();
+		pickupAction = RandomizerLocationManager.AddPickupAction(doorSequence.gameObject, "HoruL1");
+		(pickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+		doorSequence.Actions.Insert(3, pickupAction);
+		ActionSequence.Rename(doorSequence.Actions);
+
+		// special cases for L4/R4
+		RandomizerPickupAction leftPickupAction = RandomizerLocationManager.AddPickupAction(lavaDrainParent.gameObject, "HoruL4", "giveLeftPickup");
+		(leftPickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+
+		RandomizerPickupAction rightPickupAction = RandomizerLocationManager.AddPickupAction(lavaDrainParent.gameObject, "HoruR4", "giveRightPickup");
+		(rightPickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+
+		// door4LavaDrain - L4/R4, whichever comes first
+		doorSequence = lavaDrainParent.FindChild("*door4LavaDrains").FindChild("*door4LavaDrain").GetComponent<ActionSequence>();
+		GameObject obj = new GameObject("pickupAction");
+		obj.transform.parent = doorSequence.transform;
+
+		RunActionCondition conditionPickupAction = obj.AddComponent<RunActionCondition>();
+		conditionPickupAction.MoonGuid = new MoonGuid(-1261986975, 1336041250, 1663544246, -817715174);
+		(conditionPickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+		conditionPickupAction.Action = leftPickupAction;
+		conditionPickupAction.ElseAction = rightPickupAction;
+		conditionPickupAction.Condition = (doorSequence.Actions[2] as RunActionCondition).Condition;
+
+		doorSequence.Actions.Insert(3, conditionPickupAction);
+		ActionSequence.Rename(doorSequence.Actions);
+
+		// door6LavaDrain - L4/R4, whichever comes second
+		doorSequence = lavaDrainParent.FindChild("*door6LavaDrains").FindChild("*door6LavaDrain").GetComponent<ActionSequence>();
+		obj = new GameObject("pickupAction");
+		obj.transform.parent = doorSequence.transform;
+
+		conditionPickupAction = obj.AddComponent<RunActionCondition>();
+		conditionPickupAction.MoonGuid = new MoonGuid(-300318401, 1327879929, 1536957364, -1500614911);
+		(conditionPickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+		conditionPickupAction.Action = leftPickupAction;
+		conditionPickupAction.ElseAction = rightPickupAction;
+		conditionPickupAction.Condition = (doorSequence.Actions[2] as RunActionCondition).Condition;
+
+		doorSequence.Actions.Insert(3, conditionPickupAction);
+		ActionSequence.Rename(doorSequence.Actions);
 	}
 
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrap = new Dictionary<string, Action<SceneRoot>>
 	{
 		{ "moonGrottoRopeBridge", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoBridge) },
+		{ "mountHoruHubMid", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMountHoruHub) },
 		{ "northMangroveFallsLanternIntro", new Action<SceneRoot>(RandomizerBootstrap.BootstrapBlackrootLanternRoom) },
 		{ "spiritTreeRefined", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSpiritTree) },
 		{ "thornfeltSwampActTwoStart", new Action<SceneRoot>(RandomizerBootstrap.BootstrapThornfeltSwampMain) },
