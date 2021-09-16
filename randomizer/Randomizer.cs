@@ -72,16 +72,6 @@ public static class Randomizer
             Randomizer.HotColdMaps = new List<int>();
             Randomizer.HotColdMapsWithFrags = new List<int>();
             int HotColdSaveId = 2000;
-            Randomizer.HoruScene = "";
-            Randomizer.HoruMap = new Hashtable();
-            Randomizer.HoruMap["mountHoruStomperSystemsR"] = 2640380;
-            Randomizer.HoruMap["mountHoruProjectileCorridor"] = 1720288;
-            Randomizer.HoruMap["mountHoruMovingPlatform"] = 3040304;
-            Randomizer.HoruMap["mountHoruLaserTurretsR"] = 2160192;
-            Randomizer.HoruMap["mountHoruBlockableLasers"] = -919624;
-            Randomizer.HoruMap["mountHoruBigPushBlock"] = -199724;
-            Randomizer.HoruMap["mountHoruBreakyPathTop"] = -1639664;
-            Randomizer.HoruMap["mountHoruFallingBlocks"] = -959848;
             Randomizer.OpenMode = true;
             Randomizer.OpenWorld = false;
             RandomizerDataMaps.LoadGladesData();
@@ -469,7 +459,7 @@ public static class Randomizer
             } else if (Randomizer.Returning)
             {
                 Characters.Sein.Position = new Vector3(189f, -215f);
-                if (Scenes.Manager.CurrentScene.Scene == "sunkenGladesRunaway")
+                if (Scenes.Manager.CurrentScene?.Scene == "sunkenGladesRunaway")
                 {
                     Randomizer.Returning = false;
                 }
@@ -494,7 +484,7 @@ public static class Randomizer
                 RandomizerStatsManager.ShowStats(10);
                 if(BingoController.Active)
                     Randomizer.log("Current bingo state: \n"+BingoController.GetJson());
-            return;
+                return;
             }
             if (RandomizerRebinding.ListTrees.IsPressed())
             {
@@ -1412,10 +1402,6 @@ public static class Randomizer
     public static ArrayList ForlornData;
     public static ArrayList HoruData;
     public static bool OpenMode;
-    public static string HoruScene;
-
-    // Token: 0x04003301 RID: 13057
-    public static Hashtable HoruMap;
 
     public static long LastTick;
 
@@ -1496,6 +1482,4 @@ public static class Randomizer
     public static bool GrenadeJumpQueued;
 
     public static float GrabForgivenessFrames;
-
-    public static HashSet<int> CutscenePickupLocs = new HashSet<int> {-1639664, -199724, -919624, -959848, 1720288, 2160192, 2640380, 3040304, 5480952};
 }

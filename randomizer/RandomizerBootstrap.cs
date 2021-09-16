@@ -303,8 +303,8 @@ public class RandomizerBootstrap
 		conditionPickupAction = obj.AddComponent<RunActionCondition>();
 		conditionPickupAction.MoonGuid = new MoonGuid(-300318401, 1327879929, 1536957364, -1500614911);
 		(conditionPickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
-		conditionPickupAction.Action = leftPickupAction;
-		conditionPickupAction.ElseAction = rightPickupAction;
+		conditionPickupAction.Action = rightPickupAction;
+		conditionPickupAction.ElseAction = leftPickupAction;
 		conditionPickupAction.Condition = (doorSequence.Actions[2] as RunActionCondition).Condition;
 
 		doorSequence.Actions.Insert(3, conditionPickupAction);
