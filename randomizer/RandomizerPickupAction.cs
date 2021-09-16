@@ -25,7 +25,6 @@ public class RandomizerPickupAction : ActionMethod
 		if (!this.Granted)
 		{
 			RandomizerLocationManager.GivePickup(this.MoonGuid);
-			Randomizer.printInfo("Pickup was granted: " + this.LocationName);
 			this.Granted = true;
 		}
 	}
