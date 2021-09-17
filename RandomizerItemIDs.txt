@@ -121,6 +121,9 @@
 258 - Remove Triple Jump
 259 - Remove Ultra Defense
 
+800 - Open World
+801 - Closed Dungeons
+
 900 - Wall Jump Tree Prog
 901 - Charge Flame Tree Prog
 902 - Double Jump Tree Prog

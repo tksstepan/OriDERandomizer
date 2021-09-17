@@ -96,6 +96,7 @@ public static class Randomizer
             Randomizer.IgnoreEnemyExp = false;
             Randomizer.RelicCountOverride = false;
             Randomizer.AllowOrbWarps = false;
+            Randomizer.RandomizedFirstEnergy = false;
             try {
                 if(File.Exists("randomizer.dat")) {
                     List<String> allLines = File.ReadAllLines("randomizer.dat").ToList();
@@ -1050,19 +1051,10 @@ public static class Randomizer
                 }
 
                 if(CreditsActive && !RandomizerCreditsManager.CreditsDone)
-                        RandomizerCreditsManager.Tick();
+                    RandomizerCreditsManager.Tick();
 
                 if(Characters.Sein)
                 {
-                    if(JustSpawned && SpawnWith != "" && Characters.Sein.Inventory) {
-                        JustSpawned = false;
-                        RandomizerAction spawnItem;
-                        if(Randomizer.StringKeyPickupTypes.Contains(SpawnWith.Substring(0, 2)))
-                            spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), SpawnWith.Substring(2));
-                        else
-                            spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), int.Parse(SpawnWith.Substring(2)));
-                        RandomizerSwitch.GivePickup(spawnItem, 2, true);
-                    }
                     if(!Characters.Sein.IsSuspended && Scenes.Manager.CurrentScene != null)
                     {
                         if(GoalModeFinish && RandomizerSyncManager.NetworkFree && Randomizer.canFinalEscape(false))
@@ -1305,6 +1297,10 @@ public static class Randomizer
             {
                 Randomizer.AllowOrbWarps = true;
             }
+            if (flag == "randomizedfirstenergy")
+            {
+                Randomizer.RandomizedFirstEnergy = true;
+            }
         }
         return doBingo;
 
@@ -1385,6 +1381,56 @@ public static class Randomizer
         bool expires = Randomizer.GrabForgivenessFrames < scaledTime;
         Randomizer.GrabForgivenessFrames -= Mathf.Min(Randomizer.GrabForgivenessFrames, Mathf.Round(time * 120f));
         return expires;
+    }
+
+    public static void SetupNewGame()
+    {
+        // start everyone with 1 energy on all difficulties if "RandomizedFirstEnergy" flag set
+        if (Randomizer.RandomizedFirstEnergy)
+        {
+            Characters.Sein.Energy.Max += 1f;
+            Characters.Sein.Energy.SetCurrent(Characters.Sein.Energy.Max);
+        }
+
+        // relaxed difficulty players start with +1 health and +1 energy, plus the first ability in each tree
+        if (DifficultyController.Instance.Difficulty == DifficultyMode.Easy)
+        {
+            Characters.Sein.Mortality.Health.MaxHealth += 4;
+            Characters.Sein.Mortality.Health.SetAmount(Characters.Sein.Mortality.Health.MaxHealth);
+
+            Characters.Sein.Energy.Max += 1f;
+            Characters.Sein.Energy.SetCurrent(Characters.Sein.Energy.Max);
+
+            Characters.Sein.PlayerAbilities.Rekindle.HasAbility = true;
+            Characters.Sein.PlayerAbilities.Magnet.HasAbility = true;
+            Characters.Sein.PlayerAbilities.QuickFlame.HasAbility = true;
+        }
+
+        // flag this save file for OpenWorld/ClosedDungeons flags
+        if (Randomizer.OpenWorld)
+        {
+            set(800, 1);
+        }
+
+        if (!Randomizer.OpenMode)
+        {
+            set(801, 1);
+        }
+
+        // grant other spawn items determined by the seed
+        if (Randomizer.SpawnWith != "")
+        {
+            RandomizerAction spawnItem;
+            if (Randomizer.StringKeyPickupTypes.Contains(SpawnWith.Substring(0, 2)))
+            {
+                spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), SpawnWith.Substring(2));
+            }
+            else
+            {
+                spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), int.Parse(SpawnWith.Substring(2)));
+            }
+            RandomizerSwitch.GivePickup(spawnItem, 2, true);
+        }
     }
 
     public static Dictionary<int, RandomizerAction> Table;
@@ -1484,8 +1530,6 @@ public static class Randomizer
 
     public static string SpawnWith;
 
-    public static bool JustSpawned;
-
     public static bool DelayedWarp;
 
     public static bool SaveAfterWarp;
@@ -1509,4 +1553,6 @@ public static class Randomizer
     public static float GrabForgivenessFrames;
 
     public static bool IsUsingRandomizerTeleportAnywhere;
+
+    public static bool RandomizedFirstEnergy;
 }
