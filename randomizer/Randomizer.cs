@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using B83.Win32;
 using Core;
 using Game;
 using Sein.World;
@@ -97,9 +98,15 @@ public static class Randomizer
             Randomizer.RelicCountOverride = false;
             Randomizer.AllowOrbWarps = false;
             Randomizer.RandomizedFirstEnergy = false;
+
+            if (Randomizer.SeedFilePath == null)
+            {
+                Randomizer.SeedFilePath = "randomizer.dat";
+            }
+
             try {
-                if(File.Exists("randomizer.dat")) {
-                    List<String> allLines = File.ReadAllLines("randomizer.dat").ToList();
+                if(File.Exists(Randomizer.SeedFilePath)) {
+                    List<String> allLines = File.ReadAllLines(Randomizer.SeedFilePath).ToList();
                     string[] flagLine = allLines[0].Split('|');
                     string s = flagLine[1];
                     string[] flags = flagLine[0].Split(',');
@@ -194,14 +201,16 @@ public static class Randomizer
                         RandomizerClues.FinishClues();
                     }
                 } else {
-                    Randomizer.printInfo("Error: randomizer.dat not found");
+                    Randomizer.printInfo("Error: " + Randomizer.SeedFilePath + " not found");
+                    Randomizer.SeedFilePath = "randomizer.dat";
                 }
             }
             catch(Exception e) {
-                Randomizer.printInfo("Error parsing randomizer.dat:" + e.Message, 300);
-        }
-        RandomizerBonusSkill.Reset();
-    
+                Randomizer.printInfo("Error parsing " + Randomizer.SeedFilePath + ":" + e.Message, 300);
+                Randomizer.SeedFilePath = "randomizer.dat";
+            }
+
+            RandomizerBonusSkill.Reset();
         } catch(Exception e) {
             Randomizer.log("init: " + e.Message);
         }
@@ -212,6 +221,31 @@ public static class Randomizer
         RandomizerLocationManager.Initialize();
         RandomizerUI.Initialize();
         RandomizerBootstrap.Initialize();
+
+        UnityDragAndDropHook.InstallHook();
+        UnityDragAndDropHook.OnDroppedFiles += Randomizer.OnDroppedFiles;
+    }
+
+    public static void OnApplicationQuit()
+    {
+        UnityDragAndDropHook.UninstallHook();
+    }
+
+    public static void OnDroppedFiles(List<string> aFiles, B83.Win32.POINT aPos)
+    {
+        if (aFiles.Count > 1)
+        {
+            return;
+        }
+
+        string filePath = aFiles[0];
+        string fileName = filePath.Substring(filePath.LastIndexOf('\\') + 1);
+        if (fileName.StartsWith("randomizer") && fileName.EndsWith(".dat"))
+        {
+            Randomizer.SeedFilePath = aFiles[0];
+            Randomizer.initialize();
+            Randomizer.showSeedInfo();
+        }
     }
 
     public static void getPickup()
@@ -1555,4 +1589,6 @@ public static class Randomizer
     public static bool IsUsingRandomizerTeleportAnywhere;
 
     public static bool RandomizedFirstEnergy;
+
+    public static string SeedFilePath;
 }

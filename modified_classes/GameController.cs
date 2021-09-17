@@ -408,6 +408,7 @@ public class GameController : SaveSerialize, ISuspendable
 			this.m_logCallbackHandler.FlushEntriesToFile(this.m_logOutputFile);
 		}
 		MoonDebug.OnApplicationQuit();
+		Randomizer.OnApplicationQuit();
 	}
 
 	public void Update()
