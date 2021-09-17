@@ -25,8 +25,8 @@ public partial class SaveGameData
 		}
 		SaveGameData.CurrentSaveFileVersion = reader.ReadInt32();
 		int num = reader.ReadInt32();
-		bool logging = RandomizerSettings.BashDeadzone > 0.9f;
-		bool reading = RandomizerSettings.AbilityMenuOpacity > 0.9f;
+		bool logging = RandomizerSettings.Controls.BashDeadzone > 0.9f;
+		bool reading = RandomizerSettings.QOL.AbilityMenuOpacity > 0.9f;
 		Hashtable DifferentDataMap = new Hashtable();
 		if (reading)
 		{

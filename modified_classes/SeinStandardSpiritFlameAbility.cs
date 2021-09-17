@@ -40,7 +40,7 @@ public class SeinStandardSpiritFlameAbility : CharacterState, ISeinReceiver
 
 	private bool ProcessAutofire(bool pressed, bool held, bool released)
 	{
-		switch (RandomizerSettings.Autofire)
+		switch (RandomizerSettings.Controls.Autofire.Value)
 		{
 		case RandomizerSettings.AutofireMode.Hold:
 			if (pressed)
@@ -127,7 +127,7 @@ public class SeinStandardSpiritFlameAbility : CharacterState, ISeinReceiver
 		{
 			this.ProcessRapidFire(pressed);
 		}
-		else if (RandomizerSettings.ImprovedSpiritFlame)
+		else if (RandomizerSettings.Game.ImprovedSpiritFlame)
 		{
 			this.ProcessImprovedSpiritFlame(pressed);
 		}

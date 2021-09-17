@@ -215,7 +215,7 @@ public class RandomizerBootstrap
 
 	private static void BootstrapMoonGrottoBridge(SceneRoot sceneRoot)
 	{
-		if (RandomizerSettings.FixGrottoBridgeDrop)
+		if (RandomizerSettings.Game.FixGrottoBridgeDrop)
 		{
 			// add an ActionSequenceSerializer to the bridge so that the sequence continues and activates the final colliders even after glitching it
 			GameObject bridgeSequence = sceneRoot.transform.FindChild("*gumoBridgeSetup").FindChild("group").FindChild("action").gameObject;

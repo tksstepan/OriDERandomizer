@@ -190,23 +190,24 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 
 	public void ModifyHorizontalPlatformMovementSettings(HorizontalPlatformMovementSettings settings)
 	{
-		SeinSwimming.State currentState = this.CurrentState;
-		if (currentState == SeinSwimming.State.SwimmingOnSurface)
+		switch (this.CurrentState)
 		{
+		case SeinSwimming.State.OutOfWater:
+			break;
+		case SeinSwimming.State.SwimmingOnSurface:
 			settings.Air.ApplySpeedMultiplier(this.SwimmingOnSurfaceHorizontalSpeed);
 			settings.Ground.ApplySpeedMultiplier(this.SwimmingOnSurfaceHorizontalSpeed);
-			return;
+			break;
+		case SeinSwimming.State.SwimMovingUnderwater:
+		case SeinSwimming.State.SwimIdleUnderwater:
+			settings.Air.Acceleration = 0f;
+			settings.Air.Decceleration = 0f;
+			settings.Air.MaxSpeed = float.PositiveInfinity;
+			settings.Ground.Acceleration = 0f;
+			settings.Ground.Decceleration = 0f;
+			settings.Ground.MaxSpeed = float.PositiveInfinity;
+			break;
 		}
-		if (currentState - SeinSwimming.State.SwimMovingUnderwater > 1)
-		{
-			return;
-		}
-		settings.Air.Acceleration = 0f;
-		settings.Air.Decceleration = 0f;
-		settings.Air.MaxSpeed = float.PositiveInfinity;
-		settings.Ground.Acceleration = 0f;
-		settings.Ground.Decceleration = 0f;
-		settings.Ground.MaxSpeed = float.PositiveInfinity;
 	}
 
 	public void ModifyGravityPlatformMovementSettings(GravityPlatformMovementSettings settings)
@@ -445,7 +446,7 @@ public class SeinSwimming : CharacterState, ISeinReceiver
 			return this.m_sein.Input.Axis;
 		}
 
-		if (RandomizerSettings.SwimmingMouseAim)
+		if (RandomizerSettings.Controls.SwimmingMouseAim)
 		{
 			Vector2 oriScreenPos = UI.Cameras.Current.Camera.WorldToScreenPoint(this.PlatformMovement.Position);
 			Vector2 oriUIPos = UI.Cameras.System.GUICamera.Camera.ScreenToWorldPoint(oriScreenPos);

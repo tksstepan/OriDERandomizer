@@ -106,7 +106,7 @@ public class SeinChargeFlameAbility : CharacterState, ISeinReceiver
 
 		bool pressed = this.ChargeFlameButton.OnPressed && !this.ChargeFlameButton.Used;
 
-		if (RandomizerSettings.Autofire == RandomizerSettings.AutofireMode.Hold && !RandomizerRebinding.SuppressAutofire.Pressed)
+		if (RandomizerSettings.Controls.Autofire == RandomizerSettings.AutofireMode.Hold && !RandomizerRebinding.SuppressAutofire.Pressed)
 		{
 			pressed = false;
 		}

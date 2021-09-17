@@ -311,7 +311,7 @@ public class SeinController : SaveSerialize, IDamageReciever, ISeinReceiver, ISu
 
 		bool grenadeJumpPressed = false;
 		bool grenadeJumpHeld = false;
-		if (RandomizerSettings.GrenadeJump == RandomizerSettings.GrenadeJumpMode.Free)
+		if (RandomizerSettings.Controls.GrenadeJump == RandomizerSettings.GrenadeJumpMode.Free)
 		{
 			grenadeJumpPressed = RandomizerRebinding.FreeGrenadeJump.OnPressed;
 			grenadeJumpHeld = RandomizerRebinding.FreeGrenadeJump.Pressed;

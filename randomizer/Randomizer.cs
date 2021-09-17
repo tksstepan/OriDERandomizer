@@ -396,7 +396,7 @@ public static class Randomizer
             }
             else
             {
-                SkillTreeManager.Instance.NavigationManager.FadeAnimator.SetParentOpacity(RandomizerSettings.AbilityMenuOpacity);
+                SkillTreeManager.Instance.NavigationManager.FadeAnimator.SetParentOpacity(RandomizerSettings.QOL.AbilityMenuOpacity);
             }
         }
         Randomizer.Tick();
@@ -589,7 +589,26 @@ public static class Randomizer
                 Randomizer.printInfo("Return to start is disabled!");
                 return;
             }
-            Randomizer.returnToStart();
+
+            if (RandomizerSettings.Game.UseTeleportAnywhere)
+            {
+                if (Characters.Sein.Active && !Characters.Sein.IsSuspended && Characters.Sein.Controller.CanMove && !UI.MainMenuVisible)
+                {
+                    if (TeleporterController.CanTeleport(null))
+                    {
+                        TeleporterController.Show("sunkenGlades");
+                        Randomizer.IsUsingRandomizerTeleportAnywhere = true;
+                    }
+                    else
+                    {
+                        Randomizer.printInfo("No #Spirit Wells# have been activated yet!");
+                    }
+                }
+            }
+            else
+            {
+                Randomizer.returnToStart();
+            }
             return;
         }
         if (RandomizerRebinding.ShowProgress.IsPressed() && Characters.Sein)
@@ -814,6 +833,12 @@ public static class Randomizer
         RandomizerBonusSkill.OnDeath();
         RandomizerTrackedDataManager.UpdateBitfields();
         RandomizerStatsManager.OnDeath();
+
+        if (Randomizer.IsUsingRandomizerTeleportAnywhere)
+        {
+            TeleporterController.Instance.CancelTeleport();
+            UI.Menu.HideMenuScreen(false);
+        }
     }
 
     public static void OnSave()
@@ -966,8 +991,8 @@ public static class Randomizer
             Randomizer.LastTick = DateTime.Now.Ticks % 10000000L;
             if (Randomizer.LastTick < old_tick)
             {
-                if(RandomizerSettings.CursorLock)
-                      Cursor.lockState = CursorLockMode.Confined;
+                if(RandomizerSettings.QOL.CursorLock)
+                    Cursor.lockState = CursorLockMode.Confined;
                 BingoController.Tick();
                 if(ResetVolume == 1)
                 {
@@ -1331,7 +1356,7 @@ public static class Randomizer
 
     public static void ApplyGrabForgiveness()
     {
-        if (!RandomizerSettings.BlackrootOrbRoomClimbAssist)
+        if (!RandomizerSettings.Game.BlackrootOrbRoomClimbAssist)
         {
             Randomizer.GrabForgivenessFrames = 0f;
             return;
@@ -1482,4 +1507,6 @@ public static class Randomizer
     public static bool GrenadeJumpQueued;
 
     public static float GrabForgivenessFrames;
+
+    public static bool IsUsingRandomizerTeleportAnywhere;
 }

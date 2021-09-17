@@ -154,7 +154,7 @@ public class SeinGrabWall : CharacterState, ISeinReceiver
 			{
 				this.Sein.Abilities.Glide.NeedsRightTriggerReleased = true;
 			}
-			float climbClamberFactor = RandomizerSettings.SlowClimbVault ? 0.225f : 0.65f;
+			float climbClamberFactor = RandomizerSettings.Controls.SlowClimbVault ? 0.225f : 0.65f;
 			this.Sein.Abilities.EdgeClamber.PerformEdgeClamber(climbClamberFactor);
 		}
 		if (!this.CanGrab)
@@ -244,7 +244,7 @@ public class SeinGrabWall : CharacterState, ISeinReceiver
 	{
 		get
 		{
-			return RandomizerSettings.InvertClimb ^ Core.Input.Glide.Pressed;
+			return RandomizerSettings.Controls.InvertClimb ^ Core.Input.Glide.Pressed;
 		}
 	}
 

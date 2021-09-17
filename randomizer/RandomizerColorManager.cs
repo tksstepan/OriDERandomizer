@@ -4,10 +4,8 @@ using System.IO;
 using Game;
 using UnityEngine;
 
-// Token: 0x02000A1C RID: 2588
 public static class RandomizerColorManager
 {
-	// Token: 0x0600384C RID: 14412
 	public static void Initialize()
 	{
 		HotColdTarget = new Vector3(0f, 0f);
@@ -112,7 +110,6 @@ public static class RandomizerColorManager
 		}
 	}
 
-	// Token: 0x0600384D RID: 14413
 	public static void UpdateColors()
 	{
 		try {
@@ -145,16 +142,18 @@ public static class RandomizerColorManager
 				}
 				if (distance >= scale)
 				{
-					if (!(customRotation && RandomizerSettings.DiscoSense))
+					if (!(customRotation && RandomizerSettings.Customization.DiscoSense))
 					{
-						Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = RandomizerSettings.ColdColor;
+						Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = RandomizerSettings.Customization.ColdColor;
 						return;
 					}
 				} else {
-					if (!(customRotation && RandomizerSettings.DiscoSense))
+					if (!(customRotation && RandomizerSettings.Customization.DiscoSense))
 					{
-						Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = new Color(RandomizerSettings.HotColor.r + (RandomizerSettings.ColdColor.r - RandomizerSettings.HotColor.r) * (distance / scale), RandomizerSettings.HotColor.g + (RandomizerSettings.ColdColor.g - RandomizerSettings.HotColor.g) * (distance / scale), RandomizerSettings.HotColor.b + (RandomizerSettings.ColdColor.b - RandomizerSettings.HotColor.b) * (distance / scale), RandomizerSettings.HotColor.a + (RandomizerSettings.ColdColor.a - RandomizerSettings.HotColor.a) * (distance / scale));
-						return;
+						Color hotColor = RandomizerSettings.Customization.HotColor;
+						Color coldColor = RandomizerSettings.Customization.ColdColor;
+						float scaleFactor = distance / scale;
+						Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = new Color(Mathf.Lerp(hotColor.r, coldColor.r, scaleFactor), Mathf.Lerp(hotColor.g, coldColor.g, scaleFactor), Mathf.Lerp(hotColor.b, coldColor.b, scaleFactor), Mathf.Lerp(hotColor.a, coldColor.a, scaleFactor));
 					}
 					else
 						colorIndex += (int)(20f * (1f - distance / scale));
@@ -177,12 +176,6 @@ public static class RandomizerColorManager
 
 	}
 
-	// Token: 0x0600384E RID: 14414
-	static RandomizerColorManager()
-	{
-	}
-
-	// Token: 0x060038E7 RID: 14567
 	public static void UpdateHotColdTarget()
 	{
 		float minimum = float.MaxValue;
@@ -199,6 +192,7 @@ public static class RandomizerColorManager
 			}
 		}
 		if(RandomizerBonus.SenseFragsActive)
+		{
 			foreach (RandomizerHotColdItem target in Randomizer.HotColdFrags.Values) {
 				if (Characters.Sein.Inventory.GetRandomizerItem(target.Id) == 0)
 				{
@@ -210,21 +204,16 @@ public static class RandomizerColorManager
 					}
 				}
 			}
-
+		}
 	}
 
-	// Token: 0x04003343 RID: 13123
 	private static bool customColor = false;
 
-	// Token: 0x04003344 RID: 13124
 	private static bool customRotation = false;
 
-	// Token: 0x04003345 RID: 13125
 	private static List<Color> colors = new List<Color>();
 
-	// Token: 0x04003346 RID: 13126
 	private static int colorIndex = 0;
 
-	// Token: 0x0400345C RID: 13404
 	private static Vector3 HotColdTarget;
 }

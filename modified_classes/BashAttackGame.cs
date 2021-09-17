@@ -120,7 +120,7 @@ internal class BashAttackGame : Suspendable, IPooled
 			{
 				Vector2 vector2 = Core.Input.AnalogAxisLeft;
 				float sqrMagnitude = vector2.sqrMagnitude;
-				if (sqrMagnitude > RandomizerSettings.BashDeadzone)
+				if (sqrMagnitude > RandomizerSettings.Controls.BashDeadzone)
 				{
 					vector2 /= Mathf.Sqrt(sqrMagnitude);
 					this.Angle = Mathf.LerpAngle(this.Angle, Mathf.Atan2(-vector2.x, vector2.y) * 57.29578f, 0.5f);
