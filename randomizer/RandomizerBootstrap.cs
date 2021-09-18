@@ -182,7 +182,7 @@ public class RandomizerBootstrap
 
 	private static void BootstrapValleyThreeBirdArea(SceneRoot sceneRoot)
 	{
-		if (Characters.Sein && Characters.Sein.Inventory && Characters.Sein.Inventory.GetRandomizerItem(800))
+		if (Characters.Sein && Characters.Sein.Inventory && Characters.Sein.Inventory.GetRandomizerItem(800) > 0)
 		{
 			Transform leverSetup = sceneRoot.transform.FindChild("*leverSetup");
 

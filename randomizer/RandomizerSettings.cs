@@ -143,6 +143,9 @@ public static class RandomizerSettings
 		Game.BlackrootOrbRoomClimbAssist = new BoolSetting("Blackroot Orb Room Climb Assist", true, false);
 		Game.FixGrottoBridgeDrop = new BoolSetting("Fix Grotto Bridge Drop", true, false);
 		Game.UseTeleportAnywhere = new BoolSetting("Use Teleport Anywhere for Alt+R", false, false);
+
+		Accessibility.ApplySoundCompression = new BoolSetting("Apply Sound Compression", false, false);
+		Accessibility.SoundCompressionFactor = new FloatSetting("Sound Compression Factor", 0.6f, false);
 	}
 
 	public static Dictionary<string, SettingBase> All = new Dictionary<string, SettingBase>();
@@ -210,6 +213,13 @@ public static class RandomizerSettings
 		public static BoolSetting FixGrottoBridgeDrop;
 
 		public static BoolSetting UseTeleportAnywhere;
+	}
+
+	public static class Accessibility
+	{
+		public static BoolSetting ApplySoundCompression;
+
+		public static FloatSetting SoundCompressionFactor;
 	}
 
 	public abstract class SettingBase
