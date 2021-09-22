@@ -131,6 +131,7 @@ public static class RandomizerSettings
 		Controls.SwimmingMouseAim = new BoolSetting("Swimming Mouse Aim", false);
 		Controls.SlowClimbVault = new BoolSetting("Slow Climb Vault", true);
 		Controls.Autofire = new EnumSetting<AutofireMode>("Autofire", AutofireMode.Toggle);
+		Controls.LongerBashAimTime = new BoolSetting("Longer Bash Aim Time", false);
 
 		Customization.ColdColor = new ColorSetting("Cold Color", new Color(0f, 0.5f, 0.5f, 0.5f));
 		Customization.HotColor = new ColorSetting("Hot Color", new Color(0.5f, 0.1666667f, 0f, 0.5f));
@@ -188,6 +189,8 @@ public static class RandomizerSettings
 		public static BoolSetting SlowClimbVault;
 
 		public static EnumSetting<AutofireMode> Autofire;
+
+		public static BoolSetting LongerBashAimTime;
 	}
 
 	public static class Customization
