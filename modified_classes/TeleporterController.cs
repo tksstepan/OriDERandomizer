@@ -244,6 +244,17 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		GameController.Instance.CreateCheckpoint();
 		GameController.Instance.PerformSaveGameSequence();
 		RandomizerStatsManager.UsedTeleporter();
+
+		if (Randomizer.IsUsingRandomizerTeleportAnywhere)
+		{
+		    RandomizerBonusSkill.LastAltR = Characters.Sein.Position;
+		    int value = World.Events.Find(Randomizer.MistySim).Value;
+		    if (value != 1 && value != 8)
+		    {
+		        World.Events.Find(Randomizer.MistySim).Value = 10;
+		    }
+		}
+
 		LateStartHook.AddLateStartMethod(new Action(this.OnFinishedTeleporting));
 	}
 

@@ -298,6 +298,24 @@ public static class Randomizer
         }
     }
 
+    public static void TeleportAnywhere()
+    {
+        if (!Characters.Sein.Controller.CanMove || !Characters.Sein.Active)
+            return;
+        if (Characters.Sein.IsSuspended || UI.MainMenuVisible)
+            return;
+
+        if (TeleporterController.CanTeleport(null))
+        {
+            TeleporterController.Show("sunkenGlades");
+            Randomizer.IsUsingRandomizerTeleportAnywhere = true;
+        }
+        else
+        {
+            Randomizer.printInfo("No #Spirit Wells# have been activated yet!");
+        }
+    }
+
     //  more reliable hook for game end / credit starts
     public static void onNaruDestroyed() {
         if (Scenes.Manager.CurrentScene.Scene == "theSacrifice" && RandomizerStatsManager.Active)
@@ -627,18 +645,7 @@ public static class Randomizer
 
             if (RandomizerSettings.Game.UseTeleportAnywhere)
             {
-                if (Characters.Sein.Active && !Characters.Sein.IsSuspended && Characters.Sein.Controller.CanMove && !UI.MainMenuVisible)
-                {
-                    if (TeleporterController.CanTeleport(null))
-                    {
-                        TeleporterController.Show("sunkenGlades");
-                        Randomizer.IsUsingRandomizerTeleportAnywhere = true;
-                    }
-                    else
-                    {
-                        Randomizer.printInfo("No #Spirit Wells# have been activated yet!");
-                    }
-                }
+                Randomizer.TeleportAnywhere();
             }
             else
             {
