@@ -13,10 +13,12 @@ public class OptionsScreen : MenuScreen, ISuspendable
 		SuspensionManager.Register(this);
 		CleverMenuItemSelectionManager navigation = this.Navigation;
 		navigation.OnBackPressedCallback = (Action)Delegate.Combine(navigation.OnBackPressedCallback, new Action(this.OnBackPressed));
-		this.AddSubscreen<KeybindsScreen>("KEYBINDS", 2);
-		this.AddSubscreen<MenuKeybindsScreen>("MENU KEYBINDS", 3);
-		this.AddSubscreen<ControllerBindsScreen>("CONTROLLER BINDS", 4);
-		this.AddSubscreen<ControllerMenuBindsScreen>("CONTROLLER MENU BINDS", 5);
+		this.AddSubscreen<ControlsSettingsScreen>("CONTROL OPTIONS", 2);
+		this.AddSubscreen<AccessibilitySettingsScreen>("ACCESSIBILITY", 3);
+		this.AddSubscreen<KeybindsScreen>("KEYBINDS", 4);
+		this.AddSubscreen<MenuKeybindsScreen>("MENU KEYBINDS", 5);
+		this.AddSubscreen<ControllerBindsScreen>("CONTROLLER BINDS", 6);
+		this.AddSubscreen<ControllerMenuBindsScreen>("CONTROLLER MENU BINDS", 7);
 	}
 
 	// Token: 0x06000315 RID: 789 RVA: 0x0000478E File Offset: 0x0000298E

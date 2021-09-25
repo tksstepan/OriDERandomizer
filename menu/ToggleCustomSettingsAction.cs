@@ -6,10 +6,10 @@ public class ToggleCustomSettingsAction : MonoBehaviour
 {
 	public void Awake()
 	{
-		ToggleSettingsAction tsa = base.GetComponentInChildren<ToggleSettingsAction>();
-		this.OnSound = tsa.OnSound;
-		this.OffSound = tsa.OffSound;
-		UnityEngine.Object.Destroy(tsa);
+		ToggleSettingsAction componentInChildren = base.GetComponentInChildren<ToggleSettingsAction>();
+		this.OnSound = componentInChildren.OnSound;
+		this.OffSound = componentInChildren.OffSound;
+		UnityEngine.Object.Destroy(componentInChildren);
 	}
 
 	private void PlaySound(bool on)
@@ -29,27 +29,20 @@ public class ToggleCustomSettingsAction : MonoBehaviour
 	{
 		this.SetSetting(!this.IsEnabled);
 		this.PlaySound(this.IsEnabled);
-		this.SetFunc(this.IsEnabled);
+		this.Setting.Value = this.IsEnabled;
 	}
 
 	public void SetSetting(bool enabled)
 	{
-		if (!this.MessageBox)
-		{
-			this.MessageBox = base.transform.FindChild("text/stateText").GetComponent<MessageBox>();
-		}
 		this.MessageBox.SetMessage(new MessageDescriptor(enabled ? "ON" : "OFF"));
 		this.IsEnabled = enabled;
 	}
 
-	public void Init(string settingID, bool initialValue, Action<bool> setter)
+	public void Init()
 	{
-		this.SettingID = settingID;
-		this.SetSetting(initialValue);
-		this.SetFunc = setter;
+		this.MessageBox = base.transform.FindChild("text/stateText").GetComponent<MessageBox>();
+		this.SetSetting(this.Setting.Value);
 	}
-
-	public string SettingID;
 
 	public SoundProvider OnSound;
 
@@ -59,5 +52,5 @@ public class ToggleCustomSettingsAction : MonoBehaviour
 
 	public bool IsEnabled;
 
-	public Action<bool> SetFunc;
+	public RandomizerSettings.BoolSetting Setting;
 }
