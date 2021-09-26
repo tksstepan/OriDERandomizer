@@ -30,6 +30,7 @@ public class ToggleCustomSettingsAction : MonoBehaviour
 		this.SetSetting(!this.IsEnabled);
 		this.PlaySound(this.IsEnabled);
 		this.Setting.Value = this.IsEnabled;
+		RandomizerSettings.SetDirty();
 	}
 
 	public void SetSetting(bool enabled)

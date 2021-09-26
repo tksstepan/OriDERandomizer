@@ -17,6 +17,7 @@ public class MusicVolumeSlider : CleverValueSlider
 			if (this.Setting != null)
 			{
 				this.Setting.Value = value;
+				RandomizerSettings.SetDirty();
 				return;
 			}
 			GameSettings.Instance.MusicVolume = value;

@@ -3,6 +3,12 @@ using UnityEngine;
 
 public abstract class CustomSettingsScreen : MonoBehaviour
 {
+	public void OnDisable()
+	{
+		// Will only write if there have been changes
+		RandomizerSettings.WriteSettings();
+	}
+
 	public virtual void Awake()
 	{
 		this.layout = base.GetComponent<CleverMenuItemLayout>();

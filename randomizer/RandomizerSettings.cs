@@ -103,6 +103,26 @@ public static class RandomizerSettings
 		}
 	}
 
+	public static void WriteSettings()
+	{
+		if (!dirty)
+			return;
+
+		using (var writer = new StreamWriter("RandomizerSettings.txt", false))
+		{
+			foreach (var setting in All)
+			{
+				if (setting.Key == "Dev" && ((BoolSetting)setting.Value).Value == false)
+					continue;
+				writer.Write(setting.Key);
+				writer.Write(": ");
+				writer.WriteLine(setting.Value.ToString());
+			}
+		}
+
+		dirty = false;
+	}
+
 	public static bool IsSwimBoosting()
 	{
 		if (RandomizerSettings.Controls.InvertSwim)
@@ -117,6 +137,11 @@ public static class RandomizerSettings
 			return Core.Input.Jump.OnReleased;
 		else
 			return Core.Input.Jump.OnPressed;
+	}
+
+	public static void SetDirty()
+	{
+		dirty = true;
 	}
 
 	static RandomizerSettings()
@@ -152,6 +177,8 @@ public static class RandomizerSettings
 	public static Dictionary<string, SettingBase> All = new Dictionary<string, SettingBase>();
 
 	public static BoolSetting Dev = new BoolSetting("Dev", false);
+
+	private static bool dirty = false;
 
 	public enum AutofireMode
 	{
