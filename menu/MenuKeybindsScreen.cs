@@ -25,6 +25,7 @@ public class MenuKeybindsScreen : CustomSettingsScreen
 		var pos = this.tooltipController.transform.position;
 		pos.y = -3.38f;
 		this.tooltipController.transform.position = pos;
+		HideLegend();
 	}
 
     private void ResetKeybinds()

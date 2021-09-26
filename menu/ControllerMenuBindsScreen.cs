@@ -1,9 +1,7 @@
 using System;
 
-// Token: 0x02000A4E RID: 2638
 public class ControllerMenuBindsScreen : CustomSettingsScreen
 {
-	// Token: 0x0600395B RID: 14683 RVA: 0x000E7E80 File Offset: 0x000E6080
 	public override void InitScreen()
 	{
 		base.AddControllerBind("Pause", () => PlayerInputRebinding.ControllerRebindings.Start, k =>	PlayerInputRebinding.ControllerRebindings.Start = k);
@@ -24,9 +22,9 @@ public class ControllerMenuBindsScreen : CustomSettingsScreen
 		var pos = this.tooltipController.transform.position;
 		pos.y = -3.38f;
 		this.tooltipController.transform.position = pos;
+		HideLegend();
 	}
 
-	// Token: 0x0600395C RID: 14684 RVA: 0x000E8288 File Offset: 0x000E6488
 	private void ResetKeybinds()
 	{
 		PlayerInputRebinding.SetDefaultControllerBindingSettings();
