@@ -20,5 +20,10 @@ public class ControllerBindsScreen : CustomSettingsScreen
 		base.AddControllerBind("Movement Down", () => PlayerInputRebinding.ControllerRebindings.VerticalDigiPadDown, k => PlayerInputRebinding.ControllerRebindings.VerticalDigiPadDown = k);
 		base.AddControllerBind("Movement Left", () => PlayerInputRebinding.ControllerRebindings.HorizontalDigiPadLeft, k => PlayerInputRebinding.ControllerRebindings.HorizontalDigiPadLeft = k);
 		base.AddControllerBind("Movement Right", () => PlayerInputRebinding.ControllerRebindings.HorizontalDigiPadRight, k => PlayerInputRebinding.ControllerRebindings.HorizontalDigiPadRight = k);
+
+		// Lower tooltip so it fits under the options
+		var pos = this.tooltipController.transform.position;
+		pos.y = -3.38f;
+		this.tooltipController.transform.position = pos;
 	}
 }

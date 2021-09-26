@@ -34,21 +34,28 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 				componentsInChildren[i].Reset();
 			}
 		}
+
+		Transform originalToolip = SettingsScreen.Instance.transform.Find("highlightFade/pivot/tooltip");
+		Transform tooltip = Instantiate(originalToolip);
+		tooltip.SetParent(this.pivot);
+		tooltip.position = originalToolip.position;
+		this.tooltipController = tooltip.GetComponent<CleverMenuItemTooltipController>();
+		this.tooltipController.Selection = this.selectionManager;
+		this.tooltipController.UpdateTooltip();
+		this.tooltipController.enabled = true;
+
 		this.InitScreen();
-		this.fakeTooltip = this.AddItem(this.DefaultTooltip, false);
-		this.fakeTooltip.transform.FindChild("text/stateText").gameObject.SetActive(false);
 		this.selectionManager.SetCurrentItem(0);
 	}
 
 	public void AddKeybind(string label, Func<KeyCode[]> getKeys, Action<KeyCode[]> setKeys)
 	{
-		CleverMenuItem cleverMenuItem = this.AddItem(label, true);
+		CleverMenuItem cleverMenuItem = this.AddItem(label);
 		cleverMenuItem.gameObject.name = "Keybind (" + label + ")";
 		KeybindControl kc = cleverMenuItem.gameObject.AddComponent<KeybindControl>();
 		kc.Init(getKeys, setKeys, this);
 		cleverMenuItem.PressedCallback += delegate()
 		{
-			this.SetFakeTooltip("Backspace: remove bind\nEnter: finish editing");
 			kc.BeginEditing();
 		};
 	}
@@ -57,7 +64,7 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 
 	public void AddButton(string caption, Action onClick)
 	{
-		CleverMenuItem cleverMenuItem = this.AddItem("", true);
+		CleverMenuItem cleverMenuItem = this.AddItem("");
 		cleverMenuItem.gameObject.name = "Button (" + caption + ")";
 		cleverMenuItem.gameObject.transform.Find("text/stateText").GetComponent<MessageBox>().SetMessage(new MessageDescriptor(caption));
 		cleverMenuItem.PressedCallback += onClick;
@@ -65,23 +72,30 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 
 	public void AddControllerBind(string label, Func<PlayerInputRebinding.ControllerButton[]> getKeys, Action<PlayerInputRebinding.ControllerButton[]> setKeys)
 	{
-		CleverMenuItem cleverMenuItem = this.AddItem(label, true);
+		CleverMenuItem cleverMenuItem = this.AddItem(label);
 		cleverMenuItem.gameObject.name = "Controller Bind (" + label + ")";
 		ControllerBindControl kc = cleverMenuItem.gameObject.AddComponent<ControllerBindControl>();
 		kc.Init(getKeys, setKeys, this);
 		cleverMenuItem.PressedCallback += delegate()
 		{
-			this.SetFakeTooltip("Start: finish editing");
 			kc.BeginEditing();
 		};
 	}
 
 	public void SetFakeTooltip(string label)
 	{
-		this.fakeTooltip.transform.Find("text/nameText").GetComponent<MessageBox>().SetMessage(new MessageDescriptor(label));
+		tooltipController.UpdateTooltip();
 	}
 
-	public CleverMenuItem AddItem(string label, bool addToNavigation = true)
+	private void AddToLayout(CleverMenuItem item)
+	{
+		this.layout.AddItem(item);
+		this.layout.Sort();
+		item.SetOpacity(1f);
+		item.OnUnhighlight();
+	}
+
+	public CleverMenuItem AddItem(string label)
 	{
 		GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(SettingsScreen.Instance.transform.Find("highlightFade/pivot/damageText").gameObject);
 		gameObject.transform.SetParent(this.pivot);
@@ -89,10 +103,7 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 			c.enabled = true;
 		CleverMenuItem component = gameObject.GetComponent<CleverMenuItem>();
 		component.Pressed = null;
-		if (addToNavigation)
-		{
-			this.selectionManager.MenuItems.Add(component);
-		}
+		this.selectionManager.MenuItems.Add(component);
 		this.AddToLayout(component);
 		TransparencyAnimator[] componentsInChildren = component.transform.GetComponentsInChildren<TransparencyAnimator>();
 		for (int i = 0; i < componentsInChildren.Length; i++)
@@ -110,20 +121,24 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 
 	public void AddToggle(string caption, RandomizerSettings.BoolSetting setting)
 	{
-		CleverMenuItem cleverMenuItem = this.AddItem(caption, true);
-		cleverMenuItem.name = string.Format("toggle ({0})", caption);
+		CleverMenuItem cleverMenuItem = this.AddItem(caption);
+		cleverMenuItem.name = caption;
 		ToggleCustomSettingsAction toggleCustomSettingsAction = cleverMenuItem.gameObject.AddComponent<ToggleCustomSettingsAction>();
 		toggleCustomSettingsAction.Setting = setting;
 		toggleCustomSettingsAction.Init();
 		cleverMenuItem.PressedCallback += toggleCustomSettingsAction.Toggle;
 	}
 
-	private void AddToLayout(CleverMenuItem item)
+	public void AddToggle(RandomizerSettings.BoolSetting setting, string tooltip)
 	{
-		this.layout.AddItem(item);
-		this.layout.Sort();
-		item.SetOpacity(1f);
-		item.OnUnhighlight();
+		CleverMenuItem cleverMenuItem = this.AddItem(setting.Name);
+		cleverMenuItem.name = setting.Name;
+		ToggleCustomSettingsAction toggleCustomSettingsAction = cleverMenuItem.gameObject.AddComponent<ToggleCustomSettingsAction>();
+		toggleCustomSettingsAction.Setting = setting;
+		toggleCustomSettingsAction.Init();
+		cleverMenuItem.PressedCallback += toggleCustomSettingsAction.Toggle;
+
+		ConfigureTooltip(cleverMenuItem.GetComponent<CleverMenuItemTooltip>(), tooltip);
 	}
 
 	public void AddSlider(string caption, RandomizerSettings.FloatSetting setting, float min, float max, float step)
@@ -157,6 +172,47 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 		component.SetMessage(new MessageDescriptor(caption));
 	}
 
+	public void AddSlider(RandomizerSettings.FloatSetting setting, float min, float max, float step, string tooltip)
+	{
+		// Template is music volume slider
+		GameObject clone = UnityEngine.Object.Instantiate<GameObject>(SettingsScreen.Instance.transform.Find("highlightFade/pivot/musicVolume").gameObject);
+		clone.gameObject.name = setting.Name;
+		foreach (var c in clone.GetComponentsInChildren<MonoBehaviour>())
+			c.enabled = true;
+		
+		// Add to navigation manager (required for all option types)
+		clone.transform.SetParent(this.pivot);
+		CleverMenuItem cleverMenuItem = clone.GetComponent<CleverMenuItem>();
+		this.selectionManager.MenuItems.Add(cleverMenuItem);
+		this.AddToLayout(cleverMenuItem);
+
+		// Add to group (required for sliders and dropdown items, but not toggles)
+		CleverValueSlider slider = clone.transform.FindChild("slider").GetComponent<CleverValueSlider>();
+		slider.NavigateMessageBoxes = new MessageBox[0]; // This is usually the control label at the bottom of the screen, but that's hidden for now
+		this.group.AddItem(cleverMenuItem, slider);
+
+		// Set up slider properties
+		slider.MinValue = min;
+		slider.MaxValue = max;
+		slider.Step = step;
+		(slider as MusicVolumeSlider).Setting = setting;
+
+		// Update label
+		MessageBox nameTextBox = clone.transform.Find("nameText").GetComponent<MessageBox>();
+		nameTextBox.MessageProvider = null;
+		nameTextBox.SetMessage(new MessageDescriptor(setting.Name));
+
+		// Update tooltip
+		ConfigureTooltip(clone.GetComponent<CleverMenuItemTooltip>(), tooltip);
+	}
+
+	private void ConfigureTooltip(CleverMenuItemTooltip tooltipComponent, string tooltip)
+	{
+		var tooltipMessageProvider = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+		tooltipMessageProvider.SetMessage(tooltip);
+		tooltipComponent.Tooltip = tooltipMessageProvider;
+	}
+
 	public CleverMenuItemLayout layout;
 
 	public CleverMenuItemSelectionManager selectionManager;
@@ -165,9 +221,9 @@ public abstract class CustomSettingsScreen : MonoBehaviour
 
 	public CleverMenuItemGroup group;
 
-	public CleverMenuItemTooltipController tooltipController;
-
 	public CleverMenuItem fakeTooltip;
+
+	public CleverMenuItemTooltipController tooltipController;
 
 	public string DefaultTooltip = "Click on an action to add or remove binds";
 }

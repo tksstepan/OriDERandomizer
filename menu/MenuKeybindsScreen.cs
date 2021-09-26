@@ -20,6 +20,11 @@ public class MenuKeybindsScreen : CustomSettingsScreen
         this.AddKeybind("Zoom In (Map)", () => PlayerInputRebinding.KeyRebindings.ZoomIn, k => PlayerInputRebinding.KeyRebindings.ZoomIn = k);
         this.AddKeybind("Zoom Out (Map)", () => PlayerInputRebinding.KeyRebindings.ZoomOut, k => PlayerInputRebinding.KeyRebindings.ZoomOut = k);
 		base.AddButton("Reset Keybinds", new Action(this.ResetKeybinds));
+
+		// Lower tooltip so it fits under the options
+		var pos = this.tooltipController.transform.position;
+		pos.y = -3.38f;
+		this.tooltipController.transform.position = pos;
 	}
 
     private void ResetKeybinds()

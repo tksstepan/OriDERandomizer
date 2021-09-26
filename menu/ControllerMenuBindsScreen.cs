@@ -19,6 +19,11 @@ public class ControllerMenuBindsScreen : CustomSettingsScreen
 		base.AddControllerBind("Zoom In (Map)", () => PlayerInputRebinding.ControllerRebindings.ZoomIn, k => PlayerInputRebinding.ControllerRebindings.ZoomIn = k);
 		base.AddControllerBind("Zoom Out (Map)", () => PlayerInputRebinding.ControllerRebindings.ZoomOut, k => PlayerInputRebinding.ControllerRebindings.ZoomOut = k);
 		base.AddButton("Reset Keybinds", new Action(this.ResetKeybinds));
+
+		// Lower tooltip so it fits under the options
+		var pos = this.tooltipController.transform.position;
+		pos.y = -3.38f;
+		this.tooltipController.transform.position = pos;
 	}
 
 	// Token: 0x0600395C RID: 14684 RVA: 0x000E8288 File Offset: 0x000E6488
