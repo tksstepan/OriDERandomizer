@@ -26,11 +26,8 @@ public class CameraShakeLogic : MonoBehaviour, ISuspendable
 			shakeRotation += cameraShake.CurrentRotation * modifiedStrength;
 		}
 
-		if (RandomizerSettings.Accessibility.ReduceCameraShake)
-		{
-			shakeOffset *= (1f - RandomizerSettings.Accessibility.CameraShakeReduction);
-			shakeRotation *= (1f - RandomizerSettings.Accessibility.CameraShakeReduction);
-		}
+		shakeOffset *= RandomizerSettings.Accessibility.CameraShakeFactor;
+		shakeRotation *= RandomizerSettings.Accessibility.CameraShakeFactor;
 
 		this.Target.localPosition = shakeOffset;
 		this.Target.localEulerAngles = shakeRotation;

@@ -103,6 +103,26 @@ public static class RandomizerSettings
 		}
 	}
 
+	public static void WriteSettings()
+	{
+		if (!dirty)
+			return;
+
+		using (var writer = new StreamWriter("RandomizerSettings.txt", false))
+		{
+			foreach (var setting in All)
+			{
+				if (setting.Key == "Dev" && ((BoolSetting)setting.Value).Value == false)
+					continue;
+				writer.Write(setting.Key);
+				writer.Write(": ");
+				writer.WriteLine(setting.Value.ToString());
+			}
+		}
+
+		dirty = false;
+	}
+
 	public static bool IsSwimBoosting()
 	{
 		if (RandomizerSettings.Controls.InvertSwim)
@@ -117,6 +137,11 @@ public static class RandomizerSettings
 			return Core.Input.Jump.OnReleased;
 		else
 			return Core.Input.Jump.OnPressed;
+	}
+
+	public static void SetDirty()
+	{
+		dirty = true;
 	}
 
 	static RandomizerSettings()
@@ -147,13 +172,14 @@ public static class RandomizerSettings
 
 		Accessibility.ApplySoundCompression = new BoolSetting("Apply Sound Compression", false, false);
 		Accessibility.SoundCompressionFactor = new FloatSetting("Sound Compression Factor", 0.6f, false);
-		Accessibility.ReduceCameraShake = new BoolSetting("Reduce Camera Shake", false, false);
-		Accessibility.CameraShakeReduction = new FloatSetting("Camera Shake Reduction Factor", 0.5f, false);
+		Accessibility.CameraShakeFactor = new FloatSetting("Camera Shake Factor", 1f, false);
 	}
 
 	public static Dictionary<string, SettingBase> All = new Dictionary<string, SettingBase>();
 
 	public static BoolSetting Dev = new BoolSetting("Dev", false);
+
+	private static bool dirty = false;
 
 	public enum AutofireMode
 	{
@@ -226,9 +252,7 @@ public static class RandomizerSettings
 
 		public static FloatSetting SoundCompressionFactor;
 
-		public static BoolSetting ReduceCameraShake;
-
-		public static FloatSetting CameraShakeReduction;
+		public static FloatSetting CameraShakeFactor;
 	}
 
 	public abstract class SettingBase
