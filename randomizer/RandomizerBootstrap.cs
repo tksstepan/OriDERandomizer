@@ -311,12 +311,21 @@ public class RandomizerBootstrap
 		ActionSequence.Rename(doorSequence.Actions);
 	}
 
+	private static void BootstrapSunkenGladesSpiritWell(SceneRoot sceneRoot)
+	{
+		// forcibly prevent the cutscene for the spirit well, instead of basing it on whether or not you have spirit flame
+		ActivateBasedOnCondition activate = sceneRoot.transform.FindChild("*activatedBySpiritFlame").GetComponent<ActivateBasedOnCondition>();
+		activate.enabled = false;
+		activate.Target.SetActive(false);
+	}
+
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrap = new Dictionary<string, Action<SceneRoot>>
 	{
 		{ "moonGrottoRopeBridge", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoBridge) },
 		{ "mountHoruHubMid", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMountHoruHub) },
 		{ "northMangroveFallsLanternIntro", new Action<SceneRoot>(RandomizerBootstrap.BootstrapBlackrootLanternRoom) },
 		{ "spiritTreeRefined", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSpiritTree) },
+		{ "sunkenGladesIntroSplitB", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSunkenGladesSpiritWell) },
 		{ "thornfeltSwampActTwoStart", new Action<SceneRoot>(RandomizerBootstrap.BootstrapThornfeltSwampMain) },
 		{ "titleScreenSwallowsNest", new Action<SceneRoot>(RandomizerBootstrap.BootstrapTitleScreen) },
 		{ "westGladesFireflyAreaA", new Action<SceneRoot>(RandomizerBootstrap.BootstrapValleyThreeBirdArea) }
