@@ -307,7 +307,23 @@ public static class Randomizer
 
         if (TeleporterController.CanTeleport(null))
         {
-            TeleporterController.Show("sunkenGlades");
+            string defaultTeleporter = "sunkenGlades";
+            float closestTeleporter = Mathf.Infinity;
+
+            foreach (GameMapTeleporter teleporter in TeleporterController.Instance.Teleporters)
+            {
+                if (teleporter.Activated)
+                {
+                    Vectore distanceVector = teleporter.WorldPosition - Characters.Sein.Position;
+                    if (distanceVector.sqrMagnitude < closestTeleporter)
+                    {
+                        defaultTeleporter = teleporter.Identifier;
+                        closestTeleporter = distanceVector.sqrMagnitude;
+                    }
+                }
+            }
+
+            TeleporterController.Show(defaultTeleporter);
             Randomizer.IsUsingRandomizerTeleportAnywhere = true;
         }
         else
