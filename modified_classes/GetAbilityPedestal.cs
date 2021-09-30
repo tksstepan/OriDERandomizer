@@ -26,6 +26,14 @@ public class GetAbilityPedestal : SaveSerialize
 	public void UpdateStates()
 	{
 		GetAbilityPedestal.States currentState = this.CurrentState;
+
+		if (currentState != GetAbilityPedestal.States.Completed && RandomizerLocationManager.IsPickupCollected(this.MoonGuid))
+		{
+			this.ChangeState(GetAbilityPedestal.States.Completed);
+			this.ActivatePedestalSequence.PerformInstantly(null);
+			return;
+		}
+
 		if (currentState != GetAbilityPedestal.States.OutOfRange)
 		{
 			if (currentState == GetAbilityPedestal.States.InRange)
@@ -91,7 +99,7 @@ public class GetAbilityPedestal : SaveSerialize
 		Characters.Sein.Mortality.Health.RestoreAllHealth();
 		Characters.Sein.Energy.RestoreAllEnergy();
 		Characters.Sein.Controller.PlayAnimation(this.GetAbilityAnimation);
-		Characters.Sein.PlayerAbilities.SetAbility(this.Ability, true);
+		RandomizerLocationManager.GivePickup(this.MoonGuid);
 		this.ChangeState(GetAbilityPedestal.States.Completed);
 		this.ActivatePedestalSequence.Perform(null);
 		GameWorld.Instance.CurrentArea.DirtyCompletionAmount();

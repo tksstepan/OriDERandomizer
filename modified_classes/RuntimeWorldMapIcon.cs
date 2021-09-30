@@ -15,7 +15,18 @@ public class RuntimeWorldMapIcon
 
 	public bool IsVisible(AreaMapUI areaMap)
 	{
-		return Characters.Sein.PlayerAbilities.MapMarkers.HasAbility;
+		if (!Characters.Sein.PlayerAbilities.MapMarkers.HasAbility)
+		{
+			return false;
+		}
+
+		// hide the pickup icon if it's a randomizer pickup that we have collected; otherwise, show it
+		if (RandomizerLocationManager.LocationsByWorldMapGuid.ContainsKey(this.Guid))
+		{
+			return !RandomizerLocationManager.LocationsByWorldMapGuid[this.Guid].Collected;
+		}
+
+		return true;
 	}
 
 	public void Show()

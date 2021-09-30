@@ -126,10 +126,10 @@ public class RuntimeGameWorldArea
 		int total = RandomizerStatsManager.PickupCounts[this.Area.AreaIdentifier];
 		int collected = RandomizerStatsManager.GetObtainedPickupCount(this.Area.AreaIdentifier);
 
-		if (RandomizerTrackedDataManager.Pedistals.ContainsKey(this.Area.AreaIdentifier))
+		if (RandomizerTrackedDataManager.MapBitsByArea.ContainsKey(this.Area.AreaIdentifier))
 		{
 			total++;
-			if (RandomizerTrackedDataManager.GetMapstone(RandomizerTrackedDataManager.Pedistals[this.Area.AreaIdentifier]))
+			if (RandomizerTrackedDataManager.GetMapstone(this.Area.AreaIdentifier))
 				collected++;
 		}
 

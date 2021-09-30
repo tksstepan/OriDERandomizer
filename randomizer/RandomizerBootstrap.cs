@@ -112,7 +112,7 @@ public class RandomizerBootstrap
 
 	private static void BootstrapBlackrootLanternRoom(SceneRoot sceneRoot)
 	{
-		Transform darkPlatforms = sceneRoot.transform.FindChild("*lightDarkPlatforms").FindChild("darkPlatforms");
+		Transform darkPlatforms = sceneRoot.transform.FindChild("*lightDarkPlatforms/darkPlatforms");
 		Transform physicsManager = darkPlatforms.FindChild("physicsManager");
 
 		// add difficulty condition to the platform container; use this to toggle all the platforms
@@ -192,7 +192,7 @@ public class RandomizerBootstrap
 			leverSystem.LeverRightAction = null;
 
 			// Force the door open
-			LegacyTranslateAnimator doorAnimator = leverSetup.FindChild("platformBranchSetup").FindChild("sunkenGladesStompTree").GetComponent<LegacyTranslateAnimator>();
+			LegacyTranslateAnimator doorAnimator = leverSetup.FindChild("platformBranchSetup/sunkenGladesStompTree").GetComponent<LegacyTranslateAnimator>();
 			doorAnimator.TimeOffset = doorAnimator.TimeOfLastCurvePoint;
 		}
 	}
@@ -200,7 +200,7 @@ public class RandomizerBootstrap
 	private static void BootstrapThornfeltSwampMain(SceneRoot sceneRoot)
 	{
 		// force the music to start up, dang it
-		ActionSequence musicSequence = sceneRoot.transform.FindChild("musicZones").FindChild("musicActivation").GetComponent<ActionSequence>();
+		ActionSequence musicSequence = sceneRoot.transform.FindChild("musicZones/musicActivation").GetComponent<ActionSequence>();
 		OnSceneStartRunAction runAction = musicSequence.gameObject.AddComponent<OnSceneStartRunAction>();
 		runAction.ActionToRun = musicSequence;
 		runAction.TriggerOnce = true;
@@ -208,7 +208,7 @@ public class RandomizerBootstrap
 		(runAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
 
 		// patch the post-Ginso cutscene to fix softlock when Sein's dialogue is auto-skipped
-		ActionSequence seinAnimationSequence = sceneRoot.transform.FindChild("*objectiveSetup").FindChild("objectiveSetupTrigger").FindChild("seinSpriteAction").GetComponent<ActionSequence>();
+		ActionSequence seinAnimationSequence = sceneRoot.transform.FindChild("*objectiveSetup/objectiveSetupTrigger/seinSpriteAction").GetComponent<ActionSequence>();
 		WaitAction waitAction = seinAnimationSequence.Actions[1] as WaitAction;
 		waitAction.Duration = 5.0f;
 	}
@@ -218,7 +218,7 @@ public class RandomizerBootstrap
 		if (RandomizerSettings.Game.FixGrottoBridgeDrop)
 		{
 			// add an ActionSequenceSerializer to the bridge so that the sequence continues and activates the final colliders even after glitching it
-			GameObject bridgeSequence = sceneRoot.transform.FindChild("*gumoBridgeSetup").FindChild("group").FindChild("action").gameObject;
+			GameObject bridgeSequence = sceneRoot.transform.FindChild("*gumoBridgeSetup/group/action").gameObject;
 			ActionSequenceSerializer serializer = bridgeSequence.AddComponent<ActionSequenceSerializer>();
 			serializer.OnValidate();
 			serializer.MoonGuid = new MoonGuid(1360931587, 1176121670, -1051255642, 855352030);
@@ -229,45 +229,45 @@ public class RandomizerBootstrap
 	private static void BootstrapMountHoruHub(SceneRoot sceneRoot)
 	{
 		// add randomized pickup actions for each end of room cutscene
-		Transform lavaDrainParent = sceneRoot.transform.FindChild("*doorSetups").FindChild("lavaDrainSetups");
+		Transform lavaDrainParent = sceneRoot.transform.FindChild("*doorSetups/lavaDrainSetups");
 
 		// door1LavaDrain - (L3) mountHoruBreakyPathTop
-		ActionSequence doorSequence = lavaDrainParent.FindChild("*door1LavaDrains").FindChild("*door1LavaDrain").GetComponent<ActionSequence>();
+		ActionSequence doorSequence = lavaDrainParent.FindChild("*door1LavaDrains/*door1LavaDrain").GetComponent<ActionSequence>();
 		RandomizerPickupAction pickupAction = RandomizerLocationManager.AddPickupAction(doorSequence.gameObject, "HoruL3");
 		(pickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
 		doorSequence.Actions.Insert(3, pickupAction);
 		ActionSequence.Rename(doorSequence.Actions);
 
 		// door2LavaDrain - (R1) mountHoruStomperSystemsR
-		doorSequence = lavaDrainParent.FindChild("*door2LavaDrains").FindChild("*door2LavaDrain").GetComponent<ActionSequence>();
+		doorSequence = lavaDrainParent.FindChild("*door2LavaDrains/*door2LavaDrain").GetComponent<ActionSequence>();
 		pickupAction = RandomizerLocationManager.AddPickupAction(doorSequence.gameObject, "HoruR1");
 		(pickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
 		doorSequence.Actions.Insert(3, pickupAction);
 		ActionSequence.Rename(doorSequence.Actions);
 
 		// door3LavaDrain - (R2) mountHoruProjectileCorridor
-		doorSequence = lavaDrainParent.FindChild("*door3LavaDrains").FindChild("*door3LavaDrain").GetComponent<ActionSequence>();
+		doorSequence = lavaDrainParent.FindChild("*door3LavaDrains/*door3LavaDrain").GetComponent<ActionSequence>();
 		pickupAction = RandomizerLocationManager.AddPickupAction(doorSequence.gameObject, "HoruR2");
 		(pickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
 		doorSequence.Actions.Insert(3, pickupAction);
 		ActionSequence.Rename(doorSequence.Actions);
 
 		// door5LavaDrain - (R3) mountHoruMovingPlatform
-		doorSequence = lavaDrainParent.FindChild("*door5LavaDrains").FindChild("*door5LavaDrain").GetComponent<ActionSequence>();
+		doorSequence = lavaDrainParent.FindChild("*door5LavaDrains/*door5LavaDrain").GetComponent<ActionSequence>();
 		pickupAction = RandomizerLocationManager.AddPickupAction(doorSequence.gameObject, "HoruR3");
 		(pickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
 		doorSequence.Actions.Insert(3, pickupAction);
 		ActionSequence.Rename(doorSequence.Actions);
 
 		// door7LavaDrain - (L2) mountHoruBigPushBlock
-		doorSequence = lavaDrainParent.FindChild("*door7LavaDrains").FindChild("*door7LavaDrain").GetComponent<ActionSequence>();
+		doorSequence = lavaDrainParent.FindChild("*door7LavaDrains/*door7LavaDrain").GetComponent<ActionSequence>();
 		pickupAction = RandomizerLocationManager.AddPickupAction(doorSequence.gameObject, "HoruL2");
 		(pickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
 		doorSequence.Actions.Insert(3, pickupAction);
 		ActionSequence.Rename(doorSequence.Actions);
 
 		// door8LavaDrain - (L1) mountHoruBlockableLasers
-		doorSequence = lavaDrainParent.FindChild("*door8LavaDrains").FindChild("*door8LavaDrain").GetComponent<ActionSequence>();
+		doorSequence = lavaDrainParent.FindChild("*door8LavaDrains/*door8LavaDrain").GetComponent<ActionSequence>();
 		pickupAction = RandomizerLocationManager.AddPickupAction(doorSequence.gameObject, "HoruL1");
 		(pickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
 		doorSequence.Actions.Insert(3, pickupAction);
@@ -281,7 +281,7 @@ public class RandomizerBootstrap
 		(rightPickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
 
 		// door4LavaDrain - L4/R4, whichever comes first
-		doorSequence = lavaDrainParent.FindChild("*door4LavaDrains").FindChild("*door4LavaDrain").GetComponent<ActionSequence>();
+		doorSequence = lavaDrainParent.FindChild("*door4LavaDrains/*door4LavaDrain").GetComponent<ActionSequence>();
 		GameObject obj = new GameObject("pickupAction");
 		obj.transform.parent = doorSequence.transform;
 
@@ -296,7 +296,7 @@ public class RandomizerBootstrap
 		ActionSequence.Rename(doorSequence.Actions);
 
 		// door6LavaDrain - L4/R4, whichever comes second
-		doorSequence = lavaDrainParent.FindChild("*door6LavaDrains").FindChild("*door6LavaDrain").GetComponent<ActionSequence>();
+		doorSequence = lavaDrainParent.FindChild("*door6LavaDrains/*door6LavaDrain").GetComponent<ActionSequence>();
 		obj = new GameObject("pickupAction");
 		obj.transform.parent = doorSequence.transform;
 
@@ -313,10 +313,8 @@ public class RandomizerBootstrap
 
 	private static void BootstrapSunkenGladesSpiritWell(SceneRoot sceneRoot)
 	{
-		// forcibly prevent the cutscene for the spirit well, instead of basing it on whether or not you have spirit flame
-		ActivateBasedOnCondition activate = sceneRoot.transform.FindChild("*activatedBySpiritFlame").GetComponent<ActivateBasedOnCondition>();
-		activate.enabled = false;
-		activate.Target.SetActive(false);
+		// forcibly deactivate the collision trigger for the spirit well intro cutscene
+		sceneRoot.transform.FindChild("*activatedBySpiritFlame/activated/*spiritWellHintSetup/objectiveSetupTrigger").GetComponent<PlayerCollisionTrigger>().Active = false;
 	}
 
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrap = new Dictionary<string, Action<SceneRoot>>

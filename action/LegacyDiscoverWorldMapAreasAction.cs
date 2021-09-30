@@ -8,13 +8,19 @@ public class LegacyDiscoverWorldMapAreasAction : ActionMethod
 {
 	public override void Perform(IContext context)
 	{
+		this.m_isInstant = false;
+		base.StartCoroutine(this.ShowWorldMap());
+	}
+
+	public override void PerformInstantly(IContext context)
+	{
+		this.m_isInstant = true;
 		base.StartCoroutine(this.ShowWorldMap());
 	}
 
 	public IEnumerator ShowWorldMap()
 	{
 		yield return new WaitForFixedUpdate();
-		GameMapUI.Instance.SetRevealingMap();
 		RuntimeGameWorldArea currentArea = World.CurrentArea;
 		if (currentArea != null)
 		{
@@ -22,13 +28,19 @@ public class LegacyDiscoverWorldMapAreasAction : ActionMethod
 			AreaMapCanvas canvas = AreaMapUI.Instance.FindCanvas(currentArea.Area);
 			canvas.UpdateAreaMaskTextureB();
 			AreaMapUI.Instance.Navigation.UpdateScrollLimits();
-			GameMapUI.Instance.SetNormal();
 			AreaMapUI.Instance.IconManager.ShowAreaIcons();
 			base.StartCoroutine(this.ReleaseTexture(canvas));
 		}
 		if (this.OnClosedAction)
 		{
-			this.OnClosedAction.Perform(null);
+			if (this.m_isInstant)
+			{
+				this.OnClosedAction.PerformInstantly(null);
+			}
+			else
+			{
+				this.OnClosedAction.Perform(null);
+			}
 		}
 		yield break;
 	}
@@ -51,4 +63,6 @@ public class LegacyDiscoverWorldMapAreasAction : ActionMethod
 	public SoundProvider RevealSound;
 
 	public Transform RevealPosition;
+
+	private bool m_isInstant;
 }

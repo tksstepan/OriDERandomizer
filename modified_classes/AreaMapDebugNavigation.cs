@@ -32,7 +32,7 @@ public class AreaMapDebugNavigation : MonoBehaviour
 				this.ToggleUndiscoveredMap(true);
 			}
 		}
-		if (Core.Input.RightClick.OnPressed)
+		if (!(MoonInput.GetKey(KeyCode.LeftShift) || MoonInput.GetKey(KeyCode.RightShift)) && Core.Input.RightClick.OnPressed)
 		{
 			Vector2 cursorPosition = Core.Input.CursorPositionUI;
 			Vector2 worldPosition = this.m_areaMapUi.Navigation.MapToWorldPosition(cursorPosition);

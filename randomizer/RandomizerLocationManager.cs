@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Game;
 using UnityEngine;
 
 public class RandomizerLocationManager
@@ -18,8 +19,18 @@ public class RandomizerLocationManager
 			}
 
 			Location newLocation = new Location(line.Trim());
-			RandomizerLocationManager.LocationsByGuid[newLocation.MoonGuid] = newLocation;
 			RandomizerLocationManager.LocationsByName[newLocation.Name] = newLocation;
+			RandomizerLocationManager.LocationsByKey[newLocation.Key] = newLocation;
+
+			if (newLocation.Type == Location.LocationType.ProgressiveMap)
+			{
+				RandomizerLocationManager.ProgressiveMapLocations[newLocation.Difficulty] = newLocation;
+			}
+			else
+			{
+				RandomizerLocationManager.LocationsByGuid[newLocation.MoonGuid] = newLocation;
+				RandomizerLocationManager.LocationsByWorldMapGuid[newLocation.WorldMapGuid] = newLocation;
+			}
 		}
 	}
 
@@ -39,18 +50,64 @@ public class RandomizerLocationManager
 		return pickupAction;
 	}
 
+	public static void PlacePickup(int key, string action, object value, bool repeatable = false)
+	{
+		if (!RandomizerLocationManager.LocationsByKey.ContainsKey(key))
+		{
+			Randomizer.printInfo("Error: Unknown location key " + key + " in seed file " + Randomizer.SeedFilePath);
+			return;
+		}
+
+		Location pickupLocation = RandomizerLocationManager.LocationsByKey[key];
+		pickupLocation.Pickup = new RandomizerAction(action, value);
+		pickupLocation.Repeatable = repeatable;
+	}
+
+	public static bool IsPickupCollected(MoonGuid pickupGuid)
+	{
+		if (RandomizerLocationManager.LocationsByGuid.ContainsKey(pickupGuid))
+		{
+			return RandomizerLocationManager.LocationsByGuid[pickupGuid].Collected;
+		}
+
+		return false;
+	}
+
+	public static bool IsPickupRepeatable(MoonGuid pickupGuid)
+	{
+		if (RandomizerLocationManager.LocationsByGuid.ContainsKey(pickupGuid))
+		{
+			return RandomizerLocationManager.LocationsByGuid[pickupGuid].Repeatable;
+		}
+
+		return false;
+	}
+
 	public static void GivePickup(MoonGuid pickupGuid)
 	{
 		if (RandomizerLocationManager.LocationsByGuid.ContainsKey(pickupGuid))
 		{
-			Location pickupLocation = RandomizerLocationManager.LocationsByGuid[pickupGuid];
-			RandomizerSwitch.GivePickup(Randomizer.Table[pickupLocation.Key], pickupLocation.Key, true);
+			RandomizerLocationManager.LocationsByGuid[pickupGuid].Give();
+		}
+	}
+
+	public static void GivePickupByWorldMapGuid(MoonGuid pickupMapGuid)
+	{
+		if (RandomizerLocationManager.LocationsByWorldMapGuid.ContainsKey(pickupMapGuid))
+		{
+			RandomizerLocationManager.LocationsByWorldMapGuid[pickupMapGuid].Give();
 		}
 	}
 
 	public static Dictionary<MoonGuid, Location> LocationsByGuid = new Dictionary<MoonGuid, Location>();
 
+	public static Dictionary<MoonGuid, Location> LocationsByWorldMapGuid = new Dictionary<MoonGuid, Location>();
+
 	public static Dictionary<string, Location> LocationsByName = new Dictionary<string, Location>();
+
+	public static Dictionary<int, Location> LocationsByKey = new Dictionary<int, Location>();
+
+	public static Location[] ProgressiveMapLocations = new Location[9];
 
 	public class Location
 	{
@@ -65,11 +122,93 @@ public class RandomizerLocationManager
 
 			this.MoonGuid = new MoonGuid(int.Parse(parts[6]), int.Parse(parts[7]), int.Parse(parts[8]), int.Parse(parts[9]));
 
-			if (parts.Length > 10)
+			if (parts.Length >= 14)
 			{
 				this.WorldMapGuid = new MoonGuid(int.Parse(parts[10]), int.Parse(parts[11]), int.Parse(parts[12]), int.Parse(parts[13]));
 			}
+			else
+			{
+				this.WorldMapGuid = this.MoonGuid;
+			}
+
+			if (this.Type == LocationType.Skill || this.Type == LocationType.Map)
+			{
+				this.SpecialIndex = int.Parse(parts[parts.Length - 1]);
+			}
 		}
+
+		public void Give()
+		{
+			if (this.Collected && !this.Repeatable)
+			{
+				return;
+			}
+
+			switch (this.Type)
+			{
+			case LocationType.Map:
+				RandomizerTrackedDataManager.SetMapstone(this.SpecialIndex);
+				break;
+			case LocationType.Skill:
+				RandomizerTrackedDataManager.SetTree(this.SpecialIndex);
+				if (this.SpecialIndex == 0)
+				{
+					Characters.Sein.PlayerAbilities.SetAbility(AbilityType.SpiritFlame, true);
+					TeleporterController.Activate("sunkenGlades");
+					return;
+				}
+				break;
+			case LocationType.Plant:
+				RandomizerPlantManager.DestroyPlant(this.MoonGuid);
+				break;
+			default:
+				break;
+			}
+
+			if (this.Type == LocationType.Map && Randomizer.ProgressiveMapStones)
+			{
+				RandomizerLocationManager.ProgressiveMapLocations[RandomizerBonus.MapStoneProgression()].Give();
+				return;
+			}
+
+			if (Randomizer.ColorShift)
+			{
+				Randomizer.changeColor();
+			}
+
+			if (this.Type == LocationType.ProgressiveMap)
+			{
+				RandomizerBonus.CollectMapstone();
+				RandomizerStatsManager.FoundMapstone();
+			}
+			else
+			{
+				RandomizerStatsManager.IncPickup(this.Key);
+			}
+
+			BingoController.OnLoc(this.Key);
+			RandomizerSwitch.GivePickup(this.Pickup, this.Key);
+
+			if (Randomizer.HotColdItems.ContainsKey(this.Key))
+			{
+				Characters.Sein.Inventory.SetRandomizerItem(Randomizer.HotColdItems[this.Key].Id, 1);
+				RandomizerColorManager.UpdateHotColdTarget();
+			}
+			else if (Randomizer.HotColdFrags.ContainsKey(this.Key))
+			{
+				Characters.Sein.Inventory.SetRandomizerItem(Randomizer.HotColdFrags[this.Key].Id, 1);
+				RandomizerColorManager.UpdateHotColdTarget();
+			}
+
+			if (this.Type == LocationType.Skill)
+			{
+				Randomizer.showProgress();
+			}
+		}
+
+		public int Key => (int)(Mathf.Floor((float)((int)this.Position.x) / 4f) * 4f) * 10000 + (int)(Mathf.Floor((float)((int)this.Position.y) / 4f) * 4f);
+
+		public bool Collected => this.Type == LocationType.Map ? RandomizerTrackedDataManager.GetMapstone(this.SpecialIndex) : Randomizer.HaveCoord(this.Key);
 
 		public MoonGuid MoonGuid;
 
@@ -85,7 +224,13 @@ public class RandomizerLocationManager
 
 		public MoonGuid WorldMapGuid;
 
-		public int Key => (int)(Mathf.Floor(Position.x / 4f) * 4f) * 10000 + (int)(Mathf.Floor(Position.y / 4f) * 4f);
+		public bool HasWorldMapGuid;
+
+		public RandomizerAction Pickup;
+
+		public bool Repeatable;
+
+		public int SpecialIndex;
 
 		public enum LocationType
 		{
@@ -101,7 +246,8 @@ public class RandomizerLocationManager
 			Plant,
 			Map,
 			Event,
-			Cutscene
+			Cutscene,
+			ProgressiveMap
 		}
 	}
 }

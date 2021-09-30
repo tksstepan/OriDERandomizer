@@ -179,13 +179,11 @@ public class WorldMapUI : MonoBehaviour
 				}
 			}
 		}
-		Vector3 vector = this.FarPosition + Vector3.right * 0.3f * Mathf.Sin(6.2831855f * Time.time / 4.2f) + Vector3.up * 0.2f * Mathf.Cos(6.2831855f * Time.time / 7.3f);
-		Vector3 closePosition = this.ClosePosition;
-		float zoomTime = this.ZoomTime;
+
 		Vector3 position2;
-		position2.x = Mathf.Lerp(vector.x, closePosition.x, this.ZoomXYCurve.Evaluate(zoomTime));
-		position2.y = Mathf.Lerp(vector.y, closePosition.y, this.ZoomXYCurve.Evaluate(zoomTime));
-		position2.z = Mathf.Lerp(vector.z, closePosition.z, this.ZoomZCurve.Evaluate(zoomTime));
+		position2.x = Mathf.Lerp(this.FarPosition.x, this.ClosePosition.x, this.ZoomXYCurve.Evaluate(this.ZoomTime));
+		position2.y = Mathf.Lerp(this.FarPosition.y, this.ClosePosition.y, this.ZoomXYCurve.Evaluate(this.ZoomTime));
+		position2.z = Mathf.Lerp(this.FarPosition.z, this.ClosePosition.z, this.ZoomZCurve.Evaluate(this.ZoomTime));
 		this.Camera.transform.position = position2;
 	}
 

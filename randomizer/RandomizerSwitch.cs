@@ -58,7 +58,6 @@ public static class RandomizerSwitch
     }
 
     public static void AbilityPickup(int Ability) {
-        Randomizer.GiveAbility = true;
         switch (Ability)
         {
         case 0:
@@ -106,7 +105,6 @@ public static class RandomizerSwitch
             Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Grenade, true);
             break;
         }
-        Randomizer.GiveAbility = false;
         RandomizerStatsManager.FoundSkill(Ability);
     }
 

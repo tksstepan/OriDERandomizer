@@ -160,15 +160,14 @@ public static class RandomizerTrackedDataManager
 			var owned = new List<string>();
 			var unowned = new List<string>();
 			var touched = new List<string>();
-			foreach(KeyValuePair<string, MapstoneData> d in Pedistals) {
-				var data = d.Value;
-				if((MapstoneBitfield >> data.Bit) % 2 == 1) {
-					owned.Add(data.Zone);
+			foreach (KeyValuePair<string, int> pair in MapBitsByArea) {
+				if (GetMapstone(pair.Value)) {
+					owned.Add(MapZonesByBit[pair.Value]);
 				} else {
-					if(BingoController.Active && BingoController.TouchedMapstone(d.Key))
-						touched.Add(data.Zone);
+					if (BingoController.Active && BingoController.TouchedMapstone(pair.Key))
+						touched.Add(MapZonesByBit[pair.Value]);
 					else
-						unowned.Add(data.Zone);
+						unowned.Add(MapZonesByBit[pair.Value]);
 				}
 			}
 			string output = "Maps active: " + string.Join(", ", owned.ToArray());
@@ -216,18 +215,31 @@ public static class RandomizerTrackedDataManager
 
 	public static void SetMapstone(string areaIdentifier) {
 		try {
-			MapstoneData data = Pedistals[areaIdentifier];
-			if(!GetMapstone(data)) {
-				MapstoneBitfield = Characters.Sein.Inventory.IncRandomizerItem(1003, (1 << data.Bit));
-			} 
+			SetMapstone(MapBitsByArea[areaIdentifier]);
 		} 
 		catch(Exception e) {
 			Randomizer.LogError("@SetMapstone:@ area " + areaIdentifier + ": " + e.Message);
 		}
 	}
 
-	public static bool GetMapstone(MapstoneData data) {
-		return (MapstoneBitfield >> data.Bit) % 2 == 1;
+	public static void SetMapstone(int mapNum) {
+		if (!GetMapstone(mapNum)) {
+			MapstoneBitfield = Characters.Sein.Inventory.IncRandomizerItem(1003, (1 << mapNum));
+		}
+	}
+
+	public static bool GetMapstone(string areaIdentifier) {
+		try {
+			return GetMapstone(MapBitsByArea[areaIdentifier]);
+		} 
+		catch(Exception e) {
+			Randomizer.LogError("@GetMapstone:@ area " + areaIdentifier + ": " + e.Message);
+			return false;
+		}
+	}
+
+	public static bool GetMapstone(int mapNum) {
+		return (MapstoneBitfield >> mapNum) % 2 == 1;
 	}
 
 	public static int GetSkillBitfield() {
@@ -244,8 +256,6 @@ public static class RandomizerTrackedDataManager
 	public static int TeleporterBitfield;
 	public static int RelicBitfield;
 	public static int KeyEventBitfield;
-
-	// Token: 0x040032E2 RID: 13026
 
 	public static Dictionary<int, string> Trees = new Dictionary<int, string>() {
 			{0, "Spirit Flame"},
@@ -303,16 +313,28 @@ public static class RandomizerTrackedDataManager
 			{"Horu", 21},
 		};
 
-	public static Dictionary<string, MapstoneData> Pedistals = new Dictionary<string, MapstoneData>() {
-			{"sunkenGlades", new MapstoneData("Glades", 0)},
-			{"mangrove", new MapstoneData("Blackroot", 1)},
-			{"hollowGrove", new MapstoneData("Grove", 2)},
-			{"moonGrotto", new MapstoneData("Grotto", 3)},
-			{"thornfeltSwamp", new MapstoneData("Swamp", 4)},
-			{"valleyOfTheWind", new MapstoneData("Valley", 5)},
-			{"forlornRuins", new MapstoneData("Forlorn", 6)},
-			{"sorrowPass", new MapstoneData("Sorrow", 7)},
-			{"mountHoru", new MapstoneData("Horu", 8)},
+	public static Dictionary<string, int> MapBitsByArea = new Dictionary<string, int>() {
+			{"sunkenGlades", 0},
+			{"mangrove", 1},
+			{"hollowGrove", 2},
+			{"moonGrotto", 3},
+			{"thornfeltSwamp", 4},
+			{"valleyOfTheWind", 5},
+			{"forlornRuins", 6},
+			{"sorrowPass", 7},
+			{"mountHoru", 8},
+		};
+
+	public static Dictionary<int, string> MapZonesByBit = new Dictionary<int, string>() {
+			{0, "Glades"},
+			{1, "Blackroot"},
+			{2, "Grove"},
+			{3, "Grotto"},
+			{4, "Swamp"},
+			{5, "Valley"},
+			{6, "Forlorn"},
+			{7, "Sorrow"},
+			{8, "Horu"},
 		};
 
 	public static Dictionary<string, int> Teleporters = new Dictionary<string, int>() {
@@ -342,21 +364,6 @@ public static class RandomizerTrackedDataManager
 			{21, AbilityType.Dash},
 		};
 
-
-	// Token: 0x02000A1B RID: 2587
-	public class MapstoneData
-	{
-		// Token: 0x06003815 RID: 14357 RVA: 0x0002C10D File Offset: 0x0002A30D
-		public MapstoneData(string zone, int bit)
-		{
-			this.Bit = bit;
-			this.Zone = zone;
-		}
-
-		public int Bit;
-		public string Zone;
-	}
-
 	public static Dictionary<int, int> CoordsMap = new Dictionary<int, int>() {
 		{ -10120036, 0 }, { -10440008, 1 }, { -10759968, 2 }, { -10760004, 3 }, { -10839992, 4 }, { -11040068, 5 }, { -11880100, 6 }, { -120208, 7 }, { -12320248, 8 }, { -1560188, 9 }, { -1560272, 10 }, { -160096, 11 }, { -1639664, 12 }, { -1680104, 13 }, { -1680140, 14 }, { -1800088, 15 }, { -1800156, 16 }, { -1840196, 17 }, { -1840228, 18 }, { -1919808, 19 }, { -199724, 20 }, { -2080116, 21 }, { -2160176, 22 }, { -2200148, 23 }, { -2200184, 24 }, { -2240084, 25 }, { -2399488, 26 }, { -2400212, 27 }, { -2480208, 28 }, { -2480280, 29 }, { -280256, 30 }, { -2840236, 31 }, 
 		{ -2919980, 32 }, { -3160308, 33 }, { -319852, 34 }, { -3200164, 35 }, { -3360288, 36 }, { -3520100, 37 }, { -3559936, 38 }, { -3600088, 39 }, { -400240, 40 }, { -4159572, 41 }, { -4160080, 42 }, { -4199936, 43 }, { -4359680, 44 }, { -4440152, 45 }, { -4559584, 46 }, { -4600020, 47 }, { -4600188, 48 }, { -4600256, 49 }, { -4680068, 50 }, { -4799416, 51 }, { -480168, 52 }, { -4879680, 53 }, { -5039728, 54 }, { -5119796, 55 }, { -5159576, 56 }, { -5159700, 57 }, { -5160280, 58 }, { -5400104, 59 }, { -5400236, 60 }, { -5479592, 61 }, { -5479948, 62 }, { -5599400, 63 },
@@ -366,6 +373,5 @@ public static class RandomizerTrackedDataManager
 		{ 39756, 160 }, { 39804, 161 }, { 399844, 162 }, { 40, 163 }, { 4039612, 164 }, { 4079964, 165 }, { 4199724, 166 }, { 4199828, 167 }, { 4239780, 168 }, { 4319676, 169 }, { 4319860, 170 }, { 4319892, 171 }, { 4359656, 172 }, { 44, 173 }, { 4439632, 174 }, { 4479568, 175 }, { 4479704, 176 }, { 4479832, 177 }, { 4559492, 178 }, { 4560564, 179 }, { 4599508, 180 }, { 4639628, 181 }, { 4680612, 182 }, { 4759860, 183 }, { 48, 184 }, { 4919600, 185 }, { 4959628, 186 }, { 4999752, 187 }, { 4999892, 188 }, { 5039560, 189 }, { 5040476, 190 }, { 5080304, 191 }, 
 		{ 5080496, 192 }, { 5119556, 193 }, { 5119584, 194 }, { 5119900, 195 }, { 5160336, 196 }, { 5160384, 197 }, { 5160864, 198 }, { 52, 199 }, { 5200140, 200 }, { 5239456, 201 }, { 5280264, 202 }, { 5280296, 203 }, { 5280404, 204 }, { 5280500, 205 }, { 5320328, 206 }, { 5320488, 207 }, { 5320660, 208 }, { 5320824, 209 }, { 5359824, 210 }, { 5360432, 211 }, { 5360732, 212 }, { 5399780, 213 }, { 5399808, 214 }, { 5400100, 215 }, { 5400276, 216 }, { 5439640, 217 }, { 5480952, 218 }, { 5519856, 219 }, { 559720, 220 }, { 56, 221 }, { 5639752, 222 }, { 5719620, 223 }, 
 		{ 5799932, 224 }, { 5879616, 225 }, { 5919864, 226 }, { 599844, 227 }, { 6080608, 228 }, { 6159900, 229 }, { 6199596, 230 }, { 6279880, 231 }, { 6359836, 232 }, { 639888, 233 }, { 6399872, 234 }, { 6639952, 235 }, { 6839792, 236 }, { 6999916, 237 }, { 719620, 238 }, { 7199904, 239 }, { 7559600, 240 }, { 7599824, 241 }, { 7639816, 242 }, { 7679852, 243 }, { 7839588, 244 }, { 7959788, 245 }, { 799776, 246 }, { 799804, 247 }, { 8599904, 248 }, { 8719856, 249 }, { 8839900, 250 }, { 9119928, 251 }, { 919772, 252 }, { 919908, 253 }, { 959960, 254 }, { 960128, 255 }, 
-	};
- 
+	}; 
 }

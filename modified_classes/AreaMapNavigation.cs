@@ -96,6 +96,7 @@ public class AreaMapNavigation : MonoBehaviour
 		this.HandleMapScrolling();
 		this.UpdatePlane();
 		this.HandleObjectiveFocus();
+		this.HandleRandomizerTooltip();
 	}
 
 	public void HandleObjectiveFocus()
@@ -116,7 +117,7 @@ public class AreaMapNavigation : MonoBehaviour
 			{
 				this.m_toggleToPlayer = true;
 			}
-			this.m_toPosition = ((!this.m_toggleToPlayer) ? Objectives.All[0].Position : Characters.Current.Position);
+			this.m_toPosition = ((!this.m_toggleToPlayer) ? Objectives.All[0].Position : (Vector2)Characters.Current.Position);
 			this.m_toggleToPlayer = !this.m_toggleToPlayer;
 			if (this.FocusSound)
 			{
@@ -133,8 +134,7 @@ public class AreaMapNavigation : MonoBehaviour
 	public void UpdatePlane()
 	{
 		this.MapPlaneSize = Vector2.one * this.Zoom;
-		Vector2 b = new Vector3(Mathf.Sin(Time.time * 1f), Mathf.Cos(Time.time * 1.2f)) * 0.06f;
-		this.MapPivot.position = -this.ScrollPosition * this.Zoom + b;
+		this.MapPivot.position = -this.ScrollPosition * this.Zoom;
 	}
 
 	public void CenterMapOnWorldPosition(Vector3 position)
@@ -304,6 +304,66 @@ public class AreaMapNavigation : MonoBehaviour
 		this.m_scrollAreaLimit.yMin = num2;
 		this.m_scrollAreaLimit.xMax = num3;
 		this.m_scrollAreaLimit.yMax = num4;
+	}
+
+	public void HandleRandomizerTooltip()
+	{
+		Vector2 cursorPositionWorld = (Vector2)this.MapToWorldPosition(Core.Input.CursorPositionUI);
+		RuntimeWorldMapIcon candidate = null;
+		string candidateArea = null;
+		float candidateDistance = Mathf.Infinity;
+
+		foreach (RuntimeGameWorldArea runtimeArea in GameWorld.Instance.RuntimeAreas)
+		{
+			foreach (RuntimeWorldMapIcon runtimeIcon in runtimeArea.Icons)
+			{
+				if (!runtimeIcon.IsVisible(this.m_areaMapUi) || runtimeIcon.Icon == WorldMapIconType.Invisible)
+				{
+					continue;
+				}
+
+				if (Mathf.Abs(runtimeIcon.Position.x - cursorPositionWorld.x) > 12f || Mathf.Abs(runtimeIcon.Position.y - cursorPositionWorld.y) > 12f)
+				{
+					continue;
+				}
+
+				if (!RandomizerLocationManager.LocationsByWorldMapGuid.ContainsKey(runtimeIcon.Guid))
+				{
+					continue;
+				}
+
+				float distance = Vector2.Distance(runtimeIcon.Position, cursorPositionWorld);
+
+				if (distance > 12f || distance > candidateDistance)
+				{
+					continue;
+				}
+
+				candidateDistance = distance;
+				candidateArea = runtimeArea.Area.AreaIdentifier;
+				candidate = runtimeIcon;
+			}
+		}
+
+		if (candidate == null)
+		{
+			AreaMapUI.Instance.RandomizerTooltip.gameObject.SetActive(false);
+			return;
+		}
+
+		Vector3 candidatePosition = this.WorldToMapPosition(candidate.Position);
+		candidatePosition.y -= 0.20f;
+		AreaMapUI.Instance.RandomizerTooltip.transform.position = candidatePosition;
+
+		RandomizerLocationManager.Location pickupLocation = RandomizerLocationManager.LocationsByWorldMapGuid[candidate.Guid];
+		AreaMapUI.Instance.RandomizerTooltip.OverrideText = pickupLocation.Name;
+		AreaMapUI.Instance.RandomizerTooltip.gameObject.SetActive(true);
+
+		if (DebugMenuB.DebugControlsEnabled && (MoonInput.GetKey(KeyCode.LeftShift) || MoonInput.GetKey(KeyCode.RightShift)) && Core.Input.RightClick.OnPressed)
+		{
+			candidate.Hide();
+			RandomizerLocationManager.GivePickupByWorldMapGuid(candidate.Guid);
+		}
 	}
 
 	public Transform MapPivot;

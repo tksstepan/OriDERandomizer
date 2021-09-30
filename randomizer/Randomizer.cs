@@ -9,7 +9,6 @@ using Game;
 using Sein.World;
 using UnityEngine;
 
-// Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
     public static string VERSION = "4.BETA";
@@ -19,7 +18,6 @@ public static class Randomizer
             Randomizer.OHKO = false;
             Randomizer.ZeroXP = false;
             Randomizer.BonusActive = true;
-            Randomizer.GiveAbility = false;
             Randomizer.Chaos = false;
             Randomizer.ChaosVerbose = false;
             Randomizer.Returning = false;
@@ -30,7 +28,6 @@ public static class Randomizer
             Randomizer.StringKeyPickupTypes = new List<string> {"TP", "SH", "NO", "WT", "MU", "HN", "WP", "RP", "WS"};
             RandomizerChaosManager.initialize();
             Randomizer.DamageModifier = 1f;
-            Randomizer.Table = new Dictionary<int, RandomizerAction>();
             Randomizer.GridFactor = 4.0;
             Randomizer.Message = "Good luck on your rando!";
             Randomizer.MessageProvider = (RandomizerMessageProvider)ScriptableObject.CreateInstance(typeof(RandomizerMessageProvider));
@@ -90,7 +87,6 @@ public static class Randomizer
             Randomizer.RelicCount = 0;
             Randomizer.GrenadeZone = "MIA";
             Randomizer.StompZone = "MIA";
-            Randomizer.Repeatables = new HashSet<int>();
             Randomizer.StompTriggers = false;
             Randomizer.GoalModeFinish = false;
             Randomizer.SpawnWith = "";
@@ -150,7 +146,8 @@ public static class Randomizer
                         }
                         if (Randomizer.StringKeyPickupTypes.Contains(lineParts[1]))
                         {
-                            Randomizer.Table[coords] = new RandomizerAction(lineParts[1], lineParts[2]);
+                            bool repeatable = lineParts[1] == "RP";
+                            RandomizerLocationManager.PlacePickup(coords, lineParts[1], lineParts[2], repeatable);
                             if(lineParts[1] == "WT") {
                                 Randomizer.RelicZoneLookup[lineParts[2]] = lineParts[3];
                                 if(!Randomizer.RelicCountOverride) {
@@ -164,9 +161,6 @@ public static class Randomizer
                                     RandomizerClues.AddClue(lineParts[3], 1);
                                 else if(lineParts[2].Contains("EV/4"))
                                     RandomizerClues.AddClue(lineParts[3], 2);
-                            }
-                            if(lineParts[1] == "RP") {
-                                Repeatables.Add(coords);
                             }
                         }
                         else
@@ -182,7 +176,7 @@ public static class Randomizer
                             }
                             else 
                             {
-                                Randomizer.Table[coords] = new RandomizerAction(lineParts[1], id);
+                                RandomizerLocationManager.PlacePickup(coords, lineParts[1], id);
                                 if (lineParts[1] == "SK") {
                                     if(id == 51) {
                                         GrenadeZone = lineParts[3];
@@ -248,11 +242,6 @@ public static class Randomizer
         }
     }
 
-    public static void getPickup()
-    {
-        Randomizer.getPickup(Characters.Sein.Position);
-    }
-
     public static void WarpTo(Vector3 position, int warpDelay) {
         Randomizer.Warping = warpDelay;
         Randomizer.WarpTarget = position;
@@ -272,7 +261,6 @@ public static class Randomizer
         Game.UI.Cameras.Current.CameraTarget.SetTargetPosition(Characters.Sein.Position);
         Game.UI.Cameras.Current.MoveCameraToTargetInstantly(true);
     }
-
 
     public static void returnToStart()
     {
@@ -314,7 +302,7 @@ public static class Randomizer
             {
                 if (teleporter.Activated)
                 {
-                    Vectore distanceVector = teleporter.WorldPosition - Characters.Sein.Position;
+                    Vector3 distanceVector = teleporter.WorldPosition - Characters.Sein.Position;
                     if (distanceVector.sqrMagnitude < closestTeleporter)
                     {
                         defaultTeleporter = teleporter.Identifier;
@@ -386,72 +374,11 @@ public static class Randomizer
         return Sein.World.Events.WindRestored && Scenes.Manager.CurrentScene != null && Scenes.Manager.CurrentScene.Scene != "forlornRuinsResurrection" && Scenes.Manager.CurrentScene.Scene != "forlornRuinsRotatingLaserFlipped";
     }
 
-    public static void getSkill()
-    {
-        Randomizer.getPickup();
-        Randomizer.showProgress();
-    }
-
     public static void hintAndLog(float x, float y)
     {
         string message = ((int)x).ToString() + " " + ((int)y).ToString();
         Randomizer.showHint(message);
         Randomizer.log(message);
-    }
-
-    public static int GetHashKey(Vector3 position)
-    {
-        int baseId = (int)(Math.Floor((double)((int)position.x) / Randomizer.GridFactor) * Randomizer.GridFactor) * 10000 + (int)(Math.Floor((double)((int)position.y) / Randomizer.GridFactor) * Randomizer.GridFactor);
-        if(Randomizer.Table.ContainsKey(baseId)) 
-            return baseId;
-        
-        for (int x = -1; x <= 1; x++)
-        {
-            for (int y = -1; y <= 1; y++)
-            {
-                int offsetCoord = baseId + (int)Randomizer.GridFactor * (10000 * x + y);
-                if (Randomizer.Table.ContainsKey(offsetCoord))
-                    return offsetCoord;
-            }
-        }
-        for (int x = -2; x <= 2; x += 4)
-        {
-            for (int y = -1; y <= 1; y++)
-            {
-                int offsetCoord = baseId + (int)Randomizer.GridFactor * (10000 * x + y);
-                if (Randomizer.Table.ContainsKey(offsetCoord))
-                    return offsetCoord;
-            }
-        }
-        Randomizer.printInfo("Error finding pickup at " + ((int)position.x).ToString() + ", " + ((int)position.y).ToString());
-        return -1;
-
-    }
-
-    public static void getPickup(Vector3 position)
-    {
-        try {
-            if (Randomizer.ColorShift)
-                Randomizer.changeColor();
-            int hashKey = GetHashKey(position);
-            if (hashKey != -1)
-            {
-                BingoController.OnLoc(hashKey);
-                RandomizerStatsManager.IncPickup(hashKey);
-                RandomizerSwitch.GivePickup(Randomizer.Table[hashKey], hashKey, true);
-                if (Randomizer.HotColdItems.ContainsKey(hashKey)) {
-                    set(Randomizer.HotColdItems[hashKey].Id, 1);
-                    RandomizerColorManager.UpdateHotColdTarget();
-                } else if(Randomizer.HotColdFrags.ContainsKey(hashKey)) {
-                    set(Randomizer.HotColdFrags[hashKey].Id, 1);
-                    RandomizerColorManager.UpdateHotColdTarget();
-                }
-                return;
-            }
-        }
-        catch(Exception e) {
-            Randomizer.LogError("GetPickup: " + e.Message);
-        }
     }
 
     public static void Update()
@@ -737,22 +664,6 @@ public static class Randomizer
         Randomizer.printInfo(message);
     }
 
-    public static void getMapStone()
-    {
-        if (!Randomizer.ProgressiveMapStones) {
-            Randomizer.getPickup();
-            return;
-        }
-        RandomizerBonus.CollectMapstone();
-        RandomizerStatsManager.FoundMapstone();
-
-        if (Randomizer.ColorShift) {
-            Randomizer.changeColor();
-        }
-        BingoController.OnLoc(20 + RandomizerBonus.MapStoneProgression() * 4);
-        RandomizerSwitch.GivePickup(Randomizer.Table[20 + RandomizerBonus.MapStoneProgression() * 4], 20 + RandomizerBonus.MapStoneProgression() * 4, true);
-    }
-
     public static void showProgress()
     {
         try {
@@ -844,7 +755,6 @@ public static class Randomizer
 
     public static void showSeedInfo()
     {
-
         string seedInfo = "v" + Randomizer.VERSION;
         seedInfo += "- seed loaded: " + Randomizer.SeedMeta;
         Randomizer.printInfo(seedInfo);
@@ -985,12 +895,6 @@ public static class Randomizer
         Randomizer.showHint("Error using door at " + ((int)position.x).ToString() + ", " + ((int)position.y).ToString());
     }
 
-    public static void getSkill(int tree)
-    {
-        RandomizerTrackedDataManager.SetTree(tree);
-        Randomizer.getSkill();
-    }
-
     public static int ordHash(string s)
     {
         int num = 0;
@@ -1041,7 +945,6 @@ public static class Randomizer
         PrintImmediately(text, seconds, true, true, false);
     }
 
-    // Token: 0x06003848 RID: 14408
     public static void Tick()
     {
         try {
@@ -1210,24 +1113,15 @@ public static class Randomizer
         }
     }
 
-    public static int RepeatableCheck(Vector3 position){
-        // 2: grabbable, 1: cooldown, 0: not repeatable
-        try{
-            if(Repeatables.Contains(GetHashKey(position)))
-            {
-                if(RepeatableCooldown <= 0)
-                {
-                    RepeatableCooldown = 2;
-                    return 2;
-                } else {
-                    return 1;
-                }
-            }
+    public static bool RepeatableCheck()
+    {
+        if (Randomizer.RepeatableCooldown <= 0)
+        {
+            Randomizer.RepeatableCooldown = 2;
+            return true;
         }
-        catch(Exception e) {
-            Randomizer.LogError("RepeatableCheck: " + e.Message);
-        }
-        return 0;
+
+        return false;
     }
 
     private static string cct(IEnumerable<char> cs) => new String(cs.ToArray());
@@ -1490,8 +1384,6 @@ public static class Randomizer
         }
     }
 
-    public static Dictionary<int, RandomizerAction> Table;
-    public static bool GiveAbility;
     public static double GridFactor;
     public static RandomizerMessageProvider MessageProvider;
     public static bool OHKO;
@@ -1576,8 +1468,6 @@ public static class Randomizer
     public static bool sacrificeStarted;
 
     public static bool AltRDisabled;
-
-    public static HashSet<int> Repeatables;
 
     public static int RepeatableCooldown;
 

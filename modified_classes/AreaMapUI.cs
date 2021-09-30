@@ -67,6 +67,14 @@ public class AreaMapUI : MonoBehaviour, ISuspendable
 			this.SoulFlamePositionMarker.transform.parent = this.FadeOutGroup;
 			TransparencyAnimator.Register(this.SoulFlamePositionMarker.transform);
 		}
+		if (this.RandomizerTooltip == null)
+		{
+			GameObject obj = UnityEngine.Object.Instantiate<GameObject>(this.transform.FindChild("legend/player").gameObject);
+			obj.transform.parent = this.transform.FindChild("legend");
+			this.RandomizerTooltip = obj.GetComponent<MessageBox>();
+			this.RandomizerTooltip.MessageProvider = null;
+			this.RandomizerTooltip.OverrideText = "Unknown";
+		}
 	}
 
 	public void OnDestroy()
@@ -221,4 +229,7 @@ public class AreaMapUI : MonoBehaviour, ISuspendable
 	public MessageProvider CompletedMessageProvider;
 
 	public Vector3 PlayerPositionOffset;
+
+	[NonSerialized]
+	public MessageBox RandomizerTooltip;
 }
