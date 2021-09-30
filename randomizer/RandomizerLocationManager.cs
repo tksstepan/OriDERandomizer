@@ -139,7 +139,7 @@ public class RandomizerLocationManager
 
 		public void Give()
 		{
-			if (this.Collected && !this.Repeatable)
+			if (this.Collected)
 			{
 				return;
 			}
@@ -208,7 +208,7 @@ public class RandomizerLocationManager
 
 		public int Key => (int)(Mathf.Floor((float)((int)this.Position.x) / 4f) * 4f) * 10000 + (int)(Mathf.Floor((float)((int)this.Position.y) / 4f) * 4f);
 
-		public bool Collected => this.Type == LocationType.Map ? RandomizerTrackedDataManager.GetMapstone(this.SpecialIndex) : Randomizer.HaveCoord(this.Key);
+		public bool Collected => this.Repeatable ? false : (this.Type == LocationType.Map ? RandomizerTrackedDataManager.GetMapstone(this.SpecialIndex) : Randomizer.HaveCoord(this.Key));
 
 		public MoonGuid MoonGuid;
 
