@@ -139,6 +139,15 @@ public class RandomizerLocationManager
 
 		public void Give()
 		{
+			// special case for Sein pickup because it doesn't technically have a valid location key
+			if (this.Type == LocationType.Skill && this.SpecialIndex == 0)
+			{
+				RandomizerTrackedDataManager.SetTree(0);
+				Characters.Sein.PlayerAbilities.SetAbility(AbilityType.SpiritFlame, true);
+				TeleporterController.Activate("sunkenGlades");
+				return;
+			}
+
 			if (this.Collected)
 			{
 				return;
@@ -151,12 +160,6 @@ public class RandomizerLocationManager
 				break;
 			case LocationType.Skill:
 				RandomizerTrackedDataManager.SetTree(this.SpecialIndex);
-				if (this.SpecialIndex == 0)
-				{
-					Characters.Sein.PlayerAbilities.SetAbility(AbilityType.SpiritFlame, true);
-					TeleporterController.Activate("sunkenGlades");
-					return;
-				}
 				break;
 			case LocationType.Plant:
 				RandomizerPlantManager.DestroyPlant(this.MoonGuid);
