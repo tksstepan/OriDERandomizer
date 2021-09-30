@@ -62,7 +62,6 @@ public static class Randomizer
             Randomizer.fragsEnabled = false;
             Randomizer.LastTick = 10000000L;
             Randomizer.LockedCount = 0;
-            Randomizer.ResetTrackerCount = 0;
             Randomizer.HotCold = false;
             Randomizer.HotColdTypes = new HashSet<string>() {"EV", "RB17", "RB19", "RB21", "RB28", "SK", "TPForlorn", "TPHoru", "TPGinso", "TPValley", "TPSorrow"};
             Randomizer.HotColdItems = new Dictionary<int, RandomizerHotColdItem>();
@@ -212,6 +211,8 @@ public static class Randomizer
 
     public static void InitializeOnce()
     {
+        Game.Events.Scheduler.OnGameSerializeLoad.Add(new Action(Randomizer.OnGameSerializeLoad));
+
         RandomizerLocationManager.Initialize();
         RandomizerUI.Initialize();
         RandomizerBootstrap.Initialize();
@@ -799,7 +800,6 @@ public static class Randomizer
     public static void OnDeath()
     {
         RandomizerBonusSkill.OnDeath();
-        RandomizerTrackedDataManager.UpdateBitfields();
         RandomizerStatsManager.OnDeath();
 
         if (Randomizer.IsUsingRandomizerTeleportAnywhere)
@@ -807,6 +807,12 @@ public static class Randomizer
             TeleporterController.Instance.CancelTeleport();
             UI.Menu.HideMenuScreen(false);
         }
+    }
+
+    public static void OnGameSerializeLoad()
+    {
+        RandomizerTrackedDataManager.Reset();
+        RandomizerTrackedDataManager.UpdateBitfields();
     }
 
     public static void OnSave()
@@ -844,7 +850,6 @@ public static class Randomizer
         }
         if (Randomizer.ForceTrees && RandomizerBonus.SkillTreeProgression() < 10)
         {
-
             if(verbose)
                 Randomizer.printInfo("Trees (" + RandomizerBonus.SkillTreeProgression().ToString() + "/10)");
             return false;
@@ -990,12 +995,6 @@ public static class Randomizer
                     }
                     if(scene == "titleScreenSwallowsNest")
                     {
-                        ResetTrackerCount++;
-                        if(ResetTrackerCount > 10)
-                        {
-                            RandomizerTrackedDataManager.Reset();
-                            ResetTrackerCount = 0;
-                        }
                         if(RandomizerCreditsManager.CreditsDone)
                         {
                             RandomizerCreditsManager.CreditsDone = false;
@@ -1021,7 +1020,6 @@ public static class Randomizer
                         {
                             RandomizerBonusSkill.UnlockCreditWarp("Goal mode(s) completed!");
                         }
-                        ResetTrackerCount = 0;
                         RandomizerTrackedDataManager.UpdateBitfields();
                         RandomizerColorManager.UpdateHotColdTarget();
                         if (Characters.Sein.Position.y > 935f && Sein.World.Events.WarmthReturned && Scenes.Manager.CurrentScene.Scene == "ginsoTreeWaterRisingEnd")
@@ -1428,8 +1426,6 @@ public static class Randomizer
     public static ArrayList GladesData;
 
     public static int LockedCount;
-
-    public static int ResetTrackerCount;
 
     public static Vector3 WarpTarget;
 
