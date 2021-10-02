@@ -62,6 +62,7 @@ public static class Randomizer
             Randomizer.fragsEnabled = false;
             Randomizer.LastTick = 10000000L;
             Randomizer.LockedCount = 0;
+            Randomizer.ResetTrackerCount = 0;
             Randomizer.HotCold = false;
             Randomizer.HotColdTypes = new HashSet<string>() {"EV", "RB17", "RB19", "RB21", "RB28", "SK", "TPForlorn", "TPHoru", "TPGinso", "TPValley", "TPSorrow"};
             Randomizer.HotColdItems = new Dictionary<int, RandomizerHotColdItem>();
@@ -811,8 +812,12 @@ public static class Randomizer
 
     public static void OnGameSerializeLoad()
     {
-        RandomizerTrackedDataManager.Reset();
-        RandomizerTrackedDataManager.UpdateBitfields();
+        Randomizer.ResetTrackerCount = 0;
+        if (Scenes.Manager.CurrentScene?.Scene != "titleScreenSwallowsNest")
+        {
+            RandomizerTrackedDataManager.Reset();
+            RandomizerTrackedDataManager.UpdateBitfields();
+        }
     }
 
     public static void OnSave()
@@ -995,6 +1000,12 @@ public static class Randomizer
                     }
                     if(scene == "titleScreenSwallowsNest")
                     {
+                        ResetTrackerCount++;
+                        if(ResetTrackerCount > 10)
+                        {
+                            RandomizerTrackedDataManager.Reset();
+                            ResetTrackerCount = 0;
+                        }
                         if(RandomizerCreditsManager.CreditsDone)
                         {
                             RandomizerCreditsManager.CreditsDone = false;
@@ -1426,6 +1437,8 @@ public static class Randomizer
     public static ArrayList GladesData;
 
     public static int LockedCount;
+
+    public static int ResetTrackerCount;
 
     public static Vector3 WarpTarget;
 
