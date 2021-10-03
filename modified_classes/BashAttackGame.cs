@@ -5,10 +5,6 @@ using UnityEngine;
 
 internal class BashAttackGame : Suspendable, IPooled
 {
-	public BashAttackGame()
-	{
-	}
-
 	public event Action<float> BashGameComplete;
 
 	public override bool IsSuspended { get; set; }
@@ -183,7 +179,7 @@ internal class BashAttackGame : Suspendable, IPooled
 		{
 			this.GameFinished();
 		}
-		if (this.ButtonBash.Released || (RandomizerRebinding.DoubleBash.OnPressed && Randomizer.BashTap))
+		if (this.ButtonBash.Released || (RandomizerRebinding.DoubleBash.Pressed && Randomizer.BashTap))
 		{
 			this.GameFinished();
 		}
