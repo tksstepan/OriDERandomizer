@@ -159,7 +159,7 @@ public class InventoryManager : MenuScreen
 		this.DeathText.SetMessage(new MessageDescriptor(SeinDeathCounter.Count.ToString()));
 		this.HealthUpgradesText.SetMessage(new MessageDescriptor(sein.Mortality.Health.HealthUpgradesCollected + " / " + 12));
 		this.EnergyUpgradesText.SetMessage(new MessageDescriptor(sein.Energy.EnergyUpgradesCollected + " / " + 15));
-		this.SkillPointUniquesText.SetMessage(new MessageDescriptor((sein.Inventory.SkillPointsCollected & 63) + " / " + 33));
+		this.SkillPointUniquesText.SetMessage(new MessageDescriptor(sein.Inventory.SkillPointsCollected + " / " + 33));
 		this.waterVeinClueText.SetMessage(new MessageDescriptor(this.GetKeyLabel(Keys.GinsoTree, RandomizerBonus.WaterVeinShards(), 0)));
 		this.gumonSealClueText.SetMessage(new MessageDescriptor(this.GetKeyLabel(Keys.ForlornRuins, RandomizerBonus.GumonSealShards(), 1)));
 		this.sunstoneClueText.SetMessage(new MessageDescriptor(this.GetKeyLabel(Keys.MountHoru, RandomizerBonus.SunstoneShards(), 2)));

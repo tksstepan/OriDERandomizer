@@ -40,7 +40,6 @@ public class ImprovedShotCombo : ShotCombo
 	public void PenalizeSpam()
 	{
 		this.m_spamPenaltyAmount = Mathf.Min(this.m_spamPenaltyAmount + this.AdditionalPenaltyForSpam, this.MaximumPenaltyForSpam);
-		Randomizer.log("ImprovedShotCombo (spam) real " + this.m_comboExecutionTimer + " / pen " + this.m_spamPenaltyAmount + " / cooldown " + this.CurrentCooldownTime);
 	}
 
 	public void OnShootInput()
@@ -49,14 +48,12 @@ public class ImprovedShotCombo : ShotCombo
 		{
 			this.m_currentBuffer = new Buffer(this.NumberOfShotsPerCombo);
 			this.m_currentBuffer.Add();
-			Randomizer.log("ImprovedShotCombo (combo:new)");
 			return;
 		}
 
 		if (this.m_currentBuffer.CanAdd && !this.InResetBufferWindow)
 		{
 			this.m_currentBuffer.Add();
-			Randomizer.log("ImprovedShotCombo (combo:add) time " + this.m_currentBuffer.EffectiveTime + " / real " + this.m_comboExecutionTimer + " / full " + !this.m_currentBuffer.CanAdd);
 			return;
 		}
 
@@ -68,12 +65,10 @@ public class ImprovedShotCombo : ShotCombo
 			{
 				this.m_pendingBuffer = new Buffer(this.NumberOfShotsPerCombo);
 				this.m_pendingBuffer.Add();
-				Randomizer.log("ImprovedShotCombo (buffer:reset) time 0 / real " + this.m_comboExecutionTimer + " / reset " + this.CurrentResetTime);
 			}
 			else if (this.m_pendingBuffer.CanAdd)
 			{
 				this.m_pendingBuffer.Add();
-				Randomizer.log("ImprovedShotCombo (buffer:reset) time " + this.m_pendingBuffer.EffectiveTime + " / real " + this.m_comboExecutionTimer + " / full " + !this.m_pendingBuffer.CanAdd);
 			}
 
 			return;
@@ -87,19 +82,16 @@ public class ImprovedShotCombo : ShotCombo
 			{
 				this.m_pendingBuffer = new Buffer(this.NumberOfShotsPerCombo);
 				this.m_pendingBuffer.Add();
-				Randomizer.log("ImprovedShotCombo (buffer:cooldown) time 0 / real " + this.m_comboExecutionTimer + " / cooldown " + this.CurrentCooldownTime);
 			}
 			else if (this.m_pendingBuffer.CanAdd)
 			{
 				this.m_pendingBuffer.Add();
-				Randomizer.log("ImprovedShotCombo (buffer:cooldown) time " + this.m_pendingBuffer.EffectiveTime + " / real " + this.m_comboExecutionTimer + " / full " + !this.m_pendingBuffer.CanAdd);
 			}
 		}
 	}
 
 	public void ResetCombo()
 	{
-		Randomizer.log("ImprovedShotCombo (reset) hasBuffer " + (this.m_pendingBuffer != null));
 		this.CanShoot = true;
 		this.CurrentShot = 0;
 		this.m_lastRealShotTime = 0f;
@@ -111,12 +103,9 @@ public class ImprovedShotCombo : ShotCombo
 
 	public void Update(float dt)
 	{
-		Randomizer.log("ImprovedShotCombo ----- FRAME -----");
-
 		if (this.CurrentShot == this.NumberOfShotsPerCombo)
 		{
 			this.m_comboExecutionTimer += Mathf.Round(dt * 120f);
-			Randomizer.log("ImprovedShotCombo (cooldown) timer " + this.m_comboExecutionTimer + " / cooldown " + this.CurrentCooldownTime);
 			if (this.m_comboExecutionTimer >= this.CurrentCooldownTime)
 			{
 				this.ResetCombo();
@@ -124,14 +113,12 @@ public class ImprovedShotCombo : ShotCombo
 		}
 		else if (this.CurrentShot == 0)
 		{
-			Randomizer.log("ImprovedShotCombo (idle)");
 			this.CanShoot = true;
 		}
 		else
 		{
 			this.m_comboExecutionTimer += Mathf.Round(dt * 120f);
 			this.CanShoot = true;
-			Randomizer.log("ImprovedShotCombo (combo) shot " + this.CurrentShot + " / num " + this.NumberOfShotsPerCombo + " / timer " + this.m_comboExecutionTimer + " / reset " + this.CurrentResetTime);
 			if (this.m_comboExecutionTimer >= this.CurrentResetTime)
 			{
 				this.ResetCombo();
@@ -159,7 +146,6 @@ public class ImprovedShotCombo : ShotCombo
 
 		float speedupTime = Mathf.Max(this.m_comboExecutionTimer - this.BufferPlaybackSpeedupThreshold, 0f) * 2f;
 		float effectiveTime = Mathf.Min(this.m_comboExecutionTimer, this.BufferPlaybackSpeedupThreshold) + speedupTime;
-		Randomizer.log("ImprovedShotCombo (process) eff " + effectiveTime + " / next " + this.m_currentBuffer.NextShotTime + " / real " + this.m_comboExecutionTimer);
 
 		if (effectiveTime >= this.m_currentBuffer.NextShotTime)
 		{
@@ -167,7 +153,6 @@ public class ImprovedShotCombo : ShotCombo
 			++this.CurrentShot;
 			this.CanShoot = false;
 			this.m_currentBuffer.Remove();
-			Randomizer.log("ImprovedShotCombo (shoot) shot " + this.CurrentShot + " / num " + this.NumberOfShotsPerCombo + " / real " + this.m_comboExecutionTimer);
 			return true;
 		}
 
