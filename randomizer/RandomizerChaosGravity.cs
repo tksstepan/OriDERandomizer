@@ -2,10 +2,8 @@ using System;
 using Game;
 using UnityEngine;
 
-// Token: 0x020009F5 RID: 2549
 public class RandomizerChaosGravity : RandomizerChaosEffect
 {
-	// Token: 0x06003765 RID: 14181
 	public override void Clear()
 	{
 		this.Countdown = 0;
@@ -14,7 +12,6 @@ public class RandomizerChaosGravity : RandomizerChaosEffect
 		this.ApplyGravityMultiplier(1f);
 	}
 
-	// Token: 0x06003766 RID: 14182
 	public override void Start()
 	{
 		this.Countdown = UnityEngine.Random.Range(600, 1200);
@@ -54,7 +51,6 @@ public class RandomizerChaosGravity : RandomizerChaosEffect
 		}
 	}
 
-	// Token: 0x06003767 RID: 14183
 	public override void Update()
 	{
 		if (this.Countdown == 0)
@@ -85,7 +81,6 @@ public class RandomizerChaosGravity : RandomizerChaosEffect
 		}
 	}
 
-	// Token: 0x06003769 RID: 14185
 	public void ApplyGravityMultiplier(float multiplier)
 	{
 		Characters.Sein.PlatformBehaviour.Gravity.BaseSettings.GravityStrength = 26f * multiplier;
@@ -99,15 +94,11 @@ public class RandomizerChaosGravity : RandomizerChaosEffect
 		Characters.Sein.Abilities.Jump.ThirdJumpHeight = jumpHeight;
 	}
 
-	// Token: 0x04003234 RID: 12852
 	public int Countdown;
 
-	// Token: 0x04003235 RID: 12853
 	public bool WellActive;
 
-	// Token: 0x04003236 RID: 12854
 	public Vector2 WellPosition;
 
-	// Token: 0x04003237 RID: 12855
 	public float WellStrength;
 }

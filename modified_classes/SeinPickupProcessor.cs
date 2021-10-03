@@ -30,11 +30,11 @@ public class SeinPickupProcessor : SaveSerialize, ISeinReceiver, IPickupCollecto
 		{
 			num *= 1.5f;
 		}
-		bool arg_58_0 = this.Sein.SoulFlame.CanAffordSoulFlame;
+		bool couldAffordBefore = this.Sein.SoulFlame.CanAffordSoulFlame;
 		AchievementsLogic.Instance.OnCollectedEnergyShard();
 		this.Sein.Energy.Gain(num);
 		energyOrbPickup.Collected();
-		if (!arg_58_0 && this.Sein.SoulFlame.CanAffordSoulFlame)
+		if (!couldAffordBefore && this.Sein.SoulFlame.CanAffordSoulFlame)
 		{
 			UI.SeinUI.ShakeSoulFlame();
 		}

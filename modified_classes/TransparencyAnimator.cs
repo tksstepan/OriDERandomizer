@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using CatlikeCoding.TextBox;
 using UnityEngine;
 
-// Token: 0x020006EC RID: 1772
 public class TransparencyAnimator : BaseAnimator
 {
-	// Token: 0x06002670 RID: 9840 RVA: 0x0001F95E File Offset: 0x0001DB5E
 	static TransparencyAnimator()
 	{
 		bool[] array = new bool[3];
@@ -15,7 +13,6 @@ public class TransparencyAnimator : BaseAnimator
 		TransparencyAnimator.s_disableRenderer = array;
 	}
 
-	// Token: 0x06002671 RID: 9841 RVA: 0x000AB958 File Offset: 0x000A9B58
 	[ContextMenu("Print out renderer data")]
 	public void PrintOutRendererData()
 	{
@@ -27,8 +24,6 @@ public class TransparencyAnimator : BaseAnimator
 		}
 	}
 
-	// Token: 0x170005F3 RID: 1523
-	// (get) Token: 0x06002672 RID: 9842 RVA: 0x000AB9C0 File Offset: 0x000A9BC0
 	private int PropertyId
 	{
 		get
@@ -45,8 +40,6 @@ public class TransparencyAnimator : BaseAnimator
 		}
 	}
 
-	// Token: 0x170005F4 RID: 1524
-	// (get) Token: 0x06002673 RID: 9843 RVA: 0x0001F996 File Offset: 0x0001DB96
 	private bool UseSharedMaterial
 	{
 		get
@@ -55,20 +48,17 @@ public class TransparencyAnimator : BaseAnimator
 		}
 	}
 
-	// Token: 0x06002674 RID: 9844 RVA: 0x0001F9B9 File Offset: 0x0001DBB9
 	public new void Awake()
 	{
 		this.m_forceUseRendererMaterial = (base.GetComponentInChildren<TextBox>() != null);
 		base.Awake();
 	}
 
-	// Token: 0x06002675 RID: 9845 RVA: 0x0001F9D3 File Offset: 0x0001DBD3
 	private bool CanBeAnimated(Renderer r)
 	{
 		return !(r.sharedMaterial == null) && r.sharedMaterial.HasProperty("_Color") && r.GetComponent<UberGhostTrail>() == null;
 	}
 
-	// Token: 0x06002676 RID: 9846 RVA: 0x0001FA0C File Offset: 0x0001DC0C
 	public override void CacheOriginals()
 	{
 		this.m_rendererData.Clear();
@@ -80,7 +70,6 @@ public class TransparencyAnimator : BaseAnimator
 		}
 	}
 
-	// Token: 0x06002677 RID: 9847 RVA: 0x000ABA20 File Offset: 0x000A9C20
 	private void AddChild(Transform child)
 	{
 		Renderer component = child.GetComponent<Renderer>();
@@ -91,7 +80,6 @@ public class TransparencyAnimator : BaseAnimator
 		}
 	}
 
-	// Token: 0x06002678 RID: 9848 RVA: 0x000ABA80 File Offset: 0x000A9C80
 	private void AddChildren(Transform childTransform)
 	{
 		int childCount = childTransform.childCount;
@@ -120,7 +108,6 @@ public class TransparencyAnimator : BaseAnimator
 		}
 	}
 
-	// Token: 0x06002679 RID: 9849 RVA: 0x000ABB24 File Offset: 0x000A9D24
 	public static void Register(Transform child)
 	{
 		Transform parent = child.parent;
@@ -136,7 +123,6 @@ public class TransparencyAnimator : BaseAnimator
 		}
 	}
 
-	// Token: 0x0600267A RID: 9850 RVA: 0x000ABB78 File Offset: 0x000A9D78
 	private void ManuallyRegister(Transform child)
 	{
 		if (!base.IsInitialized)
@@ -164,7 +150,6 @@ public class TransparencyAnimator : BaseAnimator
 		this.ApplyTransparency(true);
 	}
 
-	// Token: 0x0600267B RID: 9851 RVA: 0x0001FA44 File Offset: 0x0001DC44
 	public override void SampleValue(float value, bool forceSample)
 	{
 		value = base.TimeToAnimationCurveTime(value);
@@ -172,7 +157,6 @@ public class TransparencyAnimator : BaseAnimator
 		this.ApplyTransparency(false);
 	}
 
-	// Token: 0x0600267C RID: 9852 RVA: 0x000ABC08 File Offset: 0x000A9E08
 	public void ApplyTransparency(bool force = true)
 	{
 		float finalOpacity = this.FinalOpacity;
@@ -197,7 +181,6 @@ public class TransparencyAnimator : BaseAnimator
 		}
 	}
 
-	// Token: 0x0600267D RID: 9853 RVA: 0x0001FA68 File Offset: 0x0001DC68
 	public void SetParentOpacity(float opacity)
 	{
 		if (!Mathf.Approximately(opacity, this.m_parentOpacity))
@@ -210,8 +193,6 @@ public class TransparencyAnimator : BaseAnimator
 		}
 	}
 
-	// Token: 0x170005F5 RID: 1525
-	// (get) Token: 0x0600267E RID: 9854 RVA: 0x0001FA94 File Offset: 0x0001DC94
 	public float FinalOpacity
 	{
 		get
@@ -220,8 +201,6 @@ public class TransparencyAnimator : BaseAnimator
 		}
 	}
 
-	// Token: 0x170005F6 RID: 1526
-	// (get) Token: 0x0600267F RID: 9855 RVA: 0x0001FAA3 File Offset: 0x0001DCA3
 	public override float Duration
 	{
 		get
@@ -230,7 +209,6 @@ public class TransparencyAnimator : BaseAnimator
 		}
 	}
 
-	// Token: 0x06002680 RID: 9856 RVA: 0x000ABCE8 File Offset: 0x000A9EE8
 	public override void RestoreToOriginalState()
 	{
 		this.m_parentOpacity = 1f;
@@ -245,8 +223,6 @@ public class TransparencyAnimator : BaseAnimator
 		}
 	}
 
-	// Token: 0x170005F7 RID: 1527
-	// (get) Token: 0x06002681 RID: 9857 RVA: 0x0001FAB6 File Offset: 0x0001DCB6
 	public override bool IsLooping
 	{
 		get
@@ -255,7 +231,6 @@ public class TransparencyAnimator : BaseAnimator
 		}
 	}
 
-	// Token: 0x06002682 RID: 9858 RVA: 0x000ABD80 File Offset: 0x000A9F80
 	public void Reset()
 	{
 		if (this.m_childTransparencyAnimators != null)
@@ -276,7 +251,6 @@ public class TransparencyAnimator : BaseAnimator
 		}
 	}
 
-	// Token: 0x04002287 RID: 8839
 	private static string[] s_propNames = new string[]
 	{
 		"_Color",
@@ -284,71 +258,51 @@ public class TransparencyAnimator : BaseAnimator
 		"_AdditiveLayerColor"
 	};
 
-	// Token: 0x04002288 RID: 8840
 	private static bool[] s_disableRenderer;
 
-	// Token: 0x04002289 RID: 8841
 	private static int[] s_propIds;
 
-	// Token: 0x0400228A RID: 8842
 	public AnimationCurve AnimationCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
-	// Token: 0x0400228B RID: 8843
 	public bool AnimateChildren;
 
-	// Token: 0x0400228C RID: 8844
 	public TransparencyAnimator.AnimateMode Mode;
 
-	// Token: 0x0400228D RID: 8845
 	[PooledSafe]
 	private readonly List<TransparencyAnimator.RendererData> m_rendererData = new List<TransparencyAnimator.RendererData>(4);
 
-	// Token: 0x0400228E RID: 8846
 	[PooledSafe]
 	private readonly List<TransparencyAnimator> m_childTransparencyAnimators = new List<TransparencyAnimator>(4);
 
-	// Token: 0x0400228F RID: 8847
 	[PooledSafe]
 	private List<CleverMenuItem> m_cleverMenuItems;
 
-	// Token: 0x04002290 RID: 8848
 	private bool m_forceUseRendererMaterial;
 
-	// Token: 0x04002291 RID: 8849
 	private float m_parentOpacity = 1f;
 
-	// Token: 0x04002292 RID: 8850
 	private float m_opacity = 1f;
 
-	// Token: 0x04002293 RID: 8851
 	[PooledSafe]
 	private readonly HashSet<Renderer> m_renderers = new HashSet<Renderer>();
 
-	// Token: 0x04002294 RID: 8852
 	private float m_lastFinalOpacity = 123456792f;
 
-	// Token: 0x020006ED RID: 1773
 	public enum AnimateMode
 	{
-		// Token: 0x04002296 RID: 8854
 		Color,
-		// Token: 0x04002297 RID: 8855
 		Dissolve,
-		// Token: 0x04002298 RID: 8856
 		Additive
 	}
 
-	// Token: 0x020006EE RID: 1774
 	private struct RendererData
 	{
-		// Token: 0x06002683 RID: 9859 RVA: 0x000ABDDC File Offset: 0x000A9FDC
 		public RendererData(Renderer renderer, int id)
 		{
 			this.Renderer = renderer;
 			this.OriginalAlpha = renderer.sharedMaterial.GetColor(id).a;
 		}
 
-		// Token: 0x06002684 RID: 9860 RVA: 0x000ABE0C File Offset: 0x000AA00C
 		public void SetRendererAlpha(int mode, int propertyID, bool useSharedMaterial, float value)
 		{
 			if (this.Renderer == null || this.Renderer.sharedMaterial == null)
@@ -366,10 +320,8 @@ public class TransparencyAnimator : BaseAnimator
 			material.SetColor(propertyID, color);
 		}
 
-		// Token: 0x04002299 RID: 8857
 		public readonly float OriginalAlpha;
 
-		// Token: 0x0400229A RID: 8858
 		public readonly Renderer Renderer;
 	}
 }

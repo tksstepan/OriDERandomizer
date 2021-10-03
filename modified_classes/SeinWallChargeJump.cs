@@ -6,10 +6,6 @@ using UnityEngine;
 
 public class SeinWallChargeJump : CharacterState, ISeinReceiver
 {
-	public SeinWallChargeJump()
-	{
-	}
-
 	public PlayerAbilities PlayerAbilities
 	{
 		get

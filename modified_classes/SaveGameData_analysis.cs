@@ -11,10 +11,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-// Token: 0x02000612 RID: 1554
 public partial class SaveGameData
 {
-	// Token: 0x06002152 RID: 8530
 	public bool LoadFromReader(BinaryReader reader)
 	{
 		this.Scenes.Clear();

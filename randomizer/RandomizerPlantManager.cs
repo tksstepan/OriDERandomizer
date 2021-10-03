@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using Game;
 using UnityEngine;
 
-// Token: 0x02000A1A RID: 2586
 public static class RandomizerPlantManager
 {
-	// Token: 0x06003819 RID: 14361
 	public static void Initialize()
 	{
 		RandomizerPlantManager.Plants = new Dictionary<MoonGuid, RandomizerPlantManager.PlantData>();
@@ -35,19 +33,16 @@ public static class RandomizerPlantManager
 		RandomizerPlantManager.Plants.Add(new MoonGuid(-1672031488, 1215719569, 1495684759, -746944328), new RandomizerPlantManager.PlantData(22, new Vector3(318.5f, 245.6f)));
 	}
 
-	// Token: 0x0600381A RID: 14362
 	public static bool Display(int id)
 	{
 		return (Characters.Sein.Inventory.GetRandomizerItem(1000) >> id) % 2 == 0;
 	}
 
-	// Token: 0x06003837 RID: 14391
 	public static bool Display(MoonGuid guid)
 	{
 		return RandomizerPlantManager.Display(RandomizerPlantManager.Plants[guid].Id);
 	}
 
-	// Token: 0x0600383C RID: 14396
 	public static void DestroyPlant(MoonGuid guid)
 	{
 		if (!RandomizerPlantManager.Plants.ContainsKey(guid))
@@ -61,23 +56,18 @@ public static class RandomizerPlantManager
 		}
 	}
 
-	// Token: 0x04003310 RID: 13072
 	public static Dictionary<MoonGuid, RandomizerPlantManager.PlantData> Plants;
 
-	// Token: 0x02000A1B RID: 2587
 	public class PlantData
 	{
-		// Token: 0x0600382C RID: 14380
 		public PlantData(int id, Vector3 position)
 		{
 			this.Id = id;
 			this.Position = position;
 		}
 
-		// Token: 0x04003323 RID: 13091
 		public Vector3 Position;
 
-		// Token: 0x04003324 RID: 13092
 		public int Id;
 	}
 }

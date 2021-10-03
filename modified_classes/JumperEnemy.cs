@@ -4,22 +4,18 @@ using fsm.triggers;
 using Game;
 using UnityEngine;
 
-// Token: 0x02000464 RID: 1124
 public class JumperEnemy : GroundEnemy
 {
-	// Token: 0x06001916 RID: 6422 RVA: 0x00016219 File Offset: 0x00014419
 	public override bool CanBeOptimized()
 	{
 		return this.Controller.StateMachine.CurrentState == this.State.Idle;
 	}
 
-	// Token: 0x06001917 RID: 6423 RVA: 0x00016238 File Offset: 0x00014438
 	public void ForceAttackPlayer()
 	{
 		this.Controller.StateMachine.ChangeState(this.State.JumpCharge);
 	}
 
-	// Token: 0x06001918 RID: 6424 RVA: 0x0007E11C File Offset: 0x0007C31C
 	public new void Start()
 	{
 		base.Start();
@@ -64,13 +60,11 @@ public class JumperEnemy : GroundEnemy
 		}
 	}
 
-	// Token: 0x06001919 RID: 6425 RVA: 0x00016255 File Offset: 0x00014455
 	public new void OnTimedRespawn()
 	{
 		this.m_timedRespawn = true;
 	}
 
-	// Token: 0x0600191A RID: 6426 RVA: 0x0007E66C File Offset: 0x0007C86C
 	public bool OutOfJumpingZone()
 	{
 		return !(this.JumpingZone == null) && !new Rect
@@ -81,27 +75,23 @@ public class JumperEnemy : GroundEnemy
 		}.Contains(base.Position);
 	}
 
-	// Token: 0x0600191B RID: 6427 RVA: 0x0001625E File Offset: 0x0001445E
 	public bool IsOnGround()
 	{
 		return this.PlatformMovement.IsOnGround;
 	}
 
-	// Token: 0x0600191C RID: 6428 RVA: 0x00079B78 File Offset: 0x00077D78
 	public bool ShouldThrow()
 	{
 		OnReceiveDamage onReceiveDamage = (OnReceiveDamage)this.Controller.StateMachine.CurrentTrigger;
 		return onReceiveDamage.Damage.Type == DamageType.Bash;
 	}
 
-	// Token: 0x0600191D RID: 6429 RVA: 0x0007E6F4 File Offset: 0x0007C8F4
 	public bool ShouldStomped()
 	{
 		OnReceiveDamage onReceiveDamage = (OnReceiveDamage)this.Controller.StateMachine.CurrentTrigger;
 		return onReceiveDamage.Damage.Type == DamageType.StompBlast;
 	}
 
-	// Token: 0x0600191E RID: 6430 RVA: 0x0007E728 File Offset: 0x0007C928
 	public void OnThrow()
 	{
 		OnReceiveDamage onReceiveDamage = (OnReceiveDamage)this.Controller.StateMachine.CurrentTrigger;
@@ -114,7 +104,6 @@ public class JumperEnemy : GroundEnemy
 		base.FaceLeft = (this.PlatformMovement.LocalSpeedX < 0f);
 	}
 
-	// Token: 0x0600191F RID: 6431 RVA: 0x0007E7E0 File Offset: 0x0007C9E0
 	public void OnStomped()
 	{
 		OnReceiveDamage onReceiveDamage = (OnReceiveDamage)this.Controller.StateMachine.CurrentTrigger;
@@ -127,7 +116,6 @@ public class JumperEnemy : GroundEnemy
 		base.FaceLeft = (this.PlatformMovement.LocalSpeedX < 0f);
 	}
 
-	// Token: 0x06001920 RID: 6432 RVA: 0x0007E898 File Offset: 0x0007CA98
 	public void DoJump()
 	{
 		Vector2 localSpeed;
@@ -164,13 +152,11 @@ public class JumperEnemy : GroundEnemy
 		this.PlatformMovement.LocalSpeed = localSpeed;
 	}
 
-	// Token: 0x06001921 RID: 6433 RVA: 0x0007EB00 File Offset: 0x0007CD00
 	public bool PlayerInRange()
 	{
 		return base.PositionToPlayerPosition.magnitude < this.Settings.ChargeRange && this.Controller.NearSein;
 	}
 
-	// Token: 0x06001922 RID: 6434
 	public new void FixedUpdate()
 	{
 		base.FixedUpdate();
@@ -198,7 +184,6 @@ public class JumperEnemy : GroundEnemy
 		}
 	}
 
-	// Token: 0x06001923 RID: 6435 RVA: 0x0007EC28 File Offset: 0x0007CE28
 	public void UpdateRotation()
 	{
 		IState currentState = this.Controller.StateMachine.CurrentState;
@@ -215,13 +200,11 @@ public class JumperEnemy : GroundEnemy
 		}
 	}
 
-	// Token: 0x06001924 RID: 6436 RVA: 0x0001626B File Offset: 0x0001446B
 	public bool LandedOnGround()
 	{
 		return this.PlatformMovement.IsOnGround && this.PlatformMovement.LocalSpeedY <= 0f;
 	}
 
-	// Token: 0x06001925 RID: 6437 RVA: 0x0007ED18 File Offset: 0x0007CF18
 	public void OnLanded()
 	{
 		if (this.m_shouldStomp && this.Settings.HasStompExplosion)
@@ -250,64 +233,44 @@ public class JumperEnemy : GroundEnemy
 		this.PlatformMovement.LocalSpeed = Vector3.zero;
 	}
 
-	// Token: 0x040015D2 RID: 5586
 	public JumpingSootEnemyAnimations Animations;
 
-	// Token: 0x040015D3 RID: 5587
 	public JumpingSootEnemySettings Settings;
 
-	// Token: 0x040015D4 RID: 5588
 	public JumpingSootEnemySounds Sounds;
 
-	// Token: 0x040015D5 RID: 5589
 	public JumperEnemy.States State = new JumperEnemy.States();
 
-	// Token: 0x040015D6 RID: 5590
 	public Transform JumpingZone;
 
-	// Token: 0x040015D7 RID: 5591
 	public LayerMask RaycastLayerMask;
 
-	// Token: 0x040015D8 RID: 5592
 	private Vector3 m_playerSmoothSpeed;
 
-	// Token: 0x040015D9 RID: 5593
 	private bool m_shouldStomp;
 
-	// Token: 0x040015DA RID: 5594
 	private Vector3 m_thrownDirection;
 
-	// Token: 0x040015DB RID: 5595
 	private bool m_timedRespawn;
 
-	// Token: 0x040015DC RID: 5596
 	public GameObject StompEffect;
 
-	// Token: 0x040015DD RID: 5597
 	public GameObject LandEffect;
 
-	// Token: 0x02000465 RID: 1125
 	public class States
 	{
-		// Token: 0x040015DE RID: 5598
 		public State Respawn;
 
-		// Token: 0x040015DF RID: 5599
 		public JumperEnemyIdleState Idle;
 
-		// Token: 0x040015E0 RID: 5600
 		public JumperEnemyChargingState JumpCharge;
 
-		// Token: 0x040015E1 RID: 5601
 		public JumperEnemyFallState Fall;
 
-		// Token: 0x040015E2 RID: 5602
 		public JumperEnemyThrownState Thrown;
 
-		// Token: 0x040015E3 RID: 5603
 		public JumperEnemyStompedState Stomped;
 
-		// Token: 0x040015E4 RID: 5604
 		public JumperEnemyStunnedState Stunned;
 	}
 }

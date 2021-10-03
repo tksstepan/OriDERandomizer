@@ -1,10 +1,8 @@
 using System;
 using UnityEngine;
 
-// Token: 0x02000A59 RID: 2649
 public class MenuKeybindsScreen : CustomSettingsScreen
 {
-	// Token: 0x06003B70 RID: 15216
 	public override void InitScreen()
 	{
 		this.AddKeybind("Pause", () => PlayerInputRebinding.KeyRebindings.Start, k => PlayerInputRebinding.KeyRebindings.Start = k);

@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 
-// Token: 0x02000A13 RID: 2579
 public static class RandomizerDataMaps
 {
-	// Token: 0x0600380F RID: 14351
 	public static void LoadGinsoData()
 	{
 		Randomizer.GinsoData = new ArrayList();
@@ -810,7 +808,6 @@ public static class RandomizerDataMaps
 		});
 	}
 
-	// Token: 0x06003810 RID: 14352
 	public static void LoadForlornData()
 	{
 		Randomizer.ForlornData = new ArrayList();
@@ -1361,7 +1358,6 @@ public static class RandomizerDataMaps
 		forlornData.Add(array);
 	}
 
-	// Token: 0x06003811 RID: 14353
 	public static void LoadHoruData()
 	{
 		Randomizer.HoruData = new ArrayList();
@@ -1997,7 +1993,6 @@ public static class RandomizerDataMaps
 		});
 	}
 
-	// Token: 0x06003812 RID: 14354
 	public static void LoadGladesData()
 	{
 		Randomizer.GladesData = new ArrayList();
@@ -2017,7 +2012,6 @@ public static class RandomizerDataMaps
 		});
 	}
 
-	// Token: 0x06003888 RID: 14472
 	public static void LoadValleyData()
 	{
 		Randomizer.ValleyStompDoorData = new ArrayList();

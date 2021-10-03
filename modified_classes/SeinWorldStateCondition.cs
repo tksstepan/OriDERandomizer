@@ -2,15 +2,8 @@ using System;
 using Sein.World;
 using UnityEngine;
 
-// Token: 0x0200098F RID: 2447
 public class SeinWorldStateCondition : Condition
 {
-    // Token: 0x06003588 RID: 13704
-    public SeinWorldStateCondition()
-    {
-    }
-
-    // Token: 0x06003589 RID: 13705
     public override bool Validate(IContext context)
     {
         switch (this.State)
@@ -67,7 +60,6 @@ public class SeinWorldStateCondition : Condition
         return false;
     }
 
-    // Token: 0x0600358A RID: 13706
     private void Awake()
     {
         if (base.gameObject.name == "openingGinsoTree")
@@ -125,33 +117,22 @@ public class SeinWorldStateCondition : Condition
         }
     }
 
-    // Token: 0x0400300A RID: 12298
     public WorldState State;
 
-    // Token: 0x0400300B RID: 12299
     public bool IsTrue = true;
 
-    // Token: 0x0400300C RID: 12300
     private SeinWorldStateCondition.OverrideEvents overrideEvent;
 
-    // Token: 0x0400300D RID: 12301
     private GameObject surfaceColliders;
 
-    // Token: 0x0400300E RID: 12302
     private GameObject blockingWall;
 
-    // Token: 0x02000990 RID: 2448
     private enum OverrideEvents
     {
-        // Token: 0x04003010 RID: 12304
         None,
-        // Token: 0x04003011 RID: 12305
         GinsoDoor,
-        // Token: 0x04003012 RID: 12306
         WaterEscapeExit,
-        // Token: 0x04003013 RID: 12307
         FinishEscapeTrigger,
-        // Token: 0x04003342 RID: 13122
         False
     }
 }

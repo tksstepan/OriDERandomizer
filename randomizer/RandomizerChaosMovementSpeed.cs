@@ -2,10 +2,8 @@ using System;
 using Game;
 using UnityEngine;
 
-// Token: 0x020009F4 RID: 2548
 public class RandomizerChaosMovementSpeed : RandomizerChaosEffect
 {
-	// Token: 0x06003761 RID: 14177 RVA: 0x000E0B54 File Offset: 0x000DED54
 	public override void Clear()
 	{
 		this.Countdown = 0;
@@ -17,7 +15,6 @@ public class RandomizerChaosMovementSpeed : RandomizerChaosEffect
 		Characters.Sein.PlatformBehaviour.LeftRightMovement.Settings.Air.MaxSpeed = 11.6666f;
 	}
 
-	// Token: 0x06003762 RID: 14178 RVA: 0x000E0C3C File Offset: 0x000DEE3C
 	public override void Start()
 	{
 		this.Countdown = UnityEngine.Random.Range(360, 3600);
@@ -70,7 +67,6 @@ public class RandomizerChaosMovementSpeed : RandomizerChaosEffect
 		}
 	}
 
-	// Token: 0x06003763 RID: 14179 RVA: 0x0002B6F4 File Offset: 0x000298F4
 	public override void Update()
 	{
 		if (this.Countdown == 0)
@@ -84,6 +80,5 @@ public class RandomizerChaosMovementSpeed : RandomizerChaosEffect
 		}
 	}
 
-	// Token: 0x04003233 RID: 12851
 	public int Countdown;
 }

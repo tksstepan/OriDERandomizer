@@ -4,10 +4,8 @@ using System.IO;
 using SmartInput;
 using UnityEngine;
 
-// Token: 0x020002F9 RID: 761
 public class PlayerInputRebinding
 {
-	// Token: 0x06000EB8 RID: 3768 RVA: 0x0005B87C File Offset: 0x00059A7C
 	static PlayerInputRebinding()
 	{
 		PlayerInputRebinding.m_controllerButtonRemappings = new int[]
@@ -47,8 +45,6 @@ public class PlayerInputRebinding
 		};
 	}
 
-	// Token: 0x1700022F RID: 559
-	// (get) Token: 0x06000EB9 RID: 3769 RVA: 0x0000CB09 File Offset: 0x0000AD09
 	public static PlayerInputRebinding.KeyBindingSettings KeyRebindings
 	{
 		get
@@ -69,8 +65,6 @@ public class PlayerInputRebinding
 		}
 	}
 
-	// Token: 0x17000230 RID: 560
-	// (get) Token: 0x06000EBA RID: 3770 RVA: 0x0000CB34 File Offset: 0x0000AD34
 	private static string KeyRebindingFile
 	{
 		get
@@ -79,7 +73,6 @@ public class PlayerInputRebinding
 		}
 	}
 
-	// Token: 0x06000EBB RID: 3771 RVA: 0x0005B910 File Offset: 0x00059B10
 	public static void GetKeyRebindSettingsFromFile()
 	{
 		try
@@ -145,7 +138,6 @@ public class PlayerInputRebinding
 		}
 	}
 
-	// Token: 0x06000EBC RID: 3772 RVA: 0x0005BC0C File Offset: 0x00059E0C
 	private static KeyCode[] StringToKeyBinding(string s)
 	{
 		s = s.Split(new string[]
@@ -164,7 +156,6 @@ public class PlayerInputRebinding
 		return list.ToArray();
 	}
 
-	// Token: 0x06000EBD RID: 3773 RVA: 0x0005BC84 File Offset: 0x00059E84
 	public static void WriteKeyRebindSettings()
 	{
 		using (StreamWriter streamWriter = new StreamWriter(new FileStream(PlayerInputRebinding.KeyRebindingFile, FileMode.OpenOrCreate)))
@@ -222,7 +213,6 @@ public class PlayerInputRebinding
 		}
 	}
 
-	// Token: 0x06000EBE RID: 3774 RVA: 0x0005C10C File Offset: 0x0005A30C
 	private static string KeyBindingToString(KeyCode[] codes)
 	{
 		string text = string.Empty;
@@ -236,13 +226,11 @@ public class PlayerInputRebinding
 		return text;
 	}
 
-	// Token: 0x06000EBF RID: 3775 RVA: 0x0000CB45 File Offset: 0x0000AD45
 	public static void SetDefaultKeyBindingSettings()
 	{
 		PlayerInputRebinding.m_keyRebindings = PlayerInputRebinding.DefaultKeyBindingSettings();
 	}
 
-	// Token: 0x06000EC0 RID: 3776 RVA: 0x0005C160 File Offset: 0x0005A360
 	private static PlayerInputRebinding.KeyBindingSettings DefaultKeyBindingSettings()
 	{
 		bool flag = GameSettings.Instance.CurrentControlScheme == ControlScheme.KeyboardAndMouse;
@@ -442,8 +430,6 @@ public class PlayerInputRebinding
 		return keyBindingSettings;
 	}
 
-	// Token: 0x17000231 RID: 561
-	// (get) Token: 0x06000EC1 RID: 3777 RVA: 0x0000CB51 File Offset: 0x0000AD51
 	private static string ControllerRemappingFile
 	{
 		get
@@ -452,13 +438,11 @@ public class PlayerInputRebinding
 		}
 	}
 
-	// Token: 0x06000EC2 RID: 3778 RVA: 0x0000CB62 File Offset: 0x0000AD62
 	public static XboxControllerInput.Button GetRemappedJoystickButton(XboxControllerInput.Button joystickButtonIndex)
 	{
 		return PlayerInputRebinding.intToButton[PlayerInputRebinding.m_controllerButtonRemappings[PlayerInputRebinding.ButtonToInt(joystickButtonIndex)]];
 	}
 
-	// Token: 0x06000EC3 RID: 3779 RVA: 0x0005C508 File Offset: 0x0005A708
 	public static void GetControllerButtonRemappingsFromFile()
 	{
 		try
@@ -548,7 +532,6 @@ public class PlayerInputRebinding
 		}
 	}
 
-	// Token: 0x06000EC4 RID: 3780 RVA: 0x0005C80C File Offset: 0x0005AA0C
 	public static void WriteControllerButtonRemappings()
 	{
 		using (StreamWriter streamWriter = new StreamWriter(new FileStream(PlayerInputRebinding.ControllerRemappingFile, FileMode.OpenOrCreate)))
@@ -588,7 +571,6 @@ public class PlayerInputRebinding
 		}
 	}
 
-	// Token: 0x06000EC5 RID: 3781 RVA: 0x0000CB76 File Offset: 0x0000AD76
 	public static void RefreshControllerButtonRemappings()
 	{
 		if (!PlayerInputRebinding.m_hasReadControllerRemappingsFile)
@@ -606,7 +588,6 @@ public class PlayerInputRebinding
 		}
 	}
 
-	// Token: 0x06000EC6 RID: 3782 RVA: 0x0000CBA2 File Offset: 0x0000ADA2
 	public static void SetDefaultControllerButtonRemappings()
 	{
 		PlayerInputRebinding.m_controllerButtonRemappings = new int[]
@@ -630,7 +611,6 @@ public class PlayerInputRebinding
 		};
 	}
 
-	// Token: 0x06000EC7 RID: 3783 RVA: 0x0005CAA8 File Offset: 0x0005ACA8
 	private static int ButtonToInt(XboxControllerInput.Button button)
 	{
 		switch (button)
@@ -668,7 +648,6 @@ public class PlayerInputRebinding
 		}
 	}
 
-	// Token: 0x06000EC8 RID: 3784 RVA: 0x0005CB18 File Offset: 0x0005AD18
 	public static void GetControllerRebindSettingsFromFile()
 	{
 		try
@@ -721,7 +700,6 @@ public class PlayerInputRebinding
 		}
 	}
 
-	// Token: 0x06000EC9 RID: 3785 RVA: 0x0005CDCC File Offset: 0x0005AFCC
 	public static PlayerInputRebinding.ControllerButton[] StringToControllerBinding(string s)
 	{
 		s = s.Split(new string[]
@@ -740,7 +718,6 @@ public class PlayerInputRebinding
 		return list.ToArray();
 	}
 
-	// Token: 0x06000ECA RID: 3786 RVA: 0x0005CE44 File Offset: 0x0005B044
 	public static void WriteControllerRebindSettings()
 	{
 		using (StreamWriter streamWriter = new StreamWriter(new FileStream(PlayerInputRebinding.ControllerRebindingFile, FileMode.OpenOrCreate)))
@@ -799,7 +776,6 @@ public class PlayerInputRebinding
 		}
 	}
 
-	// Token: 0x06000ECB RID: 3787 RVA: 0x0005D2C8 File Offset: 0x0005B4C8
 	public static string ControllerBindingToString(PlayerInputRebinding.ControllerButton[] codes)
 	{
 		string text = string.Empty;
@@ -813,13 +789,11 @@ public class PlayerInputRebinding
 		return text;
 	}
 
-	// Token: 0x06000ECC RID: 3788 RVA: 0x0000CBBB File Offset: 0x0000ADBB
 	public static void SetDefaultControllerBindingSettings()
 	{
 		PlayerInputRebinding.m_controllerRebindings = PlayerInputRebinding.DefaultControllerBindingSettings();
 	}
 
-	// Token: 0x06000ECD RID: 3789 RVA: 0x0005D31C File Offset: 0x0005B51C
 	public static PlayerInputRebinding.ControllerBindingSettings DefaultControllerBindingSettings()
 	{
 		return new PlayerInputRebinding.ControllerBindingSettings
@@ -958,8 +932,6 @@ public class PlayerInputRebinding
 		};
 	}
 
-	// Token: 0x17000232 RID: 562
-	// (get) Token: 0x06000ECE RID: 3790 RVA: 0x0000CBC7 File Offset: 0x0000ADC7
 	public static PlayerInputRebinding.ControllerBindingSettings ControllerRebindings
 	{
 		get
@@ -980,8 +952,6 @@ public class PlayerInputRebinding
 		}
 	}
 
-	// Token: 0x17000233 RID: 563
-	// (get) Token: 0x06000ECF RID: 3791 RVA: 0x0000CBF2 File Offset: 0x0000ADF2
 	public static string ControllerRebindingFile
 	{
 		get
@@ -990,37 +960,26 @@ public class PlayerInputRebinding
 		}
 	}
 
-	// Token: 0x04000E18 RID: 3608
 	private static string keyRebindingFileName = "KeyRebindings.txt";
 
-	// Token: 0x04000E19 RID: 3609
 	private static string controllerRebindingFileName = "ControllerButtonRemaps.txt";
 
-	// Token: 0x04000E1A RID: 3610
 	private static PlayerInputRebinding.KeyBindingSettings m_keyRebindings;
 
-	// Token: 0x04000E1B RID: 3611
 	private static int[] m_controllerButtonRemappings;
 
-	// Token: 0x04000E1C RID: 3612
 	private static bool m_controllerIsRemappingButtons;
 
-	// Token: 0x04000E1D RID: 3613
 	private static bool m_hasReadControllerRemappingsFile;
 
-	// Token: 0x04000E1E RID: 3614
 	private static XboxControllerInput.Button[] intToButton;
 
-	// Token: 0x04000E1F RID: 3615
 	public static string controllerInputRebindingsFileName = "ControllerRebindings.txt";
 
-	// Token: 0x04000E20 RID: 3616
 	public static PlayerInputRebinding.ControllerBindingSettings m_controllerRebindings;
 
-	// Token: 0x020002FA RID: 762
 	public class KeyBindingSettings
 	{
-		// Token: 0x06000ED0 RID: 3792 RVA: 0x0005D560 File Offset: 0x0005B760
 		public KeyBindingSettings()
 		{
 			this.Glide = new KeyCode[0];
@@ -1041,262 +1000,169 @@ public class PlayerInputRebinding
 			this.Legend = new KeyCode[0];
 		}
 
-		// Token: 0x04000E21 RID: 3617
 		public bool IsRebinding;
 
-		// Token: 0x04000E22 RID: 3618
 		public KeyCode[] HorizontalDigiPadLeft = new KeyCode[0];
 
-		// Token: 0x04000E23 RID: 3619
 		public KeyCode[] HorizontalDigiPadRight = new KeyCode[0];
 
-		// Token: 0x04000E24 RID: 3620
 		public KeyCode[] VerticalDigiPadDown = new KeyCode[0];
 
-		// Token: 0x04000E25 RID: 3621
 		public KeyCode[] VerticalDigiPadUp = new KeyCode[0];
 
-		// Token: 0x04000E26 RID: 3622
 		public KeyCode[] MenuLeft = new KeyCode[0];
 
-		// Token: 0x04000E27 RID: 3623
 		public KeyCode[] MenuRight = new KeyCode[0];
 
-		// Token: 0x04000E28 RID: 3624
 		public KeyCode[] MenuDown = new KeyCode[0];
 
-		// Token: 0x04000E29 RID: 3625
 		public KeyCode[] MenuUp = new KeyCode[0];
 
-		// Token: 0x04000E2A RID: 3626
 		public KeyCode[] MenuPageLeft = new KeyCode[0];
 
-		// Token: 0x04000E2B RID: 3627
 		public KeyCode[] MenuPageRight = new KeyCode[0];
 
-		// Token: 0x04000E2C RID: 3628
 		public KeyCode[] ActionButtonA = new KeyCode[0];
 
-		// Token: 0x04000E2D RID: 3629
 		public KeyCode[] SoulFlame = new KeyCode[0];
 
-		// Token: 0x04000E2E RID: 3630
 		public KeyCode[] Jump = new KeyCode[0];
 
-		// Token: 0x04000E2F RID: 3631
 		public KeyCode[] Grab = new KeyCode[0];
 
-		// Token: 0x04000E30 RID: 3632
 		public KeyCode[] SpiritFlame = new KeyCode[0];
 
-		// Token: 0x04000E31 RID: 3633
 		public KeyCode[] Bash = new KeyCode[0];
 
-		// Token: 0x04000E32 RID: 3634
 		public KeyCode[] Glide;
 
-		// Token: 0x04000E33 RID: 3635
 		public KeyCode[] ChargeJump;
 
-		// Token: 0x04000E34 RID: 3636
 		public KeyCode[] Select;
 
-		// Token: 0x04000E35 RID: 3637
 		public KeyCode[] Start;
 
-		// Token: 0x04000E36 RID: 3638
 		public KeyCode[] Cancel;
 
-		// Token: 0x04000E37 RID: 3639
 		public KeyCode[] LeftShoulder;
 
-		// Token: 0x04000E38 RID: 3640
 		public KeyCode[] RightShoulder;
 
-		// Token: 0x04000E39 RID: 3641
 		public KeyCode[] LeftStick;
 
-		// Token: 0x04000E3A RID: 3642
 		public KeyCode[] RightStick;
 
-		// Token: 0x04000E3B RID: 3643
 		public KeyCode[] ZoomIn;
 
-		// Token: 0x04000E3C RID: 3644
 		public KeyCode[] ZoomOut;
 
-		// Token: 0x04000E3D RID: 3645
 		public KeyCode[] Copy;
 
-		// Token: 0x04000E3E RID: 3646
 		public KeyCode[] Delete;
 
-		// Token: 0x04000E3F RID: 3647
 		public KeyCode[] Focus;
 
-		// Token: 0x04000E40 RID: 3648
 		public KeyCode[] Filter;
 
-		// Token: 0x04000E41 RID: 3649
 		public KeyCode[] Legend;
 
-		// Token: 0x04000E42 RID: 3650
 		public KeyCode[] Stomp = new KeyCode[0];
 	}
 
-	// Token: 0x020002FB RID: 763
 	public enum ControllerButton
 	{
-		// Token: 0x04000E44 RID: 3652
 		A,
-		// Token: 0x04000E45 RID: 3653
 		B,
-		// Token: 0x04000E46 RID: 3654
 		X,
-		// Token: 0x04000E47 RID: 3655
 		Y,
-		// Token: 0x04000E48 RID: 3656
 		LT,
-		// Token: 0x04000E49 RID: 3657
 		RT,
-		// Token: 0x04000E4A RID: 3658
 		LB,
-		// Token: 0x04000E4B RID: 3659
 		RB,
-		// Token: 0x04000E4C RID: 3660
 		LS,
-		// Token: 0x04000E4D RID: 3661
 		RS,
-		// Token: 0x04000E4E RID: 3662
 		LUp,
-		// Token: 0x04000E4F RID: 3663
 		LDown,
-		// Token: 0x04000E50 RID: 3664
 		LLeft,
-		// Token: 0x04000E51 RID: 3665
 		LRight,
-		// Token: 0x04000E52 RID: 3666
 		DUp,
-		// Token: 0x04000E53 RID: 3667
 		DDown,
-		// Token: 0x04000E54 RID: 3668
 		DLeft,
-		// Token: 0x04000E55 RID: 3669
 		DRight,
-		// Token: 0x04000E56 RID: 3670
 		RUp,
-		// Token: 0x04000E57 RID: 3671
 		RDown,
-		// Token: 0x04000E58 RID: 3672
 		RLeft,
-		// Token: 0x04000E59 RID: 3673
 		RRight,
-		// Token: 0x04000E5A RID: 3674
 		Back,
-		// Token: 0x04000E5B RID: 3675
 		Start
 	}
 
-	// Token: 0x020002FC RID: 764
 	public class ControllerBindingSettings
 	{
-		// Token: 0x04000E5C RID: 3676
 		public PlayerInputRebinding.ControllerButton[] HorizontalDigiPadLeft = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E5D RID: 3677
 		public PlayerInputRebinding.ControllerButton[] HorizontalDigiPadRight = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E5E RID: 3678
 		public PlayerInputRebinding.ControllerButton[] VerticalDigiPadDown = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E5F RID: 3679
 		public PlayerInputRebinding.ControllerButton[] VerticalDigiPadUp = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E60 RID: 3680
 		public PlayerInputRebinding.ControllerButton[] MenuLeft = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E61 RID: 3681
 		public PlayerInputRebinding.ControllerButton[] MenuRight = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E62 RID: 3682
 		public PlayerInputRebinding.ControllerButton[] MenuDown = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E63 RID: 3683
 		public PlayerInputRebinding.ControllerButton[] MenuUp = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E64 RID: 3684
 		public PlayerInputRebinding.ControllerButton[] MenuPageLeft = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E65 RID: 3685
 		public PlayerInputRebinding.ControllerButton[] MenuPageRight = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E66 RID: 3686
 		public PlayerInputRebinding.ControllerButton[] ActionButtonA = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E67 RID: 3687
 		public PlayerInputRebinding.ControllerButton[] SoulFlame = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E68 RID: 3688
 		public PlayerInputRebinding.ControllerButton[] Jump = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E69 RID: 3689
 		public PlayerInputRebinding.ControllerButton[] Grab = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E6A RID: 3690
 		public PlayerInputRebinding.ControllerButton[] SpiritFlame = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E6B RID: 3691
 		public PlayerInputRebinding.ControllerButton[] Bash = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E6C RID: 3692
 		public PlayerInputRebinding.ControllerButton[] Glide = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E6D RID: 3693
 		public PlayerInputRebinding.ControllerButton[] ChargeJump = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E6E RID: 3694
 		public PlayerInputRebinding.ControllerButton[] Select = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E6F RID: 3695
 		public PlayerInputRebinding.ControllerButton[] Start = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E70 RID: 3696
 		public PlayerInputRebinding.ControllerButton[] Cancel = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E71 RID: 3697
 		public PlayerInputRebinding.ControllerButton[] LeftShoulder = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E72 RID: 3698
 		public PlayerInputRebinding.ControllerButton[] RightShoulder = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E73 RID: 3699
 		public PlayerInputRebinding.ControllerButton[] LeftStick = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E74 RID: 3700
 		public PlayerInputRebinding.ControllerButton[] RightStick = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E75 RID: 3701
 		public PlayerInputRebinding.ControllerButton[] ZoomIn = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E76 RID: 3702
 		public PlayerInputRebinding.ControllerButton[] ZoomOut = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E77 RID: 3703
 		public PlayerInputRebinding.ControllerButton[] Copy = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E78 RID: 3704
 		public PlayerInputRebinding.ControllerButton[] Delete = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E79 RID: 3705
 		public PlayerInputRebinding.ControllerButton[] Focus = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E7A RID: 3706
 		public PlayerInputRebinding.ControllerButton[] Filter = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E7B RID: 3707
 		public PlayerInputRebinding.ControllerButton[] Legend = new PlayerInputRebinding.ControllerButton[0];
 
-		// Token: 0x04000E7C RID: 3708
 		public PlayerInputRebinding.ControllerButton[] Stomp = new PlayerInputRebinding.ControllerButton[0];
 	}
 }

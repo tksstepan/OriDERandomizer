@@ -7,14 +7,6 @@ using UnityEngine;
 
 public class SeinChargeFlameAbility : CharacterState, ISeinReceiver
 {
-	public SeinChargeFlameAbility()
-	{
-	}
-
-	static SeinChargeFlameAbility()
-	{
-	}
-
 	public float ChargeDuration
 	{
 		get
@@ -314,10 +306,6 @@ public class SeinChargeFlameAbility : CharacterState, ISeinReceiver
 	[Serializable]
 	public class ChargeFlameDefinitions
 	{
-		public ChargeFlameDefinitions()
-		{
-		}
-
 		public float ChargeDuration = 1f;
 
 		public GameObject ChargeFlameBurstA;
@@ -331,10 +319,6 @@ public class SeinChargeFlameAbility : CharacterState, ISeinReceiver
 
 	public class States
 	{
-		public States()
-		{
-		}
-
 		public State Start;
 
 		public State Precharging;
