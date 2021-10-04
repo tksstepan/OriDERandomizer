@@ -155,7 +155,7 @@ public static class RandomizerSettings
 		Controls.WallChargeMouseAim = new BoolSetting("Wall Charge Mouse Aim", true);
 		Controls.SwimmingMouseAim = new BoolSetting("Swimming Mouse Aim", false);
 		Controls.SlowClimbVault = new BoolSetting("Slow Climb Vault", true);
-		Controls.Autofire = new EnumSetting<AutofireMode>("Autofire", AutofireMode.Toggle);
+		Controls.Autofire = new EnumSetting<AutofireMode>("Autofire", AutofireMode.Off);
 		Controls.LongerBashAimTime = new BoolSetting("Longer Bash Aim Time", false);
 
 		Customization.ColdColor = new ColorSetting("Cold Color", new Color(0f, 0.5f, 0.5f, 0.5f));
@@ -168,7 +168,7 @@ public static class RandomizerSettings
 		Game.ImprovedSpiritFlame = new BoolSetting("Improved Spirit Flame", true, false);
 		Game.BlackrootOrbRoomClimbAssist = new BoolSetting("Blackroot Orb Room Climb Assist", true, false);
 		Game.FixGrottoBridgeDrop = new BoolSetting("Fix Grotto Bridge Drop", true, false);
-		Game.UseTeleportAnywhere = new BoolSetting("Use Teleport Anywhere for Alt+R", false, false);
+		Game.UseTeleportAnywhere = new BoolSetting("Use Teleport Anywhere for Alt+R", true, false);
 
 		Accessibility.ApplySoundCompression = new BoolSetting("Apply Sound Compression", false, false);
 		Accessibility.SoundCompressionFactor = new FloatSetting("Sound Compression Factor", 0.6f, false);
