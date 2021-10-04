@@ -325,10 +325,10 @@ public static class Randomizer
     //  more reliable hook for game end / credit starts
     public static void onNaruDestroyed() {
         if (Scenes.Manager.CurrentScene.Scene == "theSacrifice" && RandomizerStatsManager.Active)
-            {
-                RandomizerStatsManager.Finish();
-                RandomizerCreditsManager.Initialize();
-            }
+        {
+            RandomizerStatsManager.Finish();
+            RandomizerCreditsManager.Initialize();
+        }
     }
 
     public static void showHint(string message)
@@ -445,7 +445,7 @@ public static class Randomizer
                         }
                     }
                     if(!loading)
-                    Randomizer.Warping--;
+                        Randomizer.Warping--;
                     if(Randomizer.Warping == 0 && Randomizer.SaveAfterWarp)
                     {
                         GameController.Instance.CreateCheckpoint();
@@ -792,7 +792,7 @@ public static class Randomizer
             }
             if(message != "") {
                 Randomizer.MessageProvider.SetMessage(message);
-                Game.UI.Hints.Show(Randomizer.MessageProvider, HintLayer.GameSaved, (float)Randomizer.MessageQueueTime / 30f + 1f);
+                Game.UI.Hints.Show(Randomizer.MessageProvider, HintLayer.Randomizer, (float)Randomizer.MessageQueueTime / 30f + 1f);
             }
         }
         Randomizer.MessageQueueTime--;
@@ -933,7 +933,7 @@ public static class Randomizer
                 GameSettings.Instance.SoundEffectsVolume = 0f;
                 ResetVolume = 3;
             }
-            Game.UI.Hints.Show(Randomizer.MessageProvider, HintLayer.GameSaved, (float)seconds);
+            Game.UI.Hints.Show(Randomizer.MessageProvider, HintLayer.Randomizer, (float)seconds);
             if(setMessage)
             {
                 Message = text;
