@@ -9,4 +9,8 @@ mountHoruHubMid/*doorSetups/lavaDrainSetups/*door7LavaDrains/*door7LavaDrain/04.
 mountHoruHubMid/*doorSetups/lavaDrainSetups/*door8LavaDrains/*door8LavaDrain/04. Give randomized pickup RandomizerPickupAction 1919663033 1265578911 -1610223430 -2058149588 726bbbb9-339f-4b6f-baf0-05a02c215385
 mountHoruHubMid/*doorSetups/lavaDrainSetups/giveLeftPickup RandomizerPickupAction -113467076 1262471100 2067579068 -1446727120 f93ca13c-c7bc-4b3f-bcc0-3c7b30b2c4a9
 mountHoruHubMid/*doorSetups/lavaDrainSetups/giveRightPickup RandomizerPickupAction 1304729780 1199153037 -833875285 488721814 4dc498b4-9f8d-4779-ab12-4cce964d211d
+mountHoruLaserPuzzle/laserPuzzle/deactivateSequence ActionSequence -217873041 1228699831 -192933462 1616173080 f303856f-78b7-493c-aa11-80f418d85460
+mountHoruLaserPuzzle/laserPuzzle/deactivateSequence TriggerByString -1643625622 1244944140 -1378018126 -449882576 9e08436a-570c-4a34-b21c-ddad30562fe5
+mountHoruLaserPuzzle/laserPuzzle/deactivateSequence/01. Deactivate blockableLaser 83562839 1305673046 1379750071 220123169 04fb1157-fd56-4dd2-b750-3d5221d01e0d
+mountHoruLaserPuzzle/laserPuzzle/deactivateSequence/02. Deactivate blockableLaser 296308939 1211527480 -1445804128 1888526783 11a950cb-7138-4836-a0c7-d2a9bfa19070
 thornfeltSwampActTwoStart/musicZones/musicActivation OnSceneStartRunAction 560691571 1097907217 -1524861543 276788056 216b7973-bc11-4170-9975-1ca558737f10

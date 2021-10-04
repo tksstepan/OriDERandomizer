@@ -56,6 +56,16 @@ public class RandomizerBootstrap
 		}
 	}
 
+	private static void SetGuidAndSave(SceneRoot sceneRoot, GuidOwner owner, MoonGuid guid)
+	{
+		owner.MoonGuid = guid;
+
+		if (owner is SaveSerialize)
+		{
+			(owner as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+		}
+	}
+
 	private static Transform CloneObject(SceneRoot sceneRoot, Transform obj, string name=null, bool sibling=true)
 	{
 		// temporarily fiddle with the original object's active status to prevent the clone from instantly awaking if it shouldn't
@@ -204,8 +214,7 @@ public class RandomizerBootstrap
 		OnSceneStartRunAction runAction = musicSequence.gameObject.AddComponent<OnSceneStartRunAction>();
 		runAction.ActionToRun = musicSequence;
 		runAction.TriggerOnce = true;
-		runAction.MoonGuid = new MoonGuid(560691571, 1097907217, -1524861543, 276788056);
-		(runAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+		RandomizerBootstrap.SetGuidAndSave(sceneRoot, runAction, new MoonGuid(560691571, 1097907217, -1524861543, 276788056));
 
 		// patch the post-Ginso cutscene to fix softlock when Sein's dialogue is auto-skipped
 		ActionSequence seinAnimationSequence = sceneRoot.transform.FindChild("*objectiveSetup/objectiveSetupTrigger/seinSpriteAction").GetComponent<ActionSequence>();
@@ -221,8 +230,7 @@ public class RandomizerBootstrap
 			GameObject bridgeSequence = sceneRoot.transform.FindChild("*gumoBridgeSetup/group/action").gameObject;
 			ActionSequenceSerializer serializer = bridgeSequence.AddComponent<ActionSequenceSerializer>();
 			serializer.OnValidate();
-			serializer.MoonGuid = new MoonGuid(1360931587, 1176121670, -1051255642, 855352030);
-			(serializer as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+			RandomizerBootstrap.SetGuidAndSave(sceneRoot, serializer, new MoonGuid(1360931587, 1176121670, -1051255642, 855352030));
 		}
 	}
 
@@ -286,8 +294,7 @@ public class RandomizerBootstrap
 		obj.transform.parent = doorSequence.transform;
 
 		RunActionCondition conditionPickupAction = obj.AddComponent<RunActionCondition>();
-		conditionPickupAction.MoonGuid = new MoonGuid(-1261986975, 1336041250, 1663544246, -817715174);
-		(conditionPickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+		RandomizerBootstrap.SetGuidAndSave(sceneRoot, conditionPickupAction, new MoonGuid(-1261986975, 1336041250, 1663544246, -817715174));
 		conditionPickupAction.Action = leftPickupAction;
 		conditionPickupAction.ElseAction = rightPickupAction;
 		conditionPickupAction.Condition = (doorSequence.Actions[2] as RunActionCondition).Condition;
@@ -301,8 +308,7 @@ public class RandomizerBootstrap
 		obj.transform.parent = doorSequence.transform;
 
 		conditionPickupAction = obj.AddComponent<RunActionCondition>();
-		conditionPickupAction.MoonGuid = new MoonGuid(-300318401, 1327879929, 1536957364, -1500614911);
-		(conditionPickupAction as SaveSerialize).RegisterToSaveSceneManager(sceneRoot.SaveSceneManager);
+		RandomizerBootstrap.SetGuidAndSave(sceneRoot, conditionPickupAction, new MoonGuid(-300318401, 1327879929, 1536957364, -1500614911));
 		conditionPickupAction.Action = rightPickupAction;
 		conditionPickupAction.ElseAction = leftPickupAction;
 		conditionPickupAction.Condition = (doorSequence.Actions[2] as RunActionCondition).Condition;
@@ -317,10 +323,51 @@ public class RandomizerBootstrap
 		sceneRoot.transform.FindChild("*activatedBySpiritFlame/activated/*spiritWellHintSetup/objectiveSetupTrigger").GetComponent<PlayerCollisionTrigger>().Active = false;
 	}
 
+	private static void BootstrapMountHoruLaserPuzzle(SceneRoot sceneRoot)
+	{
+		GameObject obj = new GameObject("deactivateSequence");
+		obj.transform.parent = sceneRoot.transform.FindChild("laserPuzzle");
+		
+		ActionSequence sequence = obj.AddComponent<ActionSequence>();
+		RandomizerBootstrap.SetGuidAndSave(sceneRoot, sequence, new MoonGuid(-217873041, 1228699831, -192933462, 1616173080));
+
+		TriggerByString trigger = obj.AddComponent<TriggerByString>();
+		trigger.Data = new TriggerByString.StringTriggerData{ String = "horuLaserPuzzleSolved", TriggerEvent = TriggerByString.TriggerEvent.Always };
+		trigger.TriggerOnce = true;
+		trigger.ActionToRun = sequence;
+		RandomizerBootstrap.SetGuidAndSave(sceneRoot, trigger, new MoonGuid(-1643625622, 1244944140, -1378018126, -449882576));
+
+		foreach (Transform child in sceneRoot.transform.FindChild("laserPuzzle/enemyStoppers"))
+		{
+			if (child.name == "blockableLaser")
+			{
+				GameObject newAction = new GameObject("action");
+				newAction.transform.parent = obj.transform;
+
+				ActivateAction activate = newAction.AddComponent<ActivateAction>();
+				activate.Activate = false;
+				activate.Target = child.gameObject;
+				sequence.Actions.Add(activate);
+
+				if (child.position.x < 265f)
+				{
+					RandomizerBootstrap.SetGuidAndSave(sceneRoot, activate, new MoonGuid(296308939, 1211527480, -1445804128, 1888526783));
+				}
+				else
+				{
+					RandomizerBootstrap.SetGuidAndSave(sceneRoot, activate, new MoonGuid(83562839, 1305673046, 1379750071, 220123169));
+				}
+			}
+		}
+
+		ActionSequence.Rename(sequence.Actions);
+	}
+
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrap = new Dictionary<string, Action<SceneRoot>>
 	{
 		{ "moonGrottoRopeBridge", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoBridge) },
 		{ "mountHoruHubMid", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMountHoruHub) },
+		{ "mountHoruLaserPuzzle", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMountHoruLaserPuzzle) },
 		{ "northMangroveFallsLanternIntro", new Action<SceneRoot>(RandomizerBootstrap.BootstrapBlackrootLanternRoom) },
 		{ "spiritTreeRefined", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSpiritTree) },
 		{ "sunkenGladesIntroSplitB", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSunkenGladesSpiritWell) },
