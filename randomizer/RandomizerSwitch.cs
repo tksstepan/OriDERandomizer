@@ -134,6 +134,7 @@ public static class RandomizerSwitch
                 break;
             case 5:
                 PickupMessage("@Warmth Returned@", 300);
+                Sein.World.Events.WarmthReturned = true;
                 break;
         }
         RandomizerStatsManager.FoundEvent(Value);

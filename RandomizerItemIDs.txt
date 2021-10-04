@@ -155,6 +155,8 @@
 936 - Have Pickup Bitfield #7
 937 - Have Pickup Bitfield #8
 
+950 - Finished Ginso escape
+
 1000 - plant tracking for map markers
 1001 - tree field for tracker
 1002 - relic field for tracker

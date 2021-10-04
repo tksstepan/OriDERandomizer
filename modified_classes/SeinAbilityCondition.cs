@@ -11,7 +11,7 @@ public class SeinAbilityCondition : Condition
         {
             if (this.Ability == AbilityType.Stomp)
             {
-                if (Sein.World.Events.WarmthReturned && Scenes.Manager.CurrentScene != null)
+                if (RandomizerStatsManager.FinishedGinsoEscape && Scenes.Manager.CurrentScene != null)
                 {
                     string scene = Scenes.Manager.CurrentScene.Scene;
                     if(scene == "ginsoTreeTurrets")
