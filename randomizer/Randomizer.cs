@@ -1033,7 +1033,7 @@ public static class Randomizer
                         }
                         RandomizerTrackedDataManager.UpdateBitfields();
                         RandomizerColorManager.UpdateHotColdTarget();
-                        if (Characters.Sein.Position.y > 935f && Sein.World.Events.WarmthReturned && Scenes.Manager.CurrentScene.Scene == "ginsoTreeWaterRisingEnd")
+                        if (Characters.Sein.Position.y > 935f && RandomizerStatsManager.FinishedGinsoEscape && Scenes.Manager.CurrentScene.Scene == "ginsoTreeWaterRisingEnd")
                         {
                             if (Characters.Sein.Abilities.Bash && Characters.Sein.Abilities.Bash.IsBashing)
                             {
