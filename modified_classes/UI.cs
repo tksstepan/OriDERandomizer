@@ -112,7 +112,14 @@ namespace Game
 					{
 						duration = 1f;
 					}
-					UI.Hints.m_currentHint = UI.MessageController.ShowHintMessage(messageProvider, UI.Hints.HintPosition, duration);
+					if (layer == HintLayer.Randomizer)
+					{
+						UI.Hints.m_currentHint = UI.MessageController.ShowHintMessage(messageProvider, new Vector3(UI.Hints.HintPosition.x, UI.Hints.HintPosition.y, -7f), duration);
+					}
+					else
+					{
+						UI.Hints.m_currentHint = UI.MessageController.ShowHintMessage(messageProvider, UI.Hints.HintPosition, duration);
+					}
 					return UI.Hints.m_currentHint;
 				}
 				return null;
