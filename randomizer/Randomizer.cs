@@ -31,6 +31,7 @@ public static class Randomizer
             Randomizer.GridFactor = 4.0;
             Randomizer.Message = "Good luck on your rando!";
             Randomizer.MessageProvider = (RandomizerMessageProvider)ScriptableObject.CreateInstance(typeof(RandomizerMessageProvider));
+            RandomizerUI.Instance.ClearRecentNotifications();
             Randomizer.ProgressiveMapStones = true;
             Randomizer.ForceTrees = false;
             Randomizer.CluesMode = false;
@@ -335,14 +336,30 @@ public static class Randomizer
     {
         LastMessageCredits = false;
         Randomizer.Message = message;
-        Randomizer.MessageQueue.Enqueue(message);
+
+        if (RandomizerSettings.Customization.MultiplePickupMessages)
+        {
+            RandomizerUI.Instance.QueueSideNotification(message);
+        }
+        else
+        {
+            Randomizer.MessageQueue.Enqueue(message);
+        }
     }
 
     public static void showHint(string message, int frames)
     {
         LastMessageCredits = false;
         Randomizer.Message = message;
-        Randomizer.MessageQueue.Enqueue(new object[] {message, frames});
+
+        if (RandomizerSettings.Customization.MultiplePickupMessages)
+        {
+            RandomizerUI.Instance.QueueSideNotification(message, (float)frames / 60f + 3f);
+        }
+        else
+        {
+            Randomizer.MessageQueue.Enqueue(new object[] {message, frames});
+        }
     }
 
     public static void printInfo(string message)
@@ -569,11 +586,6 @@ public static class Randomizer
             }
         }
 
-        if (RandomizerRebinding.ReplayMessage.IsPressed())
-        {
-            Randomizer.playLastMessage();
-            return;
-        }
         if (RandomizerRebinding.ReturnToStart.IsPressed() && Characters.Sein && Randomizer.Warping <= 0)
         {
             if(CanWarp > 0 && Vector3.Distance(Randomizer.WarpSource, Characters.Sein.Position) < 7)
@@ -902,7 +914,7 @@ public static class Randomizer
                 }
             }
         }
-        Randomizer.showHint("Error using door at " + ((int)position.x).ToString() + ", " + ((int)position.y).ToString());
+        Randomizer.printInfo("Error using door at " + ((int)position.x).ToString() + ", " + ((int)position.y).ToString());
     }
 
     public static int ordHash(string s)
@@ -1080,17 +1092,38 @@ public static class Randomizer
                             if(gameMapTP.Identifier == "ginsoTree" && get(1024) == 1 && RandomizerBonus.WaterVeinShards() >= 2)
                             {
                                 TeleporterController.Activate(Randomizer.TeleportTable["Ginso"].ToString(), false);
-                                Randomizer.MessageQueue.Enqueue("*Ginso teleporter activated*");
+                                if (RandomizerSettings.Customization.MultiplePickupMessages)
+                                {
+                                    RandomizerSwitch.PickupMessage("*Ginso teleporter activated*");
+                                }
+                                else
+                                {
+                                    Randomizer.MessageQueue.Enqueue("*Ginso teleporter activated*");
+                                }
                             }
                             else if(gameMapTP.Identifier == "forlorn" && get(1025) == 1 && RandomizerBonus.GumonSealShards() >= 2)
                             {
                                 TeleporterController.Activate(Randomizer.TeleportTable["Forlorn"].ToString(), false);
-                                Randomizer.MessageQueue.Enqueue("#Forlorn teleporter activated#");
+                                if (RandomizerSettings.Customization.MultiplePickupMessages)
+                                {
+                                    RandomizerSwitch.PickupMessage("#Forlorn teleporter activated#");
+                                }
+                                else
+                                {
+                                    Randomizer.MessageQueue.Enqueue("#Forlorn teleporter activated#");
+                                }
                             }
                             else if(gameMapTP.Identifier == "mountHoru" && get(1026) == 1 && RandomizerBonus.SunstoneShards() >= 2)
                             {
                                 TeleporterController.Activate(Randomizer.TeleportTable["Horu"].ToString(), false);
-                                Randomizer.MessageQueue.Enqueue("@Horu teleporter activated@");
+                                if (RandomizerSettings.Customization.MultiplePickupMessages)
+                                {
+                                    RandomizerSwitch.PickupMessage("@Horu teleporter activated@");
+                                }
+                                else
+                                {
+                                    Randomizer.MessageQueue.Enqueue("@Horu teleporter activated@");
+                                }
                             }
                         }
                     }

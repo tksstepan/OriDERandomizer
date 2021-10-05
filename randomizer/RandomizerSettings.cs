@@ -161,6 +161,8 @@ public static class RandomizerSettings
 		Customization.ColdColor = new ColorSetting("Cold Color", new Color(0f, 0.5f, 0.5f, 0.5f));
 		Customization.HotColor = new ColorSetting("Hot Color", new Color(0.5f, 0.1666667f, 0f, 0.5f));
 		Customization.DiscoSense = new BoolSetting("Disco Sense", false, false);
+		Customization.MultiplePickupMessages = new BoolSetting("Display Multiple Pickup Messages", false, false);
+		Customization.AlwaysShowLastFivePickups = new BoolSetting("Always Show Last Five Pickup Messages", false, false);
 
 		QOL.AbilityMenuOpacity = new FloatSetting("Ability Menu Opacity", 0.5f);
 		QOL.CursorLock = new BoolSetting("Cursor Lock", false, false);
@@ -226,6 +228,10 @@ public static class RandomizerSettings
 		public static ColorSetting HotColor;
 
 		public static BoolSetting DiscoSense;
+
+		public static BoolSetting MultiplePickupMessages;
+
+		public static BoolSetting AlwaysShowLastFivePickups;
 	}
 
 	public static class QOL
