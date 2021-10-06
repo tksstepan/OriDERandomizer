@@ -327,7 +327,7 @@ public class SeinController : SaveSerialize, IDamageReciever, ISeinReceiver, ISu
 			}
 		}
 
-		if (grenadeJumpPressed && CharacterState.IsActive(this.Sein.Abilities.WallChargeJump) && this.Sein.Abilities.GrabWall && this.Sein.Abilities.WallChargeJump.CanChargeJump && this.Sein.Abilities.Grenade && this.Sein.Abilities.Grenade.CanAim)
+		if (grenadeJumpPressed && CharacterState.IsActive(this.Sein.Abilities.WallChargeJump) && this.Sein.Abilities.GrabWall && this.Sein.Abilities.WallChargeJump.CanChargeJump && this.Sein.Abilities.Grenade && this.Sein.Abilities.Grenade.CanAim && !this.IsAimingGrenade)
 		{
 			Randomizer.GrenadeJumpQueued = true;
 			Core.Input.LeftShoulder.IsPressed = true;
