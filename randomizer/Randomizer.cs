@@ -301,10 +301,33 @@ public static class Randomizer
             string defaultTeleporter = "sunkenGlades";
             float closestTeleporter = Mathf.Infinity;
 
+            bool isInGlades = false;
+            bool isInGrotto = false;
+
+            if (Scenes.Manager.CurrentScene.Scene.StartsWith("sunkenGlades"))
+            {
+                isInGlades = true;
+            }
+            else if (Scenes.Manager.CurrentScene.Scene.StartsWith("moonGrotto"))
+            {
+                isInGrotto = true;
+            }
+
             foreach (GameMapTeleporter teleporter in TeleporterController.Instance.Teleporters)
             {
                 if (teleporter.Activated)
                 {
+                    if (isInGlades && teleporter.Identifier == "sunkenGlades")
+                    {
+                        defaultTeleporter = teleporter.Identifier;
+                        break;
+                    }
+                    else if (isInGrotto && teleporter.Identifier == "moonGrotto")
+                    {
+                        defaultTeleporter = teleporter.Identifier;
+                        break;
+                    }
+                    
                     Vector3 distanceVector = teleporter.WorldPosition - Characters.Sein.Position;
                     if (distanceVector.sqrMagnitude < closestTeleporter)
                     {
