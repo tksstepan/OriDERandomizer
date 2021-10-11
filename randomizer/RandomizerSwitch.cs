@@ -42,7 +42,8 @@ public static class RandomizerSwitch
 
     public static void KeystonePickup() {
         PickupMessage("Keystone");
-        Characters.Sein.Inventory.CollectKeystones(1);     
+        Characters.Sein.Inventory.CollectKeystones(1);
+        Characters.Sein.Inventory.IncRandomizerItem(70, 1);
     }
 
     public static void MaxHealthContainerPickup() 
@@ -55,6 +56,7 @@ public static class RandomizerSwitch
     {
         PickupMessage("Map Stone");
         Characters.Sein.Inventory.MapStones++;
+        Characters.Sein.Inventory.IncRandomizerItem(71, 1);
     }
 
     public static void AbilityPickup(int Ability) {

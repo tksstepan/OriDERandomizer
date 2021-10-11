@@ -6,6 +6,7 @@ using System.IO;
 using B83.Win32;
 using Core;
 using Game;
+using Protogen;
 using Sein.World;
 using UnityEngine;
 
@@ -195,6 +196,10 @@ public static class Randomizer
                     if (Randomizer.CluesMode) {
                         RandomizerClues.FinishClues();
                     }
+                    RandomizerLocationManager.InitializeLogic();
+                    if (Characters.Sein) {
+                        RandomizerLocationManager.UpdateReachable();
+                    }
                 } else {
                     Randomizer.printInfo("Error: " + Randomizer.SeedFilePath + " not found");
                     Randomizer.SeedFilePath = "randomizer.dat";
@@ -327,7 +332,7 @@ public static class Randomizer
                         defaultTeleporter = teleporter.Identifier;
                         break;
                     }
-                    
+
                     Vector3 distanceVector = teleporter.WorldPosition - Characters.Sein.Position;
                     if (distanceVector.sqrMagnitude < closestTeleporter)
                     {
@@ -852,6 +857,8 @@ public static class Randomizer
         {
             RandomizerTrackedDataManager.Reset();
             RandomizerTrackedDataManager.UpdateBitfields();
+
+            RandomizerLocationManager.UpdateReachable();
         }
     }
 

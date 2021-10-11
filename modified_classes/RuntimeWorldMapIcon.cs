@@ -20,10 +20,11 @@ public class RuntimeWorldMapIcon
 			return false;
 		}
 
-		// hide the pickup icon if it's a randomizer pickup that we have collected; otherwise, show it
+		// show randomizer pickup icons only if they're reachable and not yet collected
 		if (RandomizerLocationManager.LocationsByWorldMapGuid.ContainsKey(this.Guid))
 		{
-			return !RandomizerLocationManager.LocationsByWorldMapGuid[this.Guid].Collected;
+			RandomizerLocationManager.Location loc = RandomizerLocationManager.LocationsByWorldMapGuid[this.Guid];
+			return loc.Reachable && !loc.Collected;
 		}
 
 		return true;

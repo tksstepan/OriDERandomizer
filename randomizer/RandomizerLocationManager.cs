@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Game;
+using Protogen;
+using Sein.World;
 using UnityEngine;
 
 public class RandomizerLocationManager
@@ -32,6 +34,38 @@ public class RandomizerLocationManager
 				RandomizerLocationManager.LocationsByWorldMapGuid[newLocation.WorldMapGuid] = newLocation;
 			}
 		}
+	}
+
+	public static void InitializeLogic()
+	{
+		HashSet<string> paths = new HashSet<string>();
+		string preset = Randomizer.SeedMeta.Substring(0, Randomizer.SeedMeta.IndexOf(','));
+
+		switch(preset)
+		{
+		case "Casual":
+			paths.Add("casual");
+			break;
+		case "Standard":
+			paths.Add("casual");
+			paths.Add("standard");
+			break;
+		case "Expert":
+			paths.Add("casual");
+			paths.Add("standard");
+			paths.Add("expert");
+			paths.Add("dbash");
+			break;
+		case "Master":
+			paths.Add("casual");
+			paths.Add("standard");
+			paths.Add("expert");
+			paths.Add("master");
+			paths.Add("gjump");
+			break;
+		}
+
+		RandomizerLocationManager.Areas = OriParse.Parse(paths);
 	}
 
 	public static RandomizerPickupAction AddPickupAction(GameObject parentObj, string pickupName, string actionName = null)
@@ -99,6 +133,59 @@ public class RandomizerLocationManager
 		}
 	}
 
+	public static void UpdateReachable()
+	{
+		Inventory currentInventory = Inventory.FromCharacter();
+		currentInventory.Unlocks.Add("Mapstone");
+
+		if (Characters.Sein.Inventory.GetRandomizerItem(70) > currentInventory.Keystones)
+		{
+			currentInventory.Keystones = Characters.Sein.Inventory.GetRandomizerItem(70);
+		}
+
+		if (Characters.Sein.Inventory.GetRandomizerItem(71) > currentInventory.Mapstones)
+		{
+			currentInventory.Mapstones = Characters.Sein.Inventory.GetRandomizerItem(71);
+		}
+
+		if (Randomizer.OpenMode)
+		{
+			currentInventory.Unlocks.Add("Open");
+		}
+
+		if (Randomizer.OpenWorld)
+		{
+			currentInventory.Unlocks.Add("OpenWorld");
+		}
+
+		HashSet<string> reachable = null;
+
+		if (RandomizerLocationManager.Areas != null)
+		{
+			reachable = OriReachable.Reachable(RandomizerLocationManager.Areas, currentInventory);
+			reachable.Add("FirstEnergyCell");
+			reachable.Add("Sein");
+
+			if (reachable.Contains("ForlornEscape"))
+			{
+				reachable.Add("ForlornEscapePlant");
+			}
+		}
+
+		foreach (var item in RandomizerLocationManager.LocationsByName)
+		{
+			if (reachable == null || reachable.Contains(item.Key))
+			{
+				item.Value.Reachable = true;
+			}
+			else if (item.Value.Reachable)
+			{
+				Randomizer.log("!!!! " + item.Key + " became unreachable!");
+				item.Value.Reachable = false;
+			}
+		}
+	}
+
 	public static Dictionary<MoonGuid, Location> LocationsByGuid = new Dictionary<MoonGuid, Location>();
 
 	public static Dictionary<MoonGuid, Location> LocationsByWorldMapGuid = new Dictionary<MoonGuid, Location>();
@@ -108,6 +195,8 @@ public class RandomizerLocationManager
 	public static Dictionary<int, Location> LocationsByKey = new Dictionary<int, Location>();
 
 	public static Location[] ProgressiveMapLocations = new Location[9];
+
+	public static AreaGraph Areas;
 
 	public class Location
 	{
@@ -191,6 +280,7 @@ public class RandomizerLocationManager
 
 			BingoController.OnLoc(this.Key);
 			RandomizerSwitch.GivePickup(this.Pickup, this.Key);
+			RandomizerLocationManager.UpdateReachable();
 
 			if (Randomizer.HotColdItems.ContainsKey(this.Key))
 			{
@@ -234,6 +324,8 @@ public class RandomizerLocationManager
 		public bool Repeatable;
 
 		public int SpecialIndex;
+
+		public bool Reachable;
 
 		public enum LocationType
 		{
