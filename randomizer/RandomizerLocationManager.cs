@@ -44,7 +44,7 @@ public class RandomizerLocationManager
 
 		if (preset.StartsWith("Sync"))
 		{
-			preset = Randomizer.SeedMeta.Substring(firstComma, Randomizer.SeedMeta.IndexOf(',', firstComma));
+			preset = Randomizer.SeedMeta.Substring(firstComma + 1, Randomizer.SeedMeta.IndexOf(',', firstComma + 1) - firstComma - 1);
 		}
 
 		switch(preset)
