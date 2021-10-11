@@ -8,7 +8,7 @@ namespace Protogen
 {
     public class Inventory
     {
-        public HashSet<string> Unlocks = new HashSet<string>();
+        public HashSet<string> Unlocks = new HashSet<string>{"Free"};
 
         public int Keystones;
 

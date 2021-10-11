@@ -7,7 +7,7 @@ namespace Protogen
 {
     public static class OriParse
     {
-        public static AreaGraph Parse(HashSet<string> logicSets)
+        public static AreaGraph Parse(string filename, HashSet<string> logicSets)
         {
             var nodeDictionary = new Dictionary<string, Node>();
             var connections = new List<Connection>();
@@ -15,12 +15,15 @@ namespace Protogen
             Node currentDestination = null;
             var hasPath = false;
 
-            if (!File.Exists("areas.ori"))
+            HashSet<string> cachedPathsets = new HashSet<string>();
+            HashSet<string> cachedExcludePathsets = new HashSet<string>();
+
+            if (!File.Exists(filename))
             {
                 return null;
             }
 
-            List<string> logicLines = File.ReadAllLines("areas.ori").ToList();
+            List<string> logicLines = File.ReadAllLines(filename).ToList();
 
             foreach (string line in logicLines)
             {
@@ -53,7 +56,25 @@ namespace Protogen
                     hasPath = false;
                     break;
                 default:
-                    if (logicSets.Any(it => first.StartsWith(it)))
+                    bool found = false;
+                    if (cachedPathsets.Contains(first))
+                    {
+                        found = true;
+                    }
+                    else if (!cachedExcludePathsets.Contains(first))
+                    {
+                        if (logicSets.Any(it => first.StartsWith(it)))
+                        {
+                            cachedPathsets.Add(first);
+                            found = true;
+                        }
+                        else
+                        {
+                            cachedExcludePathsets.Add(first);
+                        }
+                    }
+
+                    if (found)
                     {
                         var inventory = ParseRequirement(segments.Skip(1));
                         connections.Add(new Connection(currentHome, currentDestination, inventory));
@@ -105,7 +126,7 @@ namespace Protogen
                             break;
                     }
                 }
-                else if (trimmed != "Free")
+                else
                 {
                     resultInventory.Unlocks.Add(trimmed);
                 }

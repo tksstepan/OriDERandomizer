@@ -39,7 +39,13 @@ public class RandomizerLocationManager
 	public static void InitializeLogic()
 	{
 		HashSet<string> paths = new HashSet<string>();
-		string preset = Randomizer.SeedMeta.Substring(0, Randomizer.SeedMeta.IndexOf(','));
+		int firstComma = Randomizer.SeedMeta.IndexOf(',');
+		string preset = Randomizer.SeedMeta.Substring(0, firstComma);
+
+		if (preset.StartsWith("Sync"))
+		{
+			preset = Randomizer.SeedMeta.Substring(firstComma, Randomizer.SeedMeta.IndexOf(',', firstComma));
+		}
 
 		switch(preset)
 		{
@@ -60,12 +66,31 @@ public class RandomizerLocationManager
 			paths.Add("casual");
 			paths.Add("standard");
 			paths.Add("expert");
+			paths.Add("dbash");
 			paths.Add("master");
 			paths.Add("gjump");
 			break;
 		}
 
-		RandomizerLocationManager.Areas = OriParse.Parse(paths);
+		if (!File.Exists("areas.ori"))
+		{
+			RandomizerLocationManager.Areas = null;
+			RandomizerLocationManager.s_logicLastUpdated = DateTime.MinValue;
+			RandomizerLocationManager.s_lastLogicPaths = paths;
+			return;
+		}
+
+		if (RandomizerLocationManager.s_logicLastUpdated == DateTime.MinValue || File.GetLastWriteTime("areas.ori") > RandomizerLocationManager.s_logicLastUpdated || !paths.SetEquals(RandomizerLocationManager.s_lastLogicPaths))
+		{
+			RandomizerLocationManager.Areas = OriParse.Parse("areas.ori", paths);
+			RandomizerLocationManager.s_logicLastUpdated = File.GetLastWriteTime("areas.ori");
+			RandomizerLocationManager.s_lastLogicPaths = paths;
+
+			foreach (Location location in RandomizerLocationManager.LocationsByName.Values)
+			{
+				location.Reachable = false;
+			}
+		}
 	}
 
 	public static RandomizerPickupAction AddPickupAction(GameObject parentObj, string pickupName, string actionName = null)
@@ -197,6 +222,10 @@ public class RandomizerLocationManager
 	public static Location[] ProgressiveMapLocations = new Location[9];
 
 	public static AreaGraph Areas;
+
+	private static DateTime s_logicLastUpdated = DateTime.MinValue;
+
+	private static HashSet<string> s_lastLogicPaths = null;
 
 	public class Location
 	{

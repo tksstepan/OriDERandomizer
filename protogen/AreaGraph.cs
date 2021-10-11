@@ -15,9 +15,13 @@ namespace Protogen
             foreach (Node node in this.Nodes)
             {
                 this.NodesByName[node.Name] = node;
+                this.OutgoingConnections[node.Name] = new List<Connection>();
             }
 
-            this.OutgoingConnections = Nodes.ToDictionary(node => node.Name, node => Connections.Where(connection => connection.Source.Name == node.Name).ToList<Connection>());
+            foreach (Connection connection in this.Connections)
+            {
+                this.OutgoingConnections[connection.Source.Name].Add(connection);
+            }
         }
 
         public Node Origin;
