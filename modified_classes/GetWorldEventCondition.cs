@@ -7,7 +7,7 @@ public class GetWorldEventCondition : Condition
 {
 	public override bool Validate(IContext context)
 	{
-		if (this.WorldEvents.UniqueID == 26 && RandomizerStatsManager.FinishedGinsoEscape)
+		if (this.WorldEvents.UniqueID == 26 && Randomizer.Inventory.FinishedGinsoEscape)
 		{
 			return this.State != 21;
 		}

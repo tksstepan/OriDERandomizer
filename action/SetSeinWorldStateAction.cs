@@ -10,7 +10,7 @@ public class SetSeinWorldStateAction : ActionMethod
 		switch (this.State)
 		{
 		case WorldState.WaterPurified:
-			RandomizerStatsManager.FinishedGinsoEscape = true;
+			Randomizer.Inventory.FinishedGinsoEscape = true;
 			Randomizer.NeedGinsoEscapeCleanup = true;
 			RandomizerLocationManager.GivePickup(this.MoonGuid);
 			return;

@@ -223,6 +223,7 @@ public static class Randomizer
         RandomizerLocationManager.Initialize();
         RandomizerUI.Initialize();
         RandomizerBootstrap.Initialize();
+        Inventory = RandomizerInventory.Initialize();
 
         UnityDragAndDropHook.InstallHook();
         UnityDragAndDropHook.OnDroppedFiles += Randomizer.OnDroppedFiles;
@@ -1075,7 +1076,7 @@ public static class Randomizer
                         }
                         RandomizerTrackedDataManager.UpdateBitfields();
                         RandomizerColorManager.UpdateHotColdTarget();
-                        if (Characters.Sein.Position.y > 935f && RandomizerStatsManager.FinishedGinsoEscape && Scenes.Manager.CurrentScene.Scene == "ginsoTreeWaterRisingEnd")
+                        if (Characters.Sein.Position.y > 935f && Randomizer.Inventory.FinishedGinsoEscape && Scenes.Manager.CurrentScene.Scene == "ginsoTreeWaterRisingEnd")
                         {
                             if (Characters.Sein.Abilities.Bash && Characters.Sein.Abilities.Bash.IsBashing)
                             {
@@ -1408,6 +1409,8 @@ public static class Randomizer
 
     public static void SetupNewGame()
     {
+        Randomizer.Inventory.Clear();
+
         // start everyone with 1 energy on all difficulties if "RandomizedFirstEnergy" flag set
         if (Randomizer.RandomizedFirstEnergy)
         {
@@ -1455,6 +1458,8 @@ public static class Randomizer
             RandomizerSwitch.GivePickup(spawnItem, 2, true);
         }
     }
+
+    public static RandomizerInventory Inventory { get; private set; }
 
     public static double GridFactor;
     public static RandomizerMessageProvider MessageProvider;

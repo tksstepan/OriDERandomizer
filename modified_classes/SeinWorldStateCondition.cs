@@ -19,7 +19,7 @@ public class SeinWorldStateCondition : Condition
             }
             if (this.overrideEvent == SeinWorldStateCondition.OverrideEvents.WaterEscapeExit)
             {
-                bool finishedEscape = RandomizerStatsManager.FinishedGinsoEscape;
+                bool finishedEscape = Randomizer.Inventory.FinishedGinsoEscape;
                 this.surfaceColliders.SetActive(finishedEscape);
                 this.blockingWall.SetActive(finishedEscape);
                 if (finishedEscape)
@@ -32,7 +32,7 @@ public class SeinWorldStateCondition : Condition
             {
                 if (this.overrideEvent == SeinWorldStateCondition.OverrideEvents.FinishEscapeTrigger)
                 {
-                    return RandomizerStatsManager.FinishedGinsoEscape;
+                    return Randomizer.Inventory.FinishedGinsoEscape;
                 }
                 return this.overrideEvent != SeinWorldStateCondition.OverrideEvents.False && Events.WaterPurified == this.IsTrue;
             }

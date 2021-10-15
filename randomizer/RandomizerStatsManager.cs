@@ -652,12 +652,6 @@ public static class RandomizerStatsManager {
 		}
 	}
 
-	public static bool FinishedGinsoEscape
-	{
-		get => get(950) == 1;
-		set => set(950, value ? 1 : 0);
-	}
-
 	public static int Deaths = 1500;
 
 	public static int DSLS = 1515;
