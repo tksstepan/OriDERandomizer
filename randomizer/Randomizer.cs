@@ -80,7 +80,6 @@ public static class Randomizer
             RandomizerDataMaps.LoadHoruData();
             RandomizerDataMaps.LoadValleyData();
             RandomizerColorManager.Initialize();
-            RandomizerPlantManager.Initialize();
             RandomizerRebinding.ParseRebinding();
             RandomizerSettings.ParseSettings();
             Randomizer.RelicZoneLookup = new Dictionary<string, string>();

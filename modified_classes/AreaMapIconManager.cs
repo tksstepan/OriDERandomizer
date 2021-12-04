@@ -39,7 +39,6 @@ public class AreaMapIconManager : MonoBehaviour
 					};
 					runtimeGameWorldArea.Icons.Add(new RuntimeWorldMapIcon(worldMapIcon, runtimeGameWorldArea)
 					{
-						IsPlant = true,
 						RandomizerIconType = icon.Type
 					});
 				}
@@ -48,40 +47,7 @@ public class AreaMapIconManager : MonoBehaviour
 					runtimeWorldMapIcon.Icon = collected ? WorldMapIconType.Invisible : WorldMapIconType.HealthUpgrade;
 				}
 			}
-			foreach (MoonGuid moonGuid in RandomizerPlantManager.Plants.Keys)
-			{
-				RandomizerPlantManager.PlantData plantData = RandomizerPlantManager.Plants[moonGuid];
-				if (runtimeGameWorldArea.Area.InsideFace(plantData.Position))
-				{
-					RuntimeWorldMapIcon runtimeWorldMapIcon = null;
-					for (int j = 0; j < runtimeGameWorldArea.Icons.Count; j++)
-					{
-						if (runtimeGameWorldArea.Icons[j].Guid == moonGuid)
-						{
-							runtimeWorldMapIcon = runtimeGameWorldArea.Icons[j];
-							break;
-						}
-					}
-					if (runtimeWorldMapIcon == null && RandomizerPlantManager.Display(moonGuid))
-					{
-						GameWorldArea.WorldMapIcon icon = new GameWorldArea.WorldMapIcon
-						{
-							Guid = moonGuid,
-							Icon = WorldMapIconType.HealthUpgrade,
-							IsSecret = false,
-							Position = plantData.Position
-						};
-						runtimeGameWorldArea.Icons.Add(new RuntimeWorldMapIcon(icon, runtimeGameWorldArea)
-						{
-							IsPlant = true
-						});
-					}
-					else if (runtimeWorldMapIcon != null)
-					{
-						runtimeWorldMapIcon.Icon = (RandomizerPlantManager.Display(moonGuid) ? WorldMapIconType.HealthUpgrade : WorldMapIconType.Invisible);
-					}
-				}
-			}
+
 			for (int k = 0; k < runtimeGameWorldArea.Icons.Count; k++)
 			{
 				runtimeGameWorldArea.Icons[k].Hide();

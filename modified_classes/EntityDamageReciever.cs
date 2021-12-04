@@ -134,7 +134,6 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 			if (this.Entity is PetrifiedPlant)
 			{
 				RandomizerLocationManager.GivePickup(this.Entity.MoonGuid);
-				RandomizerPlantManager.DestroyPlant(this.Entity.MoonGuid);
 			}
 		}
 	}

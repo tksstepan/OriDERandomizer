@@ -279,9 +279,6 @@ public class RandomizerLocationManager
 			case LocationType.Skill:
 				RandomizerTrackedDataManager.SetTree(this.SpecialIndex);
 				break;
-			case LocationType.Plant:
-				RandomizerPlantManager.DestroyPlant(this.MoonGuid);
-				break;
 			default:
 				break;
 			}
