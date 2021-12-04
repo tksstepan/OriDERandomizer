@@ -6,5 +6,6 @@ public enum RandomizerWorldMapIconType
     Sunstone,
     CleanWater,
     WindRestored,
-    HoruRoom
+    HoruRoom,
+    SkillTree
 }

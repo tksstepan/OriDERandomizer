@@ -99,6 +99,9 @@ public class RuntimeWorldMapIcon
 					componentsInChildren[i].material.color = new Color(0.1792157f, 0.2364706f, 0.8656863f);
 				this.m_iconGameObject.transform.rotation = Quaternion.Euler(0f, 0f, 180f);
 				break;
+			case RandomizerWorldMapIconType.SkillTree:
+				InitStandardIcon(WorldMapIconType.AbilityPedestal);
+				break;
 			default:
 				break;
 		}

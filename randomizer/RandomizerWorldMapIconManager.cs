@@ -7,7 +7,10 @@ public class RandomizerWorldMapIconManager
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.WaterVein, new Vector3(503.9977f, -246.8492f),  new MoonGuid(-311986442, 1339883091, -1367161930, -1482660984)),
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.CleanWater, new Vector3(524.7007f, 573.2695f),  new MoonGuid(-311986443, 1339883091, -1367161930, -1482660984)),
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.WindRestored, new Vector3(-733.6296f, -229.0052f),  new MoonGuid(-311986444, 1339883091, -1367161930, -1482660984)),
-        new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Sunstone, new Vector3(-558.3355f, 604.2133f),  new MoonGuid(-311986445, 1339883091, -1367161930, -1482660984)),
+        new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Sunstone, new Vector3(-558.3355f, 604.2133f),  new MoonGuid(1358934909, 1223903071, 482024081, 2044569179)),
+
+        new RandomizerWorldMapIcon(RandomizerWorldMapIconType.SkillTree, new Vector3(-162.4078f, -257.7189f), new MoonGuid(-550456551, 1312223365, -251340902, -293109681)), // Sein
+        new RandomizerWorldMapIcon(RandomizerWorldMapIconType.SkillTree, new Vector3(-456.1564f, -13.787f), new MoonGuid(2007719075, 1284864229, 701022080, -877064706)), // Glide
 
         // L1 -> L4
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.HoruRoom, new Vector3(-92.54841f, 379.0250f),  new MoonGuid(-311986446, 1339883091, -1367161930, -1482660984)),
@@ -21,7 +24,6 @@ public class RandomizerWorldMapIconManager
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.HoruRoom, new Vector3(310.0000f, 286.8892f),  new MoonGuid(-311986472, 1339883091, -1367161930, -1482660984)),
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.HoruRoom, new Vector3(207.0726f, 196.6679f),  new MoonGuid(-311986482, 1339883091, -1367161930, -1482660984)),
 
-        // Petrified plants
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Plant, new Vector3(313.3f, -231.6f), new MoonGuid(-1556827621, 1266247965, 658524593, -439112014)),
 		new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Plant, new Vector3(43.9f, -156.1f), new MoonGuid(1357098119, 1185246384, -60723813, -1846269103)),
 		new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Plant, new Vector3(330.5f, -77f), new MoonGuid(1515223554, 1193340384, -1596868467, 697952739)),
