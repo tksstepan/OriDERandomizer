@@ -12,6 +12,42 @@ public class AreaMapIconManager : MonoBehaviour
 		for (int i = 0; i < GameWorld.Instance.RuntimeAreas.Count; i++)
 		{
 			RuntimeGameWorldArea runtimeGameWorldArea = GameWorld.Instance.RuntimeAreas[i];
+			foreach (var icon in RandomizerWorldMapIconManager.Icons)
+			{
+				if (!runtimeGameWorldArea.Area.InsideFace(icon.Position))
+					continue;
+				
+				RuntimeWorldMapIcon runtimeWorldMapIcon = null;
+				for (int j = 0; j < runtimeGameWorldArea.Icons.Count; j++)
+				{
+					if (runtimeGameWorldArea.Icons[j].Guid == icon.Guid)
+					{
+						runtimeWorldMapIcon = runtimeGameWorldArea.Icons[j];
+						break;
+					}
+				}
+
+				bool collected = RandomizerLocationManager.IsPickupCollected(icon.Guid);
+				if (runtimeWorldMapIcon == null && !collected)
+				{
+					GameWorldArea.WorldMapIcon worldMapIcon = new GameWorldArea.WorldMapIcon
+					{
+						Guid = icon.Guid,
+						Icon = WorldMapIconType.HealthUpgrade,
+						IsSecret = false,
+						Position = icon.Position
+					};
+					runtimeGameWorldArea.Icons.Add(new RuntimeWorldMapIcon(worldMapIcon, runtimeGameWorldArea)
+					{
+						IsPlant = true,
+						RandomizerIconType = icon.Type
+					});
+				}
+				else if (runtimeWorldMapIcon != null)
+				{
+					runtimeWorldMapIcon.Icon = collected ? WorldMapIconType.Invisible : WorldMapIconType.HealthUpgrade;
+				}
+			}
 			foreach (MoonGuid moonGuid in RandomizerPlantManager.Plants.Keys)
 			{
 				RandomizerPlantManager.PlantData plantData = RandomizerPlantManager.Plants[moonGuid];

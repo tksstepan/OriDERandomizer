@@ -46,24 +46,71 @@ public class RuntimeWorldMapIcon
 			this.m_iconGameObject.SetActive(true);
 			return;
 		}
-		GameObject icon = instance.IconManager.GetIcon(this.Icon);
-		this.m_iconGameObject = (GameObject)InstantiateUtility.Instantiate(icon);
-		Transform transform = this.m_iconGameObject.transform;
-		transform.parent = instance.Navigation.MapPivot.transform;
-		transform.localPosition = this.Position;
-		transform.localRotation = Quaternion.identity;
-		transform.localScale = icon.transform.localScale;
-		TransparencyAnimator.Register(transform);
-		if (this.IsPlant)
+
+		if (this.RandomizerIconType != RandomizerWorldMapIconType.None)
 		{
-			this.m_iconGameObject.name = "plantMapIcon(Clone)";
-			Renderer[] componentsInChildren = this.m_iconGameObject.GetComponentsInChildren<Renderer>();
-			for (int i = 0; i < componentsInChildren.Length; i++)
-			{
-				componentsInChildren[i].material.color = new Color(0.1792157f, 0.2364706f, 0.8656863f);
-			}
-			this.m_iconGameObject.transform.rotation = Quaternion.Euler(0f, 0f, 180f);
+			InitRandomizerIcon();
 		}
+		else
+		{
+			GameObject icon = instance.IconManager.GetIcon(this.Icon);
+			this.m_iconGameObject = (GameObject)InstantiateUtility.Instantiate(icon);
+			Transform transform = this.m_iconGameObject.transform;
+			transform.parent = instance.Navigation.MapPivot.transform;
+			transform.localPosition = this.Position;
+			transform.localRotation = Quaternion.identity;
+			transform.localScale = icon.transform.localScale;
+			TransparencyAnimator.Register(transform);
+			if (this.IsPlant)
+			{
+				this.m_iconGameObject.name = "plantMapIcon(Clone)";
+				Renderer[] componentsInChildren = this.m_iconGameObject.GetComponentsInChildren<Renderer>();
+				for (int i = 0; i < componentsInChildren.Length; i++)
+				{
+					componentsInChildren[i].material.color = new Color(0.1792157f, 0.2364706f, 0.8656863f);
+				}
+				this.m_iconGameObject.transform.rotation = Quaternion.Euler(0f, 0f, 180f);
+			}
+		}
+	}
+
+	private void InitRandomizerIcon()
+	{
+		switch (RandomizerIconType)
+		{
+			case RandomizerWorldMapIconType.WaterVein:
+				CreateIconFromInventory(InventoryManager.Instance.GinsoTreeKey.transform.Find("ginsoKeyGraphic"), 4);
+				break;
+			case RandomizerWorldMapIconType.CleanWater:
+				var icon = CreateIconFromInventory(InventoryManager.Instance.WorldEventsGroup.transform.Find("waterPurifiedIcon/waterPurifiedGraphics"), 20);
+				var offset = icon.Find("waterPurifiedGraphic").localPosition;
+				foreach (var child in icon)
+					((Transform)child).localPosition -= offset;
+				break;
+			case RandomizerWorldMapIconType.WindRestored:
+				CreateIconFromInventory(InventoryManager.Instance.WorldEventsGroup.transform.Find("windRestoredIcon/windRestoredIcon"), 10);
+				break;
+			case RandomizerWorldMapIconType.Sunstone:
+				CreateIconFromInventory(InventoryManager.Instance.MountHoruKey.transform.Find("sunStoneA"), 8);
+				break;
+			case RandomizerWorldMapIconType.HoruRoom:
+				CreateIconFromInventory(InventoryManager.Instance.WorldEventsGroup.transform.Find("warmthReturned/warmthReturnedGraphics"), 10);
+				break;
+			default:
+				break;
+		}
+	}
+
+	private Transform CreateIconFromInventory(Transform obj, float scale)
+	{
+		var clone = GameObject.Instantiate(obj).gameObject;
+		clone.SetActive(true);
+		clone.transform.SetParent(AreaMapUI.Instance.Navigation.MapPivot.transform);
+		clone.transform.localScale = new Vector3(scale, scale, 1);
+		clone.transform.localPosition = this.Position;
+		TransparencyAnimator.Register(clone.transform);
+		m_iconGameObject = clone;
+		return clone.transform;
 	}
 
 	public void Hide()
@@ -96,4 +143,6 @@ public class RuntimeWorldMapIcon
 	private GameObject m_iconGameObject;
 
 	public bool IsPlant;
+
+	public RandomizerWorldMapIconType RandomizerIconType;
 }
