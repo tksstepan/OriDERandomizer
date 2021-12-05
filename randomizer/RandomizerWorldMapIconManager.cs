@@ -5,20 +5,17 @@ public class RandomizerWorldMapIconManager
     public static readonly RandomizerWorldMapIcon[] Icons =
     {
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.WaterVein, new Vector3(503.9977f, -246.8492f), "WaterVein"),
-        new RandomizerWorldMapIcon(RandomizerWorldMapIconType.CleanWater, new Vector3(524.7007f, 573.2695f),  new MoonGuid(-311986443, 1339883091, -1367161930, -1482660984)),
-        new RandomizerWorldMapIcon(RandomizerWorldMapIconType.WindRestored, new Vector3(-733.6296f, -229.0052f),  new MoonGuid(-311986444, 1339883091, -1367161930, -1482660984)),
+        new RandomizerWorldMapIcon(RandomizerWorldMapIconType.CleanWater, new Vector3(524.7007f, 573.2695f), "GinsoEscapeExit"),
+        new RandomizerWorldMapIcon(RandomizerWorldMapIconType.WindRestored, new Vector3(-733.6296f, -229.0052f), "ForlornEscape"),
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Sunstone, new Vector3(-558.3355f, 604.2133f),  "Sunstone"),
 
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.SkillTree, new Vector3(-162.4078f, -257.7189f), "Sein"),
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.SkillTree, new Vector3(-456.1564f, -13.787f), "GlideSkillFeather"),
 
-        // L1 -> L4
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.HoruRoom, new Vector3(-92.54841f, 379.0250f), "HoruL1"),
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.HoruRoom, new Vector3(-17.79449f, 277.3809f), "HoruL2"),
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.HoruRoom, new Vector3(-156.1515f, 351.3048f), "HoruL3"),
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.HoruRoom, new Vector3(-94.61309f, 156.4479f), "HoruL4"),
-
-        // R1 -> R4
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.HoruRoom, new Vector3(251.9695f, 383.9832f), "HoruR1"),
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.HoruRoom, new Vector3(171.4578f, 292.5522f), "HoruR2"),
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.HoruRoom, new Vector3(310.0000f, 286.8892f), "HoruR3"),
