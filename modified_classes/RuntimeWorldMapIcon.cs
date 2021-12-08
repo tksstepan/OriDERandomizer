@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using Game;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RuntimeWorldMapIcon
 {
@@ -74,22 +76,22 @@ public class RuntimeWorldMapIcon
 		switch (RandomizerIconType)
 		{
 			case RandomizerWorldMapIconType.WaterVein:
-				CreateIconFromInventory(InventoryManager.Instance.GinsoTreeKey.transform.Find("ginsoKeyGraphic"), 4);
+				CreateIconFromInventory("ginsoKeyIcon/ginsoKeyGraphic", 4);
 				break;
 			case RandomizerWorldMapIconType.CleanWater:
-				CreateIconFromInventory(InventoryManager.Instance.WorldEventsGroup.transform.Find("waterPurifiedIcon/waterPurifiedGraphics"), 20);
+				CreateIconFromInventory("waterPurifiedIcon/waterPurifiedGraphics", 20);
 				var offset = m_iconGameObject.transform.Find("waterPurifiedGraphic").localPosition;
 				foreach (var child in m_iconGameObject.transform)
 					((Transform)child).localPosition -= offset;
 				break;
 			case RandomizerWorldMapIconType.WindRestored:
-				CreateIconFromInventory(InventoryManager.Instance.WorldEventsGroup.transform.Find("windRestoredIcon/windRestoredIcon"), 10);
+				CreateIconFromInventory("windRestoredIcon/windRestoredIcon", 10);
 				break;
 			case RandomizerWorldMapIconType.Sunstone:
-				CreateIconFromInventory(InventoryManager.Instance.MountHoruKey.transform.Find("sunStoneA"), 8);
+				CreateIconFromInventory("mountHoru/sunStoneA", 8);
 				break;
 			case RandomizerWorldMapIconType.HoruRoom:
-				CreateIconFromInventory(InventoryManager.Instance.WorldEventsGroup.transform.Find("warmthReturned/warmthReturnedGraphics"), 10);
+				CreateIconFromInventory("warmthReturned/warmthReturnedGraphics", 10);
 				break;
 			case RandomizerWorldMapIconType.Plant:
 				InitStandardIcon(WorldMapIconType.HealthUpgrade);
@@ -107,8 +109,16 @@ public class RuntimeWorldMapIcon
 		}
 	}
 
-	private void CreateIconFromInventory(Transform obj, float scale)
+	private void CreateIconFromInventory(string name, float scale)
 	{
+		if (!inventoryTemplate)
+		{
+			// The visible inventory on the pause screen has transparency animations affecting the cloned icons
+			// So clone from the permanently disabled inventory that the visible one is cloned from
+			inventoryTemplate = SceneManager.GetSceneByName("loadBootstrap").GetRootGameObjects().First((GameObject go) => go.name == "inventoryScreen").transform;
+		}
+
+		var obj = inventoryTemplate.transform.Find("progression").Find(name);
 		var clone = GameObject.Instantiate(obj).gameObject;
 		clone.SetActive(true);
 		clone.transform.SetParent(AreaMapUI.Instance.Navigation.MapPivot.transform);
@@ -117,7 +127,7 @@ public class RuntimeWorldMapIcon
 		TransparencyAnimator.Register(clone.transform);
 		m_iconGameObject = clone;
 	}
-
+	
 	public void Hide()
 	{
 		if (this.m_iconGameObject)
@@ -148,4 +158,6 @@ public class RuntimeWorldMapIcon
 	private GameObject m_iconGameObject;
 
 	public RandomizerWorldMapIconType RandomizerIconType;
+
+	private static Transform inventoryTemplate;
 }
