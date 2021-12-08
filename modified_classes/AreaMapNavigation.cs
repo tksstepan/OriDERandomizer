@@ -356,7 +356,7 @@ public class AreaMapNavigation : MonoBehaviour
 		AreaMapUI.Instance.RandomizerTooltip.transform.position = candidatePosition;
 
 		RandomizerLocationManager.Location pickupLocation = RandomizerLocationManager.LocationsByWorldMapGuid[candidate.Guid];
-		AreaMapUI.Instance.RandomizerTooltip.OverrideText = pickupLocation.Name;
+		AreaMapUI.Instance.RandomizerTooltip.OverrideText = pickupLocation.FriendlyName;
 		AreaMapUI.Instance.RandomizerTooltip.gameObject.SetActive(true);
 
 		if (DebugMenuB.DebugControlsEnabled && (MoonInput.GetKey(KeyCode.LeftShift) || MoonInput.GetKey(KeyCode.RightShift)) && Core.Input.RightClick.OnPressed)

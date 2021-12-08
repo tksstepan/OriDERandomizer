@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using Game;
 using Protogen;
 using Sein.World;
@@ -233,6 +234,7 @@ public class RandomizerLocationManager
 		{
 			string[] parts = locationData.Split();
 			this.Name = parts[0];
+			this.FriendlyName = Regex.Replace(this.Name, "([A-Z0-9]+)", " $1");
 			this.Position = new Vector2(float.Parse(parts[1]), float.Parse(parts[2]));
 			this.Type = (LocationType)Enum.Parse(typeof(LocationType), parts[3]);
 			this.Difficulty = int.Parse(parts[4]);
@@ -332,6 +334,8 @@ public class RandomizerLocationManager
 		public MoonGuid MoonGuid;
 
 		public string Name;
+
+		public string FriendlyName;
 
 		public Vector2 Position;
 
