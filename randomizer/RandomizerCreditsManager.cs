@@ -59,7 +59,7 @@ Singles:	Sigmasin
 Doubles:	That Is Still Faster (Sigmasin and IMRaziel)
 
 		2021
-Winner:  Cleanfel
+Winner:	Cleanfel
 Runner-ups: Tritonite, Xemsys, Dedew
 ", 14));
 
