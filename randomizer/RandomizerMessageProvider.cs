@@ -11,6 +11,12 @@ public class RandomizerMessageProvider : MessageProvider
 		this.messages = new MessageDescriptor[1];
 	}
 
+	public RandomizerMessageProvider(string message)
+	{
+		this.messages = new MessageDescriptor[1];
+		this.messages[0] = new MessageDescriptor(message);
+	}
+
 	// Token: 0x0600373D RID: 14141 RVA: 0x0002B562 File Offset: 0x00029762
 	[DebuggerHidden]
 	public override IEnumerable<MessageDescriptor> GetMessages()
@@ -23,9 +29,6 @@ public class RandomizerMessageProvider : MessageProvider
 	{
 		this.messages[0] = new MessageDescriptor(message);
 	}
-
-	// Token: 0x04003227 RID: 12839
-	public MessageProvider Message;
 
 	// Token: 0x04003228 RID: 12840
 	public MessageDescriptor[] messages;

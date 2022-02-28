@@ -184,6 +184,7 @@ public static class RandomizerStatsManager {
 
 		SceneToZone.Add("mangroveFallsDashEscalation", "mangrove");
 		SceneToZone.Add("northMangroveFallsIntro", "mangrove");
+		SceneToZone.Add("southMangroveFallsGrenadeEscalationB", "mangrove");
 		SceneToZone.Add("southMangroveFallsGrenadeEscalationBR", "mangrove");
 
 		SceneToZone.Add("mountHoruMovingPlatform", "mountHoru");
@@ -194,6 +195,10 @@ public static class RandomizerStatsManager {
 		SceneToZone.Add("catAndMouseLeft", "mountHoru");
 		SceneToZone.Add("catAndMouseResurrectionRoom", "mountHoru");
 		SceneToZone.Add("mountHoruHubBottom", "mountHoru");
+		SceneToZone.Add("mountHoruHubTop", "mountHoru");
+	}
+	public static string CurrentZone(bool pretty) {
+		return pretty ? ZonePrettyNames[CurrentZone()].Replace("\t","") : CurrentZone();
 	}
 
 	public static string CurrentZone() {
@@ -297,8 +302,13 @@ public static class RandomizerStatsManager {
 			}
 		}
 	}
+	public static void IncPickup(int loc) {
+        if(Randomizer.HaveCoord(loc))
+        	return;
+	    IncPickup();
+	}
 
-	public static void IncPickup () {
+	public static void IncPickup() {
 		if(!Active)
 			return;
 		try {
@@ -316,7 +326,6 @@ public static class RandomizerStatsManager {
 					set(PPM_max_count, count);
 				}
 			}
-
 			inc(Pickups + Offsets[CurrentZone()], 1);
 		}
 		catch(Exception e)
@@ -338,6 +347,8 @@ public static class RandomizerStatsManager {
 			{
 				Randomizer.PrintImmediately("", 1, false, false, false);
 				WriteStatsFile();
+				if(RandomizerSettings.Dev && BingoController.Active)
+					Randomizer.log("Bingo payload: " + BingoController.GetJson());
 			}
 			 else 
 				ShowStats(duration);
@@ -605,7 +616,6 @@ public static class RandomizerStatsManager {
 			default:
 				break;
 		}
-
 	}
 
 

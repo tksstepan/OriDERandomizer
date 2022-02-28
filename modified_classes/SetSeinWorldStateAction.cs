@@ -17,7 +17,11 @@ public class SetSeinWorldStateAction : ActionMethod
 		{
 		case WorldState.WaterPurified:
 			Events.WarmthReturned = this.IsTrue;
-			Randomizer.getPickup(new Vector3(548f, 952f));
+			if (!Randomizer.NeedGinsoEscapeCleanup)
+			{
+				Randomizer.NeedGinsoEscapeCleanup = true;
+				Randomizer.getPickup(new Vector3(548f, 952f));
+			}
 			return;
 		case WorldState.GumoFree:
 			Events.GumoFree = this.IsTrue;

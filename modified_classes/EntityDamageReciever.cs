@@ -1,7 +1,7 @@
 using System;
 using Game;
 using UnityEngine;
-
+using Core;
 // Token: 0x02000422 RID: 1058
 public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IProjectileDetonatable
 {
@@ -61,7 +61,7 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 		bool terrain = (damage.Type == DamageType.Crush || damage.Type == DamageType.Spikes || damage.Type == DamageType.Lava || damage.Type == DamageType.Laser);
 		if (this.Entity is Enemy && !(terrain || damage.Type == DamageType.Projectile || damage.Type == DamageType.Enemy))
 		{
-			RandomizerBonus.DamageDealt(Math.Max(Math.Min(this.Health / 4f, damage.Amount), 0f));
+			RandomizerBonus.DamageDealt(damage.Amount);
 		}
 		this.OnModifyDamage(damage);
 		if (damage.Type == DamageType.Enemy)
@@ -106,6 +106,7 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 			}
 			if (this.Entity is Enemy)
 			{
+				BingoController.OnDestroyEntity(this.Entity, damage);
 				RandomizerStatsManager.OnKill(damage.Type);
 				if (damage.Type == DamageType.ChargeFlame)
 				{

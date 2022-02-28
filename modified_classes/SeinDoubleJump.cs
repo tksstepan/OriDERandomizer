@@ -102,14 +102,14 @@ public class SeinDoubleJump : CharacterState, ISeinReceiver
 		{
 			this.Sein.Abilities.ChargeJump.OnDoubleJump();
 		}
-		this.PlatformMovement.LocalSpeedY = this.JumpStrength;
+		this.PlatformMovement.LocalSpeedY = this.JumpStrength * RandomizerBonus.Jumpscale;
 		this.m_numberOfJumpsAvailable--;
 		this.Sein.PlatformBehaviour.Visuals.Animation.PlayRandom(this.DoubleJumpAnimation, 10, new Func<bool>(this.ShouldDoubleJumpAnimationKeepPlaying));
 		this.m_doubleJumpSound = Sound.Play(this.DoubleJumpSound.GetSound(null), this.Sein.PlatformBehaviour.PlatformMovement.Position, delegate
 		{
 			this.m_doubleJumpSound = null;
 		});
-		SeinDoubleJump.OnDoubleJumpEvent(this.JumpStrength);
+		SeinDoubleJump.OnDoubleJumpEvent(this.JumpStrength * RandomizerBonus.Jumpscale);
 		GameObject original = this.DoubleJumpAfterShock;
 		if (this.m_numberOfJumpsAvailable == 0 && this.ExtraJumpsAvailable == 2)
 		{

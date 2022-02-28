@@ -352,11 +352,23 @@ public class GameController : SaveSerialize, ISuspendable
 	// Token: 0x06003430 RID: 13360 RVA: 0x000D6D14 File Offset: 0x000D4F14
 	private void OnApplicationFocus(bool focusStatus)
 	{
-		this.m_setRunInBackgroundToFalse = false;
-		Application.runInBackground = true;
-		GameController.IsFocused = true;
+		if (focusStatus)
+		{
+			this.m_setRunInBackgroundToFalse = false;
+			Application.runInBackground = true;
+			if (this.CurVsyncValue != 0)
+			{
+				QualitySettings.vSyncCount = this.CurVsyncValue;
+				this.CurVsyncValue = 0;
+			}
+		}
+		else if (QualitySettings.vSyncCount != 0)
+		{
+			this.CurVsyncValue = QualitySettings.vSyncCount;
+			QualitySettings.vSyncCount = 0;
+		}
 	}
-
+	
 	// Token: 0x06003431 RID: 13361 RVA: 0x000D6D78 File Offset: 0x000D4F78
 	private IEnumerator SetRunInBackgroundToTrue()
 	{
@@ -805,4 +817,7 @@ public class GameController : SaveSerialize, ISuspendable
 
 	// Token: 0x04002EF4 RID: 12020
 	private Action m_onRestoreCheckpointFinished;
+	
+	// Token: 0x04003522 RID: 13602
+	private int CurVsyncValue;
 }

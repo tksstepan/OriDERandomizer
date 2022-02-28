@@ -166,7 +166,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 		case AbilityType.Bash:
 			if (Randomizer.GiveAbility)
 			{
-				this.Bash.HasAbility = true;
+				this.Bash.HasAbility = value;
 			}
 			else
 			{
@@ -176,7 +176,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 		case AbilityType.ChargeFlame:
 			if (Randomizer.GiveAbility)
 			{
-				this.ChargeFlame.HasAbility = true;
+				this.ChargeFlame.HasAbility = value;
 			}
 			else
 			{
@@ -186,7 +186,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 		case AbilityType.WallJump:
 			if (Randomizer.GiveAbility)
 			{
-				this.WallJump.HasAbility = true;
+				this.WallJump.HasAbility = value;
 			}
 			else
 			{
@@ -196,7 +196,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 		case AbilityType.Stomp:
 			if (Randomizer.GiveAbility)
 			{
-				this.Stomp.HasAbility = true;
+				this.Stomp.HasAbility = value;
 			}
 			else
 			{
@@ -206,7 +206,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 		case AbilityType.DoubleJump:
 			if (Randomizer.GiveAbility)
 			{
-				this.DoubleJump.HasAbility = true;
+				this.DoubleJump.HasAbility = value;
 			}
 			else
 			{
@@ -216,7 +216,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 		case AbilityType.ChargeJump:
 			if (Randomizer.GiveAbility)
 			{
-				this.ChargeJump.HasAbility = true;
+				this.ChargeJump.HasAbility = value;
 			}
 			else
 			{
@@ -232,7 +232,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 		case AbilityType.Climb:
 			if (Randomizer.GiveAbility)
 			{
-				this.Climb.HasAbility = true;
+				this.Climb.HasAbility = value;
 			}
 			else
 			{
@@ -242,7 +242,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 		case AbilityType.Glide:
 			if (Randomizer.GiveAbility)
 			{
-				this.Glide.HasAbility = true;
+				this.Glide.HasAbility = value;
 			}
 			else
 			{
@@ -335,7 +335,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 		case AbilityType.Dash:
 			if (Randomizer.GiveAbility)
 			{
-				this.Dash.HasAbility = true;
+				this.Dash.HasAbility = value;
 			}
 			else
 			{
@@ -345,7 +345,7 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 		case AbilityType.Grenade:
 			if (Randomizer.GiveAbility)
 			{
-				this.Grenade.HasAbility = true;
+				this.Grenade.HasAbility = value;
 			}
 			else
 			{

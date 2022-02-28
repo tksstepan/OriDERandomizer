@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Core;
 using Game;
+using System;
 using Sein.World;
 using UnityEngine;
 
@@ -9,32 +10,42 @@ public static class RandomizerCreditsManager {
 	{
 		CreditsDone = false;
 		Credits = new List<KeyValuePair<string, int>>();
-		Credits.Add(new KeyValuePair<string, int>(
-@"ANCHORTOPPARAMS_20_7.5_2_Ori DE Randomizer (3.0)
+		if(BingoController.Active)
+			Credits.Add(new KeyValuePair<string, int>(
+@"ANCHORTOPPARAMS_20_7.5_2_Ori DE Randomizer (" + Randomizer.VERSION + @")
+Developed by:
+Sigmasin
+*Eiko*  #Meldon#  @Vulajin@
+
+Bingo by *Eiko*", 14));
+		else
+			Credits.Add(new KeyValuePair<string, int>(
+@"ANCHORTOPPARAMS_20_7.5_2_Ori DE Randomizer (" + Randomizer.VERSION + @")
 
 Developed by:
 Sigmasin
-*Eiko*  #Meldon#  @Vulajin@", 9));
+*Eiko*  #Meldon#  @Vulajin@", 14));
+
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_7.5_2_Major contributions by:
 DevilSquirrel
+Kirefel
 
 Community Contributions by:
 GreeZ  Hydra  Jitaenow  LusTher
-Phant  Skulblaka  Terra  xaviershay", 11));
+Phant  Skulblaka  Terra  Xemsys", 14));
 		Credits.Add(new KeyValuePair<string, int>(
-@"ANCHORTOPPARAMS_20_10_2_Additional community contributions by:
+@"ANCHORTOPPARAMS_20_12_2_Additional community contributions by:
 Athos213    AvengedRuler    Cereberon    Cleanfel
-CovertMuffin    Grimelios    iRobin    JHobz
-Jitaenow    Kirefel    madinsane    Mattermonkey
-RainbowPoogle    Roryrai    UncleRonny   Wingheart
-SeaAverage   DireKrow   Eph   shedd", 14));
+CovertMuffin   Grimelios   iRobin   JHobz   Roryrai
+Jitaenow    shedd    madinsane    Mattermonkey
+RainbowPoogle   UncleRonny   Wingheart   spinesheath
+SeaAverage   DireKrow   Eph   xaviershay", 14));
 
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_10_2_Ori DE Randomizer inspired by:
 Chicken_Supreme's Ori 'remix'
-Link to the Past Randomizer", 7));
-
+A Link to the Past Randomizer", 10));
 
 		Credits.Add(new KeyValuePair<string, int>(
 @"ALIGNLEFTANCHORTOPPARAMS_20_10_2_        Ori Randomizer Tournament Champions
@@ -48,16 +59,18 @@ Singles:	Sigmasin
 Doubles:	That Is Still Faster (Sigmasin and IMRaziel)
 ", 14));
 
-
 		// Credits.Add(new KeyValuePair<string, int>("In memory of Grandma Irine", 5));
-		Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(0), 50));
-		Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(1), 50));
-		Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(2), 50));
-		Credits.Add(new KeyValuePair<string, int>(
+		try {
+			Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(0), 50));
+			Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(1), 50));
+			Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(2), 50));
+			Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_12_2_Thanks for playing!
 Website: orirando.com
-Join the Ori community: orirando.com/discord", 30));
-
+Join the Ori community: orirando.com/discord", 40));
+        } catch(Exception e) {
+            Randomizer.LogError("Init credits: " + e.Message);
+        }
 		NextCreditCountdown = 0;
 	}
 

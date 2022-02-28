@@ -10,7 +10,7 @@ public static class RandomizerColorManager
 	// Token: 0x0600384C RID: 14412
 	public static void Initialize()
 	{
-		RandomizerColorManager.HotColdTarget = new Vector3(0f, 0f);
+		HotColdTarget = new Vector3(0f, 0f);
 		bool found = false;
 		if (File.Exists("Color.txt"))
 		{
@@ -21,7 +21,7 @@ public static class RandomizerColorManager
 			});
 			if (lines != null && lines.Length >= 1 && lines[0].Trim().Equals("customrotation"))
 			{
-				RandomizerColorManager.colors.Clear();
+				colors.Clear();
 				float red = 0f;
 				float green = 0f;
 				float blue = 0f;
@@ -43,7 +43,7 @@ public static class RandomizerColorManager
 						green /= 511f;
 						blue /= 511f;
 						alpha /= 511f;
-						RandomizerColorManager.colors.Add(new Color(red, green, blue, alpha));
+						colors.Add(new Color(red, green, blue, alpha));
 					}
 					components = lines[i + 1].Split(new char[]
 					{
@@ -68,17 +68,17 @@ public static class RandomizerColorManager
 						alpha2 /= 511f;
 						for (int j = 1; j <= (int)frames; j++)
 						{
-							RandomizerColorManager.colors.Add(new Color(red + (red2 - red) * (float)j / frames, green + (green2 - green) * (float)j / frames, blue + (blue2 - blue) * (float)j / frames, alpha + (alpha2 - alpha) * (float)j / frames));
+							colors.Add(new Color(red + (red2 - red) * (float)j / frames, green + (green2 - green) * (float)j / frames, blue + (blue2 - blue) * (float)j / frames, alpha + (alpha2 - alpha) * (float)j / frames));
 						}
 					}
 					i++;
 				}
-				RandomizerColorManager.customColor = false;
-				RandomizerColorManager.customRotation = true;
+				customColor = false;
+				customRotation = true;
 				return;
 			}
-			RandomizerColorManager.colors.Clear();
-			RandomizerColorManager.customRotation = false;
+			colors.Clear();
+			customRotation = false;
 			string[] components2 = text.Split(new char[]
 			{
 				','
@@ -100,63 +100,81 @@ public static class RandomizerColorManager
 				{
 					alpha3 = 255f;
 				}
-				RandomizerColorManager.colors.Add(new Color(red3 / 511f, green3 / 511f, blue3 / 511f, alpha3 / 511f));
+				colors.Add(new Color(red3 / 511f, green3 / 511f, blue3 / 511f, alpha3 / 511f));
 				found = true;
-				RandomizerColorManager.customColor = true;
+				customColor = true;
 			}
 		}
-		if (!found && (RandomizerColorManager.customColor || RandomizerColorManager.customRotation))
+		if (!found && (customColor || customRotation))
 		{
-			RandomizerColorManager.customColor = false;
-			RandomizerColorManager.customRotation = false;
+			customColor = false;
+			customRotation = false;
 		}
 	}
 
 	// Token: 0x0600384D RID: 14413
 	public static void UpdateColors()
 	{
-		if (Randomizer.HotCold || Characters.Sein.PlayerAbilities.Sense.HasAbility)
-		{
-			float scale = 64f;
-			float distance = 100f;
-			if (Characters.Ori.InsideMapstone)
+		try {
+			if (Randomizer.HotCold || Characters.Sein.PlayerAbilities.Sense.HasAbility)
 			{
-				int currentMap = 20 + RandomizerBonus.MapStoneProgression() * 4;
-				using (List<int>.Enumerator enumerator = Randomizer.HotColdMaps.GetEnumerator())
+				float scale = 64f;
+				float distance = 100f;
+				if (Characters.Ori.InsideMapstone)
 				{
-					while (enumerator.MoveNext())
+					int currentMap = 20 + RandomizerBonus.MapStoneProgression() * 4;
+					using (List<int>.Enumerator enumerator = (RandomizerBonus.SenseFragsActive ? Randomizer.HotColdMapsWithFrags : Randomizer.HotColdMaps).GetEnumerator())
 					{
-						int map = enumerator.Current;
-						if (map > currentMap)
+						while (enumerator.MoveNext())
 						{
-							distance = (float)(map - currentMap - 4) * 2f;
-							break;
+							int map = enumerator.Current;
+							if (map > currentMap)
+							{
+								distance = (float)(map - currentMap - 4) * 2f;
+								break;
+							}
 						}
 					}
+					if(distance < scale && RandomizerBonus.SenseFragsEnabled && !RandomizerBonus.SenseFragsActive) {
+						RandomizerBonus.SenseFragsActive = true;
+					}
 				}
+				else
+				{
+					distance = Vector3.Distance(HotColdTarget, Characters.Sein.Position);
+				}
+				if (distance >= scale)
+				{
+					if (!(customRotation && RandomizerSettings.DiscoSense))
+					{
+						Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = RandomizerSettings.ColdColor;
+						return;
+					}
+				} else {
+					if (!(customRotation && RandomizerSettings.DiscoSense))
+					{
+						Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = new Color(RandomizerSettings.HotColor.r + (RandomizerSettings.ColdColor.r - RandomizerSettings.HotColor.r) * (distance / scale), RandomizerSettings.HotColor.g + (RandomizerSettings.ColdColor.g - RandomizerSettings.HotColor.g) * (distance / scale), RandomizerSettings.HotColor.b + (RandomizerSettings.ColdColor.b - RandomizerSettings.HotColor.b) * (distance / scale), RandomizerSettings.HotColor.a + (RandomizerSettings.ColdColor.a - RandomizerSettings.HotColor.a) * (distance / scale));
+						return;
+					}
+					else
+						colorIndex += (int)(20f * (1f - distance / scale));
+				} 
 			}
-			else
+			if (customRotation)
 			{
-				distance = Vector3.Distance(RandomizerColorManager.HotColdTarget, Characters.Sein.Position);
-			}
-			if (distance >= scale)
-			{
-				Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = RandomizerSettings.ColdColor;
+				colorIndex = (colorIndex + 1) % colors.Count;
+				Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = colors[colorIndex];
 				return;
 			}
-			Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = new Color(RandomizerSettings.HotColor.r + (RandomizerSettings.ColdColor.r - RandomizerSettings.HotColor.r) * (distance / scale), RandomizerSettings.HotColor.g + (RandomizerSettings.ColdColor.g - RandomizerSettings.HotColor.g) * (distance / scale), RandomizerSettings.HotColor.b + (RandomizerSettings.ColdColor.b - RandomizerSettings.HotColor.b) * (distance / scale), RandomizerSettings.HotColor.a + (RandomizerSettings.ColdColor.a - RandomizerSettings.HotColor.a) * (distance / scale));
-			return;
+			if (customColor)
+			{
+				Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = colors[0];
+			}
 		}
-		if (RandomizerColorManager.customRotation)
-		{
-			RandomizerColorManager.colorIndex %= RandomizerColorManager.colors.Count;
-			Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = RandomizerColorManager.colors[RandomizerColorManager.colorIndex++];
-			return;
+		catch(Exception e) {
+			Randomizer.LogError("ColorTick: " + colorIndex.ToString() + " out of " + colors.Count.ToString() + ": " + e.Message);
 		}
-		if (RandomizerColorManager.customColor)
-		{
-			Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = RandomizerColorManager.colors[0];
-		}
+
 	}
 
 	// Token: 0x0600384E RID: 14414
@@ -176,10 +194,23 @@ public static class RandomizerColorManager
 				if (distance < minimum)
 				{
 					minimum = distance;
-					RandomizerColorManager.HotColdTarget = target.Position;
+					HotColdTarget = target.Position;
 				}
 			}
 		}
+		if(RandomizerBonus.SenseFragsActive)
+			foreach (RandomizerHotColdItem target in Randomizer.HotColdFrags.Values) {
+				if (Characters.Sein.Inventory.GetRandomizerItem(target.Id) == 0)
+				{
+					float distance = Vector3.Distance(target.Position, Characters.Sein.Position);
+					if (distance < minimum)
+					{
+						minimum = distance;
+						HotColdTarget = target.Position;
+					}
+				}
+			}
+
 	}
 
 	// Token: 0x04003343 RID: 13123

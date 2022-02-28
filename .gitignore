@@ -23,5 +23,8 @@ seed_gen/seed_gen.zip
 seed_gen/ignore/*
 seed_gen/*.csv
 
+# ignore the UnityEngine.dll added to make dnspy less of a PITA
+UnityEngine.dll
+
 # Ignore compiled python files
 *.pyc

@@ -196,10 +196,10 @@ public class SeinWallChargeJump : CharacterState, ISeinReceiver
 	// Token: 0x06001242 RID: 4674 RVA: 0x00069768 File Offset: 0x00067968
 	public void UpdateJumpingState()
 	{
-		float adjustedDrag = this.HorizontalDrag-this.HorizontalDrag*.10f*RandomizerBonus.Velocity();
+		float adjustedDrag = this.HorizontalDrag-this.HorizontalDrag* 0.08f * (float)(RandomizerBonus.Velocity() + RandomizerBonus.Jumpgrades());
 		this.PlatformMovement.LocalSpeedX = this.PlatformMovement.LocalSpeedX * (1f - adjustedDrag);
 		this.PlatformMovement.LocalSpeedY = this.PlatformMovement.LocalSpeedY * (1f - adjustedDrag);
-		if (this.m_stateCurrentTime > (this.AntiGravityDuration+this.AntiGravityDuration*.10f*RandomizerBonus.Velocity()))
+		if (this.m_stateCurrentTime > (this.AntiGravityDuration+this.AntiGravityDuration* 0.08f * (float)(RandomizerBonus.Velocity() + RandomizerBonus.Jumpgrades())))
 		{
 			this.ChangeState(SeinWallChargeJump.State.Normal);
 			return;
@@ -332,13 +332,13 @@ public class SeinWallChargeJump : CharacterState, ISeinReceiver
 	// Token: 0x0600124B RID: 4683 RVA: 0x00069BA4 File Offset: 0x00067DA4
 	public void PerformChargeJump()
 	{
-		float chargedJumpStrength = this.ChargedJumpStrength +  this.ChargedJumpStrength*.10f*RandomizerBonus.Velocity();
+		float chargedJumpStrength = this.ChargedJumpStrength +  this.ChargedJumpStrength* 0.08f * (float)(RandomizerBonus.Velocity() + RandomizerBonus.Jumpgrades());
 		this.PlatformMovement.LocalSpeedX = chargedJumpStrength * this.Arrow.transform.right.x;
 		this.PlatformMovement.LocalSpeedY = chargedJumpStrength * this.Arrow.transform.right.y;
 		Vector2 normalized = this.m_sein.PlatformBehaviour.PlatformMovement.LocalSpeed.normalized;
 		this.m_angleDirection = Mathf.Atan2(normalized.y, Mathf.Abs(normalized.x)) * 57.29578f * (float)((normalized.x >= 0f) ? 1 : -1);
 		Sound.Play(this.JumpSound.GetSound(null), this.m_sein.PlatformBehaviour.PlatformMovement.Position, null);
-		this.m_sein.Mortality.DamageReciever.MakeInvincibleToEnemies(this.AntiGravityDuration+this.AntiGravityDuration*.10f*RandomizerBonus.Velocity());
+		this.m_sein.Mortality.DamageReciever.MakeInvincibleToEnemies(this.AntiGravityDuration);
 		this.ChangeState(SeinWallChargeJump.State.Jumping);
 		this.m_sein.FaceLeft = (this.PlatformMovement.LocalSpeedX < 0f);
 		CharacterAnimationSystem.CharacterAnimationState characterAnimationState = this.m_sein.PlatformBehaviour.Visuals.Animation.Play(this.JumpAnimation, 10, new Func<bool>(this.ShouldChargeJumpAnimationKeepPlaying));

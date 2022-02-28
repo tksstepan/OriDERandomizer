@@ -152,9 +152,9 @@ public class SeinStomp : CharacterState, ISeinReceiver
 		{
 			if (this.Sein.PlayerAbilities.StompUpgrade.HasAbility)
 			{
-				return this.UpgradedDamage;
+				return RandomizerBonusSkill.AbilityDamage(this.UpgradedDamage);
 			}
-			return this.Damage;
+			return RandomizerBonusSkill.AbilityDamage(this.Damage);
 		}
 	}
 
@@ -359,10 +359,10 @@ public class SeinStomp : CharacterState, ISeinReceiver
 		{
 			return;
 		}
-		bool flag = this.Sein.Input.Down.OnPressed & this.Sein.Input.NormalizedHorizontal == 0;
-		bool flag2 = this.Sein.Input.Down.OnPressed && Core.Input.DigiPadAxis.y < 0f;
+		bool flag = Core.Input.Stomp.OnPressed & this.Sein.Input.NormalizedHorizontal == 0;
+		bool flag2 = Core.Input.Stomp.OnPressed && Core.Input.DigiPadAxis.y < 0f;
 		bool flag3 = flag || flag2;
-		if (flag3 && !this.Sein.Input.Down.Used && this.CanStomp())
+		if (flag3 && !Core.Input.Stomp.Used && this.CanStomp())
 		{
 			this.Logic.ChangeState(this.State.StompIdle);
 		}
@@ -382,7 +382,7 @@ public class SeinStomp : CharacterState, ISeinReceiver
 			this.EndStomp();
 			return;
 		}
-		if (this.Logic.CurrentStateTime > this.StompDownDuration && !Core.Input.Down.Pressed)
+		if (this.Logic.CurrentStateTime > this.StompDownDuration && !Core.Input.Stomp.Pressed)
 		{
 			this.EndStomp();
 			return;

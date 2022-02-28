@@ -109,6 +109,7 @@ public class SkillTreeManager : MenuScreen
 			Characters.Sein.PlayerAbilities.GainAbilityAction = this.CurrentSkillItem.GainSkillSequence;
 			InstantiateUtility.Instantiate(this.GainSkillEffect, this.CurrentSkillItem.transform.position, Quaternion.identity);
 			RandomizerBonus.SpentAP(this.CurrentSkillItem.ActualRequiredSkillPoints);
+			BingoController.OnGainAbility(this.CurrentSkillItem.Ability);			
 			Characters.Sein.Level.SkillPoints -= this.CurrentSkillItem.ActualRequiredSkillPoints;
 			if (this.OnGainAbility)
 			{
@@ -117,7 +118,7 @@ public class SkillTreeManager : MenuScreen
 			SeinLevel.HasSpentSkillPoint = true;
 			AchievementsController.AwardAchievement(this.SpentFirstSkillPointAchievement);
 			GameController.Instance.CreateCheckpoint();
-			RandomizerStatsManager.OnSave();
+			RandomizerStatsManager.OnSave(false);
 			GameController.Instance.SaveGameController.PerformSave();
 			this.UpdateRequirementsText();
 			return;

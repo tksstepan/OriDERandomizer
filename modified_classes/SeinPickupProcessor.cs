@@ -62,39 +62,34 @@ public class SeinPickupProcessor : SaveSerialize, ISeinReceiver, IPickupCollecto
 	// Token: 0x06003325 RID: 13093
 	public void OnCollectExpOrbPickup(ExpOrbPickup expOrbPickup)
 	{
-		int num = RandomizerBonus.ExpWithBonuses(expOrbPickup.Amount);
-		if (expOrbPickup.MessageType != ExpOrbPickup.ExpOrbMessageType.None)
+		int num = RandomizerBonus.ExpWithBonuses(expOrbPickup.Amount, false);
+		if (expOrbPickup.MessageType == ExpOrbPickup.ExpOrbMessageType.None)
 		{
-			int repeatable = Randomizer.RepeatableCheck(expOrbPickup.Bounds.center);
-			if(repeatable != 1)
-				Randomizer.getPickup(expOrbPickup.Bounds.center);
-			if(repeatable > 0)
-				return;
-			if (GameWorld.Instance.CurrentArea != null)
-			{
-				GameWorld.Instance.CurrentArea.DirtyCompletionAmount();
-			}
 			expOrbPickup.Collected();
+			if (Randomizer.IgnoreEnemyExp)
+				return;
+			RandomizerBonus.ExpWithBonuses(expOrbPickup.Amount, true);
+			this.Sein.Level.GainExperience(num);
+			if (this.m_expText && this.m_expText.gameObject.activeInHierarchy)
+				this.m_expText.Amount += num;
+			else
+				this.m_expText = Orbs.OrbDisplayText.Create(Characters.Sein.Transform, Vector3.up, num);
+			UI.SeinUI.ShakeExperienceBar();
+			if (GameWorld.Instance.CurrentArea != null)
+				GameWorld.Instance.CurrentArea.DirtyCompletionAmount();
 			return;
-		}
-		expOrbPickup.Collected();
-		if (Randomizer.IgnoreEnemyExp)
-		{
-			return;
-		}
-		this.Sein.Level.GainExperience(num);
-		if (this.m_expText && this.m_expText.gameObject.activeInHierarchy)
-		{
-			this.m_expText.Amount += num;
 		}
 		else
 		{
-			this.m_expText = Orbs.OrbDisplayText.Create(Characters.Sein.Transform, Vector3.up, num);
-		}
-		UI.SeinUI.ShakeExperienceBar();
-		if (GameWorld.Instance.CurrentArea != null)
-		{
-			GameWorld.Instance.CurrentArea.DirtyCompletionAmount();
+			int repeatable = Randomizer.RepeatableCheck(expOrbPickup.Bounds.center);
+			if (repeatable != 1)
+				Randomizer.getPickup(expOrbPickup.Bounds.center);
+			if (repeatable > 0)
+				return;
+			if (GameWorld.Instance.CurrentArea != null)
+				GameWorld.Instance.CurrentArea.DirtyCompletionAmount();
+			expOrbPickup.Collected();
+			return;
 		}
 	}
 
@@ -172,7 +167,7 @@ public class SeinPickupProcessor : SaveSerialize, ISeinReceiver, IPickupCollecto
 		Vector3 position = this.Sein.Position;
 		if (checkpoint.RespawnPosition != Vector2.zero)
 		{
-			this.Sein.Position = checkpoint.RespawnPosition + checkpoint.transform.position;
+			this.Sein.Position = new Vector3(checkpoint.RespawnPosition.x, checkpoint.RespawnPosition.y) + checkpoint.transform.position;
 		}
 		GameController.Instance.CreateCheckpoint();
 		this.Sein.Position = position;

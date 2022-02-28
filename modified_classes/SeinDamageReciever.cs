@@ -100,6 +100,8 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 	// Token: 0x06001030 RID: 4144
 	public void OnRecieveDamage(Damage damage)
 	{
+		if (RandomizerBonusSkill.Invincible)
+			return;
 		if (damage.Amount < 9000f || damage.Type != DamageType.Water)
 		{
 			if (this.IsImmortal)
@@ -317,6 +319,7 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 				GameController.Instance.SaveGameController.PerformSave();
 			}
 		}
+		RandomizerBonusSkill.UpdateDrain();
 	}
 
 	// Token: 0x06001039 RID: 4153 RVA: 0x00061818 File Offset: 0x0005FA18

@@ -427,9 +427,8 @@ public class SeinBashAttack : CharacterState, ISeinReceiver
 		Component component = this.Target as Component;
 		if (!InstantiateUtility.IsDestroyed(component))
 		{
-			Vector2 force = -MoonMath.Angle.VectorFromAngle(this.m_bashAngle + 90f) * 4f;
-			new Damage((!this.Sein.PlayerAbilities.BashBuff.HasAbility) ? this.Damage : this.UpgradedDamage, force, Characters.Sein.Position, DamageType.Bash, base.gameObject).DealToComponents(component.gameObject);
-			EntityTargetting component2 = component.gameObject.GetComponent<EntityTargetting>();
+			Vector2 force = -MoonMath.Angle.VectorFromAngle(this.m_bashAngle + 90f) * (4f + (float)RandomizerBonus.Velocity());
+			new Damage(RandomizerBonusSkill.AbilityDamage((!this.Sein.PlayerAbilities.BashBuff.HasAbility) ? this.Damage : this.UpgradedDamage), force, Characters.Sein.Position, DamageType.Bash, base.gameObject).DealToComponents(component.gameObject);			EntityTargetting component2 = component.gameObject.GetComponent<EntityTargetting>();
 			if (component2 && component2.Entity is Enemy)
 			{
 				SeinBashAttack.OnBashEnemy(component2);

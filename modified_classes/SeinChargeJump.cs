@@ -151,7 +151,7 @@ public class SeinChargeJump : CharacterState, ISeinReceiver
 	// Token: 0x06000FFE RID: 4094 RVA: 0x00060A40 File Offset: 0x0005EC40
 	public void PerformChargeJump()
 	{
-		float chargedJumpStrength = this.ChargedJumpStrength + this.ChargedJumpStrength*.10f*RandomizerBonus.Velocity();
+		float chargedJumpStrength = this.ChargedJumpStrength + this.ChargedJumpStrength * 0.08f * (float)(RandomizerBonus.Velocity() + RandomizerBonus.Jumpgrades());
 		this.PlatformMovement.LocalSpeedY = chargedJumpStrength;
 		this.OnJumpEvent(chargedJumpStrength);
 		Sound.Play(this.JumpSound.GetSound(null), this.Sein.PlatformBehaviour.PlatformMovement.Position, null);
