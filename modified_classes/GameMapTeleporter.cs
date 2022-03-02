@@ -125,8 +125,12 @@ public class GameMapTeleporter
 
     public GameMapTeleporter(string name, float x, float y)
 	{
-		Vector3 worldPosition = new Vector3(x, y, 0f);
-		GameMapTeleporter(name, worldPosition, false);
+		this.Identifier = name;
+		this.WorldPosition = new Vector3(x, y, 0f);
+		this.Activated = false;
+		RandomizerMessageProvider randomizerMessageProvider = (RandomizerMessageProvider)ScriptableObject.CreateInstance(typeof(RandomizerMessageProvider));
+		randomizerMessageProvider.SetMessage(name);
+		this.Name = randomizerMessageProvider;
 	}
 
 	public GameMapTeleporter(string name, Vector3 position, bool activated)
@@ -150,7 +154,6 @@ public class GameMapTeleporter
 		this.WorldPosition = position;
 		this.Activated = activated;
 	}
-
 
 	public string Identifier;
 

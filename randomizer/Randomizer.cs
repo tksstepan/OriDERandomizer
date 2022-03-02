@@ -26,7 +26,7 @@ public static class Randomizer
             Randomizer.SyncId = "";
             Randomizer.ForceMaps = false;
             Randomizer.SyncMode = 4;
-            Randomizer.StringKeyPickupTypes = new List<string> {"TP", "SH", "NO", "WT", "MU", "HN", "WP", "RP", "WS"};
+            Randomizer.StringKeyPickupTypes = new List<string> {"TP", "SH", "NO", "WT", "MU", "HN", "WP", "RP", "WS", "TW"};
             RandomizerChaosManager.initialize();
             Randomizer.DamageModifier = 1f;
             Randomizer.GridFactor = 4.0;
@@ -95,6 +95,7 @@ public static class Randomizer
             Randomizer.RelicCountOverride = false;
             Randomizer.AllowOrbWarps = false;
             Randomizer.RandomizedFirstEnergy = false;
+            Randomizer.NightBerryWarpPosition = new Vector3(-910f, -300f);
 
             if (Randomizer.SeedFilePath == null)
             {
@@ -452,7 +453,7 @@ public static class Randomizer
             }
             if (get(82) > 0 && Items.NightBerry != null)
             {
-                Items.NightBerry.transform.position = new Vector3(-910f, -300f);
+                Items.NightBerry.transform.position = NightBerryWarpPosition;
                 set(82, 0);
             }
             if(RandomizerBonusSkill.LevelExplosionCooldown > 0)
@@ -1409,6 +1410,7 @@ public static class Randomizer
     public static void SetupNewGame()
     {
         Randomizer.Inventory.Clear();
+        TeleporterController.RemoveCustomTeleporters();
 
         // start everyone with 1 energy on all difficulties if "RandomizedFirstEnergy" flag set
         if (Randomizer.RandomizedFirstEnergy)
@@ -1580,4 +1582,6 @@ public static class Randomizer
     public static bool RandomizedFirstEnergy;
 
     public static string SeedFilePath;
+
+    public static Vector3 NightBerryWarpPosition;
 }

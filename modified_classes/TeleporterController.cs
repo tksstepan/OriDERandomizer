@@ -13,9 +13,76 @@ public class TeleporterController : SaveSerialize, ISuspendable
 
 	public override void Serialize(Archive ar)
 	{
-		foreach (GameMapTeleporter gameMapTeleporter in this.Teleporters)
+		// By default we just serialize 12 booleans, one for each default teleporter.
+		// So if we only get 12 bytes of information or only have default teleporters then
+		// we stick to that.
+		// If there are more than 12 teleporters immediately after the 12 default teleporters
+		// we serialize the number of extra teleporters, and then for each teleporter
+		// serialise the name, location, and activation status.
+		if (ar.Reading)
 		{
-			ar.Serialize(ref gameMapTeleporter.Activated);
+			long readLength = ar.MemoryStream.Length;
+			if (readLength < 12) {
+				return;
+			}
+			// Read default teleporters.
+			for (int i = 0; i < 12; i++)
+			{
+				GameMapTeleporter gameMapTeleporter = this.Teleporters[i];
+				ar.Serialize(ref gameMapTeleporter.Activated);
+			}
+			// Determine extra teleporter count.
+			int requiredCustomTeleporterCount = 0;
+			if (readLength > 12) {
+				ar.Serialize(ref requiredCustomTeleporterCount);
+			}
+			// Remove excess teleporters.
+			while (this.Teleporters.Count > 12 + requiredCustomTeleporterCount)
+			{	
+				this.Teleporters.RemoveAt(this.Teleporters.Count - 1);
+			}
+			// Create or modify teleporters.
+			for (int i = 0; i < requiredCustomTeleporterCount; i++)
+			{
+				string name = "???";
+				Vector3 position = new Vector3(0,0,0);
+				bool activated = false;
+				ar.Serialize(ref name);
+				ar.Serialize(ref position);
+				ar.Serialize(ref activated);
+				int currentTeleporterIndex = 12 + i;
+				if (currentTeleporterIndex < this.Teleporters.Count) {
+					// Alter the existing teleporter.
+					this.Teleporters[currentTeleporterIndex].SetInfo(name, position, activated);
+				} else {
+					// Create a new teleporter.
+					GameMapTeleporter gameMapTeleporter = new GameMapTeleporter(name, position, activated);
+					this.Teleporters.Add(gameMapTeleporter);
+				}
+			}
+		} else {
+			// Writing.
+			if (this.Teleporters.Count < 12) {
+				return;
+			}
+			// Default teleporters.
+			for (int i = 0; i < 12; i++)
+			{
+				GameMapTeleporter gameMapTeleporter = this.Teleporters[i];
+				ar.Serialize(ref gameMapTeleporter.Activated);
+			}
+			// Extra teleporters.
+			int customTeleporterCount = this.Teleporters.Count - 12;
+			if (customTeleporterCount > 0) {
+				ar.Serialize(ref customTeleporterCount);
+			}
+			for (int i = 12; i < this.Teleporters.Count; i++)
+			{
+				GameMapTeleporter gameMapTeleporter = this.Teleporters[i];
+				ar.Serialize(ref gameMapTeleporter.Identifier);
+				ar.Serialize(ref gameMapTeleporter.WorldPosition);
+				ar.Serialize(ref gameMapTeleporter.Activated);
+			}
 		}
 	}
 
@@ -128,8 +195,9 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		{
 			return;
 		}
-		if (selectedTeleporter.Identifier == "forlorn")
+		if (selectedTeleporter.Area.Area.AreaNameString == "Forlorn Ruins")
 		{
+			Randomizer.NightBerryWarpPosition = selectedTeleporter.WorldPosition;
 			Characters.Sein.Inventory.SetRandomizerItem(82, 1);
 		}
 		if (!TeleporterController.Instance.DontTeleportForAnimationTesting)
@@ -277,6 +345,31 @@ public class TeleporterController : SaveSerialize, ISuspendable
 			Sound.Play(this.TeleportingEndSound.GetSound(null), Characters.Sein.Position, null);
 		}
 	}
+
+	public static void RemoveCustomTeleporters()
+	{
+		if (TeleporterController.Instance != null)
+		{
+			TeleporterController.Instance.Teleporters.RemoveAll((GameMapTeleporter teleporter) => teleporter.Name.GetType() == typeof(RandomizerMessageProvider));
+		}
+	}
+
+	public static void AddCustomTeleporter(string name, float warpX, float warpY)
+	{
+		if (TeleporterController.Instance == null) {
+			return;
+		}
+		// If we already have that teleporter don't add it.
+		for (int i = 0; i < TeleporterController.Instance.Teleporters.Count; i++) 
+		{
+			if (TeleporterController.Instance.Teleporters[i].Identifier == name)
+			{
+				return;
+			}
+		}
+		GameMapTeleporter teleporter = new GameMapTeleporter(name, warpX, warpY);
+		TeleporterController.Instance.Teleporters.Add(teleporter);
+    }
 
 	public bool IsSuspended { get; set; }
 
