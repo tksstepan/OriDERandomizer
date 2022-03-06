@@ -278,6 +278,17 @@ public static class RandomizerSwitch
                     break;
                 case "NO":
                     break;
+                case "TW":
+                    // TW entries are coord|TW|name,x,y
+                    string[] pieces2 = ((string)Action.Value).Split(',');
+                    int warpX;
+                    int.TryParse(pieces2[1], out warpX);
+                    int warpY;
+                    int.TryParse(pieces2[2], out warpY);
+                    TeleporterController.AddCustomTeleporter(pieces2[0], warpX, warpY);
+                    TeleporterController.Activate(pieces2[0]);
+                    PickupMessage(pieces2[0], 120);
+                    break;
             }
             BingoController.OnItem(Action, coords);
             RandomizerTrackedDataManager.UpdateBitfields();
