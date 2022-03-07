@@ -26,6 +26,30 @@ public class GameMapTeleporter
 			this.m_worldMapIconTransform.position = WorldMapUI.Instance.WorldToUIPosition(this.WorldPosition);
 			this.m_worldMapIconTransform.parent = WorldMapUI.Instance.FadeOutGroup;
 			TransparencyAnimator.Register(this.m_worldMapIconTransform);
+			if (this.Name.GetType() == typeof(RandomizerMessageProvider))
+			{
+				Renderer[] componentsInChildren = this.m_worldMapIconGameObject.GetComponentsInChildren<Renderer>();
+				int[] multiplicative = new int[] {0, 10, 11, 12};
+				int[] others = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9};
+				foreach (int index in multiplicative)
+				{
+					Color originalColor = componentsInChildren[index].material.color;
+					Color newColor = new Color(RandomizerSettings.Customization.WarpTeleporterColor.Value.r * originalColor.r, 
+						RandomizerSettings.Customization.WarpTeleporterColor.Value.g * originalColor.g, 
+						RandomizerSettings.Customization.WarpTeleporterColor.Value.b * originalColor.b, 
+						originalColor.a);
+					componentsInChildren[index].material.color = newColor;
+				}
+				foreach (int index2 in others)
+				{
+					Color originalColor2 = componentsInChildren[index2].material.color;
+					Color newColor2 = new Color(RandomizerSettings.Customization.WarpTeleporterColor.Value.r, 
+						RandomizerSettings.Customization.WarpTeleporterColor.Value.g, 
+						RandomizerSettings.Customization.WarpTeleporterColor.Value.b, 
+						originalColor2.a);
+					componentsInChildren[index2].material.color = newColor2;
+				}
+			}
 		}
 		if (this.m_areaMapIconGameObject)
 		{
@@ -40,6 +64,30 @@ public class GameMapTeleporter
 			this.m_areaMapIconTransform.position = AreaMapUI.Instance.Navigation.WorldToMapPosition(this.WorldPosition + Vector3.up * 4f);
 			this.m_areaMapIconTransform.parent = AreaMapUI.Instance.FadeOutGroup;
 			TransparencyAnimator.Register(this.m_areaMapIconTransform);
+			if (this.Name.GetType() == typeof(RandomizerMessageProvider))
+			{
+				Renderer[] componentsInChildren2 = this.m_areaMapIconGameObject.GetComponentsInChildren<Renderer>();
+				int[] multiplicative2 = new int[] {0, 10, 11, 12};
+				int[] others2 = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9};
+				foreach (int index3 in multiplicative2)
+				{
+					Color originalColor3 = componentsInChildren2[index3].material.color;
+					Color newColor3 = new Color(RandomizerSettings.Customization.WarpTeleporterColor.Value.r * originalColor3.r, 
+						RandomizerSettings.Customization.WarpTeleporterColor.Value.g * originalColor3.g, 
+						RandomizerSettings.Customization.WarpTeleporterColor.Value.b * originalColor3.b, 
+						originalColor3.a);
+					componentsInChildren2[index3].material.color = newColor3;
+				}
+				foreach (int index4 in others2)
+				{
+					Color originalColor4 = componentsInChildren2[index4].material.color;
+					Color newColor4 = new Color(RandomizerSettings.Customization.WarpTeleporterColor.Value.r, 
+						RandomizerSettings.Customization.WarpTeleporterColor.Value.g, 
+						RandomizerSettings.Customization.WarpTeleporterColor.Value.b, 
+						originalColor4.a);
+					componentsInChildren2[index4].material.color = newColor4;
+				}
+			}
 		}
 	}
 
