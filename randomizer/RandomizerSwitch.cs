@@ -297,7 +297,7 @@ public static class RandomizerSwitch
                     int positionY;
                     int.TryParse(pieces3[1], out positionY);
                     Randomizer.NightBerryWarpPosition = new UnityEngine.Vector3(positionX, positionY);
-					Characters.Sein.Inventory.SetRandomizerItem(82, 1);
+                    Characters.Sein.Inventory.SetRandomizerItem(82, 1);
                     break;
             }
             BingoController.OnItem(Action, coords);

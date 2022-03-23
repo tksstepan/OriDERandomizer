@@ -514,22 +514,22 @@ public static class Randomizer
                 }
             }
             if (Randomizer.SpawnWarpState != 0)
-			{
+            {
                 // Essentially we delay given spawn items until we aren't input locked.
                 // But We don't start input locked during SetupNewGame so we wait for that first.
-			    if (Randomizer.SpawnWarpState == 2) {
-					if (Characters.Sein.Controller.InputLocked)
-					{
-						Randomizer.SpawnWarpState = 1;
-					}
-				} else {
-					if (!Characters.Sein.Controller.InputLocked)
-					{
-						Randomizer.SpawnWarpState = 0;
-						Randomizer.GiveSpawnItems();
-					}
-				}
-			}
+                if (Randomizer.SpawnWarpState == 2) {
+                    if (Characters.Sein.Controller.InputLocked)
+                    {
+                        Randomizer.SpawnWarpState = 1;
+                    }
+                } else {
+                    if (!Characters.Sein.Controller.InputLocked)
+                    {
+                        Randomizer.SpawnWarpState = 0;
+                        Randomizer.GiveSpawnItems();
+                    }
+                }
+            }
         }
         if (CreditsActive)
             return;
