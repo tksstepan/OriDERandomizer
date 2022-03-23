@@ -26,7 +26,7 @@ public static class Randomizer
             Randomizer.SyncId = "";
             Randomizer.ForceMaps = false;
             Randomizer.SyncMode = 4;
-            Randomizer.StringKeyPickupTypes = new List<string> {"TP", "SH", "NO", "WT", "MU", "HN", "WP", "RP", "WS", "TW"};
+            Randomizer.StringKeyPickupTypes = new List<string> {"TP", "SH", "NO", "WT", "MU", "HN", "WP", "RP", "WS", "TW", "NB"};
             RandomizerChaosManager.initialize();
             Randomizer.DamageModifier = 1f;
             Randomizer.GridFactor = 4.0;
