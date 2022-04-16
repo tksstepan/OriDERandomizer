@@ -1353,11 +1353,12 @@ public static class Randomizer
     }
     private static int get(int item) { return Characters.Sein.Inventory.GetRandomizerItem(item); }
     private static int set(int item, int value) { return Characters.Sein.Inventory.SetRandomizerItem(item, value); }
+    private static HashSet<int> knownUnknowns = new HashSet<int>() {-1, -2, -1640264 }; // remove -1640264 once appropriate seedgen changes happen ig?
 
     public static bool SeenCoord(int coord) {
         if(!RandomizerTrackedDataManager.CoordsMap.ContainsKey(coord))
         {
-            if(coord != 2 && coord != -1)
+            if(!knownUnknowns.Contains(coord))
                 Randomizer.LogError("Unknown coord: " + coord.ToString());
             return false;
         }
@@ -1368,7 +1369,7 @@ public static class Randomizer
     public static bool HaveCoord(int coord) {
         if(!RandomizerTrackedDataManager.CoordsMap.ContainsKey(coord))
         {
-            if(coord != 2 && coord != -1)
+            if(!knownUnknowns.Contains(coord))
                 Randomizer.LogError("Unknown coord: " + coord.ToString());
             return false;
         }
@@ -1379,7 +1380,7 @@ public static class Randomizer
     public static void OnCoord(int coord) {
         if(!RandomizerTrackedDataManager.CoordsMap.ContainsKey(coord))
         {
-            if(coord != 2 && coord != -1)
+            if(!knownUnknowns.Contains(coord))
                 Randomizer.LogError("Unknown coord: " + coord.ToString());
             return;
         }
