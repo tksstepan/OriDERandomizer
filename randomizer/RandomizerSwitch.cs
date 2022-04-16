@@ -268,7 +268,7 @@ public static class RandomizerSwitch
                     Randomizer.SaveAfterWarp = Action.Action == "WS";
                     string[] xy = ((string)Action.Value).Split(',');
                     if(xy.Length > 2 && xy[2] == "force") {
-                        Randomizer.WarpTo(new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1])), 15);
+                        Randomizer.WarpTo(new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1])), 15, coords==2);
                     }
                     else {
                         Randomizer.WarpTarget = new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1]));
@@ -288,6 +288,16 @@ public static class RandomizerSwitch
                     TeleporterController.AddCustomTeleporter(pieces2[0], warpX, warpY);
                     TeleporterController.Activate(pieces2[0]);
                     PickupMessage(pieces2[0], 120);
+                    break;
+                case "NB":
+                    // NB entries are coord|NB|x,y
+                    string[] pieces3 = ((string)Action.Value).Split(',');
+                    int positionX;
+                    int.TryParse(pieces3[0], out positionX);
+                    int positionY;
+                    int.TryParse(pieces3[1], out positionY);
+                    Randomizer.NightBerryWarpPosition = new UnityEngine.Vector3(positionX, positionY);
+                    Characters.Sein.Inventory.SetRandomizerItem(82, 1);
                     break;
             }
             BingoController.OnItem(Action, coords);
