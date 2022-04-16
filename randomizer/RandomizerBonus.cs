@@ -592,6 +592,7 @@ public static class RandomizerBonus
         }
     }
     public static float Jumpscale {get {return 1f + .25f * Jumpgrades();}}
+    public static float DoubleJumpscale {get {return 1f + .10f * Jumpgrades();}}
     public static float Veloscale {get {return 1f + .20f * Velocity();}}
     public static bool GravitySuit()
     {
