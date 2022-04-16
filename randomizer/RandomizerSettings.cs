@@ -158,11 +158,12 @@ public static class RandomizerSettings
 		Controls.Autofire = new EnumSetting<AutofireMode>("Autofire", AutofireMode.Off);
 		Controls.LongerBashAimTime = new BoolSetting("Longer Bash Aim Time", false);
 
-		Customization.ColdColor = new ColorSetting("Cold Color", new Color(0f, 0.5f, 0.5f, 0.5f));
-		Customization.HotColor = new ColorSetting("Hot Color", new Color(0.5f, 0.1666667f, 0f, 0.5f));
+		Customization.ColdColor = new ColorSetting("Cold Color", new Color(0f, 0.5f, 0.5f, 0.5f), 511f);
+		Customization.HotColor = new ColorSetting("Hot Color", new Color(0.5f, 0.1666667f, 0f, 0.5f), 511f);
 		Customization.DiscoSense = new BoolSetting("Disco Sense", false, false);
 		Customization.MultiplePickupMessages = new BoolSetting("Display Multiple Pickup Messages", false, false);
 		Customization.AlwaysShowLastFivePickups = new BoolSetting("Always Show Last Five Pickup Messages", false, false);
+		Customization.WarpTeleporterColor = new ColorSetting("Warp Teleporter Color", new Color(202f/255f, 57f/255f, 243f/255f, 1f), 255f);
 
 		QOL.AbilityMenuOpacity = new FloatSetting("Ability Menu Opacity", 0.5f);
 		QOL.CursorLock = new BoolSetting("Cursor Lock", false, false);
@@ -232,6 +233,8 @@ public static class RandomizerSettings
 		public static BoolSetting MultiplePickupMessages;
 
 		public static BoolSetting AlwaysShowLastFivePickups;
+
+		public static ColorSetting WarpTeleporterColor;
 	}
 
 	public static class QOL
@@ -329,18 +332,23 @@ public static class RandomizerSettings
 
 	public class ColorSetting : Setting<Color>
 	{
-		public ColorSetting(string name, Color defaultValue, bool nag = true) : base(name, defaultValue, nag) {}
+        public ColorSetting(string name, Color defaultValue, float divisor, bool nag = true) : base(name, defaultValue, nag)
+		{	
+			this.divisor = divisor;
+		}
 
-		public override void Parse(string value)
+        public override void Parse(string value)
 		{
 			string[] parts = value.Split(new char[]{','});
-			this.Value = new UnityEngine.Color(float.Parse(parts[0]) / 511f, float.Parse(parts[1]) / 511f, float.Parse(parts[2]) / 511f, float.Parse(parts[3]) / 511f);
+			this.Value = new UnityEngine.Color(float.Parse(parts[0]) / divisor, float.Parse(parts[1]) / divisor, float.Parse(parts[2]) / divisor, float.Parse(parts[3]) / divisor);
 		}
 
 		public override string ToString()
 		{
-			return String.Format("{0:F0}, {1:F0}, {2:F0}, {3:F0}", this.Value.r * 511f, this.Value.g * 511f, this.Value.b * 511f, this.Value.a * 511f);
+			return String.Format("{0:F0}, {1:F0}, {2:F0}, {3:F0}", this.Value.r * divisor, this.Value.g * divisor, this.Value.b * divisor, this.Value.a * divisor);
 		}
+
+		public float divisor;
 	}
 
 	public class EnumSetting<T> : Setting<T> where T : System.Enum
