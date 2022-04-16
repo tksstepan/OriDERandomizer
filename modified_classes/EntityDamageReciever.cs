@@ -96,9 +96,9 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 					AchievementsLogic.Instance.OnEnemyKilledItself();
 				}
 			}
+			BingoController.OnDestroyEntity(this.Entity, damage);
 			if (this.Entity is Enemy)
 			{
-				BingoController.OnDestroyEntity(this.Entity, damage);
 				RandomizerStatsManager.OnKill(damage.Type);
 				if (damage.Type == DamageType.ChargeFlame)
 				{
