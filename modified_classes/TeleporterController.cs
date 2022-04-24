@@ -298,6 +298,8 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		{
 			UberGCManager.CollectResourcesIfNeeded();
 		}
+		if (Randomizer.IsUsingRandomizerTeleportAnywhere)
+		    RandomizerBonusSkill.LastAltR = Characters.Sein.Position;		
 		Characters.Sein.Position = this.m_teleporterTargetPosition + Vector3.up * 1.6f;
 		CameraPivotZone.InstantUpdate();
 		Scenes.Manager.UpdatePosition();
@@ -315,7 +317,6 @@ public class TeleporterController : SaveSerialize, ISuspendable
 
 		if (Randomizer.IsUsingRandomizerTeleportAnywhere)
 		{
-		    RandomizerBonusSkill.LastAltR = Characters.Sein.Position;
 		    int value = World.Events.Find(Randomizer.MistySim).Value;
 		    if (value != 1 && value != 8)
 		    {
