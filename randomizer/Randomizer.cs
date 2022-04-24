@@ -1353,7 +1353,7 @@ public static class Randomizer
     }
     private static int get(int item) { return Characters.Sein.Inventory.GetRandomizerItem(item); }
     private static int set(int item, int value) { return Characters.Sein.Inventory.SetRandomizerItem(item, value); }
-    private static HashSet<int> knownUnknowns = new HashSet<int>() {-1, -2, -1640264 }; // remove -1640264 once appropriate seedgen changes happen ig?
+    private static HashSet<int> knownUnknowns = new HashSet<int>() {-1, 2, -1640264 }; // remove -1640264 once appropriate seedgen changes happen ig?
 
     public static bool SeenCoord(int coord) {
         if(!RandomizerTrackedDataManager.CoordsMap.ContainsKey(coord))
