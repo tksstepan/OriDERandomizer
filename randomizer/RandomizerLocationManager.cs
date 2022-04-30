@@ -78,6 +78,16 @@ public class RandomizerLocationManager
 			return;
 		}
 
+		spawnNodeName = null;
+		if(Randomizer.SpawnWith.Contains("WS")){
+			foreach(var kvp in stupidBullshit) {
+				if(Randomizer.SpawnWith.EndsWith(kvp.Key)){
+					spawnNodeName = kvp.Value;
+					break;
+				}
+			}
+		}
+
 		if (RandomizerLocationManager.s_logicLastUpdated == DateTime.MinValue || File.GetLastWriteTime("areas.ori") > RandomizerLocationManager.s_logicLastUpdated || !paths.SetEquals(RandomizerLocationManager.s_lastLogicPaths))
 		{
 			RandomizerLocationManager.Areas = OriParse.Parse("areas.ori", paths);
@@ -195,7 +205,7 @@ public class RandomizerLocationManager
 
 			if (RandomizerLocationManager.Areas != null)
 			{
-				reachable = OriReachable.Reachable(RandomizerLocationManager.Areas, currentInventory);
+				reachable = OriReachable.Reachable(RandomizerLocationManager.Areas, currentInventory, spawnNodeName);
 				reachable.Add("FirstEnergyCell");
 				reachable.Add("Sein");
 
@@ -238,6 +248,21 @@ public class RandomizerLocationManager
 	private static DateTime s_logicLastUpdated = DateTime.MinValue;
 
 	private static HashSet<string> s_lastLogicPaths = null;
+
+	private static Dictionary<string, string> stupidBullshit = new Dictionary<string, string>() {
+		{"-159,-114,force", "SpiritTreeRefined"},
+		{"491,-73,force", "SwampTeleporter"},
+		{"519,-174,force",  "MoonGrotto"},
+		{"-914,-298,force", "ForlornTeleporter"},
+		{"-430,0,force",  "ValleyTeleporter"},
+		{"88,142,force",   "HoruTeleporter"},
+		{"570,539,force", "GinsoTeleporter"},
+		{"-594,496,force",  "SorrowTeleporter"},
+		{"381,-297,force",  "BlackrootGrottoConnection"}
+	};
+
+	private static string spawnNodeName = null;
+
 
 	public class Location
 	{

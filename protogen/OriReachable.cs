@@ -32,10 +32,12 @@ namespace Protogen
             return reachableOrder;
         }
 
-        public static HashSet<string> Reachable(AreaGraph graph, Inventory inventory)
+        public static HashSet<string> Reachable(AreaGraph graph, Inventory inventory, string startNode = null)
         {
+            if(startNode == null || !graph.OutgoingConnections.ContainsKey(startNode))
+                startNode = graph.Origin.Name;
             HashSet<string> reachable = new HashSet<string>();
-            reachable.Add(graph.Origin.Name);
+            reachable.Add(startNode);
 
             HashSet<string> newNodes = reachable;
 
@@ -46,7 +48,7 @@ namespace Protogen
             List<Connection> usedKeystoneConnections = new List<Connection>();
 
             bool openWorld = inventory.Unlocks.Contains("OpenWorld");
-            if (openWorld)
+            if (openWorld && startNode == graph.Origin.Name)
             {
                 reachable.Add("GladesMain");
             }
@@ -77,7 +79,7 @@ namespace Protogen
                 var mapstonesReachable = Math.Min(inventory.Mapstones, accessibleMapstones.Count);
                 if (accessedMapstones < mapstonesReachable)
                 {
-                    foreach (var connection in graph.OutgoingConnections[graph.Origin.Name].Where(conn =>
+                    foreach (var connection in graph.OutgoingConnections[startNode].Where(conn =>
                         conn.Requirement.Mapstones > accessedMapstones &&
                         conn.Requirement.Mapstones <= mapstonesReachable))
                     {
