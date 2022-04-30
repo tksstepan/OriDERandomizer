@@ -17,10 +17,10 @@ public class RuntimeWorldMapIcon
 
 	public bool IsVisible(AreaMapUI areaMap)
 	{
-		if (!Characters.Sein.PlayerAbilities.MapMarkers.HasAbility)
-		{
-			return false;
-		}
+		// if (!Characters.Sein.PlayerAbilities.MapMarkers.HasAbility)
+		// {
+		// 	return false;
+		// }
 
 		// show randomizer pickup icons only if they're reachable and not yet collected
 		if (RandomizerLocationManager.LocationsByWorldMapGuid.ContainsKey(this.Guid))

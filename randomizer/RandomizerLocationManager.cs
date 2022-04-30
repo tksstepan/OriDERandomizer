@@ -6,21 +6,15 @@ using Game;
 using Protogen;
 using Sein.World;
 using UnityEngine;
-
+using System.Threading;
 public class RandomizerLocationManager
 {
 	public static void Initialize()
 	{
 		StringReader reader = new StringReader(RandomizerLocationData.All);
-		string line;		
-		while (true)
+		string line = reader.ReadLine();		
+		while (line != null)
 		{
-			line = reader.ReadLine();
-			if (line == null)
-			{
-				break;
-			}
-
 			Location newLocation = new Location(line.Trim());
 			RandomizerLocationManager.LocationsByName[newLocation.Name] = newLocation;
 			RandomizerLocationManager.LocationsByKey[newLocation.Key] = newLocation;
@@ -34,11 +28,13 @@ public class RandomizerLocationManager
 				RandomizerLocationManager.LocationsByGuid[newLocation.MoonGuid] = newLocation;
 				RandomizerLocationManager.LocationsByWorldMapGuid[newLocation.WorldMapGuid] = newLocation;
 			}
+			line = reader.ReadLine();
 		}
 	}
 
 	public static void InitializeLogic()
 	{
+		
 		HashSet<string> paths = new HashSet<string>();
 		int firstComma = Randomizer.SeedMeta.IndexOf(',');
 		string preset = Randomizer.SeedMeta.Substring(0, firstComma);
@@ -78,6 +74,7 @@ public class RandomizerLocationManager
 			RandomizerLocationManager.Areas = null;
 			RandomizerLocationManager.s_logicLastUpdated = DateTime.MinValue;
 			RandomizerLocationManager.s_lastLogicPaths = paths;
+			Randomizer.log("No areas.ori found, will not update logic");
 			return;
 		}
 
@@ -91,7 +88,7 @@ public class RandomizerLocationManager
 			{
 				location.Reachable = false;
 			}
-		}
+		}		
 	}
 
 	public static RandomizerPickupAction AddPickupAction(GameObject parentObj, string pickupName, string actionName = null)
@@ -161,55 +158,67 @@ public class RandomizerLocationManager
 
 	public static void UpdateReachable()
 	{
-		Inventory currentInventory = Inventory.FromCharacter();
-		currentInventory.Unlocks.Add("Mapstone");
-
-		if (Characters.Sein.Inventory.GetRandomizerItem(70) > currentInventory.Keystones)
-		{
-			currentInventory.Keystones = Characters.Sein.Inventory.GetRandomizerItem(70);
+		if(LogicThread != null && LogicThread.IsAlive) {
+			LogicThread.Abort();
+			Randomizer.log("Killing existing logic thread");
 		}
+		LogicThread = new Thread(UpdateReachableWorker);
+		LogicThread.Start();
+		
+	}
 
-		if (Characters.Sein.Inventory.GetRandomizerItem(71) > currentInventory.Mapstones)
-		{
-			currentInventory.Mapstones = Characters.Sein.Inventory.GetRandomizerItem(71);
-		}
+	public static void UpdateReachableWorker() {
+			Inventory currentInventory = Inventory.FromCharacter();
+			currentInventory.Unlocks.Add("Mapstone");
 
-		if (Randomizer.OpenMode)
-		{
-			currentInventory.Unlocks.Add("Open");
-		}
-
-		if (Randomizer.OpenWorld)
-		{
-			currentInventory.Unlocks.Add("OpenWorld");
-		}
-
-		HashSet<string> reachable = null;
-
-		if (RandomizerLocationManager.Areas != null)
-		{
-			reachable = OriReachable.Reachable(RandomizerLocationManager.Areas, currentInventory);
-			reachable.Add("FirstEnergyCell");
-			reachable.Add("Sein");
-
-			if (reachable.Contains("ForlornEscape"))
+			if (Characters.Sein.Inventory.GetRandomizerItem(70) > currentInventory.Keystones)
 			{
-				reachable.Add("ForlornEscapePlant");
+				currentInventory.Keystones = Characters.Sein.Inventory.GetRandomizerItem(70);
 			}
-		}
 
-		foreach (var item in RandomizerLocationManager.LocationsByName)
-		{
-			if (reachable == null || reachable.Contains(item.Key))
+			if (Characters.Sein.Inventory.GetRandomizerItem(71) > currentInventory.Mapstones)
 			{
-				item.Value.Reachable = true;
+				currentInventory.Mapstones = Characters.Sein.Inventory.GetRandomizerItem(71);
 			}
-			else if (item.Value.Reachable)
+
+			if (Randomizer.OpenMode)
 			{
-				Randomizer.log("!!!! " + item.Key + " became unreachable!");
-				item.Value.Reachable = false;
+				currentInventory.Unlocks.Add("Open");
 			}
-		}
+
+			if (Randomizer.OpenWorld)
+			{
+				currentInventory.Unlocks.Add("OpenWorld");
+			}
+
+			HashSet<string> reachable = null;
+
+			if (RandomizerLocationManager.Areas != null)
+			{
+				reachable = OriReachable.Reachable(RandomizerLocationManager.Areas, currentInventory);
+				reachable.Add("FirstEnergyCell");
+				reachable.Add("Sein");
+
+				if (reachable.Contains("ForlornEscape"))
+				{
+					reachable.Add("ForlornEscapePlant");
+				}
+				foreach (var item in RandomizerLocationManager.LocationsByName) 
+					item.Value.Reachable = reachable.Contains(item.Key);
+/* can toggle this on for debugging but logging in a thread is spoopy and the conditionals are more work than overwriting bools
+				{
+					if (reachable.Contains(item.Key))
+					{
+						item.Value.Reachable = true;
+					}
+					else if (item.Value.Reachable)
+					{
+						Randomizer.log("!!!! " + item.Key + " became unreachable!"); // can toggle this on for debugging but logging in a thread is spoopy
+						item.Value.Reachable = false;
+					}
+				}*/
+			}
+		
 	}
 
 	public static Dictionary<MoonGuid, Location> LocationsByGuid = new Dictionary<MoonGuid, Location>();
@@ -223,6 +232,8 @@ public class RandomizerLocationManager
 	public static Location[] ProgressiveMapLocations = new Location[9];
 
 	public static AreaGraph Areas;
+
+	public static Thread LogicThread;
 
 	private static DateTime s_logicLastUpdated = DateTime.MinValue;
 
