@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.IO;
 using Core;
@@ -79,6 +80,7 @@ public static class RandomizerSettings
 
 				File.AppendAllText("RandomizerSettings.txt", writeText);
 			}
+			CurrentFilter = Customization.DefaultMapFilter.Value;
 		}
 		catch (Exception e)
 		{
@@ -164,6 +166,7 @@ public static class RandomizerSettings
 		Customization.MultiplePickupMessages = new BoolSetting("Display Multiple Pickup Messages", false, false);
 		Customization.AlwaysShowLastFivePickups = new BoolSetting("Always Show Last Five Pickup Messages", false, false);
 		Customization.WarpTeleporterColor = new ColorSetting("Warp Teleporter Color", new Color(202f/255f, 57f/255f, 243f/255f, 1f), 255f);
+		Customization.DefaultMapFilter = new EnumSetting<MapFilterMode>("Default Map Filter", MapFilterMode.InLogic, false);
 
 		QOL.AbilityMenuOpacity = new FloatSetting("Ability Menu Opacity", 0.5f);
 		QOL.CursorLock = new BoolSetting("Cursor Lock", false, false);
@@ -182,6 +185,8 @@ public static class RandomizerSettings
 
 	public static BoolSetting Dev = new BoolSetting("Dev", false);
 
+	public static MapFilterMode CurrentFilter = MapFilterMode.InLogic;
+
 	private static bool dirty = false;
 
 	public enum AutofireMode
@@ -195,6 +200,12 @@ public static class RandomizerSettings
 	{
 		Manual,
 		Free
+	}
+	public enum MapFilterMode {
+		[Description("In Logic")]
+		InLogic,
+		[Description("Uncollected")]
+		All
 	}
 
 	public static class Controls
@@ -235,6 +246,8 @@ public static class RandomizerSettings
 		public static BoolSetting AlwaysShowLastFivePickups;
 
 		public static ColorSetting WarpTeleporterColor;
+
+		public static EnumSetting<MapFilterMode> DefaultMapFilter;
 	}
 
 	public static class QOL

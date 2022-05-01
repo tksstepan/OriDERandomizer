@@ -63,6 +63,7 @@ public static class RandomizerRebinding
 				{"Show Progress", "LeftAlt+P, RightAlt+P"},
 				{"Color Shift", "LeftAlt+C, RightAlt+C"},
 				{"Double Bash", "Grenade"},
+				{"Toggle Map Mode", "Grenade"},
 				{"Free Grenade Jump", "Grenade+Jump"},
 				{"Show Bonuses", "LeftAlt+B, RightAlt+B"},
 				{"Bonus Switch", "LeftAlt+Q, RightAlt+Q"},
@@ -210,7 +211,6 @@ public static class RandomizerRebinding
 					singleBind.Add(new RandomizerRebinding.SingleInput(input.Trim()));
 				}
 			}
-
 			if (singleBind.Count > 0)
 			{
 				binds.Add(new RandomizerRebinding.SingleBind(singleBind));
@@ -241,6 +241,7 @@ public static class RandomizerRebinding
 	public static RandomizerRebinding.BindSet ColorShift = new RandomizerRebinding.BindSet(new List<RandomizerRebinding.SingleBind>());
 	public static RandomizerRebinding.BindSet DoubleBash = new RandomizerRebinding.BindSet(new List<RandomizerRebinding.SingleBind>());
 	public static RandomizerRebinding.BindSet FreeGrenadeJump = new RandomizerRebinding.BindSet(new List<RandomizerRebinding.SingleBind>());
+	public static RandomizerRebinding.BindSet ToggleMapMode = new RandomizerRebinding.BindSet(new List<RandomizerRebinding.SingleBind>());
 	public static RandomizerRebinding.BindSet ShowBonuses = new RandomizerRebinding.BindSet(new List<RandomizerRebinding.SingleBind>());
 	public static RandomizerRebinding.BindSet BonusSwitch = new RandomizerRebinding.BindSet(new List<RandomizerRebinding.SingleBind>());
 	public static RandomizerRebinding.BindSet BonusToggle = new RandomizerRebinding.BindSet(new List<RandomizerRebinding.SingleBind>());
@@ -273,6 +274,7 @@ public static class RandomizerRebinding
 		{"Color Shift", RandomizerRebinding.ColorShift},
 		{"Double Bash", RandomizerRebinding.DoubleBash},
 		{"Free Grenade Jump", RandomizerRebinding.FreeGrenadeJump},
+		{"Toggle Map Mode", RandomizerRebinding.ToggleMapMode},
 		{"Show Bonuses", RandomizerRebinding.ShowBonuses},
 		{"Bonus Switch", RandomizerRebinding.BonusSwitch},
 		{"Bonus Toggle", RandomizerRebinding.BonusToggle},
@@ -298,6 +300,7 @@ public static class RandomizerRebinding
 	{
 		public SingleInput(string input)
 		{
+			raw = input;
 			if (input.StartsWith("_"))
 			{
 				this.Type = ActionType.ControllerButton;
@@ -336,7 +339,7 @@ public static class RandomizerRebinding
 			switch (this.Type)
 			{
 			case ActionType.CoreInput:
-				return this.CoreInput.ToString();
+				return raw;
 			case ActionType.ControllerButton:
 				return "_" + this.Button.ToString();
 			case ActionType.KeyCode:
@@ -347,6 +350,8 @@ public static class RandomizerRebinding
 		}
 
 		public KeyCode Key;
+
+		private string raw;
 
 		public Core.Input.InputButtonProcessor CoreInput;
 

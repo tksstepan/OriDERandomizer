@@ -4,7 +4,7 @@ using System.Linq;
 using Core;
 using Game;
 using UnityEngine;
-
+using RandoExts;
 public class AreaMapUI : MonoBehaviour, ISuspendable
 {
 	public GameObject PlayerPositionMarker { get; set; }
@@ -113,6 +113,7 @@ public class AreaMapUI : MonoBehaviour, ISuspendable
 		this.UpdatePlayerPositionMarker();
 		this.UpdateSoulFlamePositionMarker();
 		this.UpdateCurrentArea();
+		
 		if (!GameMapUI.Instance.ShowingObjective)
 		{
 			this.ObjectiveText.SetMessage(new MessageDescriptor(string.Concat(new object[]
@@ -120,7 +121,9 @@ public class AreaMapUI : MonoBehaviour, ISuspendable
 				"#",
 				this.ObjectiveMessageProvider,
 				"#: ",
-				RandomizerText.GetObjectiveText()
+				RandomizerText.GetObjectiveText(),
+				"\n",
+				RandomizerText.MapFilterText
 			})));
 			this.ObjectiveText.gameObject.SetActive(true);
 		}
@@ -128,9 +131,13 @@ public class AreaMapUI : MonoBehaviour, ISuspendable
 		{
 			this.ObjectiveText.gameObject.SetActive(false);
 		}
-		if (GameMapTransitionManager.Instance.InAreaMapMode && Core.Input.Legend.OnPressed)
-		{
-			this.AreaMapLegend.Toggle();
+		if (GameMapTransitionManager.Instance.InAreaMapMode) {
+			if(Core.Input.Legend.OnPressed) 
+				this.AreaMapLegend.Toggle();
+			if(RandomizerRebinding.ToggleMapMode.OnPressed) {
+				RandomizerSettings.CurrentFilter = RandomizerSettings.CurrentFilter.Next();
+				this.IconManager.ShowAreaIcons();
+			}
 		}
 	}
 

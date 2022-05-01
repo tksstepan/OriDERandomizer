@@ -23,7 +23,7 @@ public class RuntimeWorldMapIcon
 		// }
 
 		// show randomizer pickup icons only if they're reachable and not yet collected
-		if (RandomizerLocationManager.LocationsByWorldMapGuid.ContainsKey(this.Guid))
+		if (RandomizerSettings.CurrentFilter == RandomizerSettings.MapFilterMode.InLogic && RandomizerLocationManager.LocationsByWorldMapGuid.ContainsKey(this.Guid))
 		{
 			RandomizerLocationManager.Location loc = RandomizerLocationManager.LocationsByWorldMapGuid[this.Guid];
 			return loc.Reachable && !loc.Collected;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using RandoExts;
 
 public static class RandomizerText
 {
@@ -21,6 +22,8 @@ public static class RandomizerText
 		}
 		return RandomizerText.m_abilityOverrides[ability].DescriptionOverride;
 	}
+
+	public static string MapFilterText => $"Icon Filter ({RandomizerRebinding.ToggleMapMode.FirstBindName()}): " + (RandomizerSettings.CurrentFilter == RandomizerSettings.MapFilterMode.InLogic && RandomizerLocationManager.Areas == null ? "@Logic filter unavailable; areas.ori missing@" : $"*{RandomizerSettings.CurrentFilter.Desc()}*"); 
 
 	public static string GetObjectiveText()
 	{
