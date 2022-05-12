@@ -345,6 +345,13 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		{
 			Sound.Play(this.TeleportingEndSound.GetSound(null), Characters.Sein.Position, null);
 		}
+		// Disable any sein locks that we got from teleporting from a physical savePedestal.
+		Characters.Ori.ChangeState(Ori.State.Hovering);
+		Characters.Ori.EnableHoverWobbling = true;
+		if (Characters.Sein.Abilities.SpiritFlame)
+		{
+			Characters.Sein.Abilities.SpiritFlame.RemoveLock("savePedestal");
+		}
 	}
 
 	public static void RemoveCustomTeleporters()
