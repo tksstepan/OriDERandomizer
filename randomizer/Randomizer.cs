@@ -96,7 +96,6 @@ public static class Randomizer
             Randomizer.AllowOrbWarps = false;
             Randomizer.RandomizedFirstEnergy = false;
             Randomizer.NightBerryWarpPosition = new Vector3(-910f, -300f);
-            Randomizer.SpawnWarpState = 0;
 
             if (Randomizer.SeedFilePath == null)
             {
@@ -253,13 +252,9 @@ public static class Randomizer
     }
 
     public static void WarpTo(Vector3 position, int warpDelay) {
-        Randomizer.WarpTo(position, warpDelay, false);
-    }
-
-    public static void WarpTo(Vector3 position, int warpDelay, bool ignoreCanMove=false) {
         Randomizer.Warping = warpDelay;
         Randomizer.WarpTarget = position;
-        if ((!Characters.Sein.Controller.CanMove && !ignoreCanMove) || !Characters.Sein.Active || Characters.Sein.IsSuspended)
+        if (!Characters.Sein.Controller.CanMove || !Characters.Sein.Active || Characters.Sein.IsSuspended)
         {
             DelayedWarp = true;
             return;
@@ -511,23 +506,6 @@ public static class Randomizer
                 if (Scenes.Manager.CurrentScene?.Scene == "sunkenGladesRunaway")
                 {
                     Randomizer.Returning = false;
-                }
-            }
-            if (Randomizer.SpawnWarpState != 0)
-            {
-                // Essentially we delay given spawn items until we aren't input locked.
-                // But We don't start input locked during SetupNewGame so we wait for that first.
-                if (Randomizer.SpawnWarpState == 2) {
-                    if (Characters.Sein.Controller.InputLocked)
-                    {
-                        Randomizer.SpawnWarpState = 1;
-                    }
-                } else {
-                    if (!Characters.Sein.Controller.InputLocked)
-                    {
-                        Randomizer.SpawnWarpState = 0;
-                        Randomizer.GiveSpawnItems();
-                    }
                 }
             }
         }
@@ -1470,27 +1448,17 @@ public static class Randomizer
         // grant other spawn items determined by the seed
         if (Randomizer.SpawnWith != "")
         {
-            if (Randomizer.SpawnWith.Contains("WS"))
+            RandomizerAction spawnItem;
+            if (Randomizer.StringKeyPickupTypes.Contains(SpawnWith.Substring(0, 2)))
             {
-                Randomizer.SpawnWarpState = 2;
-            } else {
-                Randomizer.GiveSpawnItems();
+                spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), SpawnWith.Substring(2));
             }
+            else
+            {
+                spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), int.Parse(SpawnWith.Substring(2)));
+            }
+            RandomizerSwitch.GivePickup(spawnItem, 2, true);
         }
-    }
-
-    public static void GiveSpawnItems()
-    {
-        RandomizerAction spawnItem;
-        if (Randomizer.StringKeyPickupTypes.Contains(SpawnWith.Substring(0, 2)))
-        {
-            spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), SpawnWith.Substring(2));
-        }
-        else
-        {
-            spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), int.Parse(SpawnWith.Substring(2)));
-        }
-        RandomizerSwitch.GivePickup(spawnItem, 2, true);
     }
 
     public static RandomizerInventory Inventory { get; private set; }
@@ -1617,6 +1585,4 @@ public static class Randomizer
     public static string SeedFilePath;
 
     public static Vector3 NightBerryWarpPosition;
-
-    public static int SpawnWarpState;
 }

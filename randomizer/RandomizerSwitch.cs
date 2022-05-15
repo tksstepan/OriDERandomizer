@@ -268,7 +268,7 @@ public static class RandomizerSwitch
                     Randomizer.SaveAfterWarp = Action.Action == "WS";
                     string[] xy = ((string)Action.Value).Split(',');
                     if(xy.Length > 2 && xy[2] == "force") {
-                        Randomizer.WarpTo(new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1])), 15, coords==2);
+                        Randomizer.WarpTo(new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1])), 15);
                     }
                     else {
                         Randomizer.WarpTarget = new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1]));
