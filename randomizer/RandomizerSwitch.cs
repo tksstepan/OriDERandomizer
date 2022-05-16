@@ -265,15 +265,18 @@ public static class RandomizerSwitch
                     break;
                 case "WS":
                 case "WP":
-                    Randomizer.SaveAfterWarp = Action.Action == "WS";
-                    string[] xy = ((string)Action.Value).Split(',');
-                    if(xy.Length > 2 && xy[2] == "force") {
-                        Randomizer.WarpTo(new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1])), 15);
-                    }
-                    else {
-                        Randomizer.WarpTarget = new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1]));
-                        Randomizer.WarpSource = Characters.Sein.Position;
-                        Randomizer.CanWarp = 7;
+                    // Don't actually warp at spawn, let other code do that.
+                    if (coords != 2) {
+                        Randomizer.SaveAfterWarp = Action.Action == "WS";
+                        string[] xy = ((string)Action.Value).Split(',');
+                        if(xy.Length > 2 && xy[2] == "force") {
+                            Randomizer.WarpTo(new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1])), 15);
+                        }
+                        else {
+                            Randomizer.WarpTarget = new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1]));
+                            Randomizer.WarpSource = Characters.Sein.Position;
+                            Randomizer.CanWarp = 7;
+                        }
                     }
                     break;
                 case "NO":
