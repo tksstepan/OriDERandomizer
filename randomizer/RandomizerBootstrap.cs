@@ -198,6 +198,7 @@ public class RandomizerBootstrap
 			sequence.Actions.Add(action);
 			ActionMethod action2 = sceneRoot.transform.FindChild("*spiritTreeStorySetup/container/actionSequences/04. returnCameraToPlayerActionSequence/10. Deactivate *seinAbilityRestrictZones").GetComponent<ActionMethod>();
 			sequence.Actions.Add(action2);
+			sceneRoot.OnValidate();
 		}
 	}
 
@@ -376,11 +377,16 @@ public class RandomizerBootstrap
 
 	private static void BootstrapSunkenGladesRunaway(SceneRoot sceneRoot)
 	{
+		// This checks if it is a non-default spawn. TODO replace this with something tidier later.
 		if (!Randomizer.SpawnWith.Contains("WS")) {
 			return;
 		}
 		int wsLocation = Randomizer.SpawnWith.IndexOf("WS");
-		string[] pieces = Randomizer.SpawnWith.Substring(wsLocation + 3).Split(',');
+		int offset = 2;
+		if (Randomizer.SpawnWith.Contains("WS/")) {
+			offset = 3;
+		}
+		string[] pieces = Randomizer.SpawnWith.Substring(wsLocation + offset).Split(',');
 		int warpX;
 		int.TryParse(pieces[0], out warpX);
 		int warpY;
@@ -388,11 +394,11 @@ public class RandomizerBootstrap
 		Vector3 position = new Vector3(warpX, warpY, 0);
 		// This only takes a position, and loads scenes at that position. Doesn't require the metadata.
 		// Definitely not as nice as adding a load to the action sequence, but significantly easier.
-		Scenes.Manager.AdditivelyLoadScenesAtPosition(position, true, false, true);		
-
+		Scenes.Manager.AdditivelyLoadScenesAtPosition(position, true, false, true);
+		
 		ActionSequence actionSequence = sceneRoot.transform.FindChild("*objectiveSetup/objectiveSetupTrigger/objectiveSetupAction").GetComponent<ActionSequence>();
 		List<ActionMethod> original_list = new List<ActionMethod>(actionSequence.Actions);
-		// Remove from "09. Wait 4 seconds" onwards.
+		// Remove from "09. Wait 4 seconds" and onwards.
 		actionSequence.Actions.RemoveRange(8, 9);	
 		// Hide letterboxes
 		actionSequence.Actions.Add(original_list[11]);
@@ -401,13 +407,10 @@ public class RandomizerBootstrap
 		// Unlock player input
 		actionSequence.Actions.Add(original_list[10]);
 		// Warp
-		GameObject positionObject = new GameObject("setCharacterPosition");
-		positionObject.transform.parent = actionSequence.transform;
-		SetCharacterPosition setPosition = positionObject.AddComponent<SetCharacterPosition>();
-		GameObject transformObject = new GameObject();
-		Transform transform = transformObject.transform;
-		setPosition.Position = transform;
-		transform.position = position;
+		SetCharacterPosition setPosition = actionSequence.gameObject.AddComponent<SetCharacterPosition>();
+		setPosition.transform.position = position;
+		setPosition.Position = setPosition.transform;
+		RandomizerBootstrap.SetGuidAndSave(sceneRoot, setPosition, new MoonGuid(2033807637, 1102752838, 351348109, 1564353675));
 		actionSequence.Actions.Add(setPosition);
 		// create checkpoint -- should be immediately after warp.
 		actionSequence.Actions.Add(original_list[14]);
@@ -419,6 +422,7 @@ public class RandomizerBootstrap
 		actionSequence.Actions.Add(original_list[13]);
 		// Set user status action.
 		actionSequence.Actions.Add(original_list[16]);
+		sceneRoot.OnValidate();
 	}
 
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrap = new Dictionary<string, Action<SceneRoot>>
