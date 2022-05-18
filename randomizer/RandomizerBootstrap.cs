@@ -188,6 +188,18 @@ public class RandomizerBootstrap
 		// Unlike most other pickups, which are permanent placeholders that spawn an object with a DestroyOnRestoreCheckpoint component,
 		// this one is *just* an object with a DestroyOnRestoreCheckpoint component. Disable that to prevent its untimely demise.
 		sceneRoot.transform.FindChild("mediumExpOrb").GetComponent<DestroyOnRestoreCheckpoint>().enabled = false;
+		// This checks if it is a grove tp spawn. TODO replace this with something tidier later.
+		if (Randomizer.SpawnWith.Contains("-159,-114,force")) {
+			Transform transform = sceneRoot.transform.FindChild("*spiritTreeStorySetup");
+			ActionSequence sequence = transform.FindChild("container/actionSequences/01. reachSpiritTreeActionSequence").GetComponent<ActionSequence>();
+			sequence.Actions.Clear();
+			ActionSequence sequence2 = transform.FindChild("container/actionSequences/04. returnCameraToPlayerActionSequence").GetComponent<ActionSequence>();
+			ActionMethod action = sequence2.Actions[12];
+			sequence.Actions.Add(action);
+			ActionMethod action2 = sceneRoot.transform.FindChild("*spiritTreeStorySetup/container/actionSequences/04. returnCameraToPlayerActionSequence/10. Deactivate *seinAbilityRestrictZones").GetComponent<ActionMethod>();
+			sequence.Actions.Add(action2);
+			sceneRoot.OnValidate();
+		}
 	}
 
 	private static void BootstrapValleyThreeBirdArea(SceneRoot sceneRoot)
@@ -363,6 +375,56 @@ public class RandomizerBootstrap
 		ActionSequence.Rename(sequence.Actions);
 	}
 
+	private static void BootstrapSunkenGladesRunaway(SceneRoot sceneRoot)
+	{
+		// This checks if it is a non-default spawn. TODO replace this with something tidier later.
+		if (!Randomizer.SpawnWith.Contains("WS")) {
+			return;
+		}
+		int wsLocation = Randomizer.SpawnWith.IndexOf("WS");
+		int offset = 2;
+		if (Randomizer.SpawnWith.Contains("WS/")) {
+			offset = 3;
+		}
+		string[] pieces = Randomizer.SpawnWith.Substring(wsLocation + offset).Split(',');
+		int warpX;
+		int.TryParse(pieces[0], out warpX);
+		int warpY;
+		int.TryParse(pieces[1], out warpY);
+		Vector3 position = new Vector3(warpX, warpY, 0);
+		// This only takes a position, and loads scenes at that position. Doesn't require the metadata.
+		// Definitely not as nice as adding a load to the action sequence, but significantly easier.
+		Scenes.Manager.AdditivelyLoadScenesAtPosition(position, true, false, true);
+		
+		ActionSequence actionSequence = sceneRoot.transform.FindChild("*objectiveSetup/objectiveSetupTrigger/objectiveSetupAction").GetComponent<ActionSequence>();
+		List<ActionMethod> original_list = new List<ActionMethod>(actionSequence.Actions);
+		// Remove from "09. Wait 4 seconds" and onwards.
+		actionSequence.Actions.RemoveRange(8, 9);	
+		// Hide letterboxes
+		actionSequence.Actions.Add(original_list[11]);
+		// Show UI
+		actionSequence.Actions.Add(original_list[15]);
+		// Unlock player input
+		actionSequence.Actions.Add(original_list[10]);
+		// Warp
+		SetCharacterPosition setPosition = actionSequence.gameObject.AddComponent<SetCharacterPosition>();
+		setPosition.transform.position = position;
+		setPosition.Position = setPosition.transform;
+		RandomizerBootstrap.SetGuidAndSave(sceneRoot, setPosition, new MoonGuid(2033807637, 1102752838, 351348109, 1564353675));
+		actionSequence.Actions.Add(setPosition);
+		// create checkpoint -- should be immediately after warp.
+		actionSequence.Actions.Add(original_list[14]);
+		// Wait 4 seconds
+		actionSequence.Actions.Add(original_list[8]);		
+		// wait 3.3 sceonds
+		actionSequence.Actions.Add(original_list[12]);
+		// play sound
+		actionSequence.Actions.Add(original_list[13]);
+		// Set user status action.
+		actionSequence.Actions.Add(original_list[16]);
+		sceneRoot.OnValidate();
+	}
+
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrap = new Dictionary<string, Action<SceneRoot>>
 	{
 		{ "moonGrottoRopeBridge", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoBridge) },
@@ -373,7 +435,8 @@ public class RandomizerBootstrap
 		{ "sunkenGladesIntroSplitB", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSunkenGladesSpiritWell) },
 		{ "thornfeltSwampActTwoStart", new Action<SceneRoot>(RandomizerBootstrap.BootstrapThornfeltSwampMain) },
 		{ "titleScreenSwallowsNest", new Action<SceneRoot>(RandomizerBootstrap.BootstrapTitleScreen) },
-		{ "westGladesFireflyAreaA", new Action<SceneRoot>(RandomizerBootstrap.BootstrapValleyThreeBirdArea) }
+		{ "westGladesFireflyAreaA", new Action<SceneRoot>(RandomizerBootstrap.BootstrapValleyThreeBirdArea) },
+		{ "sunkenGladesRunaway", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSunkenGladesRunaway) }
 	};
 
 	private static List<string> s_bootstrappedScenes = new List<string>();
