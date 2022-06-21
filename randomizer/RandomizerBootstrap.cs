@@ -238,9 +238,15 @@ public class RandomizerBootstrap
 	{
 		if (RandomizerSettings.Game.FixGrottoBridgeDrop)
 		{
-			// add an ActionSequenceSerializer to the bridge so that the sequence continues and activates the final colliders even after glitching it
-			GameObject bridgeSequence = sceneRoot.transform.FindChild("*gumoBridgeSetup/group/action").gameObject;
-			ActionSequenceSerializer serializer = bridgeSequence.AddComponent<ActionSequenceSerializer>();
+			// add an ActionSequenceSerializer to the bridge so that the sequence continues and activates the final colliders even after glitching it,
+			// but delay that activation so the skip acts more like the vanilla skip.
+			GameObject bridgeSequenceGameObject = sceneRoot.transform.FindChild("*gumoBridgeSetup/group/action").gameObject;
+			ActionSequenceSerializer serializer = bridgeSequenceGameObject.AddComponent<ActionSequenceSerializer>();
+			ActionSequence bridgeSequence = sceneRoot.transform.FindChild("*gumoBridgeSetup/group/action").GetComponent<ActionSequence>();
+			WaitAction waitAction = bridgeSequence.gameObject.AddComponent<WaitAction>();
+			waitAction.Duration = 10f;
+			bridgeSequence.Actions.Insert(16, waitAction);
+			RandomizerBootstrap.SetGuidAndSave(sceneRoot, waitAction, new MoonGuid(705566895, 1206307123, -626862952, 223115723));
 			serializer.OnValidate();
 			RandomizerBootstrap.SetGuidAndSave(sceneRoot, serializer, new MoonGuid(1360931587, 1176121670, -1051255642, 855352030));
 		}
@@ -394,7 +400,7 @@ public class RandomizerBootstrap
 		Vector3 position = new Vector3(warpX, warpY, 0);
 		// This only takes a position, and loads scenes at that position. Doesn't require the metadata.
 		// Definitely not as nice as adding a load to the action sequence, but significantly easier.
-		Scenes.Manager.AdditivelyLoadScenesAtPosition(position, true, false, true);
+		Core.Scenes.Manager.AdditivelyLoadScenesAtPosition(position, true, false, true);
 		
 		ActionSequence actionSequence = sceneRoot.transform.FindChild("*objectiveSetup/objectiveSetupTrigger/objectiveSetupAction").GetComponent<ActionSequence>();
 		List<ActionMethod> original_list = new List<ActionMethod>(actionSequence.Actions);
