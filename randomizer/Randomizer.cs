@@ -71,7 +71,7 @@ public static class Randomizer
             Randomizer.HotColdFrags = new Dictionary<int, RandomizerHotColdItem>();
             Randomizer.HotColdMaps = new List<int>();
             Randomizer.HotColdMapsWithFrags = new List<int>();
-            int HotColdSaveId = 2000;
+            Randomizer.HotColdSaveId = 2000;
             Randomizer.OpenMode = true;
             Randomizer.OpenWorld = false;
             RandomizerDataMaps.LoadGladesData();
@@ -126,69 +126,23 @@ public static class Randomizer
                         string[] lineParts = line.Split('|');
                         int coords;
                         int.TryParse(lineParts[0], out coords);
-                        if (coords == 2) {
-                            SpawnWith = lineParts[1] + lineParts[2];
-                            continue;
+                        
+                        GetDataFromSeedLine(coords, lineParts[1], lineParts[2], lineParts[3]);
+
+                        if (coords == 2)
+                        {
+                            Randomizer.SpawnWith = lineParts[1] + lineParts[2];
                         }
-                        if (Randomizer.HotColdTypes.Contains(lineParts[1]) || Randomizer.HotColdTypes.Any((string t) => (lineParts[1] + lineParts[2]).StartsWith(t))) {
-                            if (Math.Abs(coords) > 100) {
-                                Randomizer.HotColdItems.Add(coords, new RandomizerHotColdItem(Randomizer.HashKeyToVector(coords), HotColdSaveId));
-                                HotColdSaveId++;
-                            } else {
-                                Randomizer.HotColdMaps.Add(coords);
-                                Randomizer.HotColdMapsWithFrags.Add(coords);
-                            }
-                        } else if(lineParts[1] == "MS") {
-                            if (Math.Abs(coords) > 100) {
-                                Randomizer.HotColdFrags.Add(coords, new RandomizerHotColdItem(Randomizer.HashKeyToVector(coords), HotColdSaveId));
-                                HotColdSaveId++; 
-                            } else {
-                                Randomizer.HotColdMapsWithFrags.Add(coords);
-                            }
-                        }
-                        if (Randomizer.StringKeyPickupTypes.Contains(lineParts[1]))
+                        else if (Randomizer.StringKeyPickupTypes.Contains(lineParts[1]))
                         {
                             bool repeatable = lineParts[1] == "RP";
                             RandomizerLocationManager.PlacePickup(coords, lineParts[1], lineParts[2], repeatable);
-                            if(lineParts[1] == "WT") {
-                                Randomizer.RelicZoneLookup[lineParts[2]] = lineParts[3];
-                                if(!Randomizer.RelicCountOverride) {
-                                    Randomizer.RelicCount++;
-                                }
-                            }
-                            if(CluesMode && (lineParts[1] == "RP" || lineParts[1] == "MU")) {
-                                if(lineParts[2].Contains("EV/0"))
-                                    RandomizerClues.AddClue(lineParts[3], 0);
-                                else if(lineParts[2].Contains("EV/2"))
-                                    RandomizerClues.AddClue(lineParts[3], 1);
-                                else if(lineParts[2].Contains("EV/4"))
-                                    RandomizerClues.AddClue(lineParts[3], 2);
-                            }
                         }
-                        else
+                        else if (lineParts[1] != "EN")
                         {
-                            int id;
-                            int.TryParse(lineParts[2], out id);
-                            if (lineParts[1] == "EN")
-                            {
-                                // door entries are coord|EN|targetX|targetY
-                                int doorY;
-                                int.TryParse(lineParts[3], out doorY);
-                                Randomizer.DoorTable[coords] = new Vector3((float)id, (float)doorY);
-                            }
-                            else 
-                            {
-                                RandomizerLocationManager.PlacePickup(coords, lineParts[1], id);
-                                if (lineParts[1] == "SK") {
-                                    if(id == 51) {
-                                        GrenadeZone = lineParts[3];
-                                    } else if(id == 4) {
-                                        StompZone = lineParts[3];
-                                    }
-                                }
-                                if (CluesMode && lineParts[1] == "EV" && id % 2 == 0)
-                                    RandomizerClues.AddClue(lineParts[3], id / 2);
-                            }
+                            int id_number;
+                            int.TryParse(lineParts[2], out id_number);
+                            RandomizerLocationManager.PlacePickup(coords, lineParts[1], id_number, false);
                         }
                     }
                     Randomizer.HotColdMaps.Sort();
@@ -1327,8 +1281,104 @@ public static class Randomizer
             }
         }
         return doBingo;
-
     }
+
+    public static void GetSenseFromSeedLine(int coords, string code, string id, string area)
+    {
+        // Prepare sense information, but not for pickups at spawn, and we only need at most 1 addition for each coordinate.
+        if (coords == 2)
+        {
+            return;
+        }
+        if (Randomizer.HotColdTypes.Contains(code) || Randomizer.HotColdTypes.Any((string t) => (code + id).StartsWith(t)))
+        {
+            if (Math.Abs(coords) > 100)
+            {
+                if (!Randomizer.HotColdItems.ContainsKey(coords))
+                {
+                    Randomizer.HotColdItems.Add(coords, new RandomizerHotColdItem(Randomizer.HashKeyToVector(coords), Randomizer.HotColdSaveId));
+                    Randomizer.HotColdSaveId++;
+                }
+            } else {
+                if (!Randomizer.HotColdMaps.Contains(coords))
+                {
+                    Randomizer.HotColdMaps.Add(coords);
+                }
+                if (!Randomizer.HotColdMapsWithFrags.Contains(coords))
+                {
+                    Randomizer.HotColdMapsWithFrags.Add(coords);
+                }
+            }
+        }
+        else if (code == "MS")
+        {
+            if (Math.Abs(coords) > 100)
+            {
+                if (!Randomizer.HotColdFrags.ContainsKey(coords))
+                {
+                    Randomizer.HotColdFrags.Add(coords, new RandomizerHotColdItem(Randomizer.HashKeyToVector(coords), Randomizer.HotColdSaveId));
+                    Randomizer.HotColdSaveId++;
+                }
+            } else {
+                if (!Randomizer.HotColdMapsWithFrags.Contains(coords))
+                { 
+                    Randomizer.HotColdMapsWithFrags.Add(coords);
+                }
+            }
+        }
+    }
+
+    public static void GetDataFromSeedLine(int coords, string code, string id, string area)
+    {
+        int id_number;
+        int.TryParse(id, out id_number);
+        // If we are processing a repeatable or multipickup recur over items in them.
+        if (code == "RP" || code == "MU")
+        {
+            // Check the full pickup code + id for sense. This is for sense=MUEC cases. Otherwise processed in the recursion.
+            GetSenseFromSeedLine(coords, code, id, area);
+            string[] pieces = id.Split('/');
+            for (int i = 0; i < pieces.Length; i += 2)
+            {
+                GetDataFromSeedLine(coords, pieces[i], pieces[i + 1], area);
+            }
+            return;
+        }
+
+        GetSenseFromSeedLine(coords, code, id, area);
+        
+        if (code == "WT")
+        {
+            Randomizer.RelicZoneLookup[id] = area;
+            if (!Randomizer.RelicCountOverride)
+            {
+                Randomizer.RelicCount++;
+            }
+        }
+        if (code == "EN")
+        {
+            // door entries are coord|EN|targetX|targetY
+            int doorY;
+            int.TryParse(area, out doorY);
+            Randomizer.DoorTable[coords] = new Vector3((float)id_number, (float)doorY);
+        }
+        if (code == "SK")
+        {
+            if (id_number == 51)
+            {
+                Randomizer.GrenadeZone = area;
+            }
+            else if (id_number == 4)
+            {
+                Randomizer.StompZone = area;
+            }
+        }
+        if (Randomizer.CluesMode && code == "EV" && id_number % 2 == 0)
+        {
+            RandomizerClues.AddClue(area, id_number / 2);
+        }
+	}
+
     private static int get(int item) { return Characters.Sein.Inventory.GetRandomizerItem(item); }
     private static int set(int item, int value) { return Characters.Sein.Inventory.SetRandomizerItem(item, value); }
     private static HashSet<int> knownUnknowns = new HashSet<int>() {-1, 2, -1640264 }; // remove -1640264 once appropriate seedgen changes happen ig?
@@ -1585,4 +1635,6 @@ public static class Randomizer
     public static string SeedFilePath;
 
     public static Vector3 NightBerryWarpPosition;
+
+    public static int HotColdSaveId;
 }
