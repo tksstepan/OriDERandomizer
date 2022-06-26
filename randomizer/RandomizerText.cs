@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Game;
 using UnityEngine;
 using RandoExts;
 
@@ -23,7 +24,18 @@ public static class RandomizerText
 		return RandomizerText.m_abilityOverrides[ability].DescriptionOverride;
 	}
 
-	public static string MapFilterText => $"Icon Filter ({RandomizerRebinding.ToggleMapMode.FirstBindName()}): " + (RandomizerSettings.CurrentFilter == RandomizerSettings.MapFilterMode.InLogic && RandomizerLocationManager.Areas == null ? "@Logic filter unavailable; areas.ori missing@" : $"*{RandomizerSettings.CurrentFilter.Desc()}*"); 
+	public static string MapFilterText {
+		get {
+			var text = $"Current Filter ({RandomizerRebinding.ToggleMapMode.FirstBindName()}): *{RandomizerSettings.CurrentFilter.Desc()}*"; 
+			if(RandomizerSettings.CurrentFilter == RandomizerSettings.MapFilterMode.InLogic) {
+				if(RandomizerLocationManager.Areas == null)
+					return $"{text}\n@Logic filter unavailable; areas.ori missing@";
+				if(!Characters.Sein.PlayerAbilities.MapMarkers.HasAbility)
+					return $"{text}\nUnlock the #Map Markers# ability to use the logic filter!";
+			}
+			return text;
+		}
+	}
 
 	public static string GetObjectiveText()
 	{
@@ -80,7 +92,7 @@ public static class RandomizerText
 		},
 		{
 			AbilityType.MapMarkers,
-			new RandomizerText.AbilityTextOverrides(null, "Displays all pickups on the Map")
+			new RandomizerText.AbilityTextOverrides("Logic Filter", "Unlocks the In-Logic Filter for the map")
 		},
 		{
 			AbilityType.HealthEfficiency,

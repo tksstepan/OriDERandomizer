@@ -17,14 +17,12 @@ public class RuntimeWorldMapIcon
 
 	public bool IsVisible(AreaMapUI areaMap)
 	{
-		// if (!Characters.Sein.PlayerAbilities.MapMarkers.HasAbility)
-		// {
-		// 	return false;
-		// }
 
 		// show randomizer pickup icons only if they're reachable and not yet collected
 		if (RandomizerSettings.CurrentFilter == RandomizerSettings.MapFilterMode.InLogic && RandomizerLocationManager.LocationsByWorldMapGuid.ContainsKey(this.Guid))
 		{
+			if (!Characters.Sein.PlayerAbilities.MapMarkers.HasAbility) // TODO: maybe don't make it possible to select this filter if you don't have Map Markers?
+			 	return false;
 			RandomizerLocationManager.Location loc = RandomizerLocationManager.LocationsByWorldMapGuid[this.Guid];
 			return loc.Reachable && !loc.Collected;
 		}

@@ -116,15 +116,10 @@ public class AreaMapUI : MonoBehaviour, ISuspendable
 		
 		if (!GameMapUI.Instance.ShowingObjective)
 		{
-			this.ObjectiveText.SetMessage(new MessageDescriptor(string.Concat(new object[]
-			{
-				"#",
-				this.ObjectiveMessageProvider,
-				"#: ",
-				RandomizerText.GetObjectiveText(),
-				"\n",
-				RandomizerText.MapFilterText
-			})));
+			var msg = $"#{this.ObjectiveMessageProvider}#: {RandomizerText.GetObjectiveText()}\n{RandomizerText.MapFilterText}";
+			if(msg.Count(c => c == '\n') > 1)
+				msg = "\n" + msg; // paddingu paddingu...
+			this.ObjectiveText.SetMessage(new MessageDescriptor(msg));
 			this.ObjectiveText.gameObject.SetActive(true);
 		}
 		else
