@@ -175,6 +175,7 @@ public static class RandomizerSettings
 		Game.BlackrootOrbRoomClimbAssist = new BoolSetting("Blackroot Orb Room Climb Assist", true, false);
 		Game.FixGrottoBridgeDrop = new BoolSetting("Fix Grotto Bridge Drop", true, false);
 		Game.UseTeleportAnywhere = new BoolSetting("Use Teleport Anywhere for Alt+R", true, false);
+		Game.DefaultDifficulty = new EnumSetting<Difficulty>("Default Difficulty", Difficulty.Relaxing, false);
 
 		Accessibility.ApplySoundCompression = new BoolSetting("Apply Sound Compression", false, false);
 		Accessibility.SoundCompressionFactor = new FloatSetting("Sound Compression Factor", 0.6f, false);
@@ -194,6 +195,14 @@ public static class RandomizerSettings
 		Off,
 		Hold,
 		Toggle
+	}
+
+	public enum Difficulty
+	{
+		Relaxing,
+		Challenging,
+		Punishing,
+		OneLife
 	}
 
 	public enum GrenadeJumpMode
@@ -266,6 +275,8 @@ public static class RandomizerSettings
 		public static BoolSetting FixGrottoBridgeDrop;
 
 		public static BoolSetting UseTeleportAnywhere;
+
+		public static EnumSetting<Difficulty> DefaultDifficulty;
 	}
 
 	public static class Accessibility

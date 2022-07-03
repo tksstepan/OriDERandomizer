@@ -99,25 +99,24 @@ public class RandomizerBootstrap
 
 	private static void BootstrapTitleScreen(SceneRoot sceneRoot)
 	{
-		SaveSlotsItemsUI itemsUI = sceneRoot.transform.FindChild("ui").GetComponent<TitleScreenManager>().SaveSlotsScreen.ItemsUI;
-		foreach (SaveSlotUI saveSlotUI in new UnityEngine.Object[2]{ itemsUI.SaveSlotUI, itemsUI.SaveSlotCompletedUI })
-		{
-			saveSlotUI.EasyTextMessageProvider = RandomizerText.DifficultyOverrides.Easy.NameOverride;
-			saveSlotUI.NormalTextMessageProvider = RandomizerText.DifficultyOverrides.Normal.NameOverride;
-			saveSlotUI.HardTextMessageProvider = RandomizerText.DifficultyOverrides.Hard.NameOverride;
-			saveSlotUI.OneLifeTestMessageProvider = RandomizerText.DifficultyOverrides.OneLife.NameOverride;
+		switch (RandomizerSettings.Game.DefaultDifficulty.Value) {
+			case RandomizerSettings.Difficulty.Relaxing:
+				difficultyManager.Index = 0;
+				break;
+			case RandomizerSettings.Difficulty.Challenging:
+				difficultyManager.Index = 1;
+				break;
+			case RandomizerSettings.Difficulty.Punishing:
+				difficultyManager.Index = 2;
+				break;
+			case RandomizerSettings.Difficulty.OneLife:
+				difficultyManager.Index = 3;
+				break;
+			default:
+				Randomizer.log($"unknown default difficulty {RandomizerSettings.Game.DefaultDifficulty.Value}");
+				difficultyManager.Index = 0;				
+				break;
 		}
-
-		CleverMenuItemSelectionManager difficultyManager = itemsUI.SaveSlotUI.DifficultyScreen.GetComponent<CleverMenuItemSelectionManager>();
-		difficultyManager.MenuItems[0].GetComponentInChildren<MessageBox>(true).SetMessageProvider(RandomizerText.DifficultyOverrides.Easy.NameOverride);
-		difficultyManager.MenuItems[0].GetComponentInChildren<CleverMenuItemTooltip>(true).Tooltip = RandomizerText.DifficultyOverrides.Easy.DescriptionOverride;
-		difficultyManager.MenuItems[1].GetComponentInChildren<MessageBox>(true).SetMessageProvider(RandomizerText.DifficultyOverrides.Normal.NameOverride);
-		difficultyManager.MenuItems[1].GetComponentInChildren<CleverMenuItemTooltip>(true).Tooltip = RandomizerText.DifficultyOverrides.Normal.DescriptionOverride;
-		difficultyManager.MenuItems[2].GetComponentInChildren<MessageBox>(true).SetMessageProvider(RandomizerText.DifficultyOverrides.Hard.NameOverride);
-		difficultyManager.MenuItems[2].GetComponentInChildren<CleverMenuItemTooltip>(true).Tooltip = RandomizerText.DifficultyOverrides.Hard.DescriptionOverride;
-		difficultyManager.MenuItems[3].GetComponentInChildren<MessageBox>(true).SetMessageProvider(RandomizerText.DifficultyOverrides.OneLife.NameOverride);
-		difficultyManager.MenuItems[3].GetComponentInChildren<CleverMenuItemTooltip>(true).Tooltip = RandomizerText.DifficultyOverrides.OneLife.DescriptionOverride;
-		difficultyManager.Index = 0;
 	}
 
 	private static void BootstrapBlackrootLanternRoom(SceneRoot sceneRoot)
