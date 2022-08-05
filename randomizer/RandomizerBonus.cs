@@ -387,6 +387,13 @@ public static class RandomizerBonus
             Characters.Sein.PlayerAbilities.Grenade.HasAbility = false;
             Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
             return;
+        case 50:
+            if (!Characters.Sein || flag)
+                return;
+            RandomizerSwitch.PickupMessage("@Sein Lost!!@", 240);
+            Characters.Sein.PlayerAbilities.SpiritFlame.HasAbility = false;
+            Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
+            return;
         case 81:
             if(Characters.Sein.Inventory.GetRandomizerItem(ID) > 0)
                 return;
