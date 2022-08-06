@@ -406,7 +406,7 @@ public static class RandomizerBonus
                 g_color = "$";
             RandomizerSwitch.PickupMessage(s_color + "Stomp: " + Randomizer.StompZone + s_color + g_color+ "    Grenade: "+ Randomizer.GrenadeZone + g_color, 480);
             break;
-        case 1107:
+        case 1102:
             if (!flag)
                 Characters.Sein.Inventory.SetRandomizerItem(ID, 1);
                 return;
