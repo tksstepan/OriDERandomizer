@@ -171,6 +171,8 @@
 1100 - Enable Frag-Sense variant
 1101 - Frag-Sense variant online
 
+1107 - Free Level Explosion
+
 ==== Begin Persists Through Death Zone ===
 1500 - Deaths
 1501 - Deaths in Glades
