@@ -177,9 +177,12 @@ public static class RandomizerBonusSkill
         {
             return;
         }
-        if (Characters.Sein.Energy.Current >= 1f)
+        if (Characters.Sein.Energy.Current >= 1f || Randomizer.FreeLevelExplosion)
             {
-                Characters.Sein.Energy.Spend(1f);
+                if (!Randomizer.FreeLevelExplosion)
+                {
+                    Characters.Sein.Energy.Spend(1f);
+                }
                 OldHealth = Characters.Sein.Mortality.Health.Amount;
                 OldEnergy = Characters.Sein.Energy.Current;
                 Characters.Sein.Level.AttemptInstantiateLevelUp();
