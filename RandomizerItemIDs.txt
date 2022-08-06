@@ -36,6 +36,7 @@
 47 - Lose Charge Jump
 48 - Lose Dash
 49 - Lose Grenade
+50 - Lose Sein
 
 70 - Total keystones collected
 71 - Total mapstones collected
