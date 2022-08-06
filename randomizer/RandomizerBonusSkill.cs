@@ -177,9 +177,9 @@ public static class RandomizerBonusSkill
         {
             return;
         }
-        if (Characters.Sein.Energy.Current >= 1f || Characters.Sein.Inventory.GetRandomizerItem(1107) == 1)
+        if (Characters.Sein.Energy.Current >= 1f || Characters.Sein.Inventory.GetRandomizerItem(1102) == 1)
             {
-                if (Characters.Sein.Inventory.GetRandomizerItem(1107) == 0)
+                if (Characters.Sein.Inventory.GetRandomizerItem(1102) == 0)
                 {
                     Characters.Sein.Energy.Spend(1f);
                 }
