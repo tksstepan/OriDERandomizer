@@ -95,6 +95,7 @@ public static class Randomizer
             Randomizer.RelicCountOverride = false;
             Randomizer.AllowOrbWarps = false;
             Randomizer.RandomizedFirstEnergy = false;
+            Randomizer.FreeLevelExplosion = false;
             Randomizer.NightBerryWarpPosition = new Vector3(-910f, -300f);
 
             if (Randomizer.SeedFilePath == null)
@@ -1279,6 +1280,10 @@ public static class Randomizer
             {
                 Randomizer.RandomizedFirstEnergy = true;
             }
+            if (flag == "freeexplosion")
+            {
+                Randomizer.FreeLevelExplosion = true;
+            }
         }
         return doBingo;
     }
@@ -1631,6 +1636,8 @@ public static class Randomizer
     public static bool IsUsingRandomizerTeleportAnywhere;
 
     public static bool RandomizedFirstEnergy;
+	
+    public static bool FreeLevelExplosion;
 
     public static string SeedFilePath;
 
