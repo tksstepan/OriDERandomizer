@@ -430,6 +430,24 @@ public class RandomizerBootstrap
 		sceneRoot.OnValidate();
 	}
 
+	private static void BootstrapWallJumpTreeHint(SceneRoot sceneRoot)
+	{
+		// This adds a return-to-start hint to the tree animation.
+		ActionSequence treeSequence = sceneRoot.transform.FindChild("*abilityPedestalWallJump/pedestal/actionSequence").GetComponent<ActionSequence>();	
+		ShowHintAction hint = treeSequence.gameObject.AddComponent<ShowHintAction>();
+		RandomizerMessageProvider message = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+		string text = "Stuck? You can use Return To Start (" + RandomizerRebinding.ReturnToStart.FirstBindName() + ") to go somewhere useful!";
+		message.SetMessage(text);
+		hint.HintMessage = message;
+		hint.Duration = 5f;
+		// The hint only shows when we don't have a casual skill set able to get out.
+		RandomizerWallJumpHintCondition condition = treeSequence.gameObject.AddComponent<RandomizerWallJumpHintCondition>();
+		RunActionCondition action = treeSequence.gameObject.AddComponent<RunActionCondition>();
+		action.Action = hint;
+		action.Condition = condition;
+		treeSequence.Actions.Add(action);
+	}
+
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrap = new Dictionary<string, Action<SceneRoot>>
 	{
 		{ "moonGrottoRopeBridge", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoBridge) },
@@ -441,7 +459,8 @@ public class RandomizerBootstrap
 		{ "thornfeltSwampActTwoStart", new Action<SceneRoot>(RandomizerBootstrap.BootstrapThornfeltSwampMain) },
 		{ "titleScreenSwallowsNest", new Action<SceneRoot>(RandomizerBootstrap.BootstrapTitleScreen) },
 		{ "westGladesFireflyAreaA", new Action<SceneRoot>(RandomizerBootstrap.BootstrapValleyThreeBirdArea) },
-		{ "sunkenGladesRunaway", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSunkenGladesRunaway) }
+		{ "sunkenGladesRunaway", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSunkenGladesRunaway) },
+		{ "sunkenGladesSpiritCavernWalljumpB", new Action<SceneRoot>(RandomizerBootstrap.BootstrapWallJumpTreeHint) },
 	};
 
 	private static List<string> s_bootstrappedScenes = new List<string>();
