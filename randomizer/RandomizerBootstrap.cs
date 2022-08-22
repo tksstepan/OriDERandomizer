@@ -555,6 +555,42 @@ public class RandomizerBootstrap
 		}
 	}
 
+	private static void BootstrapSeinRoomWall(SceneRoot sceneRoot)
+	{
+		// This removes the invisible blocking wall in the sein room so that
+		// after an alt-r we don't soft-lock on the FronkeyFight pickup.
+		// We also remove the fronkeys when the wall is not there since they
+		// shouldn't be able to leave the room normally.
+		// Check disable alt-r soft-lock fixes.
+		if (Characters.Sein.Inventory.GetRandomizerItem(1103) != 0) {
+			return;
+		}
+		
+		Transform blockingWall = sceneRoot.transform.FindChild("blocker");
+		Transform fronkeys = sceneRoot.transform.FindChild("*setups/*story/allEnemiesKilled/group/jumpingSootEnemyPlaceholders");
+		ActionSequence getSeinSequence = sceneRoot.transform.FindChild("*setups/*story/findingOri/seinInterestZone/trigger/activateSequence").GetComponent<ActionSequence>();
+		bool doorIsClosed = blockingWall.gameObject.active;
+		bool canSpawnFronkeys = getSeinSequence.Index > 0;
+		//                                  left bottom right top
+		Rect seinRoom = Rect.MinMaxRect(-172f, -275f, -81f, -250f); 
+		bool isInRoom = seinRoom.Contains(Characters.Sein.Position);
+		if (doorIsClosed && !isInRoom) {
+			blockingWall.gameObject.active = false;
+			fronkeys.gameObject.active = false;
+		} else if (!doorIsClosed && canSpawnFronkeys) {
+			fronkeys.gameObject.active = false;
+		}
+	}
+
+	private static void BootstrapRhinoBeforeSein(SceneRoot sceneRoot)
+	{
+		// This changes the rhino before sein to respawn if ori is on screen, and faster, to make it more
+		// intuitive when the rhino is killed.
+		RammingEnemyPlaceholder rhino = sceneRoot.transform.FindChild("*crashIntoRocksSetups/rammingEnemySetup/rammingEnemyPlaceholder").GetComponent<RammingEnemyPlaceholder>();
+		rhino.RespawnOnScreen = true;
+		rhino.RespawnTime = 10f;
+	}
+
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrapPreEnabled = new Dictionary<string, Action<SceneRoot>>
 	{
 		{ "moonGrottoRopeBridge", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoBridge) },
@@ -569,6 +605,7 @@ public class RandomizerBootstrap
 		{ "sunkenGladesRunaway", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSunkenGladesRunaway) },
 		{ "sunkenGladesSpiritCavernWalljumpB", new Action<SceneRoot>(RandomizerBootstrap.BootstrapWallJumpTreeHint) },
 		{ "sunkenGladesOriRoom", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSeinRoomHint) },
+		{ "sunkenGladesEnemyIntroductionC", new Action<SceneRoot>(RandomizerBootstrap.BootstrapRhinoBeforeSein) },
 	};
 
 	private static List<string> s_bootstrappedScenesPreEnabled = new List<string>();
@@ -582,6 +619,7 @@ public class RandomizerBootstrap
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrapAfterSerialize = new Dictionary<string, Action<SceneRoot>>
 	{
 		{ "moonGrottoEnemyPuzzle", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoMiniboss) },
+		{ "sunkenGladesOriRoom", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSeinRoomWall) },
 	};
 
 	private static List<string> s_bootstrappedScenesAfterSerialize = new List<string>();
