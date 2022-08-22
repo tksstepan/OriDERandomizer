@@ -571,7 +571,6 @@ public class RandomizerBootstrap
 		ActionSequence getSeinSequence = sceneRoot.transform.FindChild("*setups/*story/findingOri/seinInterestZone/trigger/activateSequence").GetComponent<ActionSequence>();
 		bool doorIsClosed = blockingWall.gameObject.active;
 		bool canSpawnFronkeys = getSeinSequence.Index > 0;
-		//                                  left bottom right top
 		Rect seinRoom = Rect.MinMaxRect(-172f, -275f, -81f, -250f); 
 		bool isInRoom = seinRoom.Contains(Characters.Sein.Position);
 		if (doorIsClosed && !isInRoom) {
@@ -589,6 +588,30 @@ public class RandomizerBootstrap
 		RammingEnemyPlaceholder rhino = sceneRoot.transform.FindChild("*crashIntoRocksSetups/rammingEnemySetup/rammingEnemyPlaceholder").GetComponent<RammingEnemyPlaceholder>();
 		rhino.RespawnOnScreen = true;
 		rhino.RespawnTime = 10f;
+	}
+
+	private static void BootstrapGinsoLowerMiniboss(SceneRoot sceneRoot)
+	{
+		// This makes it so you can't soft-lock if you alt-r out of the 
+		// lower ginso miniboss before killing the boss.
+		// Check disable alt-r soft-lock fixes.
+		if (Characters.Sein.Inventory.GetRandomizerItem(1103) != 0) {
+			return;
+		}
+
+		LegacyTranslateAnimator firstDoorAnimator = sceneRoot.transform.FindChild("ginsoTreeMultiMortar/doorASetup/ginsoTreeBlockingWallA").GetComponent<LegacyTranslateAnimator>();
+		PlayerCollisionStayTrigger firstDoorTrigger = sceneRoot.transform.FindChild("ginsoTreeMultiMortar/doorASetup/triggerCollider").GetComponent<PlayerCollisionStayTrigger>();
+		bool firstDoorShut = !firstDoorAnimator.AtStart; // Or shutting.
+		Rect minibossRoom = Rect.MinMaxRect(504f, 235.5f, 545f, 255f); 
+		bool isInRoom = minibossRoom.Contains(Characters.Sein.Position);		
+		if (firstDoorShut && !isInRoom) {
+			firstDoorAnimator.Stopped = true;
+			firstDoorAnimator.Reversed = false;
+			firstDoorAnimator.CurrentTime = 0f;
+			firstDoorAnimator.Sample(firstDoorAnimator.CurrentTime);
+			firstDoorTrigger.gameObject.active = true;
+			firstDoorTrigger.Active = true;
+		}
 	}
 
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrapPreEnabled = new Dictionary<string, Action<SceneRoot>>
@@ -620,6 +643,7 @@ public class RandomizerBootstrap
 	{
 		{ "moonGrottoEnemyPuzzle", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoMiniboss) },
 		{ "sunkenGladesOriRoom", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSeinRoomWall) },
+		{ "ginsoTreePuzzles", new Action<SceneRoot>(RandomizerBootstrap.BootstrapGinsoLowerMiniboss) },
 	};
 
 	private static List<string> s_bootstrappedScenesAfterSerialize = new List<string>();
