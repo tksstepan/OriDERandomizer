@@ -511,6 +511,50 @@ public class RandomizerBootstrap
 		getSeinSequence.Actions.Insert(17, hint);
 	}
 
+	private static void BootstrapMoonGrottoMiniboss(SceneRoot sceneRoot)
+	{
+		// This function makes it so you don't soft-lock if you alt-r out
+		// of the moon grotto miniboss room.
+		// Check disable alt-r soft-lock fixes.
+		if (Characters.Sein.Inventory.GetRandomizerItem(1103) != 0) {
+			return;
+		}
+
+		PlayerCollisionTrigger firstDoorTrigger = sceneRoot.transform.FindChild("*gumoAnimationSummonEnemy/enemyPuzzles/doorASetup/triggerCollider").GetComponent<PlayerCollisionTrigger>();
+		LegacyTranslateAnimator firstDoorAnimator = sceneRoot.transform.FindChild("*gumoAnimationSummonEnemy/enemyPuzzles/doorASetup/moonGrottoBlockingDoorB").GetComponent<LegacyTranslateAnimator>();		
+		LegacyTranslateAnimator secondDoorAnimator = sceneRoot.transform.FindChild("*gumoAnimationSummonEnemy/enemyPuzzles/enemyPuzzle/doorSetup/sidewaysDoor/puzzleDoorLeft").GetComponent<LegacyTranslateAnimator>();
+		CameraWideScreenZone cameraZone = sceneRoot.transform.FindChild("*gumoAnimationSummonEnemy/cameraWideScreenZone").GetComponent<CameraWideScreenZone>();
+
+		bool firstDoorShut = !firstDoorAnimator.AtStart;
+		bool secondDoorOpen = !secondDoorAnimator.AtStart;
+		if (secondDoorOpen) {
+			// Note: I don't believe this is required as the other logic should suffice
+			// by itself, but it is here just in case.
+			// Open the door and disable the trigger and camera zone.
+			firstDoorAnimator.Stopped = true;
+			firstDoorAnimator.Reversed = false;
+			firstDoorAnimator.CurrentTime = 0f;
+			firstDoorAnimator.Sample(firstDoorAnimator.CurrentTime);
+			firstDoorTrigger.gameObject.active = false;
+			firstDoorTrigger.Active = false;
+			cameraZone.gameObject.active = false;
+			return;
+		}
+		
+		Rect minibossRoom = Rect.MinMaxRect(558f, -423f, 628f, -390f); 
+		bool isInRoom = minibossRoom.Contains(Characters.Sein.Position);		
+		if (firstDoorShut && !isInRoom) {
+			// Open the door and enable the trigger and camera zone.
+			firstDoorAnimator.Stopped = true;
+			firstDoorAnimator.Reversed = false;
+			firstDoorAnimator.CurrentTime = 0f;
+			firstDoorAnimator.Sample(firstDoorAnimator.CurrentTime);
+			firstDoorTrigger.gameObject.active = true;
+			firstDoorTrigger.Active = true;
+			cameraZone.gameObject.active = true;
+		}
+	}
+
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrapPreEnabled = new Dictionary<string, Action<SceneRoot>>
 	{
 		{ "moonGrottoRopeBridge", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoBridge) },
@@ -537,6 +581,7 @@ public class RandomizerBootstrap
 	// new serialised scene elements you'll need to use PreEnabled.
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrapAfterSerialize = new Dictionary<string, Action<SceneRoot>>
 	{
+		{ "moonGrottoEnemyPuzzle", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoMiniboss) },
 	};
 
 	private static List<string> s_bootstrappedScenesAfterSerialize = new List<string>();

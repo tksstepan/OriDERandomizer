@@ -170,6 +170,7 @@
 
 1100 - Enable Frag-Sense variant
 1101 - Frag-Sense variant online
+1103 - Disable Alt-R soft-lock fixes
 
 ==== Begin Persists Through Death Zone ===
 1500 - Deaths
