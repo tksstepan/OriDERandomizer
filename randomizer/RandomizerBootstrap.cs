@@ -468,6 +468,19 @@ public class RandomizerBootstrap
 		treeSequence.Actions.Add(action);
 	}
 
+	private static void BootstrapSeinRoomHint(SceneRoot sceneRoot)
+	{
+		// This adds an alt-r hint into the getting-sein animation.
+		ActionSequence getSeinSequence = sceneRoot.transform.FindChild("*setups/*story/findingOri/seinInterestZone/trigger/activateSequence").GetComponent<ActionSequence>();	
+		ShowHintAction hint = getSeinSequence.gameObject.AddComponent<ShowHintAction>();
+		RandomizerMessageProvider message = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+		string text = "Tip: You can use Return To Start (" + RandomizerRebinding.ReturnToStart.FirstBindName() + ") to skip this fight!";
+		message.SetMessage(text);
+		hint.HintMessage = message;
+		hint.Duration = 5f;
+		getSeinSequence.Actions.Insert(17, hint);
+	}
+
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrap = new Dictionary<string, Action<SceneRoot>>
 	{
 		{ "moonGrottoRopeBridge", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoBridge) },
@@ -481,6 +494,7 @@ public class RandomizerBootstrap
 		{ "westGladesFireflyAreaA", new Action<SceneRoot>(RandomizerBootstrap.BootstrapValleyThreeBirdArea) },
 		{ "sunkenGladesRunaway", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSunkenGladesRunaway) },
 		{ "sunkenGladesSpiritCavernWalljumpB", new Action<SceneRoot>(RandomizerBootstrap.BootstrapWallJumpTreeHint) },
+		{ "sunkenGladesOriRoom", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSeinRoomHint) },
 	};
 
 	private static List<string> s_bootstrappedScenes = new List<string>();
