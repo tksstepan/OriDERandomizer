@@ -7,35 +7,65 @@ public class RandomizerBootstrap
 {
 	public static void Initialize()
 	{
-		Events.Scheduler.OnSceneRootPreEnabled.Add(new Action<SceneRoot>(RandomizerBootstrap.BootstrapScene));
+		Events.Scheduler.OnSceneRootPreEnabled.Add(new Action<SceneRoot>(RandomizerBootstrap.BootstrapScenePreEnabled));
+		Events.Scheduler.OnSceneRootEnabledAfterSerialize.Add(new Action<SceneRoot>(RandomizerBootstrap.BootstrapSceneAfterSerialize));
 	}
 
 	public static void FixedUpdate()
 	{
-		for (int i = 0; i < RandomizerBootstrap.s_bootstrappedScenes.Count;)
+		for (int i = 0; i < RandomizerBootstrap.s_bootstrappedScenesPreEnabled.Count;)
 		{
-			if (Core.Scenes.Manager.GetSceneManagerScene(RandomizerBootstrap.s_bootstrappedScenes[i]) != null)
+			if (Core.Scenes.Manager.GetSceneManagerScene(RandomizerBootstrap.s_bootstrappedScenesPreEnabled[i]) != null)
 			{
 				i++;
 			}
 			else
 			{
-				RandomizerBootstrap.s_bootstrappedScenes.RemoveAt(i);
+				RandomizerBootstrap.s_bootstrappedScenesPreEnabled.RemoveAt(i);
+			}
+		}
+		for (int i = 0; i < RandomizerBootstrap.s_bootstrappedScenesAfterSerialize.Count;)
+		{
+			if (Core.Scenes.Manager.GetSceneManagerScene(RandomizerBootstrap.s_bootstrappedScenesAfterSerialize[i]) != null)
+			{
+				i++;
+			}
+			else
+			{
+				RandomizerBootstrap.s_bootstrappedScenesAfterSerialize.RemoveAt(i);
 			}
 		}
 	}
 
-	private static void BootstrapScene(SceneRoot sceneRoot)
+	private static void BootstrapScenePreEnabled(SceneRoot sceneRoot)
 	{
-		if (RandomizerBootstrap.s_bootstrappedScenes.Contains(sceneRoot.name))
+		if (RandomizerBootstrap.s_bootstrappedScenesPreEnabled.Contains(sceneRoot.name))
 		{
 			return;
 		}
 
-		if (RandomizerBootstrap.s_bootstrap.ContainsKey(sceneRoot.name))
+		if (RandomizerBootstrap.s_bootstrapPreEnabled.ContainsKey(sceneRoot.name))
 		{
-			RandomizerBootstrap.s_bootstrappedScenes.Add(sceneRoot.name);
-			RandomizerBootstrap.s_bootstrap[sceneRoot.name].Invoke(sceneRoot);
+			RandomizerBootstrap.s_bootstrappedScenesPreEnabled.Add(sceneRoot.name);
+			RandomizerBootstrap.s_bootstrapPreEnabled[sceneRoot.name].Invoke(sceneRoot);
+		}
+	}
+
+	private static void BootstrapSceneAfterSerialize(SceneRoot sceneRoot)
+	{
+		if (RandomizerBootstrap.s_bootstrappedScenesAfterSerialize.Contains(sceneRoot.name))
+		{
+			return;
+		}
+
+		if (RandomizerBootstrap.s_bootstrapAfterSerialize.ContainsKey(sceneRoot.name))
+		{
+			RandomizerBootstrap.s_bootstrappedScenesAfterSerialize.Add(sceneRoot.name);
+			RandomizerBootstrap.s_bootstrapAfterSerialize[sceneRoot.name].Invoke(sceneRoot);
+			// We also need to process these functions after serialisation not caused by
+			// scene loading, e.g. after death. So connect those hooks.
+			sceneRoot.SaveSceneManager.sceneRoot = sceneRoot;
+			sceneRoot.SaveSceneManager.bootstrapHook = RandomizerBootstrap.s_bootstrapAfterSerialize[sceneRoot.name];
 		}
 	}
 
@@ -481,7 +511,7 @@ public class RandomizerBootstrap
 		getSeinSequence.Actions.Insert(17, hint);
 	}
 
-	private static Dictionary<string, Action<SceneRoot>> s_bootstrap = new Dictionary<string, Action<SceneRoot>>
+	private static Dictionary<string, Action<SceneRoot>> s_bootstrapPreEnabled = new Dictionary<string, Action<SceneRoot>>
 	{
 		{ "moonGrottoRopeBridge", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoBridge) },
 		{ "mountHoruHubMid", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMountHoruHub) },
@@ -497,5 +527,17 @@ public class RandomizerBootstrap
 		{ "sunkenGladesOriRoom", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSeinRoomHint) },
 	};
 
-	private static List<string> s_bootstrappedScenes = new List<string>();
+	private static List<string> s_bootstrappedScenesPreEnabled = new List<string>();
+
+	// Generally prefer PreEnabled over AfterSerialize. These functions are run after *every* 
+	// serialisation of the scene, so after every death and not just the initial load. So don't e.g.
+	// unconditionally add things to the scene in these functions, as they will repeat. But if
+	// you need to do things that alter or depend on serialised parts of the scene, this is the 
+	// place. Things altered here may be serialised (saved) by the scene. If you want to make
+	// new serialised scene elements you'll need to use PreEnabled.
+	private static Dictionary<string, Action<SceneRoot>> s_bootstrapAfterSerialize = new Dictionary<string, Action<SceneRoot>>
+	{
+	};
+
+	private static List<string> s_bootstrappedScenesAfterSerialize = new List<string>();
 }
