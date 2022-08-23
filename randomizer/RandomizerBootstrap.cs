@@ -583,8 +583,8 @@ public class RandomizerBootstrap
 
 	private static void BootstrapRhinoBeforeSein(SceneRoot sceneRoot)
 	{
-		// This changes the rhino before sein to respawn if ori is on screen, and faster, to make it more
-		// intuitive when the rhino is killed.
+		// This changes the rhino before sein to respawn if ori is on screen, and faster, to 
+		// make it more intuitive when the rhino is killed.
 		RammingEnemyPlaceholder rhino = sceneRoot.transform.FindChild("*crashIntoRocksSetups/rammingEnemySetup/rammingEnemyPlaceholder").GetComponent<RammingEnemyPlaceholder>();
 		rhino.RespawnOnScreen = true;
 		rhino.RespawnTime = 10f;
@@ -592,8 +592,8 @@ public class RandomizerBootstrap
 
 	private static void BootstrapGinsoLowerMiniboss(SceneRoot sceneRoot)
 	{
-		// This makes it so you can't soft-lock if you alt-r out of the 
-		// lower ginso miniboss before killing the boss.
+		// This makes it so you can't soft-lock if you alt-r out of the lower ginso miniboss 
+		// before killing the boss.
 		// Check disable alt-r soft-lock fixes.
 		if (Characters.Sein.Inventory.GetRandomizerItem(1103) != 0) {
 			return;
@@ -614,6 +614,67 @@ public class RandomizerBootstrap
 		}
 	}
 
+	private static void BootstrapMistyPedestal(SceneRoot sceneRoot)
+	{
+		// So at the start of misty we get a useless press X to interact with sein that tells 
+		// us literally nothing because we have silenced some dialog popups, so remove that.
+		Transform initialHint = sceneRoot.transform.FindChild("*storySetup/hintStoryAreaB");
+		initialHint.gameObject.active = false;
+		
+		// Make it clearer what resetting misty via the "Press X to interact with shrouded 
+		// lantern" popup does for the player.
+		OriInterestTriggerB changeTrigger = sceneRoot.transform.FindChild("*toggleTorchSetup/toggleTorchSetup/oriInterestTrigger").GetComponent<OriInterestTriggerB>();
+		RandomizerMessageProvider changeTriggerText = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+		changeTriggerText.SetMessage("Press [StructureInteraction] to change the layout of *Misty Woods*!");
+		changeTrigger.HintMessage = changeTriggerText;
+
+		ActionSequence changeToRevisitSequence = sceneRoot.transform.FindChild("*toggleTorchSetup/toggleTorchSetup/oriInterestTrigger/extinguishSequence").GetComponent<ActionSequence>();
+		ShowHintAction revisitHint = changeToRevisitSequence.gameObject.AddComponent<ShowHintAction>();
+		RandomizerMessageProvider revisitText = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+		revisitText.SetMessage("*Misty Woods* is now in the #normal# layout.");
+		revisitHint.HintMessage = revisitText;
+		revisitHint.Duration = 3f;
+		changeToRevisitSequence.Actions.Add(revisitHint);
+
+		ActionSequence changeToFinishedSequence = sceneRoot.transform.FindChild("*toggleTorchSetup/toggleTorchSetup/oriInterestTrigger/igniteSequence").GetComponent<ActionSequence>();
+		ShowHintAction finishedHint = changeToFinishedSequence.gameObject.AddComponent<ShowHintAction>();
+		RandomizerMessageProvider finishedText = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+		finishedText.SetMessage("*Misty Woods* is now in the #finished# layout.");
+		finishedHint.HintMessage = finishedText;
+		finishedHint.Duration = 3f;
+		changeToFinishedSequence.Actions.Add(finishedHint);
+
+		// Put a hint on reentry of misty when misty is complete.
+		Transform pedestalTorch = sceneRoot.transform.FindChild("pedestalTorch");
+		Transform reentryHintTransform = CloneObject(sceneRoot, pedestalTorch, "reentryHint", true);
+		// The location of the collision trigger.
+		reentryHintTransform.position = new Vector3(-606, -26);
+		reentryHintTransform.localScale = new Vector3(5, 20);
+
+		RandomizerMessageProvider reentryText = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+		reentryText.SetMessage("You can change the misty layout at the orb pedestal");
+		ShowSpiritTreeTextAction reentryHint = reentryHintTransform.gameObject.AddComponent<ShowSpiritTreeTextAction>();
+		reentryHint.Message = reentryText;
+		// Location of the text.
+		Transform reentryTextTarget = CloneObject(sceneRoot, pedestalTorch, "reentryTarget", true);
+		reentryTextTarget.position = new Vector3(-619, -25);
+		reentryHint.Target = reentryTextTarget;
+		
+		// Make it only show when misty is in the finished state and we are going left 
+		// (entering misty again).
+		PlayerCollisionTrigger collisionTrigger = reentryHintTransform.gameObject.AddComponent<PlayerCollisionTrigger>();
+		collisionTrigger.ActionToRun = reentryHint;
+		RandomizerGoingDirectionCondition goingLeftCondition = reentryHintTransform.gameObject.AddComponent<RandomizerGoingDirectionCondition>();
+		goingLeftCondition.left = true;
+		GetWorldEventCondition mistyCompleteCondition = sceneRoot.transform.FindChild("*toggleTorchSetup/toggleTorchSetup/oriInterestTrigger/activateAction").GetComponent<GetWorldEventCondition>();
+		CompoundCondition compoundCondition = reentryHintTransform.gameObject.AddComponent<CompoundCondition>();
+		CompoundCondition.ConditionInformation conditionInformation = new CompoundCondition.ConditionInformation();
+		conditionInformation.Conditions.Add(mistyCompleteCondition);
+		conditionInformation.Conditions.Add(goingLeftCondition);
+		compoundCondition.Tests.Add(conditionInformation);
+		collisionTrigger.Condition = compoundCondition;
+	}
+
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrapPreEnabled = new Dictionary<string, Action<SceneRoot>>
 	{
 		{ "moonGrottoRopeBridge", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoBridge) },
@@ -629,16 +690,17 @@ public class RandomizerBootstrap
 		{ "sunkenGladesSpiritCavernWalljumpB", new Action<SceneRoot>(RandomizerBootstrap.BootstrapWallJumpTreeHint) },
 		{ "sunkenGladesOriRoom", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSeinRoomHint) },
 		{ "sunkenGladesEnemyIntroductionC", new Action<SceneRoot>(RandomizerBootstrap.BootstrapRhinoBeforeSein) },
+		{ "sorrowPassForestB", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMistyPedestal) },
 	};
 
 	private static List<string> s_bootstrappedScenesPreEnabled = new List<string>();
 
 	// Generally prefer PreEnabled over AfterSerialize. These functions are run after *every* 
-	// serialisation of the scene, so after every death and not just the initial load. So don't e.g.
-	// unconditionally add things to the scene in these functions, as they will repeat. But if
-	// you need to do things that alter or depend on serialised parts of the scene, this is the 
-	// place. Things altered here may be serialised (saved) by the scene. If you want to make
-	// new serialised scene elements you'll need to use PreEnabled.
+	// serialisation of the scene, so after every death and not just the initial load. So don't
+	// e.g. unconditionally add things to the scene in these functions, as they will repeat. 
+	// But if you need to do things that alter or depend on serialised parts of the scene, 
+	// this is the place. Things altered here may be serialised (saved) by the scene. If you 
+	// want to make new serialised scene elements you'll need to use PreEnabled.
 	private static Dictionary<string, Action<SceneRoot>> s_bootstrapAfterSerialize = new Dictionary<string, Action<SceneRoot>>
 	{
 		{ "moonGrottoEnemyPuzzle", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoMiniboss) },
