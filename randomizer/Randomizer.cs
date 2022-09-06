@@ -569,7 +569,7 @@ public static class Randomizer
             }
         }
 
-        if (RandomizerRebinding.ReturnToStart.IsPressed() && Characters.Sein && Randomizer.Warping <= 0)
+        if (RandomizerRebinding.ReturnToStart.IsPressed() && Characters.Sein && !Characters.Sein.Abilities.Bash.IsBashing && Randomizer.Warping <= 0)
         {
             if(CanWarp > 0 && Vector3.Distance(Randomizer.WarpSource, Characters.Sein.Position) < 7)
             {
