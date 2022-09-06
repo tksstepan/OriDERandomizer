@@ -200,6 +200,11 @@ public class TeleporterController : SaveSerialize, ISuspendable
 			Randomizer.NightBerryWarpPosition = selectedTeleporter.WorldPosition;
 			Characters.Sein.Inventory.SetRandomizerItem(82, 1);
 		}
+		RandomizerHints.ShowTip();
+		if(Characters.Sein.Abilities.Swimming.CurrentState != SeinSwimming.State.OutOfWater) {
+			Characters.Sein.Abilities.Swimming.ChangeState(SeinSwimming.State.OutOfWater);
+			Characters.Sein.Abilities.Swimming.HideBreathingUI();
+		}
 		if (!TeleporterController.Instance.DontTeleportForAnimationTesting)
 		{
 			Scenes.Manager.AdditivelyLoadScenesAtPosition(selectedTeleporter.WorldPosition, true, false, true);
@@ -225,7 +230,6 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		{
 			savePedestal.OnBeginTeleporting();
 		}
-		RandomizerHints.ShowTip();
 	}
 
 	public static void OnFinishedTeleportingStartAnimation()
