@@ -225,6 +225,7 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		{
 			savePedestal.OnBeginTeleporting();
 		}
+		RandomizerHints.ShowTip();
 	}
 
 	public static void OnFinishedTeleportingStartAnimation()

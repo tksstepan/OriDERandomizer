@@ -167,6 +167,7 @@ public static class RandomizerSettings
 		Customization.AlwaysShowLastFivePickups = new BoolSetting("Always Show Last Five Pickup Messages", false, false);
 		Customization.WarpTeleporterColor = new ColorSetting("Warp Teleporter Color", new Color(202f/255f, 57f/255f, 243f/255f, 1f), 255f);
 		Customization.DefaultMapFilter = new EnumSetting<MapFilterMode>("Default Map Filter", MapFilterMode.InLogic, false);
+		Customization.HintLevel = new EnumSetting<HintLevels>("Hints", HintLevels.NewPlayer, false);
 
 		QOL.AbilityMenuOpacity = new FloatSetting("Ability Menu Opacity", 0.5f);
 		QOL.CursorLock = new BoolSetting("Cursor Lock", false, false);
@@ -203,6 +204,13 @@ public static class RandomizerSettings
 		Challenging,
 		Punishing,
 		OneLife
+	}
+
+	public enum HintLevels
+	{
+		NewPlayer,
+		Skilled,
+		Disabled,
 	}
 
 	public enum GrenadeJumpMode
@@ -257,6 +265,8 @@ public static class RandomizerSettings
 		public static ColorSetting WarpTeleporterColor;
 
 		public static EnumSetting<MapFilterMode> DefaultMapFilter;
+
+		public static EnumSetting<HintLevels> HintLevel;
 	}
 
 	public static class QOL
