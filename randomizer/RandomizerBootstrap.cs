@@ -7,35 +7,65 @@ public class RandomizerBootstrap
 {
 	public static void Initialize()
 	{
-		Events.Scheduler.OnSceneRootPreEnabled.Add(new Action<SceneRoot>(RandomizerBootstrap.BootstrapScene));
+		Events.Scheduler.OnSceneRootPreEnabled.Add(new Action<SceneRoot>(RandomizerBootstrap.BootstrapScenePreEnabled));
+		Events.Scheduler.OnSceneRootEnabledAfterSerialize.Add(new Action<SceneRoot>(RandomizerBootstrap.BootstrapSceneAfterSerialize));
 	}
 
 	public static void FixedUpdate()
 	{
-		for (int i = 0; i < RandomizerBootstrap.s_bootstrappedScenes.Count;)
+		for (int i = 0; i < RandomizerBootstrap.s_bootstrappedScenesPreEnabled.Count;)
 		{
-			if (Core.Scenes.Manager.GetSceneManagerScene(RandomizerBootstrap.s_bootstrappedScenes[i]) != null)
+			if (Core.Scenes.Manager.GetSceneManagerScene(RandomizerBootstrap.s_bootstrappedScenesPreEnabled[i]) != null)
 			{
 				i++;
 			}
 			else
 			{
-				RandomizerBootstrap.s_bootstrappedScenes.RemoveAt(i);
+				RandomizerBootstrap.s_bootstrappedScenesPreEnabled.RemoveAt(i);
+			}
+		}
+		for (int i = 0; i < RandomizerBootstrap.s_bootstrappedScenesAfterSerialize.Count;)
+		{
+			if (Core.Scenes.Manager.GetSceneManagerScene(RandomizerBootstrap.s_bootstrappedScenesAfterSerialize[i]) != null)
+			{
+				i++;
+			}
+			else
+			{
+				RandomizerBootstrap.s_bootstrappedScenesAfterSerialize.RemoveAt(i);
 			}
 		}
 	}
 
-	private static void BootstrapScene(SceneRoot sceneRoot)
+	private static void BootstrapScenePreEnabled(SceneRoot sceneRoot)
 	{
-		if (RandomizerBootstrap.s_bootstrappedScenes.Contains(sceneRoot.name))
+		if (RandomizerBootstrap.s_bootstrappedScenesPreEnabled.Contains(sceneRoot.name))
 		{
 			return;
 		}
 
-		if (RandomizerBootstrap.s_bootstrap.ContainsKey(sceneRoot.name))
+		if (RandomizerBootstrap.s_bootstrapPreEnabled.ContainsKey(sceneRoot.name))
 		{
-			RandomizerBootstrap.s_bootstrappedScenes.Add(sceneRoot.name);
-			RandomizerBootstrap.s_bootstrap[sceneRoot.name].Invoke(sceneRoot);
+			RandomizerBootstrap.s_bootstrappedScenesPreEnabled.Add(sceneRoot.name);
+			RandomizerBootstrap.s_bootstrapPreEnabled[sceneRoot.name].Invoke(sceneRoot);
+		}
+	}
+
+	private static void BootstrapSceneAfterSerialize(SceneRoot sceneRoot)
+	{
+		if (RandomizerBootstrap.s_bootstrappedScenesAfterSerialize.Contains(sceneRoot.name))
+		{
+			return;
+		}
+
+		if (RandomizerBootstrap.s_bootstrapAfterSerialize.ContainsKey(sceneRoot.name))
+		{
+			RandomizerBootstrap.s_bootstrappedScenesAfterSerialize.Add(sceneRoot.name);
+			RandomizerBootstrap.s_bootstrapAfterSerialize[sceneRoot.name].Invoke(sceneRoot);
+			// We also need to process these functions after serialisation not caused by
+			// scene loading, e.g. after death. So connect those hooks.
+			sceneRoot.SaveSceneManager.sceneRoot = sceneRoot;
+			sceneRoot.SaveSceneManager.bootstrapHook = RandomizerBootstrap.s_bootstrapAfterSerialize[sceneRoot.name];
 		}
 	}
 
@@ -99,6 +129,26 @@ public class RandomizerBootstrap
 
 	private static void BootstrapTitleScreen(SceneRoot sceneRoot)
 	{
+		SaveSlotsItemsUI itemsUI = sceneRoot.transform.FindChild("ui").GetComponent<TitleScreenManager>().SaveSlotsScreen.ItemsUI;
+		foreach (SaveSlotUI saveSlotUI in new UnityEngine.Object[2]{ itemsUI.SaveSlotUI, itemsUI.SaveSlotCompletedUI })
+		{
+			saveSlotUI.EasyTextMessageProvider = RandomizerText.DifficultyOverrides.Easy.NameOverride;
+			saveSlotUI.NormalTextMessageProvider = RandomizerText.DifficultyOverrides.Normal.NameOverride;
+			saveSlotUI.HardTextMessageProvider = RandomizerText.DifficultyOverrides.Hard.NameOverride;
+			saveSlotUI.OneLifeTestMessageProvider = RandomizerText.DifficultyOverrides.OneLife.NameOverride;
+		}
+
+		CleverMenuItemSelectionManager difficultyManager = itemsUI.SaveSlotUI.DifficultyScreen.GetComponent<CleverMenuItemSelectionManager>();
+		difficultyManager.MenuItems[0].GetComponentInChildren<MessageBox>(true).SetMessageProvider(RandomizerText.DifficultyOverrides.Easy.NameOverride);
+		difficultyManager.MenuItems[0].GetComponentInChildren<CleverMenuItemTooltip>(true).Tooltip = RandomizerText.DifficultyOverrides.Easy.DescriptionOverride;
+		difficultyManager.MenuItems[1].GetComponentInChildren<MessageBox>(true).SetMessageProvider(RandomizerText.DifficultyOverrides.Normal.NameOverride);
+		difficultyManager.MenuItems[1].GetComponentInChildren<CleverMenuItemTooltip>(true).Tooltip = RandomizerText.DifficultyOverrides.Normal.DescriptionOverride;
+		difficultyManager.MenuItems[2].GetComponentInChildren<MessageBox>(true).SetMessageProvider(RandomizerText.DifficultyOverrides.Hard.NameOverride);
+		difficultyManager.MenuItems[2].GetComponentInChildren<CleverMenuItemTooltip>(true).Tooltip = RandomizerText.DifficultyOverrides.Hard.DescriptionOverride;
+		difficultyManager.MenuItems[3].GetComponentInChildren<MessageBox>(true).SetMessageProvider(RandomizerText.DifficultyOverrides.OneLife.NameOverride);
+		difficultyManager.MenuItems[3].GetComponentInChildren<CleverMenuItemTooltip>(true).Tooltip = RandomizerText.DifficultyOverrides.OneLife.DescriptionOverride;
+		difficultyManager.Index = 0;
+
 		switch (RandomizerSettings.Game.DefaultDifficulty.Value) {
 			case RandomizerSettings.Difficulty.Relaxing:
 				difficultyManager.Index = 0;
@@ -430,7 +480,202 @@ public class RandomizerBootstrap
 		sceneRoot.OnValidate();
 	}
 
-	private static Dictionary<string, Action<SceneRoot>> s_bootstrap = new Dictionary<string, Action<SceneRoot>>
+	private static void BootstrapWallJumpTreeHint(SceneRoot sceneRoot)
+	{
+		// This adds a return-to-start hint to the tree animation.
+		ActionSequence treeSequence = sceneRoot.transform.FindChild("*abilityPedestalWallJump/pedestal/actionSequence").GetComponent<ActionSequence>();	
+		ShowHintAction hint = treeSequence.gameObject.AddComponent<ShowHintAction>();
+		RandomizerMessageProvider message = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+		string text = "Stuck? You can use Return To Start (" + RandomizerRebinding.ReturnToStart.FirstBindName() + ") to go somewhere useful!";
+		message.SetMessage(text);
+		hint.HintMessage = message;
+		hint.Duration = 5f;
+		// The hint only shows when we don't have a casual skill set able to get out.
+		RandomizerWallJumpHintCondition condition = treeSequence.gameObject.AddComponent<RandomizerWallJumpHintCondition>();
+		RunActionCondition action = treeSequence.gameObject.AddComponent<RunActionCondition>();
+		action.Action = hint;
+		action.Condition = condition;
+		treeSequence.Actions.Add(action);
+	}
+
+	private static void BootstrapSeinRoomHint(SceneRoot sceneRoot)
+	{
+		// This adds an alt-r hint into the getting-sein animation.
+		ActionSequence getSeinSequence = sceneRoot.transform.FindChild("*setups/*story/findingOri/seinInterestZone/trigger/activateSequence").GetComponent<ActionSequence>();	
+		ShowHintAction hint = getSeinSequence.gameObject.AddComponent<ShowHintAction>();
+		RandomizerMessageProvider message = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+		string text = "Tip: You can use Return To Start (" + RandomizerRebinding.ReturnToStart.FirstBindName() + ") to skip this fight!";
+		message.SetMessage(text);
+		hint.HintMessage = message;
+		hint.Duration = 5f;
+		getSeinSequence.Actions.Insert(17, hint);
+	}
+
+	private static void BootstrapMoonGrottoMiniboss(SceneRoot sceneRoot)
+	{
+		// This function makes it so you don't soft-lock if you alt-r out
+		// of the moon grotto miniboss room.
+		// Check disable alt-r soft-lock fixes.
+		if (Characters.Sein.Inventory.GetRandomizerItem(1103) != 0) {
+			return;
+		}
+
+		PlayerCollisionTrigger firstDoorTrigger = sceneRoot.transform.FindChild("*gumoAnimationSummonEnemy/enemyPuzzles/doorASetup/triggerCollider").GetComponent<PlayerCollisionTrigger>();
+		LegacyTranslateAnimator firstDoorAnimator = sceneRoot.transform.FindChild("*gumoAnimationSummonEnemy/enemyPuzzles/doorASetup/moonGrottoBlockingDoorB").GetComponent<LegacyTranslateAnimator>();		
+		LegacyTranslateAnimator secondDoorAnimator = sceneRoot.transform.FindChild("*gumoAnimationSummonEnemy/enemyPuzzles/enemyPuzzle/doorSetup/sidewaysDoor/puzzleDoorLeft").GetComponent<LegacyTranslateAnimator>();
+		CameraWideScreenZone cameraZone = sceneRoot.transform.FindChild("*gumoAnimationSummonEnemy/cameraWideScreenZone").GetComponent<CameraWideScreenZone>();
+
+		bool firstDoorShut = !firstDoorAnimator.AtStart;
+		bool secondDoorOpen = !secondDoorAnimator.AtStart;
+		if (secondDoorOpen) {
+			// Note: I don't believe this is required as the other logic should suffice
+			// by itself, but it is here just in case.
+			// Open the door and disable the trigger and camera zone.
+			firstDoorAnimator.Stopped = true;
+			firstDoorAnimator.Reversed = false;
+			firstDoorAnimator.CurrentTime = 0f;
+			firstDoorAnimator.Sample(firstDoorAnimator.CurrentTime);
+			firstDoorTrigger.gameObject.active = false;
+			firstDoorTrigger.Active = false;
+			cameraZone.gameObject.active = false;
+			return;
+		}
+		
+		Rect minibossRoom = Rect.MinMaxRect(558f, -423f, 628f, -390f); 
+		bool isInRoom = minibossRoom.Contains(Characters.Sein.Position);		
+		if (firstDoorShut && !isInRoom) {
+			// Open the door and enable the trigger and camera zone.
+			firstDoorAnimator.Stopped = true;
+			firstDoorAnimator.Reversed = false;
+			firstDoorAnimator.CurrentTime = 0f;
+			firstDoorAnimator.Sample(firstDoorAnimator.CurrentTime);
+			firstDoorTrigger.gameObject.active = true;
+			firstDoorTrigger.Active = true;
+			cameraZone.gameObject.active = true;
+		}
+	}
+
+	private static void BootstrapSeinRoomWall(SceneRoot sceneRoot)
+	{
+		// This removes the invisible blocking wall in the sein room so that
+		// after an alt-r we don't soft-lock on the FronkeyFight pickup.
+		// We also remove the fronkeys when the wall is not there since they
+		// shouldn't be able to leave the room normally.
+		// Check disable alt-r soft-lock fixes.
+		if (Characters.Sein.Inventory.GetRandomizerItem(1103) != 0) {
+			return;
+		}
+		
+		Transform blockingWall = sceneRoot.transform.FindChild("blocker");
+		Transform fronkeys = sceneRoot.transform.FindChild("*setups/*story/allEnemiesKilled/group/jumpingSootEnemyPlaceholders");
+		ActionSequence getSeinSequence = sceneRoot.transform.FindChild("*setups/*story/findingOri/seinInterestZone/trigger/activateSequence").GetComponent<ActionSequence>();
+		bool doorIsClosed = blockingWall.gameObject.active;
+		bool canSpawnFronkeys = getSeinSequence.Index > 0;
+		Rect seinRoom = Rect.MinMaxRect(-172f, -275f, -81f, -250f); 
+		bool isInRoom = seinRoom.Contains(Characters.Sein.Position);
+		if (doorIsClosed && !isInRoom) {
+			blockingWall.gameObject.active = false;
+			fronkeys.gameObject.active = false;
+		} else if (!doorIsClosed && canSpawnFronkeys) {
+			fronkeys.gameObject.active = false;
+		}
+	}
+
+	private static void BootstrapRhinoBeforeSein(SceneRoot sceneRoot)
+	{
+		// This changes the rhino before sein to respawn if ori is on screen, and faster, to 
+		// make it more intuitive when the rhino is killed.
+		RammingEnemyPlaceholder rhino = sceneRoot.transform.FindChild("*crashIntoRocksSetups/rammingEnemySetup/rammingEnemyPlaceholder").GetComponent<RammingEnemyPlaceholder>();
+		rhino.RespawnOnScreen = true;
+		rhino.RespawnTime = 10f;
+	}
+
+	private static void BootstrapGinsoLowerMiniboss(SceneRoot sceneRoot)
+	{
+		// This makes it so you can't soft-lock if you alt-r out of the lower ginso miniboss 
+		// before killing the boss.
+		// Check disable alt-r soft-lock fixes.
+		if (Characters.Sein.Inventory.GetRandomizerItem(1103) != 0) {
+			return;
+		}
+
+		LegacyTranslateAnimator firstDoorAnimator = sceneRoot.transform.FindChild("ginsoTreeMultiMortar/doorASetup/ginsoTreeBlockingWallA").GetComponent<LegacyTranslateAnimator>();
+		PlayerCollisionStayTrigger firstDoorTrigger = sceneRoot.transform.FindChild("ginsoTreeMultiMortar/doorASetup/triggerCollider").GetComponent<PlayerCollisionStayTrigger>();
+		bool firstDoorShut = !firstDoorAnimator.AtStart; // Or shutting.
+		Rect minibossRoom = Rect.MinMaxRect(504f, 235.5f, 545f, 255f); 
+		bool isInRoom = minibossRoom.Contains(Characters.Sein.Position);		
+		if (firstDoorShut && !isInRoom) {
+			firstDoorAnimator.Stopped = true;
+			firstDoorAnimator.Reversed = false;
+			firstDoorAnimator.CurrentTime = 0f;
+			firstDoorAnimator.Sample(firstDoorAnimator.CurrentTime);
+			firstDoorTrigger.gameObject.active = true;
+			firstDoorTrigger.Active = true;
+		}
+	}
+
+	private static void BootstrapMistyPedestal(SceneRoot sceneRoot)
+	{
+		// So at the start of misty we get a useless press X to interact with sein that tells 
+		// us literally nothing because we have silenced some dialog popups, so remove that.
+		Transform initialHint = sceneRoot.transform.FindChild("*storySetup/hintStoryAreaB");
+		initialHint.gameObject.active = false;
+		
+		// Make it clearer what resetting misty via the "Press X to interact with shrouded 
+		// lantern" popup does for the player.
+		OriInterestTriggerB changeTrigger = sceneRoot.transform.FindChild("*toggleTorchSetup/toggleTorchSetup/oriInterestTrigger").GetComponent<OriInterestTriggerB>();
+		RandomizerMessageProvider changeTriggerText = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+		changeTriggerText.SetMessage("Press [StructureInteraction] to change the layout of *Misty Woods*!");
+		changeTrigger.HintMessage = changeTriggerText;
+
+		ActionSequence changeToRevisitSequence = sceneRoot.transform.FindChild("*toggleTorchSetup/toggleTorchSetup/oriInterestTrigger/extinguishSequence").GetComponent<ActionSequence>();
+		ShowHintAction revisitHint = changeToRevisitSequence.gameObject.AddComponent<ShowHintAction>();
+		RandomizerMessageProvider revisitText = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+		revisitText.SetMessage("*Misty Woods* is now in the #normal# layout.");
+		revisitHint.HintMessage = revisitText;
+		revisitHint.Duration = 3f;
+		changeToRevisitSequence.Actions.Add(revisitHint);
+
+		ActionSequence changeToFinishedSequence = sceneRoot.transform.FindChild("*toggleTorchSetup/toggleTorchSetup/oriInterestTrigger/igniteSequence").GetComponent<ActionSequence>();
+		ShowHintAction finishedHint = changeToFinishedSequence.gameObject.AddComponent<ShowHintAction>();
+		RandomizerMessageProvider finishedText = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+		finishedText.SetMessage("*Misty Woods* is now in the #finished# layout.");
+		finishedHint.HintMessage = finishedText;
+		finishedHint.Duration = 3f;
+		changeToFinishedSequence.Actions.Add(finishedHint);
+
+		// Put a hint on reentry of misty when misty is complete.
+		Transform pedestalTorch = sceneRoot.transform.FindChild("pedestalTorch");
+		Transform reentryHintTransform = CloneObject(sceneRoot, pedestalTorch, "reentryHint", true);
+		// The location of the collision trigger.
+		reentryHintTransform.position = new Vector3(-606, -26);
+		reentryHintTransform.localScale = new Vector3(5, 20);
+
+		RandomizerMessageProvider reentryText = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
+		reentryText.SetMessage("You can change the misty layout at the orb pedestal");
+		ShowSpiritTreeTextAction reentryHint = reentryHintTransform.gameObject.AddComponent<ShowSpiritTreeTextAction>();
+		reentryHint.Message = reentryText;
+		// Location of the text.
+		Transform reentryTextTarget = CloneObject(sceneRoot, pedestalTorch, "reentryTarget", true);
+		reentryTextTarget.position = new Vector3(-619, -25);
+		reentryHint.Target = reentryTextTarget;
+		
+		// Make it only show when misty is in the finished state and we are going left 
+		// (entering misty again).
+		PlayerCollisionTrigger collisionTrigger = reentryHintTransform.gameObject.AddComponent<PlayerCollisionTrigger>();
+		collisionTrigger.ActionToRun = reentryHint;
+		RandomizerGoingDirectionCondition goingLeftCondition = reentryHintTransform.gameObject.AddComponent<RandomizerGoingDirectionCondition>();
+		goingLeftCondition.left = true;
+		GetWorldEventCondition mistyCompleteCondition = sceneRoot.transform.FindChild("*toggleTorchSetup/toggleTorchSetup/oriInterestTrigger/activateAction").GetComponent<GetWorldEventCondition>();
+		CompoundCondition compoundCondition = reentryHintTransform.gameObject.AddComponent<CompoundCondition>();
+		CompoundCondition.ConditionInformation conditionInformation = new CompoundCondition.ConditionInformation();
+		conditionInformation.Conditions.Add(mistyCompleteCondition);
+		conditionInformation.Conditions.Add(goingLeftCondition);
+		compoundCondition.Tests.Add(conditionInformation);
+		collisionTrigger.Condition = compoundCondition;
+	}
+
+	private static Dictionary<string, Action<SceneRoot>> s_bootstrapPreEnabled = new Dictionary<string, Action<SceneRoot>>
 	{
 		{ "moonGrottoRopeBridge", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoBridge) },
 		{ "mountHoruHubMid", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMountHoruHub) },
@@ -441,8 +686,27 @@ public class RandomizerBootstrap
 		{ "thornfeltSwampActTwoStart", new Action<SceneRoot>(RandomizerBootstrap.BootstrapThornfeltSwampMain) },
 		{ "titleScreenSwallowsNest", new Action<SceneRoot>(RandomizerBootstrap.BootstrapTitleScreen) },
 		{ "westGladesFireflyAreaA", new Action<SceneRoot>(RandomizerBootstrap.BootstrapValleyThreeBirdArea) },
-		{ "sunkenGladesRunaway", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSunkenGladesRunaway) }
+		{ "sunkenGladesRunaway", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSunkenGladesRunaway) },
+		{ "sunkenGladesSpiritCavernWalljumpB", new Action<SceneRoot>(RandomizerBootstrap.BootstrapWallJumpTreeHint) },
+		{ "sunkenGladesOriRoom", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSeinRoomHint) },
+		{ "sunkenGladesEnemyIntroductionC", new Action<SceneRoot>(RandomizerBootstrap.BootstrapRhinoBeforeSein) },
+		{ "sorrowPassForestB", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMistyPedestal) },
 	};
 
-	private static List<string> s_bootstrappedScenes = new List<string>();
+	private static List<string> s_bootstrappedScenesPreEnabled = new List<string>();
+
+	// Generally prefer PreEnabled over AfterSerialize. These functions are run after *every* 
+	// serialisation of the scene, so after every death and not just the initial load. So don't
+	// e.g. unconditionally add things to the scene in these functions, as they will repeat. 
+	// But if you need to do things that alter or depend on serialised parts of the scene, 
+	// this is the place. Things altered here may be serialised (saved) by the scene. If you 
+	// want to make new serialised scene elements you'll need to use PreEnabled.
+	private static Dictionary<string, Action<SceneRoot>> s_bootstrapAfterSerialize = new Dictionary<string, Action<SceneRoot>>
+	{
+		{ "moonGrottoEnemyPuzzle", new Action<SceneRoot>(RandomizerBootstrap.BootstrapMoonGrottoMiniboss) },
+		{ "sunkenGladesOriRoom", new Action<SceneRoot>(RandomizerBootstrap.BootstrapSeinRoomWall) },
+		{ "ginsoTreePuzzles", new Action<SceneRoot>(RandomizerBootstrap.BootstrapGinsoLowerMiniboss) },
+	};
+
+	private static List<string> s_bootstrappedScenesAfterSerialize = new List<string>();
 }
