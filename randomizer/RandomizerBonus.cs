@@ -387,6 +387,13 @@ public static class RandomizerBonus
             Characters.Sein.PlayerAbilities.Grenade.HasAbility = false;
             Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
             return;
+        case 50:
+            if (!Characters.Sein || flag)
+                return;
+            RandomizerSwitch.PickupMessage("@Sein Lost!!@", 240);
+            Characters.Sein.PlayerAbilities.SpiritFlame.HasAbility = false;
+            Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
+            return;
         case 81:
             if(Characters.Sein.Inventory.GetRandomizerItem(ID) > 0)
                 return;
@@ -399,6 +406,12 @@ public static class RandomizerBonus
                 g_color = "$";
             RandomizerSwitch.PickupMessage(s_color + "Stomp: " + Randomizer.StompZone + s_color + g_color+ "    Grenade: "+ Randomizer.GrenadeZone + g_color, 480);
             break;
+        case 1102:
+            if (!flag)
+                Characters.Sein.Inventory.SetRandomizerItem(ID, 1);
+                return;
+            Characters.Sein.Inventory.SetRandomizerItem(ID, 0);
+            return;
         default:
             if(flag)
                 Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
