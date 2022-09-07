@@ -30,8 +30,6 @@ public static class RandomizerText
 			if(RandomizerSettings.CurrentFilter == RandomizerSettings.MapFilterMode.InLogic) {
 				if(RandomizerLocationManager.Areas == null)
 					return $"{text}\n@Logic filter unavailable; areas.ori missing@";
-				if(!Characters.Sein.PlayerAbilities.MapMarkers.HasAbility)
-					return $"{text}\nUnlock the #Map Markers# ability to use the logic filter!";
 			}
 			return text;
 		}
@@ -92,7 +90,7 @@ public static class RandomizerText
 		},
 		{
 			AbilityType.MapMarkers,
-			new RandomizerText.AbilityTextOverrides("Logic Filter", "Unlocks the In-Logic Filter for the map")
+			new RandomizerText.AbilityTextOverrides("Maphacks", "Reveal the entire world map")
 		},
 		{
 			AbilityType.HealthEfficiency,

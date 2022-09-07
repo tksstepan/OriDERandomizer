@@ -219,6 +219,9 @@ public class PlayerAbilities : SaveSerialize, ISeinReceiver
 			break;
 		case AbilityType.MapMarkers:
 			this.MapMarkers.HasAbility = value;
+		    if(value) 
+				foreach(var area in GameWorld.Instance.RuntimeAreas) 
+					area.DiscoverAllAreas();
 			break;
 		case AbilityType.EnergyEfficiency:
 			this.EnergyEfficiency.HasAbility = value;
