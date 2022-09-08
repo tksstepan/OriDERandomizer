@@ -296,6 +296,12 @@ public static class RandomizerRebinding
 		{"Bonus 9", RandomizerRebinding.Bonus9}
 	};
 
+	private static Dictionary<string, string> coreInputNameRepl = new Dictionary<string, string>
+	{
+		{"Grenade", "LightSpheres"},
+		{"ChargeJump", "ChargeJumpCharge"}
+	};
+
 	public class SingleInput : Core.Input.InputButtonProcessor
 	{
 		public SingleInput(string input)
@@ -339,7 +345,7 @@ public static class RandomizerRebinding
 			switch (this.Type)
 			{
 			case ActionType.CoreInput:
-				return raw;
+				return $"[{(coreInputNameRepl.ContainsKey(raw) ? coreInputNameRepl[raw] : raw)}]";
 			case ActionType.ControllerButton:
 				return "_" + this.Button.ToString();
 			case ActionType.KeyCode:
