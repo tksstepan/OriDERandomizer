@@ -569,7 +569,7 @@ public static class Randomizer
             }
         }
 
-        if (RandomizerRebinding.ReturnToStart.IsPressed() && Characters.Sein && !Characters.Sein.Abilities.Bash.IsBashing && Randomizer.Warping <= 0)
+        if (RandomizerRebinding.ReturnToStart.IsPressed() && Characters.Sein && !SafeIsBashing && Randomizer.Warping <= 0)
         {
             if(CanWarp > 0 && Vector3.Distance(Randomizer.WarpSource, Characters.Sein.Position) < 7)
             {
@@ -1031,19 +1031,15 @@ public static class Randomizer
                         RandomizerColorManager.UpdateHotColdTarget();
                         if (Characters.Sein.Position.y > 935f && Randomizer.Inventory.FinishedGinsoEscape && Scenes.Manager.CurrentScene.Scene == "ginsoTreeWaterRisingEnd")
                         {
-                            if (Characters.Sein.Abilities.Bash && Characters.Sein.Abilities.Bash.IsBashing)
-                            {
+                            if (SafeIsBashing)
                                 Characters.Sein.Abilities.Bash.BashGameComplete(0f);
-                            }
                             Characters.Sein.Position = new Vector3(750f, -120f);
                             return;
                         }
                         if (Characters.Sein.Position.y > -225f && Scenes.Manager.CurrentScene.Scene == "forlornRuinsResurrection")
                         {
-                            if (Characters.Sein.Abilities.Bash && Characters.Sein.Abilities.Bash.IsBashing)
-                            {
+                            if (SafeIsBashing)
                                 Characters.Sein.Abilities.Bash.BashGameComplete(0f);
-                            }
                             Characters.Sein.Position = new Vector3(-1350f, -420f);
                             return;
                         }                        
@@ -1376,7 +1372,7 @@ public static class Randomizer
         {
             RandomizerClues.AddClue(area, id_number / 2);
         }
-	}
+    }
 
     private static int get(int item) { return Characters.Sein.Inventory.GetRandomizerItem(item); }
     private static int set(int item, int value) { return Characters.Sein.Inventory.SetRandomizerItem(item, value); }
@@ -1509,6 +1505,8 @@ public static class Randomizer
             RandomizerSwitch.GivePickup(spawnItem, 2, true);
         }
     }
+
+    public static bool SafeIsBashing {get => (Characters.Sein.Abilities.Bash && Characters.Sein.Abilities.Bash.IsBashing) || false; }
 
     public static RandomizerInventory Inventory { get; private set; }
 
