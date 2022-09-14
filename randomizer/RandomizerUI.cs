@@ -46,12 +46,6 @@ public class RandomizerUI : MonoBehaviour
 
 	public void OnGUI()
 	{
-		GUIStyle betaStyle = new GUIStyle();
-		betaStyle.fontStyle = FontStyle.Bold;
-		betaStyle.fontSize = 32;
-		betaStyle.alignment = TextAnchor.MiddleLeft;
-		betaStyle.normal.textColor = Color.white;
-		GUI.Label(new Rect(0f, 0f, 70f, 36f), "BETA", betaStyle);
 
 		if (DebugMenuB.DebugControlsEnabled && Characters.Sein != null && Characters.Sein.Active)
 		{

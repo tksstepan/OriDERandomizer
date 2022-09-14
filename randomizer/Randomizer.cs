@@ -12,7 +12,7 @@ using UnityEngine;
 
 public static class Randomizer
 {
-    public static string VERSION = "4.BETA";
+    public static string VERSION = "4.0.0";
     public static void initialize()
     {
         try {
@@ -665,7 +665,6 @@ public static class Randomizer
     {
         try {
             string text = "";
-            text += "BETA BETA BETA BETA\n";
             if(Randomizer.ForceTrees || Randomizer.CluesMode)
             {
                 if (RandomizerBonus.SkillTreeProgression() == 10)
