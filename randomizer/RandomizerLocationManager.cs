@@ -141,6 +141,15 @@ public class RandomizerLocationManager
 		return false;
 	}
 
+	public static bool HasPickupBeenTouched(MoonGuid pickupGuid)
+	{
+		if (RandomizerLocationManager.LocationsByGuid.ContainsKey(pickupGuid))
+		{
+			return RandomizerLocationManager.LocationsByGuid[pickupGuid].Touched;
+		}
+		return false;
+	}
+
 	public static bool IsPickupRepeatable(MoonGuid pickupGuid)
 	{
 		if (RandomizerLocationManager.LocationsByGuid.ContainsKey(pickupGuid))
@@ -367,6 +376,8 @@ public class RandomizerLocationManager
 		public int Key => (int)(Mathf.Floor((float)((int)this.Position.x) / 4f) * 4f) * 10000 + (int)(Mathf.Floor((float)((int)this.Position.y) / 4f) * 4f);
 
 		public bool Collected => this.Repeatable ? false : (this.Type == LocationType.Map ? RandomizerTrackedDataManager.GetMapstone(this.SpecialIndex) : Randomizer.HaveCoord(this.Key));
+
+		public bool Touched => Collected || this.Repeatable && Randomizer.HaveCoord(this.Key);
 
 		public MoonGuid MoonGuid;
 
