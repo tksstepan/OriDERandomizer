@@ -1,9 +1,7 @@
 using System;
 
-// Token: 0x02000A4A RID: 2634
 public class ControllerBindsScreen : CustomSettingsScreen
 {
-	// Token: 0x0600390C RID: 14604 RVA: 0x000E7A0C File Offset: 0x000E5C0C
 	public override void InitScreen()
 	{
 		base.AddControllerBind("Bash", () => PlayerInputRebinding.ControllerRebindings.Bash, k => PlayerInputRebinding.ControllerRebindings.Bash = k);
@@ -20,5 +18,11 @@ public class ControllerBindsScreen : CustomSettingsScreen
 		base.AddControllerBind("Movement Down", () => PlayerInputRebinding.ControllerRebindings.VerticalDigiPadDown, k => PlayerInputRebinding.ControllerRebindings.VerticalDigiPadDown = k);
 		base.AddControllerBind("Movement Left", () => PlayerInputRebinding.ControllerRebindings.HorizontalDigiPadLeft, k => PlayerInputRebinding.ControllerRebindings.HorizontalDigiPadLeft = k);
 		base.AddControllerBind("Movement Right", () => PlayerInputRebinding.ControllerRebindings.HorizontalDigiPadRight, k => PlayerInputRebinding.ControllerRebindings.HorizontalDigiPadRight = k);
+
+		// Lower tooltip so it fits under the options
+		var pos = this.tooltipController.transform.position;
+		pos.y = -3.38f;
+		this.tooltipController.transform.position = pos;
+		HideLegend();
 	}
 }

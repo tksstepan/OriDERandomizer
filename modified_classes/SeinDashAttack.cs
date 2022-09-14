@@ -4,10 +4,8 @@ using Core;
 using Game;
 using UnityEngine;
 
-// Token: 0x0200031B RID: 795
 public class SeinDashAttack : CharacterState, ISeinReceiver
 {
-	// Token: 0x06001057 RID: 4183
 	static SeinDashAttack()
 	{
 		SeinDashAttack.OnDashEvent = delegate()
@@ -18,18 +16,10 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		};
 	}
 
-	// Token: 0x14000012 RID: 18
-	// (add) Token: 0x06001058 RID: 4184
-	// (remove) Token: 0x06001059 RID: 4185
 	public static event Action OnDashEvent;
 
-	// Token: 0x14000013 RID: 19
-	// (add) Token: 0x0600105A RID: 4186
-	// (remove) Token: 0x0600105B RID: 4187
 	public static event Action OnWallDashEvent;
 
-	// Token: 0x170002A9 RID: 681
-	// (get) Token: 0x0600105C RID: 4188
 	public bool HasEnoughEnergy
 	{
 		get
@@ -39,7 +29,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600105D RID: 4189
 	public override void Serialize(Archive ar)
 	{
 		if (ar.Reading)
@@ -48,20 +37,17 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600105E RID: 4190
 	public override void OnExit()
 	{
 		this.ReturnToNormal();
 		base.OnExit();
 	}
 
-	// Token: 0x0600105F RID: 4191
 	public void OnDisable()
 	{
 		this.Exit();
 	}
 
-	// Token: 0x06001060 RID: 4192
 	public void ReturnToNormal()
 	{
 		if (this.CurrentState != SeinDashAttack.State.Normal)
@@ -83,35 +69,29 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001061 RID: 4193
 	public void SpendEnergy()
 	{
 		float num = RandomizerBonus.ChargeDashEfficiency() ? 0.5f : 0f;
 		this.m_sein.Energy.Spend(this.EnergyCost - num);
 	}
 
-	// Token: 0x06001062 RID: 4194
 	public void RestoreEnergy()
 	{
 		float num = RandomizerBonus.ChargeDashEfficiency() ? 0.5f : 0f;
 		this.m_sein.Energy.Gain(this.EnergyCost - num);
 	}
 
-	// Token: 0x06001063 RID: 4195
 	public void SetReferenceToSein(SeinCharacter sein)
 	{
 		this.m_sein = sein;
 		sein.Abilities.Dash = this;
 	}
 
-	// Token: 0x06001064 RID: 4196
 	public override void UpdateCharacterState()
 	{
 		this.UpdateState();
 	}
 
-	// Token: 0x170002AA RID: 682
-	// (get) Token: 0x06001065 RID: 4197
 	public bool IsDashingOrChangeDashing
 	{
 		get
@@ -124,7 +104,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001066 RID: 4198
 	public void ChangeState(SeinDashAttack.State state)
 	{
 		this.CurrentState = state;
@@ -132,8 +111,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		this.m_attackablesIgnore.Clear();
 	}
 
-	// Token: 0x170002AB RID: 683
-	// (get) Token: 0x06001067 RID: 4199
 	public IChargeDashAttackable FindClosestAttackable
 	{
 		get
@@ -160,7 +137,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001068 RID: 4200
 	public void AttackNearbyEnemies()
 	{
 		int i = 0;
@@ -188,7 +164,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001069 RID: 4201
 	private void PerformDash(TextureAnimationWithTransitions dashAnimation, SoundProvider dashSound)
 	{
 		this.m_sein.Mortality.DamageReciever.ResetInviciblity();
@@ -242,7 +217,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		this.m_sein.PlatformBehaviour.PlatformMovement.LocalSpeedY = -this.DashDownwardSpeed;
 	}
 
-	// Token: 0x0600106A RID: 4202
 	public void PerformDash()
 	{
 		this.m_chargeDashAtTarget = false;
@@ -254,7 +228,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		SeinDashAttack.OnDashEvent();
 	}
 
-	// Token: 0x0600106B RID: 4203
 	public void PerformWallDash()
 	{
 		this.m_chargeDashAtTarget = false;
@@ -265,7 +238,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		SeinDashAttack.OnWallDashEvent();
 	}
 
-	// Token: 0x0600106C RID: 4204
 	public void PerformDashIntoWall()
 	{
 		this.m_lastPressTime = 0f;
@@ -274,13 +246,11 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		Sound.Play(this.DashIntoWallSound.GetSound(null), this.m_sein.Position, null);
 	}
 
-	// Token: 0x0600106D RID: 4205
 	public bool KeepDashIntoWallAnimationPlaying()
 	{
 		return this.AgainstWall() && this.m_sein.IsOnGround;
 	}
 
-	// Token: 0x0600106E RID: 4206
 	public void PerformChargeDash()
 	{
 		this.m_hasHitAttackable = false;
@@ -307,25 +277,21 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		this.UpdateChargeDashing();
 	}
 
-	// Token: 0x0600106F RID: 4207
 	private bool HasChargeDashSkill()
 	{
 		return this.m_sein.PlayerAbilities.ChargeDash.HasAbility;
 	}
 
-	// Token: 0x06001070 RID: 4208
 	private bool HasAirDashSkill()
 	{
 		return this.m_sein.PlayerAbilities.AirDash.HasAbility;
 	}
 
-	// Token: 0x06001071 RID: 4209
 	private bool CanChargeDash()
 	{
 		return this.HasChargeDashSkill() && Core.Input.ChargeJump.Pressed && this.m_chargeJumpWasReleased && !Characters.Sein.Abilities.Swimming.IsSwimming;
 	}
 
-	// Token: 0x06001072 RID: 4210
 	public void CompleteChargeEffect()
 	{
 		if (this.m_sein.Abilities.ChargeJumpCharging)
@@ -334,7 +300,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001073 RID: 4211
 	private void UpdateTargetHighlight(IChargeDashAttackable target)
 	{
 		if (this.m_lastTarget == target)
@@ -352,33 +317,27 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001074 RID: 4212
 	public bool KeepDashAnimationPlaying()
 	{
 		return !this.m_stopAnimation && !this.m_sein.Abilities.WallSlide.IsOnWall && base.Active;
 	}
 
-	// Token: 0x06001075 RID: 4213
 	public bool KeepChargeDashAnimationPlaying()
 	{
 		return this.KeepDashAnimationPlaying();
 	}
 
-	// Token: 0x06001076 RID: 4214
 	public bool AgainstWall()
 	{
 		PlatformMovement platformMovement = this.m_sein.PlatformBehaviour.PlatformMovement;
 		return (platformMovement.HasWallLeft && this.m_sein.FaceLeft) || (platformMovement.HasWallRight && !this.m_sein.FaceLeft);
 	}
 
-	// Token: 0x06001077 RID: 4215
 	public bool CanPerformNormalDash()
 	{
 		return	((this.HasAirDashSkill() || this.m_sein.IsOnGround || (RandomizerBonus.GravitySuit() &&  Characters.Sein.Abilities.Swimming.IsSwimming)) && !this.AgainstWall() && this.DashHasCooledDown && !this.m_hasDashed);
 	}
 
-	// Token: 0x170002AC RID: 684
-	// (get) Token: 0x06001078 RID: 4216
 	private bool DashHasCooledDown
 	{
 		get
@@ -387,20 +346,17 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001079 RID: 4217
 	public bool CanPerformDashIntoWall()
 	{
 		return this.m_sein.IsOnGround && this.AgainstWall() && this.DashHasCooledDown;
 	}
 
-	// Token: 0x0600107A RID: 4218
 	public bool CanWallDash()
 	{
 		PlatformMovement platformMovement = this.m_sein.PlatformBehaviour.PlatformMovement;
 		return ((platformMovement.HasWallLeft && this.m_sein.Input.Horizontal >= 0f) || (platformMovement.HasWallRight && this.m_sein.Input.Horizontal <= 0f)) && !this.m_sein.IsOnGround && this.m_sein.PlayerAbilities.AirDash.HasAbility;
 	}
 
-	// Token: 0x0600107B RID: 4219
 	public void UpdateNormal()
 	{
 		float num = Time.time - this.m_lastPressTime;
@@ -463,7 +419,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600107C RID: 4220
 	private void ShowNotEnoughEnergy()
 	{
 		UI.SeinUI.ShakeEnergyOrbBar();
@@ -473,7 +428,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600107D RID: 4221
 	public void UpdateDashing()
 	{
 		PlatformMovement platformMovement = this.m_sein.PlatformBehaviour.PlatformMovement;
@@ -530,7 +484,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		this.m_isOnGround = false;
 	}
 
-	// Token: 0x0600107E RID: 4222
 	private void StickOntoGround()
 	{
 		PlatformMovement platformMovement = this.m_sein.PlatformBehaviour.PlatformMovement;
@@ -547,7 +500,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		platformMovement.Position = vector;
 	}
 
-	// Token: 0x0600107F RID: 4223
 	public void UpdateChargeDashing()
 	{
 		PlatformMovement platformMovement = this.m_sein.PlatformBehaviour.PlatformMovement;
@@ -603,7 +555,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		this.m_isOnGround = false;
 	}
 
-	// Token: 0x06001080 RID: 4224
 	public void UpdateState()
 	{
 		UI.Cameras.Current.ChaseTarget.CameraSpeedMultiplier.x = 1f;
@@ -630,7 +581,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		this.m_stateCurrentTime += Time.deltaTime;
 	}
 
-	// Token: 0x06001081 RID: 4225
 	public void StopDashing()
 	{
 		this.m_sein.PlatformBehaviour.PlatformMovement.LocalSpeed = Vector2.zero;
@@ -639,7 +589,6 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		this.m_chargeDashAtTarget = false;
 	}
 
-	// Token: 0x06001082 RID: 4226
 	private bool RaycastTest()
 	{
 		Vector3 a = Vector3.Cross(this.m_sein.PlatformBehaviour.PlatformMovement.GroundRayNormal, Vector3.forward);
@@ -651,168 +600,114 @@ public class SeinDashAttack : CharacterState, ISeinReceiver
 		return this.m_sein.Controller.RayTest(vector, vector2, out raycastHit);
 	}
 
-	// Token: 0x06001083 RID: 4227
 	public void ResetDashLimit()
 	{
 		this.m_hasDashed = false;
 		RandomizerBonus.DoubleAirDashUsed = false;
 	}
 
-	// Token: 0x04000F8C RID: 3980
 	public AnimationCurve DashSpeedOverTime;
 
-	// Token: 0x04000F8D RID: 3981
 	public AnimationCurve ChargeDashSpeedOverTime;
 
-	// Token: 0x04000F8E RID: 3982
 	public float DashTime = 0.5f;
 
-	// Token: 0x04000F8F RID: 3983
 	public float ChargeDashTime = 0.5f;
 
-	// Token: 0x04000F90 RID: 3984
 	public float ChargeTime = 0.2f;
 
-	// Token: 0x04000F91 RID: 3985
 	public SoundProvider ChargeSound;
 
-	// Token: 0x04000F92 RID: 3986
 	public SoundProvider DoneChargingSound;
 
-	// Token: 0x04000F93 RID: 3987
 	public SoundSource ChargedSound;
 
-	// Token: 0x04000F94 RID: 3988
 	public SoundProvider UnChargeSound;
 
-	// Token: 0x04000F95 RID: 3989
 	public SoundProvider DashSound;
 
-	// Token: 0x04000F96 RID: 3990
 	public SoundProvider ChargeDashSound;
 
-	// Token: 0x04000F97 RID: 3991
 	public SoundProvider RainbowDashSound;
 
-	// Token: 0x04000F98 RID: 3992
 	public SoundProvider DashIntoWallSound;
 
-	// Token: 0x04000F99 RID: 3993
 	public GameObject ExplosionEffect;
 
-	// Token: 0x04000F9A RID: 3994
 	public SeinDashAttack.State CurrentState;
 
-	// Token: 0x04000F9B RID: 3995
 	public float DashDownwardSpeed = 10f;
 
-	// Token: 0x04000F9C RID: 3996
 	public float OffGroundSpeed = 15f;
 
-	// Token: 0x04000F9D RID: 3997
 	public int Damage = 50;
 
-	// Token: 0x04000F9E RID: 3998
 	public float EnergyCost = 1f;
 
-	// Token: 0x04000F9F RID: 3999
 	public SoundProvider NotEnoughEnergySound;
 
-	// Token: 0x04000FA0 RID: 4000
 	public TextureAnimationWithTransitions DashAnimation;
 
-	// Token: 0x04000FA1 RID: 4001
 	public TextureAnimationWithTransitions ChargeDashAnimation;
 
-	// Token: 0x04000FA2 RID: 4002
 	public TextureAnimationWithTransitions GlideDashAnimation;
 
-	// Token: 0x04000FA3 RID: 4003
 	public TextureAnimationWithTransitions DashIntoWallAnimation;
 
-	// Token: 0x04000FA4 RID: 4004
 	public GameObject DashStartEffect;
 
-	// Token: 0x04000FA5 RID: 4005
 	public GameObject DashFollowEffect;
 
-	// Token: 0x04000FA6 RID: 4006
 	public GameObject DashFollowRainbowEffect;
 
-	// Token: 0x04000FA7 RID: 4007
 	private SeinCharacter m_sein;
 
-	// Token: 0x04000FA8 RID: 4008
 	private bool m_faceLeft;
 
-	// Token: 0x04000FA9 RID: 4009
 	private float m_stateCurrentTime;
 
-	// Token: 0x04000FAA RID: 4010
 	private HashSet<IAttackable> m_attackablesIgnore = new HashSet<IAttackable>();
 
-	// Token: 0x04000FAB RID: 4011
 	private bool m_stopAnimation;
 
-	// Token: 0x04000FAC RID: 4012
 	private float m_lastPressTime;
 
-	// Token: 0x04000FAD RID: 4013
 	private float m_lastDashTime;
 
-	// Token: 0x04000FAE RID: 4014
 	private bool m_isOnGround;
 
-	// Token: 0x04000FAF RID: 4015
 	public static bool RainbowDashActivated;
 
-	// Token: 0x04000FB0 RID: 4016
 	private bool m_hasDashed;
 
-	// Token: 0x04000FB1 RID: 4017
 	public float ChargeDashTargetMaxDistance = 20f;
 
-	// Token: 0x04000FB2 RID: 4018
 	private float m_timeOfLastExplosionEffect;
 
-	// Token: 0x04000FB3 RID: 4019
 	private float m_timeWhenDashJumpHappened;
 
-	// Token: 0x04000FB4 RID: 4020
 	private bool m_allowNoDecelerationForThisDash;
 
-	// Token: 0x04000FB5 RID: 4021
 	private IAttackable m_chargeDashAttackTarget;
 
-	// Token: 0x04000FB6 RID: 4022
 	private bool m_hasHitAttackable;
 
-	// Token: 0x04000FB7 RID: 4023
 	private bool m_chargeJumpWasReleased = true;
 
-	// Token: 0x04000FB8 RID: 4024
 	private IChargeDashAttackable m_lastTarget;
 
-	// Token: 0x04000FB9 RID: 4025
 	public float SpriteRotation;
 
-	// Token: 0x04000FBA RID: 4026
 	private Vector3 m_chargeDashDirection;
 
-	// Token: 0x04000FBB RID: 4027
 	private bool m_chargeDashAtTarget;
 
-	// Token: 0x04000FBC RID: 4028
 	private Vector3 m_chargeDashAtTargetPosition;
 
-	// Token: 0x0200031C RID: 796
 	public enum State
 	{
-		// Token: 0x04000FC2 RID: 4034
 		Normal,
-		// Token: 0x04000FC3 RID: 4035
 		Dashing,
-		// Token: 0x04000FC4 RID: 4036
 		ChargeDashing
 	}
 }

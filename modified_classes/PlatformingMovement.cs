@@ -1,15 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x020005EC RID: 1516
 public class PlatformingMovement : PlatformMovement
 {
-	// Token: 0x17000520 RID: 1312
-	// (get) Token: 0x06002078 RID: 8312 RVA: 0x0001C24F File Offset: 0x0001A44F
-	// (set) Token: 0x06002079 RID: 8313 RVA: 0x0001C257 File Offset: 0x0001A457
 	public override bool IsSuspended { get; set; }
 
-	// Token: 0x0600207A RID: 8314 RVA: 0x0001C260 File Offset: 0x0001A460
 	public new void Awake()
 	{
 		base.Awake();
@@ -17,19 +12,16 @@ public class PlatformingMovement : PlatformMovement
 		this.m_rigidbody.sleepThreshold = 0f;
 	}
 
-	// Token: 0x0600207B RID: 8315 RVA: 0x0001C284 File Offset: 0x0001A484
 	public void OnCollisionEnter(Collision collision)
 	{
 		this.OnCollision(collision);
 	}
 
-	// Token: 0x0600207C RID: 8316 RVA: 0x0001C284 File Offset: 0x0001A484
 	public void OnCollisionStay(Collision collision)
 	{
 		this.OnCollision(collision);
 	}
 
-	// Token: 0x0600207D RID: 8317 RVA: 0x00094A78 File Offset: 0x00092C78
 	public void OnCollision(Collision collision)
 	{
 		for (int i = 0; i < collision.contacts.Length; i++)
@@ -56,7 +48,6 @@ public class PlatformingMovement : PlatformMovement
 		}
 	}
 
-	// Token: 0x0600207E RID: 8318
 	public void FixedUpdate()
 	{
 		if (this.IsSuspended)
@@ -122,7 +113,6 @@ public class PlatformingMovement : PlatformMovement
 		}
 	}
 
-	// Token: 0x0600207F RID: 8319 RVA: 0x00094E30 File Offset: 0x00093030
 	public override void PlaceOnGround(float lift = 0.5f, float distance = 0f)
 	{
 		this.Position += base.LocalToWorld(Vector3.up * lift);
@@ -146,9 +136,7 @@ public class PlatformingMovement : PlatformMovement
 		}
 	}
 
-	// Token: 0x04001CCA RID: 7370
 	private Rigidbody m_rigidbody;
 
-	// Token: 0x04001CCB RID: 7371
 	private Vector2 m_groundContactNormal;
 }

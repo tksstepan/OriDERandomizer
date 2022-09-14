@@ -302,6 +302,14 @@ public static class RandomizerStatsManager {
 			}
 		}
 	}
+
+	public static int GetObtainedPickupCount(string areaName)
+	{
+		if (!Game.Characters.Sein?.Inventory)
+			return 0;
+		return get(Pickups + Offsets[areaName]);
+	}
+
 	public static void IncPickup(int loc) {
         if(Randomizer.HaveCoord(loc))
         	return;
@@ -491,7 +499,7 @@ public static class RandomizerStatsManager {
 
 	public static void WriteStatsFile() {
 		try {
-			string flagLine = File.ReadAllLines("randomizer.dat")[0];
+			string flagLine = File.ReadAllLines(Randomizer.SeedFilePath)[0];
 			string zonePart = GetStatsPage(0).Substring(33);
 			// formatting is garbage
 			zonePart = zonePart.Replace("   ", "");

@@ -1,10 +1,8 @@
 using System;
 using UnityEngine;
 
-// Token: 0x02000A59 RID: 2649
 public class MenuKeybindsScreen : CustomSettingsScreen
 {
-	// Token: 0x06003B70 RID: 15216
 	public override void InitScreen()
 	{
 		this.AddKeybind("Pause", () => PlayerInputRebinding.KeyRebindings.Start, k => PlayerInputRebinding.KeyRebindings.Start = k);
@@ -20,6 +18,12 @@ public class MenuKeybindsScreen : CustomSettingsScreen
         this.AddKeybind("Zoom In (Map)", () => PlayerInputRebinding.KeyRebindings.ZoomIn, k => PlayerInputRebinding.KeyRebindings.ZoomIn = k);
         this.AddKeybind("Zoom Out (Map)", () => PlayerInputRebinding.KeyRebindings.ZoomOut, k => PlayerInputRebinding.KeyRebindings.ZoomOut = k);
 		base.AddButton("Reset Keybinds", new Action(this.ResetKeybinds));
+
+		// Lower tooltip so it fits under the options
+		var pos = this.tooltipController.transform.position;
+		pos.y = -3.38f;
+		this.tooltipController.transform.position = pos;
+		HideLegend();
 	}
 
     private void ResetKeybinds()

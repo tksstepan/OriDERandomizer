@@ -3,22 +3,22 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using B83.Win32;
 using Core;
 using Game;
+using Protogen;
 using Sein.World;
 using UnityEngine;
 
-// Token: 0x020009F5 RID: 2549
 public static class Randomizer
 {
-    public static string VERSION = "3.5.2";
+    public static string VERSION = "4.0.0";
     public static void initialize()
     {
         try {
             Randomizer.OHKO = false;
             Randomizer.ZeroXP = false;
             Randomizer.BonusActive = true;
-            Randomizer.GiveAbility = false;
             Randomizer.Chaos = false;
             Randomizer.ChaosVerbose = false;
             Randomizer.Returning = false;
@@ -26,13 +26,13 @@ public static class Randomizer
             Randomizer.SyncId = "";
             Randomizer.ForceMaps = false;
             Randomizer.SyncMode = 4;
-            Randomizer.StringKeyPickupTypes = new List<string> {"TP", "SH", "NO", "WT", "MU", "HN", "WP", "RP", "WS"};
+            Randomizer.StringKeyPickupTypes = new List<string> {"TP", "SH", "NO", "WT", "MU", "HN", "WP", "RP", "WS", "TW", "NB"};
             RandomizerChaosManager.initialize();
             Randomizer.DamageModifier = 1f;
-            Randomizer.Table = new Dictionary<int, RandomizerAction>();
             Randomizer.GridFactor = 4.0;
             Randomizer.Message = "Good luck on your rando!";
             Randomizer.MessageProvider = (RandomizerMessageProvider)ScriptableObject.CreateInstance(typeof(RandomizerMessageProvider));
+            RandomizerUI.Instance.ClearRecentNotifications();
             Randomizer.ProgressiveMapStones = true;
             Randomizer.ForceTrees = false;
             Randomizer.CluesMode = false;
@@ -60,6 +60,7 @@ public static class Randomizer
             Randomizer.QueueBash = false;
             Randomizer.BashWasQueued = false;
             Randomizer.BashTap = false;
+            Randomizer.GrenadeJumpQueued = false;
             Randomizer.fragsEnabled = false;
             Randomizer.LastTick = 10000000L;
             Randomizer.LockedCount = 0;
@@ -70,17 +71,7 @@ public static class Randomizer
             Randomizer.HotColdFrags = new Dictionary<int, RandomizerHotColdItem>();
             Randomizer.HotColdMaps = new List<int>();
             Randomizer.HotColdMapsWithFrags = new List<int>();
-            int HotColdSaveId = 2000;
-            Randomizer.HoruScene = "";
-            Randomizer.HoruMap = new Hashtable();
-            Randomizer.HoruMap["mountHoruStomperSystemsR"] = 2640380;
-            Randomizer.HoruMap["mountHoruProjectileCorridor"] = 1720288;
-            Randomizer.HoruMap["mountHoruMovingPlatform"] = 3040304;
-            Randomizer.HoruMap["mountHoruLaserTurretsR"] = 2160192;
-            Randomizer.HoruMap["mountHoruBlockableLasers"] = -919624;
-            Randomizer.HoruMap["mountHoruBigPushBlock"] = -199724;
-            Randomizer.HoruMap["mountHoruBreakyPathTop"] = -1639664;
-            Randomizer.HoruMap["mountHoruFallingBlocks"] = -959848;
+            Randomizer.HotColdSaveId = 2000;
             Randomizer.OpenMode = true;
             Randomizer.OpenWorld = false;
             RandomizerDataMaps.LoadGladesData();
@@ -89,7 +80,6 @@ public static class Randomizer
             RandomizerDataMaps.LoadHoruData();
             RandomizerDataMaps.LoadValleyData();
             RandomizerColorManager.Initialize();
-            RandomizerPlantManager.Initialize();
             RandomizerRebinding.ParseRebinding();
             RandomizerSettings.ParseSettings();
             Randomizer.RelicZoneLookup = new Dictionary<string, string>();
@@ -98,17 +88,23 @@ public static class Randomizer
             Randomizer.RelicCount = 0;
             Randomizer.GrenadeZone = "MIA";
             Randomizer.StompZone = "MIA";
-            Randomizer.Repeatables = new HashSet<int>();
             Randomizer.StompTriggers = false;
             Randomizer.GoalModeFinish = false;
             Randomizer.SpawnWith = "";
             Randomizer.IgnoreEnemyExp = false;
             Randomizer.RelicCountOverride = false;
-            Randomizer.FixCutscenePickup = -1;
             Randomizer.AllowOrbWarps = false;
+            Randomizer.RandomizedFirstEnergy = false;
+            Randomizer.NightBerryWarpPosition = new Vector3(-910f, -300f);
+
+            if (Randomizer.SeedFilePath == null)
+            {
+                Randomizer.SeedFilePath = "randomizer.dat";
+            }
+
             try {
-                if(File.Exists("randomizer.dat")) {
-                    List<String> allLines = File.ReadAllLines("randomizer.dat").ToList();
+                if(File.Exists(Randomizer.SeedFilePath)) {
+                    List<String> allLines = File.ReadAllLines(Randomizer.SeedFilePath).ToList();
                     string[] flagLine = allLines[0].Split('|');
                     string s = flagLine[1];
                     string[] flags = flagLine[0].Split(',');
@@ -130,71 +126,23 @@ public static class Randomizer
                         string[] lineParts = line.Split('|');
                         int coords;
                         int.TryParse(lineParts[0], out coords);
-                        if (coords == 2) {
-                            SpawnWith = lineParts[1] + lineParts[2];
-                            continue;
-                        }
-                        if (Randomizer.HotColdTypes.Contains(lineParts[1]) || Randomizer.HotColdTypes.Any((string t) => (lineParts[1] + lineParts[2]).StartsWith(t))) {
-                            if (Math.Abs(coords) > 100) {
-                                Randomizer.HotColdItems.Add(coords, new RandomizerHotColdItem(Randomizer.HashKeyToVector(coords), HotColdSaveId));
-                                HotColdSaveId++;
-                            } else {
-                                Randomizer.HotColdMaps.Add(coords);
-                                Randomizer.HotColdMapsWithFrags.Add(coords);
-                            }
-                        } else if(lineParts[1] == "MS") {
-                            if (Math.Abs(coords) > 100) {
-                                Randomizer.HotColdFrags.Add(coords, new RandomizerHotColdItem(Randomizer.HashKeyToVector(coords), HotColdSaveId));
-                                HotColdSaveId++; 
-                            } else {
-                                Randomizer.HotColdMapsWithFrags.Add(coords);
-                            }
-                        }
-                        if (Randomizer.StringKeyPickupTypes.Contains(lineParts[1]))
+                        
+                        GetDataFromSeedLine(coords, lineParts[1], lineParts[2], lineParts[3]);
+
+                        if (coords == 2)
                         {
-                            Randomizer.Table[coords] = new RandomizerAction(lineParts[1], lineParts[2]);
-                            if(lineParts[1] == "WT") {
-                                Randomizer.RelicZoneLookup[lineParts[2]] = lineParts[3];
-                                if(!Randomizer.RelicCountOverride) {
-                                    Randomizer.RelicCount++;
-                                }
-                            }
-                            if(CluesMode && (lineParts[1] == "RP" || lineParts[1] == "MU")) {
-                                if(lineParts[2].Contains("EV/0"))
-                                    RandomizerClues.AddClue(lineParts[3], 0);
-                                else if(lineParts[2].Contains("EV/2"))
-                                    RandomizerClues.AddClue(lineParts[3], 1);
-                                else if(lineParts[2].Contains("EV/4"))
-                                    RandomizerClues.AddClue(lineParts[3], 2);
-                            }
-                            if(lineParts[1] == "RP") {
-                                Repeatables.Add(coords);
-                            }
+                            Randomizer.SpawnWith = lineParts[1] + lineParts[2];
                         }
-                        else
+                        else if (Randomizer.StringKeyPickupTypes.Contains(lineParts[1]))
                         {
-                            int id;
-                            int.TryParse(lineParts[2], out id);
-                            if (lineParts[1] == "EN")
-                            {
-                                // door entries are coord|EN|targetX|targetY
-                                int doorY;
-                                int.TryParse(lineParts[3], out doorY);
-                                Randomizer.DoorTable[coords] = new Vector3((float)id, (float)doorY);
-                            }
-                            else 
-                            {
-                                Randomizer.Table[coords] = new RandomizerAction(lineParts[1], id);
-                                if (lineParts[1] == "SK") {
-                                    if(id == 51) {
-                                        GrenadeZone = lineParts[3];
-                                    } else if(id == 4) {
-                                        StompZone = lineParts[3];
-                                    }
-                                }
-                                if (CluesMode && lineParts[1] == "EV" && id % 2 == 0)
-                                    RandomizerClues.AddClue(lineParts[3], id / 2);
-                            }
+                            bool repeatable = lineParts[1] == "RP";
+                            RandomizerLocationManager.PlacePickup(coords, lineParts[1], lineParts[2], repeatable);
+                        }
+                        else if (lineParts[1] != "EN")
+                        {
+                            int id_number;
+                            int.TryParse(lineParts[2], out id_number);
+                            RandomizerLocationManager.PlacePickup(coords, lineParts[1], id_number, false);
                         }
                     }
                     Randomizer.HotColdMaps.Sort();
@@ -202,23 +150,59 @@ public static class Randomizer
                     if (Randomizer.CluesMode) {
                         RandomizerClues.FinishClues();
                     }
+                    RandomizerLocationManager.InitializeLogic();
+                    if (Characters.Sein) {
+                        RandomizerLocationManager.UpdateReachable();
+                    }
                 } else {
-                    Randomizer.printInfo("Error: randomizer.dat not found");
+                    Randomizer.printInfo("Error: " + Randomizer.SeedFilePath + " not found");
+                    Randomizer.SeedFilePath = "randomizer.dat";
                 }
             }
             catch(Exception e) {
-                Randomizer.printInfo("Error parsing randomizer.dat:" + e.Message, 300);
-        }
-        RandomizerBonusSkill.Reset();
-    
+                Randomizer.printInfo("Error parsing " + Randomizer.SeedFilePath + ":" + e.Message, 300);
+                Randomizer.SeedFilePath = "randomizer.dat";
+            }
+
+            RandomizerBonusSkill.Reset();
         } catch(Exception e) {
             Randomizer.log("init: " + e.Message);
         }
     }
 
-    public static void getPickup()
+    public static void InitializeOnce()
     {
-        Randomizer.getPickup(Characters.Sein.Position);
+        Game.Events.Scheduler.OnGameSerializeLoad.Add(new Action(Randomizer.OnGameSerializeLoad));
+
+        RandomizerLocationManager.Initialize();
+        RandomizerUI.Initialize();
+        RandomizerBootstrap.Initialize();
+        Inventory = RandomizerInventory.Initialize();
+
+        UnityDragAndDropHook.InstallHook();
+        UnityDragAndDropHook.OnDroppedFiles += Randomizer.OnDroppedFiles;
+    }
+
+    public static void OnApplicationQuit()
+    {
+        UnityDragAndDropHook.UninstallHook();
+    }
+
+    public static void OnDroppedFiles(List<string> aFiles, B83.Win32.POINT aPos)
+    {
+        if (aFiles.Count > 1)
+        {
+            return;
+        }
+
+        string filePath = aFiles[0];
+        string fileName = filePath.Substring(filePath.LastIndexOf('\\') + 1);
+        if (fileName.StartsWith("randomizer") && fileName.EndsWith(".dat"))
+        {
+            Randomizer.SeedFilePath = aFiles[0];
+            Randomizer.initialize();
+            Randomizer.showSeedInfo();
+        }
     }
 
     public static void WarpTo(Vector3 position, int warpDelay) {
@@ -237,10 +221,9 @@ public static class Randomizer
         Characters.Sein.Speed = new Vector3(0f, 0f);
         Characters.Ori.Position = new Vector3(position.x, position.y+5);
         Scenes.Manager.SetTargetPositions(Characters.Sein.Position);
-        UI.Cameras.Current.CameraTarget.SetTargetPosition(Characters.Sein.Position);
-        UI.Cameras.Current.MoveCameraToTargetInstantly(true);
+        Game.UI.Cameras.Current.CameraTarget.SetTargetPosition(Characters.Sein.Position);
+        Game.UI.Cameras.Current.MoveCameraToTargetInstantly(true);
     }
-
 
     public static void returnToStart()
     {
@@ -257,8 +240,8 @@ public static class Randomizer
         Characters.Sein.Speed = new Vector3(0f, 0f);
         Characters.Ori.Position = new Vector3(190f, -210f);
         Scenes.Manager.SetTargetPositions(Characters.Sein.Position);
-        UI.Cameras.Current.CameraTarget.SetTargetPosition(Characters.Sein.Position);
-        UI.Cameras.Current.MoveCameraToTargetInstantly(true);
+        Game.UI.Cameras.Current.CameraTarget.SetTargetPosition(Characters.Sein.Position);
+        Game.UI.Cameras.Current.MoveCameraToTargetInstantly(true);
         int value = World.Events.Find(Randomizer.MistySim).Value;
         if (value != 1 && value != 8)
         {
@@ -266,27 +249,100 @@ public static class Randomizer
         }
     }
 
+    public static void TeleportAnywhere()
+    {
+        if (!Characters.Sein.Controller.CanMove || !Characters.Sein.Active)
+            return;
+        if (Characters.Sein.IsSuspended || UI.MainMenuVisible)
+            return;
+
+        if (TeleporterController.CanTeleport(null))
+        {
+            string defaultTeleporter = "sunkenGlades";
+            float closestTeleporter = Mathf.Infinity;
+
+            bool isInGlades = false;
+            bool isInGrotto = false;
+
+            if (Scenes.Manager.CurrentScene.Scene.StartsWith("sunkenGlades"))
+            {
+                isInGlades = true;
+            }
+            else if (Scenes.Manager.CurrentScene.Scene.StartsWith("moonGrotto"))
+            {
+                isInGrotto = true;
+            }
+
+            foreach (GameMapTeleporter teleporter in TeleporterController.Instance.Teleporters)
+            {
+                if (teleporter.Activated)
+                {
+                    if (isInGlades && teleporter.Identifier == "sunkenGlades")
+                    {
+                        defaultTeleporter = teleporter.Identifier;
+                        break;
+                    }
+                    else if (isInGrotto && teleporter.Identifier == "moonGrotto")
+                    {
+                        defaultTeleporter = teleporter.Identifier;
+                        break;
+                    }
+
+                    Vector3 distanceVector = teleporter.WorldPosition - Characters.Sein.Position;
+                    if (distanceVector.sqrMagnitude < closestTeleporter)
+                    {
+                        defaultTeleporter = teleporter.Identifier;
+                        closestTeleporter = distanceVector.sqrMagnitude;
+                    }
+                }
+            }
+
+            TeleporterController.Show(defaultTeleporter);
+            Randomizer.IsUsingRandomizerTeleportAnywhere = true;
+        }
+        else
+        {
+            Randomizer.printInfo("No #Spirit Wells# have been activated yet!");
+        }
+    }
+
     //  more reliable hook for game end / credit starts
     public static void onNaruDestroyed() {
         if (Scenes.Manager.CurrentScene.Scene == "theSacrifice" && RandomizerStatsManager.Active)
-            {
-                RandomizerStatsManager.Finish();
-                RandomizerCreditsManager.Initialize();
-            }
+        {
+            RandomizerStatsManager.Finish();
+            RandomizerCreditsManager.Initialize();
+        }
     }
 
     public static void showHint(string message)
     {
         LastMessageCredits = false;
         Randomizer.Message = message;
-        Randomizer.MessageQueue.Enqueue(message);
+
+        if (RandomizerSettings.Customization.MultiplePickupMessages)
+        {
+            RandomizerUI.Instance.QueueSideNotification(message);
+        }
+        else
+        {
+            Randomizer.MessageQueue.Enqueue(message);
+        }
     }
 
     public static void showHint(string message, int frames)
     {
         LastMessageCredits = false;
         Randomizer.Message = message;
-        Randomizer.MessageQueue.Enqueue(new object[] {message, frames});
+
+        if (RandomizerSettings.Customization.MultiplePickupMessages)
+        {
+            RandomizerUI.Instance.QueueSideNotification(message, (float)frames / 60f + 3f);
+        }
+        else
+        {
+            Randomizer.MessageQueue.Enqueue(new object[] {message, frames});
+        }
     }
 
     public static void printInfo(string message)
@@ -320,72 +376,11 @@ public static class Randomizer
         return Sein.World.Events.WindRestored && Scenes.Manager.CurrentScene != null && Scenes.Manager.CurrentScene.Scene != "forlornRuinsResurrection" && Scenes.Manager.CurrentScene.Scene != "forlornRuinsRotatingLaserFlipped";
     }
 
-    public static void getSkill()
-    {
-        Randomizer.getPickup();
-        Randomizer.showProgress();
-    }
-
     public static void hintAndLog(float x, float y)
     {
         string message = ((int)x).ToString() + " " + ((int)y).ToString();
         Randomizer.showHint(message);
         Randomizer.log(message);
-    }
-
-    public static int GetHashKey(Vector3 position)
-    {
-        int baseId = (int)(Math.Floor((double)((int)position.x) / Randomizer.GridFactor) * Randomizer.GridFactor) * 10000 + (int)(Math.Floor((double)((int)position.y) / Randomizer.GridFactor) * Randomizer.GridFactor);
-        if(Randomizer.Table.ContainsKey(baseId)) 
-            return baseId;
-        
-        for (int x = -1; x <= 1; x++)
-        {
-            for (int y = -1; y <= 1; y++)
-            {
-                int offsetCoord = baseId + (int)Randomizer.GridFactor * (10000 * x + y);
-                if (Randomizer.Table.ContainsKey(offsetCoord))
-                    return offsetCoord;
-            }
-        }
-        for (int x = -2; x <= 2; x += 4)
-        {
-            for (int y = -1; y <= 1; y++)
-            {
-                int offsetCoord = baseId + (int)Randomizer.GridFactor * (10000 * x + y);
-                if (Randomizer.Table.ContainsKey(offsetCoord))
-                    return offsetCoord;
-            }
-        }
-        Randomizer.printInfo("Error finding pickup at " + ((int)position.x).ToString() + ", " + ((int)position.y).ToString());
-        return -1;
-
-    }
-
-    public static void getPickup(Vector3 position)
-    {
-        try {
-            if (Randomizer.ColorShift)
-                Randomizer.changeColor();
-            int hashKey = GetHashKey(position);
-            if (hashKey != -1)
-            {
-                BingoController.OnLoc(hashKey);
-                RandomizerStatsManager.IncPickup(hashKey);
-                RandomizerSwitch.GivePickup(Randomizer.Table[hashKey], hashKey, true);
-                if (Randomizer.HotColdItems.ContainsKey(hashKey)) {
-                    set(Randomizer.HotColdItems[hashKey].Id, 1);
-                    RandomizerColorManager.UpdateHotColdTarget();
-                } else if(Randomizer.HotColdFrags.ContainsKey(hashKey)) {
-                    set(Randomizer.HotColdFrags[hashKey].Id, 1);
-                    RandomizerColorManager.UpdateHotColdTarget();
-                }
-                return;
-            }
-        }
-        catch(Exception e) {
-            Randomizer.LogError("GetPickup: " + e.Message);
-        }
     }
 
     public static void Update()
@@ -399,7 +394,7 @@ public static class Randomizer
             }
             else
             {
-                SkillTreeManager.Instance.NavigationManager.FadeAnimator.SetParentOpacity(RandomizerSettings.AbilityMenuOpacity);
+                SkillTreeManager.Instance.NavigationManager.FadeAnimator.SetParentOpacity(RandomizerSettings.QOL.AbilityMenuOpacity);
             }
         }
         Randomizer.Tick();
@@ -410,10 +405,9 @@ public static class Randomizer
             {
                 RandomizerColorManager.UpdateColors();
             }
-            Randomizer.UpdateHoruCutsceneStatus();
             if (get(82) > 0 && Items.NightBerry != null)
             {
-                Items.NightBerry.transform.position = new Vector3(-910f, -300f);
+                Items.NightBerry.transform.position = NightBerryWarpPosition;
                 set(82, 0);
             }
             if(RandomizerBonusSkill.LevelExplosionCooldown > 0)
@@ -451,7 +445,7 @@ public static class Randomizer
                         }
                     }
                     if(!loading)
-                    Randomizer.Warping--;
+                        Randomizer.Warping--;
                     if(Randomizer.Warping == 0 && Randomizer.SaveAfterWarp)
                     {
                         GameController.Instance.CreateCheckpoint();
@@ -463,7 +457,7 @@ public static class Randomizer
             } else if (Randomizer.Returning)
             {
                 Characters.Sein.Position = new Vector3(189f, -215f);
-                if (Scenes.Manager.CurrentScene.Scene == "sunkenGladesRunaway")
+                if (Scenes.Manager.CurrentScene?.Scene == "sunkenGladesRunaway")
                 {
                     Randomizer.Returning = false;
                 }
@@ -488,7 +482,7 @@ public static class Randomizer
                 RandomizerStatsManager.ShowStats(10);
                 if(BingoController.Active)
                     Randomizer.log("Current bingo state: \n"+BingoController.GetJson());
-            return;
+                return;
             }
             if (RandomizerRebinding.ListTrees.IsPressed())
             {
@@ -575,12 +569,7 @@ public static class Randomizer
             }
         }
 
-        if (RandomizerRebinding.ReplayMessage.IsPressed())
-        {
-            Randomizer.playLastMessage();
-            return;
-        }
-        if (RandomizerRebinding.ReturnToStart.IsPressed() && Characters.Sein && Randomizer.Warping <= 0)
+        if (RandomizerRebinding.ReturnToStart.IsPressed() && Characters.Sein && !SafeIsBashing && Randomizer.Warping <= 0)
         {
             if(CanWarp > 0 && Vector3.Distance(Randomizer.WarpSource, Characters.Sein.Position) < 7)
             {
@@ -593,7 +582,15 @@ public static class Randomizer
                 Randomizer.printInfo("Return to start is disabled!");
                 return;
             }
-            Randomizer.returnToStart();
+
+            if (RandomizerSettings.Game.UseTeleportAnywhere)
+            {
+                Randomizer.TeleportAnywhere();
+            }
+            else
+            {
+                Randomizer.returnToStart();
+            }
             return;
         }
         if (RandomizerRebinding.ShowProgress.IsPressed() && Characters.Sein)
@@ -664,22 +661,6 @@ public static class Randomizer
         Randomizer.printInfo(message);
     }
 
-    public static void getMapStone()
-    {
-        if (!Randomizer.ProgressiveMapStones) {
-            Randomizer.getPickup();
-            return;
-        }
-        RandomizerBonus.CollectMapstone();
-        RandomizerStatsManager.FoundMapstone();
-
-        if (Randomizer.ColorShift) {
-            Randomizer.changeColor();
-        }
-        BingoController.OnLoc(20 + RandomizerBonus.MapStoneProgression() * 4);
-        RandomizerSwitch.GivePickup(Randomizer.Table[20 + RandomizerBonus.MapStoneProgression() * 4], 20 + RandomizerBonus.MapStoneProgression() * 4, true);
-    }
-
     public static void showProgress()
     {
         try {
@@ -698,9 +679,9 @@ public static class Randomizer
             if (Randomizer.WorldTour && Characters.Sein) {
                 int relics = get(302);
                 if(relics < Randomizer.RelicCount) {
-                    text += "Relics (" + relics.ToString() + "/"+Randomizer.RelicCount.ToString() + ") ";
+                    text += "Relics (" + relics.ToString() + "/"+Randomizer.RelicCount.ToString() + ")  ";
                 } else {
-                    text += "$Relics (" + relics.ToString() + "/"+Randomizer.RelicCount.ToString() + ")$ ";
+                    text += "$Relics (" + relics.ToString() + "/"+Randomizer.RelicCount.ToString() + ")$  ";
                 }
             }
             if (RandomizerBonus.MapStoneProgression() == 9 && Randomizer.ForceMaps)
@@ -740,7 +721,7 @@ public static class Randomizer
                 }
                 else
                 {
-                    text = text + " @SS@ (" + RandomizerBonus.SunstoneShards().ToString() + "/3)";
+                    text = text + "@SS@ (" + RandomizerBonus.SunstoneShards().ToString() + "/3)";
                 }
             }
             if (Randomizer.fragsEnabled)
@@ -770,7 +751,6 @@ public static class Randomizer
 
     public static void showSeedInfo()
     {
-
         string seedInfo = "v" + Randomizer.VERSION;
         seedInfo += "- seed loaded: " + Randomizer.SeedMeta;
         Randomizer.printInfo(seedInfo);
@@ -806,7 +786,7 @@ public static class Randomizer
             }
             if(message != "") {
                 Randomizer.MessageProvider.SetMessage(message);
-                UI.Hints.Show(Randomizer.MessageProvider, HintLayer.GameSaved, (float)Randomizer.MessageQueueTime / 30f + 1f);
+                Game.UI.Hints.Show(Randomizer.MessageProvider, HintLayer.Randomizer, (float)Randomizer.MessageQueueTime / 30f + 1f);
             }
         }
         Randomizer.MessageQueueTime--;
@@ -814,10 +794,26 @@ public static class Randomizer
 
     public static void OnDeath()
     {
-        FixCutscenePickup = -1;
         RandomizerBonusSkill.OnDeath();
-        RandomizerTrackedDataManager.UpdateBitfields();
         RandomizerStatsManager.OnDeath();
+
+        if (Randomizer.IsUsingRandomizerTeleportAnywhere)
+        {
+            TeleporterController.Instance.CancelTeleport();
+            UI.Menu.HideMenuScreen(false);
+        }
+    }
+
+    public static void OnGameSerializeLoad()
+    {
+        Randomizer.ResetTrackerCount = 0;
+        if (Scenes.Manager.CurrentScene?.Scene != "titleScreenSwallowsNest")
+        {
+            RandomizerTrackedDataManager.Reset();
+            RandomizerTrackedDataManager.UpdateBitfields();
+
+            RandomizerLocationManager.UpdateReachable();
+        }
     }
 
     public static void OnSave()
@@ -855,7 +851,6 @@ public static class Randomizer
         }
         if (Randomizer.ForceTrees && RandomizerBonus.SkillTreeProgression() < 10)
         {
-
             if(verbose)
                 Randomizer.printInfo("Trees (" + RandomizerBonus.SkillTreeProgression().ToString() + "/10)");
             return false;
@@ -903,13 +898,7 @@ public static class Randomizer
                 }
             }
         }
-        Randomizer.showHint("Error using door at " + ((int)position.x).ToString() + ", " + ((int)position.y).ToString());
-    }
-
-    public static void getSkill(int tree)
-    {
-        RandomizerTrackedDataManager.SetTree(tree);
-        Randomizer.getSkill();
+        Randomizer.printInfo("Error using door at " + ((int)position.x).ToString() + ", " + ((int)position.y).ToString());
     }
 
     public static int ordHash(string s)
@@ -922,31 +911,6 @@ public static class Randomizer
         return num;
     }
 
-    // Token: 0x0600381D RID: 14365
-    public static void UpdateHoruCutsceneStatus()
-    {
-        if (!Characters.Sein.Controller.CanMove)
-        {
-            if (Randomizer.HoruScene != "")
-            {
-                if (Randomizer.HoruScene != Scenes.Manager.CurrentScene.Scene && Scenes.Manager.CurrentScene.Scene == "mountHoruHubMid")
-                {
-                    Randomizer.getPickup(new Vector3(0f, (float)((int)Randomizer.HoruMap[Randomizer.HoruScene])));
-                }
-                Randomizer.HoruScene = Scenes.Manager.CurrentScene.Scene;
-                return;
-            }
-            if (Scenes.Manager.CurrentScene.Scene.StartsWith("mountHoru"))
-            {
-                Randomizer.HoruScene = Scenes.Manager.CurrentScene.Scene;
-                return;
-            }
-        }
-        else
-        {
-            Randomizer.HoruScene = "";
-        }
-    } 
     public static void PrintImmediately(string text, int seconds, bool mute, bool setMessage, bool devOnly)
     {
         Print(text, seconds, mute, setMessage, devOnly, true);
@@ -965,7 +929,7 @@ public static class Randomizer
                 GameSettings.Instance.SoundEffectsVolume = 0f;
                 ResetVolume = 3;
             }
-            UI.Hints.Show(Randomizer.MessageProvider, HintLayer.GameSaved, (float)seconds);
+            Game.UI.Hints.Show(Randomizer.MessageProvider, HintLayer.Randomizer, (float)seconds);
             if(setMessage)
             {
                 Message = text;
@@ -987,7 +951,6 @@ public static class Randomizer
         PrintImmediately(text, seconds, true, true, false);
     }
 
-    // Token: 0x06003848 RID: 14408
     public static void Tick()
     {
         try {
@@ -995,8 +958,8 @@ public static class Randomizer
             Randomizer.LastTick = DateTime.Now.Ticks % 10000000L;
             if (Randomizer.LastTick < old_tick)
             {
-                if(RandomizerSettings.CursorLock)
-                      Cursor.lockState = CursorLockMode.Confined;
+                if(RandomizerSettings.QOL.CursorLock)
+                    Cursor.lockState = CursorLockMode.Confined;
                 BingoController.Tick();
                 if(ResetVolume == 1)
                 {
@@ -1054,43 +1017,29 @@ public static class Randomizer
                 }
 
                 if(CreditsActive && !RandomizerCreditsManager.CreditsDone)
-                        RandomizerCreditsManager.Tick();
+                    RandomizerCreditsManager.Tick();
 
                 if(Characters.Sein)
                 {
-                    if(JustSpawned && SpawnWith != "" && Characters.Sein.Inventory) {
-                        JustSpawned = false;
-                        RandomizerAction spawnItem;
-                        if(Randomizer.StringKeyPickupTypes.Contains(SpawnWith.Substring(0, 2)))
-                            spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), SpawnWith.Substring(2));
-                        else
-                            spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), int.Parse(SpawnWith.Substring(2)));
-                        RandomizerSwitch.GivePickup(spawnItem, 2, true);
-                    }
                     if(!Characters.Sein.IsSuspended && Scenes.Manager.CurrentScene != null)
                     {
                         if(GoalModeFinish && RandomizerSyncManager.NetworkFree && Randomizer.canFinalEscape(false))
                         {
                             RandomizerBonusSkill.UnlockCreditWarp("Goal mode(s) completed!");
                         }
-                        ResetTrackerCount = 0;
                         RandomizerTrackedDataManager.UpdateBitfields();
                         RandomizerColorManager.UpdateHotColdTarget();
-                        if (Characters.Sein.Position.y > 935f && Sein.World.Events.WarmthReturned && Scenes.Manager.CurrentScene.Scene == "ginsoTreeWaterRisingEnd")
+                        if (Characters.Sein.Position.y > 935f && Randomizer.Inventory.FinishedGinsoEscape && Scenes.Manager.CurrentScene.Scene == "ginsoTreeWaterRisingEnd")
                         {
-                            if (Characters.Sein.Abilities.Bash && Characters.Sein.Abilities.Bash.IsBashing)
-                            {
+                            if (SafeIsBashing)
                                 Characters.Sein.Abilities.Bash.BashGameComplete(0f);
-                            }
                             Characters.Sein.Position = new Vector3(750f, -120f);
                             return;
                         }
                         if (Characters.Sein.Position.y > -225f && Scenes.Manager.CurrentScene.Scene == "forlornRuinsResurrection")
                         {
-                            if (Characters.Sein.Abilities.Bash && Characters.Sein.Abilities.Bash.IsBashing)
-                            {
+                            if (SafeIsBashing)
                                 Characters.Sein.Abilities.Bash.BashGameComplete(0f);
-                            }
                             Characters.Sein.Position = new Vector3(-1350f, -420f);
                             return;
                         }                        
@@ -1110,9 +1059,6 @@ public static class Randomizer
                                 return;
                             }
                         }
-                        else if(FixCutscenePickup > 0) {
-                            RandomizerSwitch.SilentAbility(FixCutscenePickup);
-                        } 
                         else {
                             Randomizer.LockedCount = 0;
                         }
@@ -1126,17 +1072,38 @@ public static class Randomizer
                             if(gameMapTP.Identifier == "ginsoTree" && get(1024) == 1 && RandomizerBonus.WaterVeinShards() >= 2)
                             {
                                 TeleporterController.Activate(Randomizer.TeleportTable["Ginso"].ToString(), false);
-                                Randomizer.MessageQueue.Enqueue("*Ginso teleporter activated*");
+                                if (RandomizerSettings.Customization.MultiplePickupMessages)
+                                {
+                                    RandomizerSwitch.PickupMessage("*Ginso teleporter activated*");
+                                }
+                                else
+                                {
+                                    Randomizer.MessageQueue.Enqueue("*Ginso teleporter activated*");
+                                }
                             }
                             else if(gameMapTP.Identifier == "forlorn" && get(1025) == 1 && RandomizerBonus.GumonSealShards() >= 2)
                             {
                                 TeleporterController.Activate(Randomizer.TeleportTable["Forlorn"].ToString(), false);
-                                Randomizer.MessageQueue.Enqueue("#Forlorn teleporter activated#");
+                                if (RandomizerSettings.Customization.MultiplePickupMessages)
+                                {
+                                    RandomizerSwitch.PickupMessage("#Forlorn teleporter activated#");
+                                }
+                                else
+                                {
+                                    Randomizer.MessageQueue.Enqueue("#Forlorn teleporter activated#");
+                                }
                             }
                             else if(gameMapTP.Identifier == "mountHoru" && get(1026) == 1 && RandomizerBonus.SunstoneShards() >= 2)
                             {
                                 TeleporterController.Activate(Randomizer.TeleportTable["Horu"].ToString(), false);
-                                Randomizer.MessageQueue.Enqueue("@Horu teleporter activated@");
+                                if (RandomizerSettings.Customization.MultiplePickupMessages)
+                                {
+                                    RandomizerSwitch.PickupMessage("@Horu teleporter activated@");
+                                }
+                                else
+                                {
+                                    Randomizer.MessageQueue.Enqueue("@Horu teleporter activated@");
+                                }
                             }
                         }
                     }
@@ -1168,24 +1135,15 @@ public static class Randomizer
         }
     }
 
-    public static int RepeatableCheck(Vector3 position){
-        // 2: grabbable, 1: cooldown, 0: not repeatable
-        try{
-            if(Repeatables.Contains(GetHashKey(position)))
-            {
-                if(RepeatableCooldown <= 0)
-                {
-                    RepeatableCooldown = 2;
-                    return 2;
-                } else {
-                    return 1;
-                }
-            }
+    public static bool RepeatableCheck()
+    {
+        if (Randomizer.RepeatableCooldown <= 0)
+        {
+            Randomizer.RepeatableCooldown = 2;
+            return true;
         }
-        catch(Exception e) {
-            Randomizer.LogError("RepeatableCheck: " + e.Message);
-        }
-        return 0;
+
+        return false;
     }
 
     private static string cct(IEnumerable<char> cs) => new String(cs.ToArray());
@@ -1312,17 +1270,118 @@ public static class Randomizer
             {
                 Randomizer.AllowOrbWarps = true;
             }
+            if (flag == "randomizedfirstenergy")
+            {
+                Randomizer.RandomizedFirstEnergy = true;
+            }
         }
         return doBingo;
-
     }
+
+    public static void GetSenseFromSeedLine(int coords, string code, string id, string area)
+    {
+        // Prepare sense information, but not for pickups at spawn, and we only need at most 1 addition for each coordinate.
+        if (coords == 2)
+        {
+            return;
+        }
+        if (Randomizer.HotColdTypes.Contains(code) || Randomizer.HotColdTypes.Any((string t) => (code + id).StartsWith(t)))
+        {
+            if (Math.Abs(coords) > 100)
+            {
+                if (!Randomizer.HotColdItems.ContainsKey(coords))
+                {
+                    Randomizer.HotColdItems.Add(coords, new RandomizerHotColdItem(Randomizer.HashKeyToVector(coords), Randomizer.HotColdSaveId));
+                    Randomizer.HotColdSaveId++;
+                }
+            } else {
+                if (!Randomizer.HotColdMaps.Contains(coords))
+                {
+                    Randomizer.HotColdMaps.Add(coords);
+                }
+                if (!Randomizer.HotColdMapsWithFrags.Contains(coords))
+                {
+                    Randomizer.HotColdMapsWithFrags.Add(coords);
+                }
+            }
+        }
+        else if (code == "MS")
+        {
+            if (Math.Abs(coords) > 100)
+            {
+                if (!Randomizer.HotColdFrags.ContainsKey(coords))
+                {
+                    Randomizer.HotColdFrags.Add(coords, new RandomizerHotColdItem(Randomizer.HashKeyToVector(coords), Randomizer.HotColdSaveId));
+                    Randomizer.HotColdSaveId++;
+                }
+            } else {
+                if (!Randomizer.HotColdMapsWithFrags.Contains(coords))
+                { 
+                    Randomizer.HotColdMapsWithFrags.Add(coords);
+                }
+            }
+        }
+    }
+
+    public static void GetDataFromSeedLine(int coords, string code, string id, string area)
+    {
+        int id_number;
+        int.TryParse(id, out id_number);
+        // If we are processing a repeatable or multipickup recur over items in them.
+        if (code == "RP" || code == "MU")
+        {
+            // Check the full pickup code + id for sense. This is for sense=MUEC cases. Otherwise processed in the recursion.
+            GetSenseFromSeedLine(coords, code, id, area);
+            string[] pieces = id.Split('/');
+            for (int i = 0; i < pieces.Length; i += 2)
+            {
+                GetDataFromSeedLine(coords, pieces[i], pieces[i + 1], area);
+            }
+            return;
+        }
+
+        GetSenseFromSeedLine(coords, code, id, area);
+        
+        if (code == "WT")
+        {
+            Randomizer.RelicZoneLookup[id] = area;
+            if (!Randomizer.RelicCountOverride)
+            {
+                Randomizer.RelicCount++;
+            }
+        }
+        if (code == "EN")
+        {
+            // door entries are coord|EN|targetX|targetY
+            int doorY;
+            int.TryParse(area, out doorY);
+            Randomizer.DoorTable[coords] = new Vector3((float)id_number, (float)doorY);
+        }
+        if (code == "SK")
+        {
+            if (id_number == 51)
+            {
+                Randomizer.GrenadeZone = area;
+            }
+            else if (id_number == 4)
+            {
+                Randomizer.StompZone = area;
+            }
+        }
+        if (Randomizer.CluesMode && code == "EV" && id_number % 2 == 0)
+        {
+            RandomizerClues.AddClue(area, id_number / 2);
+        }
+    }
+
     private static int get(int item) { return Characters.Sein.Inventory.GetRandomizerItem(item); }
     private static int set(int item, int value) { return Characters.Sein.Inventory.SetRandomizerItem(item, value); }
+    private static HashSet<int> knownUnknowns = new HashSet<int>() {-1, 2, -1640264 }; // remove -1640264 once appropriate seedgen changes happen ig?
 
     public static bool SeenCoord(int coord) {
         if(!RandomizerTrackedDataManager.CoordsMap.ContainsKey(coord))
         {
-            if(coord != 2 && coord != -1)
+            if(!knownUnknowns.Contains(coord))
                 Randomizer.LogError("Unknown coord: " + coord.ToString());
             return false;
         }
@@ -1333,7 +1392,7 @@ public static class Randomizer
     public static bool HaveCoord(int coord) {
         if(!RandomizerTrackedDataManager.CoordsMap.ContainsKey(coord))
         {
-            if(coord != 2 && coord != -1)
+            if(!knownUnknowns.Contains(coord))
                 Randomizer.LogError("Unknown coord: " + coord.ToString());
             return false;
         }
@@ -1344,7 +1403,7 @@ public static class Randomizer
     public static void OnCoord(int coord) {
         if(!RandomizerTrackedDataManager.CoordsMap.ContainsKey(coord))
         {
-            if(coord != 2 && coord != -1)
+            if(!knownUnknowns.Contains(coord))
                 Randomizer.LogError("Unknown coord: " + coord.ToString());
             return;
         }
@@ -1361,8 +1420,96 @@ public static class Randomizer
             set(locID, current + (1 << offset));
     }
 
-    public static Dictionary<int, RandomizerAction> Table;
-    public static bool GiveAbility;
+    public static void ApplyGrabForgiveness()
+    {
+        if (!RandomizerSettings.Game.BlackrootOrbRoomClimbAssist)
+        {
+            Randomizer.GrabForgivenessFrames = 0f;
+            return;
+        }
+
+        // XP orb jump in Blackroot lantern room, right side (initial crappy slope)
+        if (new Rect(152.26f, -298.6f, 0.02f, 0.7f).Contains(Characters.Sein.PlatformBehaviour.PlatformMovement.Position2D))
+        {
+            Randomizer.GrabForgivenessFrames = 4f;
+            return;
+        }
+
+        // XP orb jump in Blackroot lantern room, left side (*extra* crappy slope)
+        if (new Rect(147.2f, -296.5f, 0.1f, 1f).Contains(Characters.Sein.PlatformBehaviour.PlatformMovement.Position2D))
+        {
+            Randomizer.GrabForgivenessFrames = 8f;
+            return;
+        }
+
+        Randomizer.GrabForgivenessFrames = 0f;
+    }
+
+    public static bool DoesGrabForgivenessExpire(float time)
+    {
+        float scaledTime = Mathf.Round(time * 120f);
+        bool expires = Randomizer.GrabForgivenessFrames < scaledTime;
+        Randomizer.GrabForgivenessFrames -= Mathf.Min(Randomizer.GrabForgivenessFrames, Mathf.Round(time * 120f));
+        return expires;
+    }
+
+    public static void SetupNewGame()
+    {
+        Randomizer.Inventory.Clear();
+        TeleporterController.RemoveCustomTeleporters();
+
+        // start everyone with 1 energy on all difficulties if "RandomizedFirstEnergy" flag set
+        if (Randomizer.RandomizedFirstEnergy)
+        {
+            Characters.Sein.Energy.Max += 1f;
+            Characters.Sein.Energy.SetCurrent(Characters.Sein.Energy.Max);
+        }
+
+        // relaxed difficulty players start with +1 health and +1 energy, plus the first ability in each tree
+        if (DifficultyController.Instance.Difficulty == DifficultyMode.Easy)
+        {
+            Characters.Sein.Mortality.Health.MaxHealth += 4;
+            Characters.Sein.Mortality.Health.SetAmount(Characters.Sein.Mortality.Health.MaxHealth);
+
+            Characters.Sein.Energy.Max += 1f;
+            Characters.Sein.Energy.SetCurrent(Characters.Sein.Energy.Max);
+
+            Characters.Sein.PlayerAbilities.Rekindle.HasAbility = true;
+            Characters.Sein.PlayerAbilities.Magnet.HasAbility = true;
+            Characters.Sein.PlayerAbilities.QuickFlame.HasAbility = true;
+        }
+
+        // flag this save file for OpenWorld/ClosedDungeons flags
+        if (Randomizer.OpenWorld)
+        {
+            set(800, 1);
+        }
+
+        if (!Randomizer.OpenMode)
+        {
+            set(801, 1);
+        }
+
+        // grant other spawn items determined by the seed
+        if (Randomizer.SpawnWith != "")
+        {
+            RandomizerAction spawnItem;
+            if (Randomizer.StringKeyPickupTypes.Contains(SpawnWith.Substring(0, 2)))
+            {
+                spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), SpawnWith.Substring(2));
+            }
+            else
+            {
+                spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), int.Parse(SpawnWith.Substring(2)));
+            }
+            RandomizerSwitch.GivePickup(spawnItem, 2, true);
+        }
+    }
+
+    public static bool SafeIsBashing {get => (Characters.Sein.Abilities.Bash && Characters.Sein.Abilities.Bash.IsBashing) || false; }
+
+    public static RandomizerInventory Inventory { get; private set; }
+
     public static double GridFactor;
     public static RandomizerMessageProvider MessageProvider;
     public static bool OHKO;
@@ -1401,10 +1548,6 @@ public static class Randomizer
     public static ArrayList ForlornData;
     public static ArrayList HoruData;
     public static bool OpenMode;
-    public static string HoruScene;
-
-    // Token: 0x04003301 RID: 13057
-    public static Hashtable HoruMap;
 
     public static long LastTick;
 
@@ -1436,8 +1579,6 @@ public static class Randomizer
 
     public static ArrayList ValleyStompDoorData;
 
-    public static ArrayList ValleyLeverDoorData;
-
     public static string GrenadeZone;
     // welcome to the...
     public static string StompZone;
@@ -1454,8 +1595,6 @@ public static class Randomizer
 
     public static bool AltRDisabled;
 
-    public static HashSet<int> Repeatables;
-
     public static int RepeatableCooldown;
 
     public static bool OpenWorld;
@@ -1463,8 +1602,6 @@ public static class Randomizer
     public static bool StompTriggers;
 
     public static string SpawnWith;
-
-    public static bool JustSpawned;
 
     public static bool DelayedWarp;
 
@@ -1482,9 +1619,19 @@ public static class Randomizer
 
     public static bool GoalModeFinish;
 
-    public static int FixCutscenePickup;
-
     public static bool AllowOrbWarps;
+    
+    public static bool GrenadeJumpQueued;
 
-    public static HashSet<int> CutscenePickupLocs = new HashSet<int> {-1639664, -199724, -919624, -959848, 1720288, 2160192, 2640380, 3040304, 5480952};
+    public static float GrabForgivenessFrames;
+
+    public static bool IsUsingRandomizerTeleportAnywhere;
+
+    public static bool RandomizedFirstEnergy;
+
+    public static string SeedFilePath;
+
+    public static Vector3 NightBerryWarpPosition;
+
+    public static int HotColdSaveId;
 }

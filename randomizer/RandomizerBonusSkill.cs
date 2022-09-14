@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using Game;
 using UnityEngine;
 
-// Token: 0x02000A11 RID: 2577
 public static class RandomizerBonusSkill
 {
-    // Token: 0x060037F8 RID: 14328
     public static void SwitchBonusSkill()
     {
         Dictionary<int, int> unlocked = new Dictionary<int, int>(UnlockedBonusSkills);
@@ -179,9 +177,12 @@ public static class RandomizerBonusSkill
         {
             return;
         }
-        if (Characters.Sein.Energy.Current >= 1f)
+        if (Characters.Sein.Energy.Current >= 1f || Characters.Sein.Inventory.GetRandomizerItem(1102) == 1)
             {
-                Characters.Sein.Energy.Spend(1f);
+                if (Characters.Sein.Inventory.GetRandomizerItem(1102) == 0)
+                {
+                    Characters.Sein.Energy.Spend(1f);
+                }
                 OldHealth = Characters.Sein.Mortality.Health.Amount;
                 OldEnergy = Characters.Sein.Energy.Current;
                 Characters.Sein.Level.AttemptInstantiateLevelUp();
@@ -302,16 +303,16 @@ public static class RandomizerBonusSkill
             return;
         }
     }
+    
     static bool CanWarpTo(Vector3 target) {
         return !((Characters.Sein.Abilities.Carry.IsCarrying && !Randomizer.AllowOrbWarps) || !Characters.Sein.Controller.CanMove || !Characters.Sein.Active || (target.x == 0f && target.y == 0f));
     }
-    // Token: 0x060037FA RID: 14330
+
     static RandomizerBonusSkill()
     {
         RandomizerBonusSkill.Reset();
     }
 
-    // Token: 0x060037FB RID: 14331
     public static void Update()
     {
         if (!Characters.Sein.IsSuspended && Characters.Sein.Controller.CanMove && Characters.Sein.Active)
@@ -341,8 +342,6 @@ public static class RandomizerBonusSkill
         } 
     }
 
-    // Token: 0x060037FC RID: 14332
-    // Token: 0x060037FD RID: 14333
     public static void OnSave()
     {
         SaveEnemy = CapturedEnemy;
@@ -353,7 +352,6 @@ public static class RandomizerBonusSkill
         UpdateDrain();
     }
 
-    // Token: 0x060037FE RID: 14334
     public static void OnDeath()
     {
         CapturedEnemy = SaveEnemy;
@@ -368,7 +366,6 @@ public static class RandomizerBonusSkill
         UpdateDrain();
     }
 
-    // Token: 0x06003801 RID: 14337
     public static void FoundBonusSkill(int ID)
     {
         bool psuedo = (ID == 108 || ID == 1587);
@@ -388,7 +385,6 @@ public static class RandomizerBonusSkill
             ActiveBonus = ID;
     }
 
-    // Token: 0x06003802 RID: 14338
     public static void Reset()
     {   
         UpdateDrain();
@@ -428,7 +424,6 @@ public static class RandomizerBonusSkill
         }
     }
 
-    // Token: 0x040032C8 RID: 13000
     public static int ActiveBonus 
     {
         get { return get(1589); }
@@ -460,7 +455,6 @@ public static class RandomizerBonusSkill
     public static float OldHealth;
     public static float OldEnergy;
 
-    // Token: 0x040032C9 RID: 13001
     public static Dictionary<int, int> UnlockedBonusSkills
     {
         get {
@@ -535,7 +529,6 @@ public static class RandomizerBonusSkill
 
     private static int get(int item) { return Characters.Sein.Inventory.GetRandomizerItem(item); }
     private static int set(int item, int value) { return Characters.Sein.Inventory.SetRandomizerItem(item, value); }
-    // Token: 0x040032CD RID: 13005
     public static Dictionary<int, string> BonusSkillNames = new Dictionary<int, string>
     {
         { 101, "Polarity Shift" },

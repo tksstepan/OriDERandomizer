@@ -4,16 +4,8 @@ using Core;
 using Game;
 using UnityEngine;
 
-// Token: 0x02000329 RID: 809
 public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 {
-	// Token: 0x06001138 RID: 4408
-	public SeinGrenadeAttack()
-	{
-	}
-
-	// Token: 0x170002DF RID: 735
-	// (get) Token: 0x06001139 RID: 4409
 	private bool IsGrabbingWall
 	{
 		get
@@ -22,8 +14,6 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x170002E0 RID: 736
-	// (get) Token: 0x0600113A RID: 4410
 	private bool IsInAir
 	{
 		get
@@ -32,19 +22,16 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600113B RID: 4411
 	private void ResetAimToDefault()
 	{
 		this.SetAimVelocity(new Vector2(14f, 16f));
 	}
 
-	// Token: 0x0600113C RID: 4412
 	private int PickAnimationIndex(int length)
 	{
 		return Mathf.Clamp(Mathf.FloorToInt(((!this.IsGrabbingWall) ? Mathf.InverseLerp(this.MinAimGroundAnimationAngle, this.MaxAimGroundAnimationAngle, this.m_animationAimAngle) : Mathf.InverseLerp(this.MinAimWallAnimationAngle, this.MaxAimWallAnimationAngle, this.m_animationAimAngle)) * (float)length), 0, length - 1);
 	}
 
-	// Token: 0x0600113D RID: 4413
 	private float IndexToAnimationAngle(int index, int length)
 	{
 		float t = (float)index / (float)length;
@@ -55,15 +42,12 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		return Mathf.Lerp(this.MinAimGroundAnimationAngle, this.MaxAimGroundAnimationAngle, t);
 	}
 
-	// Token: 0x0600113E RID: 4414
 	private TextureAnimationWithTransitions PickAnimation(TextureAnimationWithTransitions[] animations)
 	{
 		int num = this.PickAnimationIndex(animations.Length);
 		return animations[num];
 	}
 
-	// Token: 0x170002E1 RID: 737
-	// (get) Token: 0x0600113F RID: 4415
 	private float EnergyCostFinal
 	{
 		get
@@ -72,14 +56,11 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001140 RID: 4416
 	private bool HasGrenadeEfficiencySkill()
 	{
 		return this.m_sein.PlayerAbilities.GrenadeEfficiency.HasAbility;
 	}
 
-	// Token: 0x170002E2 RID: 738
-	// (get) Token: 0x06001141 RID: 4417
 	private bool HasEnoughEnergy
 	{
 		get
@@ -88,26 +69,22 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001142 RID: 4418
 	private void SpendEnergy()
 	{
 		this.m_sein.Energy.Spend(this.EnergyCostFinal);
 	}
 
-	// Token: 0x06001143 RID: 4419
 	private void RestoreEnergy()
 	{
 		this.m_sein.Energy.Gain(this.EnergyCostFinal);
 	}
 
-	// Token: 0x06001144 RID: 4420
 	public void Start()
 	{
 		this.CharacterLeftRightMovement.ModifyHorizontalPlatformMovementSettingsEvent += this.ModifyHorizontalPlatformMovementSettings;
 		Game.Checkpoint.Events.OnPostRestore.Add(new Action(this.OnRestoreCheckpoint));
 	}
 
-	// Token: 0x06001145 RID: 4421
 	public override void OnDestroy()
 	{
 		base.OnDestroy();
@@ -115,14 +92,11 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		Game.Checkpoint.Events.OnPostRestore.Remove(new Action(this.OnRestoreCheckpoint));
 	}
 
-	// Token: 0x06001146 RID: 4422
 	public void OnRestoreCheckpoint()
 	{
 		this.CancelAiming();
 	}
 
-	// Token: 0x170002E3 RID: 739
-	// (get) Token: 0x06001147 RID: 4423
 	public CharacterLeftRightMovement CharacterLeftRightMovement
 	{
 		get
@@ -131,8 +105,6 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x170002E4 RID: 740
-	// (get) Token: 0x06001148 RID: 4424
 	public CharacterGravity CharacterGravity
 	{
 		get
@@ -141,7 +113,6 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001149 RID: 4425
 	private void ModifyHorizontalPlatformMovementSettings(HorizontalPlatformMovementSettings settings)
 	{
 		if (this.m_isAiming)
@@ -151,14 +122,12 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600114A RID: 4426
 	public void SetReferenceToSein(SeinCharacter sein)
 	{
 		this.m_sein = sein;
 		sein.Abilities.Grenade = this;
 	}
 
-	// Token: 0x0600114B RID: 4427
 	public override void UpdateCharacterState()
 	{
 		if (this.m_sein.IsSuspended)
@@ -182,14 +151,11 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		this.UpdateNormal();
 	}
 
-	// Token: 0x0600114C RID: 4428
 	private bool HasGrenadeUpgrade()
 	{
 		return this.m_sein.PlayerAbilities.GrenadeUpgrade.HasAbility;
 	}
 
-	// Token: 0x170002E5 RID: 741
-	// (get) Token: 0x0600114D RID: 4429
 	private Vector3 GrenadeSpawnPosition
 	{
 		get
@@ -198,7 +164,6 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600114E RID: 4430
 	private SpiritGrenade SpawnGrenade(Vector2 velocity)
 	{
 		this.RefreshListOfQuickSpiritGrenades();
@@ -218,14 +183,11 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		return component;
 	}
 
-	// Token: 0x0600114F RID: 4431
 	private void RefreshListOfQuickSpiritGrenades()
 	{
 		this.m_spiritGrenades.RemoveAll((SpiritGrenade a) => a == null);
 	}
 
-	// Token: 0x170002E6 RID: 742
-	// (get) Token: 0x06001150 RID: 4432
 	public bool IsAiming
 	{
 		get
@@ -234,8 +196,6 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x170002E7 RID: 743
-	// (get) Token: 0x06001151 RID: 4433
 	public bool CanAim
 	{
 		get
@@ -244,13 +204,11 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001152 RID: 4434
 	public void PlayAimAnimation()
 	{
 		this.m_sein.Animation.PlayLoop(this.PickAnimation((!this.IsGrabbingWall) ? this.AimingAnimations : this.WallAimingAnimations), 154, new Func<bool>(this.KeepPlayingAimAnimation), true);
 	}
 
-	// Token: 0x06001153 RID: 4435
 	public void PlayThrowAnimation()
 	{
 		if (Mathf.Approximately(Mathf.Abs(this.m_rawAimOffset.x), this.QuickThrowSpeed.x) && Mathf.Approximately(this.m_rawAimOffset.y, this.QuickThrowSpeed.y))
@@ -261,14 +219,11 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		this.m_sein.Animation.Play(this.PickAnimation((!this.IsGrabbingWall) ? this.ThrowAnimations : this.WallThrowAnimations), 154, new Func<bool>(this.KeepPlayingThrowAnimation));
 	}
 
-	// Token: 0x06001154 RID: 4436
 	public void PlayThrowSound()
 	{
 		Sound.Play(this.ThrowGrenadeSound.GetSound(null), base.transform.position, null);
 	}
 
-	// Token: 0x170002E8 RID: 744
-	// (get) Token: 0x06001155 RID: 4437
 	public float GrenadeGravity
 	{
 		get
@@ -277,7 +232,6 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001156 RID: 4438
 	public void UpdateAiming()
 	{
 		if (Core.Input.LeftShoulder.Released)
@@ -295,14 +249,14 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 			return;
 		}
 		this.m_sein.Speed = Vector2.zero;
-		if (RandomizerRebinding.ResetGrenadeAim.IsPressed())
+		if (RandomizerRebinding.ResetGrenadeAim.OnPressed)
 		{
 			this.ResetAimToDefault();
 		}
 		Vector2 axis = Core.Input.Axis;
-		if (!RandomizerSettings.FastGrenadeAim)
+		if (!RandomizerSettings.Controls.FastGrenadeAim)
 		{
-			Vector2 b = this.AimSpeed.Evaluate(axis.magnitude) * axis.normalized * RandomizerSettings.GrenadeAimSpeed;
+			Vector2 b = this.AimSpeed.Evaluate(axis.magnitude) * axis.normalized * RandomizerSettings.Controls.GrenadeAimSpeed;
 			if (b.magnitude > 0f)
 			{
 				this.m_autoAim = false;
@@ -392,7 +346,6 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001157 RID: 4439
 	private void PositionGrenadeAiming(AnimationMetaData metaData, int frame)
 	{
 		AnimationMetaData.AnimationData animationData = metaData.FindData("#grenade");
@@ -403,7 +356,6 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001158 RID: 4440
 	public void EndAiming()
 	{
 		this.m_lockAimAnimationRemainingTime = 0f;
@@ -423,7 +375,6 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001159 RID: 4441
 	private void ClampAim()
 	{
 		this.m_rawAimOffset.x = Mathf.Clamp(this.m_rawAimOffset.x, -this.MaxAimDistance, this.MaxAimDistance);
@@ -442,20 +393,17 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		this.m_rawAimOffset.y = Mathf.Clamp(this.m_rawAimOffset.y, (!this.IsGrabbingWall) ? this.MinAimVertical : this.MinAimVerticalWall, this.MaxAimVertical);
 	}
 
-	// Token: 0x0600115A RID: 4442
 	public void UpdateTrajectory()
 	{
 		this.Trajectory.StartPosition = this.GrenadeSpawnPosition;
 		this.Trajectory.InitialVelocity = this.m_aimOffset;
 	}
 
-	// Token: 0x0600115B RID: 4443
 	public float TimeToTarget(Vector2 velocity, IAttackable target)
 	{
 		return Mathf.Abs(target.Position.x - this.GrenadeSpawnPosition.x) / Mathf.Abs(velocity.x);
 	}
 
-	// Token: 0x0600115C RID: 4444
 	public bool WillRayHitEnemy(Vector2 initialVelocity, IAttackable target)
 	{
 		Vector3 vector = this.GrenadeSpawnPosition;
@@ -483,7 +431,6 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		return Vector3.Distance(vector2, target.Position) <= 4f;
 	}
 
-	// Token: 0x0600115D RID: 4445
 	public bool CompareAnimations(TextureAnimationWithTransitions current, TextureAnimationWithTransitions[] array)
 	{
 		for (int i = 0; i < array.Length; i++)
@@ -496,7 +443,6 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		return false;
 	}
 
-	// Token: 0x0600115E RID: 4446
 	public Func<bool> AnimationRule(SeinGrenadeAttack.FastThrowAnimationRule.AnimationRule rule)
 	{
 		if (rule == SeinGrenadeAttack.FastThrowAnimationRule.AnimationRule.InAir)
@@ -510,7 +456,6 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		return new Func<bool>(this.KeepPlayingGroundThrowAnimation);
 	}
 
-	// Token: 0x0600115F RID: 4447
 	public void PlayFastThrowAnimation()
 	{
 		TextureAnimation currentAnimation = this.m_sein.PlatformBehaviour.Visuals.Animation.Animator.CurrentAnimation;
@@ -533,22 +478,19 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001160 RID: 4448
 	public bool KeepPlayingAirThrowAnimation()
 	{
 		return this.m_sein.PlatformBehaviour.PlatformMovement.IsInAir;
 	}
 
-	// Token: 0x06001161 RID: 4449
 	public bool KeepPlayingGroundThrowAnimation()
 	{
 		return this.m_sein.PlatformBehaviour.PlatformMovement.IsOnGround;
 	}
 
-	// Token: 0x06001162 RID: 4450
 	public void UpdateNormal()
 	{
-		if (RandomizerRebinding.ResetGrenadeAim.IsPressed())
+		if (RandomizerRebinding.ResetGrenadeAim.OnPressed)
 		{
 			this.ResetAimToDefault();
 		}
@@ -631,25 +573,21 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001163 RID: 4451
 	public bool KeepPlayingAimAnimation()
 	{
 		return this.m_isAiming;
 	}
 
-	// Token: 0x06001164 RID: 4452
 	public bool KeepPlayingThrowAnimation()
 	{
 		return !this.m_sein.PlatformBehaviour.PlatformMovement.MovingHorizontally;
 	}
 
-	// Token: 0x06001165 RID: 4453
 	public bool KeepPlayingNotEnoughEnergyAnimation()
 	{
 		return this.m_sein.PlatformBehaviour.PlatformMovement.LocalSpeed == Vector2.zero;
 	}
 
-	// Token: 0x06001166 RID: 4454
 	public void BeginAiming()
 	{
 		this.m_sein.PlatformBehaviour.PlatformMovement.LocalSpeed = Vector2.zero;
@@ -697,8 +635,6 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		this.PlayAimAnimation();
 	}
 
-	// Token: 0x170002E9 RID: 745
-	// (get) Token: 0x06001167 RID: 4455
 	public IAttackable FindAutoAttackable
 	{
 		get
@@ -734,7 +670,6 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001168 RID: 4456
 	public void AutoTarget()
 	{
 		this.m_autoTarget = this.FindAutoAttackable;
@@ -744,14 +679,12 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001169 RID: 4457
 	private void SetAimVelocity(Vector2 aim)
 	{
 		this.m_aimOffset = aim;
 		this.m_rawAimOffset = aim;
 	}
 
-	// Token: 0x0600116A RID: 4458
 	public Vector2 VelocityToAimAtTarget(IAttackable attackable)
 	{
 		Vector2 vector = attackable.Position - this.m_sein.Position;
@@ -760,14 +693,12 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		return new Vector2(vector.x / num2, vector.y / num2 + this.GrenadeGravity * num2 * 0.5f);
 	}
 
-	// Token: 0x0600116B RID: 4459
 	public override void OnExit()
 	{
 		base.OnExit();
 		this.CancelAiming();
 	}
 
-	// Token: 0x0600116C RID: 4460
 	public void CancelAiming()
 	{
 		if (this.m_isAiming)
@@ -778,261 +709,167 @@ public class SeinGrenadeAttack : CharacterState, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0400103B RID: 4155
 	public GameObject Grenade;
 
-	// Token: 0x0400103C RID: 4156
 	public GameObject GrenadeUpgraded;
 
-	// Token: 0x0400103D RID: 4157
 	public GameObject GrenadeAiming;
 
-	// Token: 0x0400103E RID: 4158
 	private GameObject m_grenadeAiming;
 
-	// Token: 0x0400103F RID: 4159
 	public SeinGrenadeTrajectory Trajectory;
 
-	// Token: 0x04001040 RID: 4160
 	public AnimationCurve AimSpeed;
 
-	// Token: 0x04001041 RID: 4161
 	public float MaxAimDistance;
 
-	// Token: 0x04001042 RID: 4162
 	public float MinAimDistanceUp;
 
-	// Token: 0x04001043 RID: 4163
 	public float MinAimDistanceDown;
 
-	// Token: 0x04001044 RID: 4164
 	public float MinAimDistanceHorizontal;
 
-	// Token: 0x04001045 RID: 4165
 	public float MaxAimVertical = 50f;
 
-	// Token: 0x04001046 RID: 4166
 	public float MinAimVertical = 2f;
 
-	// Token: 0x04001047 RID: 4167
 	public float MinAimVerticalWall = -30f;
 
-	// Token: 0x04001048 RID: 4168
 	public int MaxSpamGrenades = 3;
 
-	// Token: 0x04001049 RID: 4169
 	public float EnergyCost = 1f;
 
-	// Token: 0x0400104A RID: 4170
 	public SoundProvider NotEnoughEnergySound;
 
-	// Token: 0x0400104B RID: 4171
 	public SoundProvider TurnAroundAimingSound;
 
-	// Token: 0x0400104C RID: 4172
 	public SoundProvider ThrowGrenadeSound;
 
-	// Token: 0x0400104D RID: 4173
 	public SoundProvider StopAimingSound;
 
-	// Token: 0x0400104E RID: 4174
 	public SoundProvider StartAimingSound;
 
-	// Token: 0x0400104F RID: 4175
 	public SoundSource AimingSound;
 
-	// Token: 0x04001050 RID: 4176
 	public Vector2 QuickThrowSpeed = new Vector2(14f, 16f);
 
-	// Token: 0x04001051 RID: 4177
 	public GameObject GrenadeFailEffect;
 
-	// Token: 0x04001052 RID: 4178
 	public float AimAnimationAngleOffset = 5f;
 
-	// Token: 0x04001053 RID: 4179
 	public float CursorSpeedMultiplier = 1f;
 
-	// Token: 0x04001054 RID: 4180
 	public float CursorSpeedYOffset = 12f;
 
-	// Token: 0x04001055 RID: 4181
 	private float m_lockPressingInputTime;
 
-	// Token: 0x04001056 RID: 4182
 	private Vector2 m_rawAimOffset = new Vector2(14f, 16f);
 
-	// Token: 0x04001057 RID: 4183
 	private SeinCharacter m_sein;
 
-	// Token: 0x04001058 RID: 4184
 	private bool m_isAiming;
 
-	// Token: 0x04001059 RID: 4185
 	private Vector2 m_aimOffset;
 
-	// Token: 0x0400105A RID: 4186
 	private List<SpiritGrenade> m_spiritGrenades = new List<SpiritGrenade>();
 
-	// Token: 0x0400105B RID: 4187
 	private float m_animationAimAngle;
 
-	// Token: 0x0400105C RID: 4188
 	private bool m_lastAimWasOnWall;
 
-	// Token: 0x0400105D RID: 4189
 	public TextureAnimationWithTransitions[] AimingAnimations;
 
-	// Token: 0x0400105E RID: 4190
 	public TextureAnimationWithTransitions[] ThrowAnimations;
 
-	// Token: 0x0400105F RID: 4191
 	public TextureAnimationWithTransitions[] WallAimingAnimations;
 
-	// Token: 0x04001060 RID: 4192
 	public TextureAnimationWithTransitions[] WallThrowAnimations;
 
-	// Token: 0x04001061 RID: 4193
 	public TextureAnimationWithTransitions[] NotEnoughEnergyThrowAnimations;
 
-	// Token: 0x04001062 RID: 4194
 	public TextureAnimationWithTransitions[] NotEnoughEnergyWallThrowAnimations;
 
-	// Token: 0x04001063 RID: 4195
 	public SeinGrenadeAttack.QuickThrowAnimations QuickThrow;
 
-	// Token: 0x04001064 RID: 4196
 	public AnimationMetaData WallAimingMetaData;
 
-	// Token: 0x04001065 RID: 4197
 	public AnimationMetaData AimingMetaData;
 
-	// Token: 0x04001066 RID: 4198
 	private float m_lockAimAnimationRemainingTime;
 
-	// Token: 0x04001067 RID: 4199
 	private bool m_faceLeft;
 
-	// Token: 0x04001068 RID: 4200
 	public float MaxAimWallAnimationAngle = 85f;
 
-	// Token: 0x04001069 RID: 4201
 	public float MinAimWallAnimationAngle = -80f;
 
-	// Token: 0x0400106A RID: 4202
 	public float MaxAimGroundAnimationAngle = 90f;
 
-	// Token: 0x0400106B RID: 4203
 	public float MinAimGroundAnimationAngle = -30f;
 
-	// Token: 0x0400106C RID: 4204
 	private bool m_inputPressed;
 
-	// Token: 0x0400106D RID: 4205
 	public List<SeinGrenadeAttack.FastThrowAnimationRule> FastThrowAnimations;
 
-	// Token: 0x0400106E RID: 4206
 	private bool m_autoAim;
 
-	// Token: 0x0400106F RID: 4207
 	private IAttackable m_autoTarget;
 
-	// Token: 0x04001070 RID: 4208
 	public SeinGrenadeAttack.AutoAimSettings AutoAim;
 
-	// Token: 0x0200032A RID: 810
 	[Serializable]
 	public class QuickThrowAnimations
 	{
-		// Token: 0x0600116E RID: 4462
-		public QuickThrowAnimations()
-		{
-		}
-
-		// Token: 0x04001072 RID: 4210
 		public TextureAnimationWithTransitions FallIdleThrowAnimation;
 
-		// Token: 0x04001073 RID: 4211
 		public TextureAnimationWithTransitions FallThrowAnimation;
 
-		// Token: 0x04001074 RID: 4212
 		public TextureAnimationWithTransitions RunThrowAnimation;
 
-		// Token: 0x04001075 RID: 4213
 		public TextureAnimationWithTransitions JogThrowAnimation;
 
-		// Token: 0x04001076 RID: 4214
 		public TextureAnimationWithTransitions WalkThrowAnimation;
 
-		// Token: 0x04001077 RID: 4215
 		public TextureAnimationWithTransitions JumpThrowAnimation;
 
-		// Token: 0x04001078 RID: 4216
 		public TextureAnimationWithTransitions JumpIdleThrowAnimation;
 
-		// Token: 0x04001079 RID: 4217
 		public TextureAnimationWithTransitions IdleThrowAnimation;
 
-		// Token: 0x0400107A RID: 4218
 		public TextureAnimationWithTransitions WallThrowAnimation;
 	}
 
-	// Token: 0x0200032B RID: 811
 	[Serializable]
 	public class FastThrowAnimationRule
 	{
-		// Token: 0x0600116F RID: 4463
-		public FastThrowAnimationRule()
-		{
-		}
-
-		// Token: 0x0400107B RID: 4219
 		public TextureAnimationWithTransitions ThrowAnimation;
 
-		// Token: 0x0400107C RID: 4220
 		public List<TextureAnimationWithTransitions> AnimationsWithTransitions;
 
-		// Token: 0x0400107D RID: 4221
 		public List<TextureAnimation> Animations;
 
-		// Token: 0x0400107E RID: 4222
 		public SeinGrenadeAttack.FastThrowAnimationRule.AnimationRule PlayRule;
 
-		// Token: 0x0200032C RID: 812
 		public enum AnimationRule
 		{
-			// Token: 0x04001080 RID: 4224
 			InAir,
-			// Token: 0x04001081 RID: 4225
 			OnGround
 		}
 	}
 
-	// Token: 0x0200032D RID: 813
 	[Serializable]
 	public class AutoAimSettings
 	{
-		// Token: 0x06001170 RID: 4464
-		public AutoAimSettings()
-		{
-		}
-
-		// Token: 0x04001082 RID: 4226
 		public float MaxDistance = 30f;
 
-		// Token: 0x04001083 RID: 4227
 		public float MinDistance = 2f;
 
-		// Token: 0x04001084 RID: 4228
 		public float Speed = 5f;
 
-		// Token: 0x04001085 RID: 4229
 		public float SpeedPerXDistance = 0.7f;
 
-		// Token: 0x04001086 RID: 4230
 		public float SpeedPerYDistance = 2f;
 
-		// Token: 0x04001087 RID: 4231
 		public float InAirSpeed = 30f;
 	}
 }

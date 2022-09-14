@@ -2,20 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-// Token: 0x0200060C RID: 1548
 public class SaveGameData
 {
-	// Token: 0x0600213D RID: 8509
-	public SaveGameData()
-	{
-	}
-
-	// Token: 0x0600213E RID: 8510
-	static SaveGameData()
-	{
-	}
-
-	// Token: 0x0600213F RID: 8511
 	public void SaveToWriter(BinaryWriter writer)
 	{
 		SaveGameData.CurrentSaveFileVersion = 1;
@@ -35,7 +23,6 @@ public class SaveGameData
 		((IDisposable)writer).Dispose();
 	}
 
-	// Token: 0x06002140 RID: 8512
 	public bool LoadFromReader(BinaryReader reader)
 	{
 		this.Scenes.Clear();
@@ -62,8 +49,6 @@ public class SaveGameData
 		return true;
 	}
 
-	// Token: 0x17000536 RID: 1334
-	// (get) Token: 0x06002141 RID: 8513
 	public SaveScene Master
 	{
 		get
@@ -72,7 +57,6 @@ public class SaveGameData
 		}
 	}
 
-	// Token: 0x06002142 RID: 8514
 	public SaveScene GetScene(MoonGuid sceneGuid)
 	{
 		SaveScene result;
@@ -83,7 +67,6 @@ public class SaveGameData
 		return null;
 	}
 
-	// Token: 0x06002143 RID: 8515
 	public SaveScene InsertScene(MoonGuid sceneGuid)
 	{
 		SaveScene saveScene;
@@ -99,7 +82,6 @@ public class SaveGameData
 		return saveScene;
 	}
 
-	// Token: 0x06002144 RID: 8516
 	public SaveScene InsertPendingScene(MoonGuid sceneGUID)
 	{
 		SaveScene saveScene;
@@ -115,13 +97,11 @@ public class SaveGameData
 		return saveScene;
 	}
 
-	// Token: 0x06002145 RID: 8517
 	public bool SceneExists(MoonGuid sceneGUID)
 	{
 		return this.Scenes.ContainsKey(sceneGUID);
 	}
 
-	// Token: 0x06002146 RID: 8518
 	public void ApplyPendingScenes()
 	{
 		foreach (SaveScene saveScene in this.PendingScenes.Values)
@@ -135,20 +115,17 @@ public class SaveGameData
 		this.ClearPendingScenes();
 	}
 
-	// Token: 0x06002147 RID: 8519
 	public void ClearPendingScenes()
 	{
 		this.PendingScenes.Clear();
 	}
 
-	// Token: 0x06002148 RID: 8520
 	public void ClearAllData()
 	{
 		this.Scenes.Clear();
 		this.PendingScenes.Clear();
 	}
 
-	// Token: 0x06003898 RID: 14488
 	public void LoadCustomData(ArrayList data)
 	{
 		SaveScene saveScene = new SaveScene();
@@ -167,18 +144,13 @@ public class SaveGameData
 	}
 
 	
-	// Token: 0x04001D3F RID: 7487
 	public const int DATA_VERSION = 1;
 
-	// Token: 0x04001D40 RID: 7488
 	private const string FILE_FORMAT_STRING = "SaveGameData";
 
-	// Token: 0x04001D41 RID: 7489
 	public readonly Dictionary<MoonGuid, SaveScene> Scenes = new Dictionary<MoonGuid, SaveScene>();
 
-	// Token: 0x04001D42 RID: 7490
 	public readonly Dictionary<MoonGuid, SaveScene> PendingScenes = new Dictionary<MoonGuid, SaveScene>();
 
-	// Token: 0x04001D43 RID: 7491
 	public static int CurrentSaveFileVersion = -1;
 }

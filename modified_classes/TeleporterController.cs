@@ -4,30 +4,88 @@ using Core;
 using Game;
 using UnityEngine;
 
-// Token: 0x0200081F RID: 2079
 public class TeleporterController : SaveSerialize, ISuspendable
 {
-	// Token: 0x06002CDF RID: 11487 RVA: 0x00024B81 File Offset: 0x00022D81
-	public TeleporterController()
-	{
-	}
-
-	// Token: 0x06002CE0 RID: 11488 RVA: 0x00024B9F File Offset: 0x00022D9F
 	private void Nullify()
 	{
 		this.m_teleportingStartSound = null;
 	}
 
-	// Token: 0x06002CE1 RID: 11489 RVA: 0x000C39F4 File Offset: 0x000C1BF4
 	public override void Serialize(Archive ar)
 	{
-		foreach (GameMapTeleporter gameMapTeleporter in this.Teleporters)
+		// By default we just serialize 12 booleans, one for each default teleporter.
+		// So if we only get 12 bytes of information or only have default teleporters then
+		// we stick to that.
+		// If there are more than 12 teleporters immediately after the 12 default teleporters
+		// we serialize the number of extra teleporters, and then for each teleporter
+		// serialise the name, location, and activation status.
+		if (ar.Reading)
 		{
-			ar.Serialize(ref gameMapTeleporter.Activated);
+			long readLength = ar.MemoryStream.Length;
+			if (readLength < 12) {
+				return;
+			}
+			// Read default teleporters.
+			for (int i = 0; i < 12; i++)
+			{
+				GameMapTeleporter gameMapTeleporter = this.Teleporters[i];
+				ar.Serialize(ref gameMapTeleporter.Activated);
+			}
+			// Determine extra teleporter count.
+			int requiredCustomTeleporterCount = 0;
+			if (readLength > 12) {
+				ar.Serialize(ref requiredCustomTeleporterCount);
+			}
+			// Remove excess teleporters.
+			while (this.Teleporters.Count > 12 + requiredCustomTeleporterCount)
+			{	
+				this.Teleporters.RemoveAt(this.Teleporters.Count - 1);
+			}
+			// Create or modify teleporters.
+			for (int i = 0; i < requiredCustomTeleporterCount; i++)
+			{
+				string name = "???";
+				Vector3 position = new Vector3(0,0,0);
+				bool activated = false;
+				ar.Serialize(ref name);
+				ar.Serialize(ref position);
+				ar.Serialize(ref activated);
+				int currentTeleporterIndex = 12 + i;
+				if (currentTeleporterIndex < this.Teleporters.Count) {
+					// Alter the existing teleporter.
+					this.Teleporters[currentTeleporterIndex].SetInfo(name, position, activated);
+				} else {
+					// Create a new teleporter.
+					GameMapTeleporter gameMapTeleporter = new GameMapTeleporter(name, position, activated);
+					this.Teleporters.Add(gameMapTeleporter);
+				}
+			}
+		} else {
+			// Writing.
+			if (this.Teleporters.Count < 12) {
+				return;
+			}
+			// Default teleporters.
+			for (int i = 0; i < 12; i++)
+			{
+				GameMapTeleporter gameMapTeleporter = this.Teleporters[i];
+				ar.Serialize(ref gameMapTeleporter.Activated);
+			}
+			// Extra teleporters.
+			int customTeleporterCount = this.Teleporters.Count - 12;
+			if (customTeleporterCount > 0) {
+				ar.Serialize(ref customTeleporterCount);
+			}
+			for (int i = 12; i < this.Teleporters.Count; i++)
+			{
+				GameMapTeleporter gameMapTeleporter = this.Teleporters[i];
+				ar.Serialize(ref gameMapTeleporter.Identifier);
+				ar.Serialize(ref gameMapTeleporter.WorldPosition);
+				ar.Serialize(ref gameMapTeleporter.Activated);
+			}
 		}
 	}
 
-	// Token: 0x06002CE2 RID: 11490 RVA: 0x000C3A54 File Offset: 0x000C1C54
 	public static bool CanTeleport(string ignoreIdentifier)
 	{
 		if (TeleporterController.Instance)
@@ -47,7 +105,6 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		return false;
 	}
 
-	// Token: 0x06002CE3 RID: 11491 RVA: 0x00024BA8 File Offset: 0x00022DA8
 	public override void Awake()
 	{
 		base.Awake();
@@ -57,7 +114,6 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		this.DontTeleportForAnimationTesting = false;
 	}
 
-	// Token: 0x06002CE4 RID: 11492 RVA: 0x00024BDE File Offset: 0x00022DDE
 	public override void OnDestroy()
 	{
 		base.OnDestroy();
@@ -66,13 +122,18 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		Events.Scheduler.OnGameReset.Remove(new Action(this.OnGameReset));
 	}
 
-	// Token: 0x06002CE5 RID: 11493 RVA: 0x000C3AC8 File Offset: 0x000C1CC8
 	public void OnGameReset()
 	{
 		for (int i = 0; i < TeleporterController.Instance.Teleporters.Count; i++)
 		{
 			TeleporterController.Instance.Teleporters[i].Activated = false;
 		}
+		this.CancelTeleport();
+	}
+
+	public void CancelTeleport()
+	{
+		Randomizer.IsUsingRandomizerTeleportAnywhere = false;
 		this.m_isTeleporting = false;
 		this.m_isBlooming = false;
 		if (!InstantiateUtility.IsDestroyed(this.m_teleportingStartSound))
@@ -82,7 +143,6 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		}
 	}
 
-	// Token: 0x06002CE6 RID: 11494 RVA: 0x000C3B44 File Offset: 0x000C1D44
 	public static void Show(string identifier)
 	{
 		UI.Menu.ShowWorldMap(false);
@@ -96,13 +156,11 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		}
 	}
 
-	// Token: 0x06002CE7 RID: 11495 RVA: 0x00024C0D File Offset: 0x00022E0D
 	public static void OnClose()
 	{
 		GameMapUI.Instance.SetNormal();
 	}
 
-	// Token: 0x06002CE8 RID: 11496 RVA: 0x000C3BE4 File Offset: 0x000C1DE4
 	public static bool ActivateAll()
 	{
 		foreach (GameMapTeleporter gameMapTeleporter in TeleporterController.Instance.Teleporters)
@@ -111,7 +169,7 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		}
 		return true;
 	}
-	// Token: 0x06002CE9 RID: 11497 RVA: 0x000C3C3C File Offset: 0x000C1E3C
+
 	public static void Activate(string identifier, bool natural)
 	{
 		if(natural)
@@ -124,25 +182,28 @@ public class TeleporterController : SaveSerialize, ISuspendable
 				gameMapTeleporter.Activated = true;
 			}
 		}
-
 	}
 
-	// Token: 0x06002CE9 RID: 11497 RVA: 0x000C3C3C File Offset: 0x000C1E3C
 	public static void Activate(string identifier)
 	{
 		Activate(identifier, true);
 	}
 
-	// Token: 0x06002CEA RID: 11498
 	public static void BeginTeleportation(GameMapTeleporter selectedTeleporter)
 	{
 		if (Vector3.Distance(selectedTeleporter.WorldPosition, Characters.Sein.Position) < 10f)
 		{
 			return;
 		}
-		if (selectedTeleporter.Identifier == "forlorn")
+		if (selectedTeleporter.Area.Area.AreaNameString == "Forlorn Ruins")
 		{
+			Randomizer.NightBerryWarpPosition = selectedTeleporter.WorldPosition;
 			Characters.Sein.Inventory.SetRandomizerItem(82, 1);
+		}
+		RandomizerHints.ShowTip();
+		if(Characters.Sein.Abilities.Swimming.CurrentState != SeinSwimming.State.OutOfWater) {
+			Characters.Sein.Abilities.Swimming.ChangeState(SeinSwimming.State.OutOfWater);
+			Characters.Sein.Abilities.Swimming.HideBreathingUI();
 		}
 		if (!TeleporterController.Instance.DontTeleportForAnimationTesting)
 		{
@@ -171,7 +232,6 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		}
 	}
 
-	// Token: 0x06002CEB RID: 11499 RVA: 0x000C3E70 File Offset: 0x000C2070
 	public static void OnFinishedTeleportingStartAnimation()
 	{
 		Characters.Sein.Controller.OnTriggeredAnimationFinished -= TeleporterController.OnFinishedTeleportingStartAnimation;
@@ -182,7 +242,6 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		}
 	}
 
-	// Token: 0x06002CEC RID: 11500 RVA: 0x000C3ED0 File Offset: 0x000C20D0
 	public void FixedUpdate()
 	{
 		if (this.m_isTeleporting)
@@ -229,7 +288,6 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		}
 	}
 
-	// Token: 0x06002CED RID: 11501 RVA: 0x000C4050 File Offset: 0x000C2250
 	public void OnFadedToBlack()
 	{
 		foreach (SavePedestal savePedestal in SavePedestal.All)
@@ -245,6 +303,8 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		{
 			UberGCManager.CollectResourcesIfNeeded();
 		}
+		if (Randomizer.IsUsingRandomizerTeleportAnywhere)
+		    RandomizerBonusSkill.LastAltR = Characters.Sein.Position;		
 		Characters.Sein.Position = this.m_teleporterTargetPosition + Vector3.up * 1.6f;
 		CameraPivotZone.InstantUpdate();
 		Scenes.Manager.UpdatePosition();
@@ -259,12 +319,22 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		GameController.Instance.CreateCheckpoint();
 		GameController.Instance.PerformSaveGameSequence();
 		RandomizerStatsManager.UsedTeleporter();
+
+		if (Randomizer.IsUsingRandomizerTeleportAnywhere)
+		{
+		    int value = World.Events.Find(Randomizer.MistySim).Value;
+		    if (value != 1 && value != 8)
+		    {
+		        World.Events.Find(Randomizer.MistySim).Value = 10;
+		    }
+		}
+
 		LateStartHook.AddLateStartMethod(new Action(this.OnFinishedTeleporting));
 	}
 
-	// Token: 0x06002CEE RID: 11502 RVA: 0x000C4188 File Offset: 0x000C2388
 	public void OnFinishedTeleporting()
 	{
+		Randomizer.IsUsingRandomizerTeleportAnywhere = false;
 		CameraFrustumOptimizer.ForceUpdate();
 		Characters.Sein.Controller.PlayAnimation(TeleporterController.Instance.TeleportingFinishAnimation);
 		if (GameMapUI.Instance.Teleporters.ReachDestinationTeleporterSound)
@@ -280,70 +350,79 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		{
 			Sound.Play(this.TeleportingEndSound.GetSound(null), Characters.Sein.Position, null);
 		}
+		// Disable any sein locks that we got from teleporting from a physical savePedestal.
+		Characters.Ori.ChangeState(Ori.State.Hovering);
+		Characters.Ori.EnableHoverWobbling = true;
+		if (Characters.Sein.Abilities.SpiritFlame)
+		{
+			Characters.Sein.Abilities.SpiritFlame.RemoveLock("savePedestal");
+		}
 	}
 
-	// Token: 0x17000706 RID: 1798
-	// (get) Token: 0x06002CEF RID: 11503 RVA: 0x00024C19 File Offset: 0x00022E19
-	// (set) Token: 0x06002CF0 RID: 11504 RVA: 0x00024C21 File Offset: 0x00022E21
+	public static void RemoveCustomTeleporters()
+	{
+		if (TeleporterController.Instance != null)
+		{
+			TeleporterController.Instance.Teleporters.RemoveAll((GameMapTeleporter teleporter) => teleporter.Name.GetType() == typeof(RandomizerMessageProvider));
+		}
+	}
+
+	public static void AddCustomTeleporter(string name, float warpX, float warpY)
+	{
+		if (TeleporterController.Instance == null) {
+			return;
+		}
+		// If we already have that teleporter don't add it.
+		for (int i = 0; i < TeleporterController.Instance.Teleporters.Count; i++) 
+		{
+			if (TeleporterController.Instance.Teleporters[i].Identifier == name)
+			{
+				return;
+			}
+		}
+		GameMapTeleporter teleporter = new GameMapTeleporter(name, warpX, warpY);
+		TeleporterController.Instance.Teleporters.Add(teleporter);
+    }
+
 	public bool IsSuspended { get; set; }
 
-	// Token: 0x04002860 RID: 10336
 	public static TeleporterController Instance;
 
-	// Token: 0x04002861 RID: 10337
 	public TextureAnimationWithTransitions TeleportingStartAnimation;
 
-	// Token: 0x04002862 RID: 10338
 	public TextureAnimationWithTransitions TeleportingLoopAnimation;
 
-	// Token: 0x04002863 RID: 10339
 	public TextureAnimationWithTransitions TeleportingFinishAnimation;
 
-	// Token: 0x04002864 RID: 10340
 	public SoundSource TeleportingTwirlAnimationSound;
 
-	// Token: 0x04002865 RID: 10341
 	public SoundProvider TeleportingStartSound;
 
-	// Token: 0x04002866 RID: 10342
 	public SoundProvider TeleportingBloomSound;
 
-	// Token: 0x04002867 RID: 10343
 	public SoundProvider TeleportingEndSound;
 
-	// Token: 0x04002868 RID: 10344
 	private SoundPlayer m_teleportingStartSound;
 
-	// Token: 0x04002869 RID: 10345
 	private float m_startTime;
 
-	// Token: 0x0400286A RID: 10346
 	public bool DontTeleportForAnimationTesting;
 
-	// Token: 0x0400286B RID: 10347
 	public float NoTeleportAnimationTime = 6f;
 
-	// Token: 0x0400286C RID: 10348
 	public List<GameMapTeleporter> Teleporters = new List<GameMapTeleporter>();
 
-	// Token: 0x0400286D RID: 10349
 	public GameObject BloomFade;
 
-	// Token: 0x0400286E RID: 10350
 	public float BloomFadeDuration;
 
-	// Token: 0x0400286F RID: 10351
 	public GameObject TeleporterFinishEffect;
 
-	// Token: 0x04002870 RID: 10352
 	private bool m_isTeleporting;
 
-	// Token: 0x04002871 RID: 10353
 	private bool m_isBlooming;
 
-	// Token: 0x04002872 RID: 10354
 	private float m_bloomCurrentTime;
 
-	// Token: 0x04002873 RID: 10355
 	private Vector3 m_teleporterTargetPosition;
 }

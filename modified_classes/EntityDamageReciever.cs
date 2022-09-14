@@ -2,10 +2,8 @@ using System;
 using Game;
 using UnityEngine;
 using Core;
-// Token: 0x02000422 RID: 1058
 public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IProjectileDetonatable
 {
-	// Token: 0x060017A7 RID: 6055 RVA: 0x000147C6 File Offset: 0x000129C6
 	public new void OnValidate()
 	{
 		this.Entity = base.transform.FindComponentUpwards<Entity>();
@@ -13,7 +11,6 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 		base.OnValidate();
 	}
 
-	// Token: 0x060017A8 RID: 6056 RVA: 0x000147EB File Offset: 0x000129EB
 	public new void Awake()
 	{
 		base.Awake();
@@ -23,8 +20,6 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 		}
 	}
 
-	// Token: 0x1700040B RID: 1035
-	// (get) Token: 0x060017A9 RID: 6057 RVA: 0x0001480A File Offset: 0x00012A0A
 	public override GameObject DisableTarget
 	{
 		get
@@ -33,7 +28,6 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 		}
 	}
 
-	// Token: 0x060017AA RID: 6058 RVA: 0x0007AA4C File Offset: 0x00078C4C
 	public override void OnPoolSpawned()
 	{
 		this.OnModifyDamage = delegate
@@ -45,7 +39,6 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 		base.OnPoolSpawned();
 	}
 
-	// Token: 0x060017AB RID: 6059 RVA: 0x0007AAA4 File Offset: 0x00078CA4
 	public void OnTriggerEnter(Collider collider)
 	{
 		if (this.CanBeCrushed && collider.GetComponent<CrushPlayer>())
@@ -55,7 +48,6 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 		}
 	}
 
-	// Token: 0x060017AC RID: 6060 RVA: 0x0007AAFC File Offset: 0x00078CFC
 	public override void OnRecieveDamage(Damage damage)
 	{
 		bool terrain = (damage.Type == DamageType.Crush || damage.Type == DamageType.Spikes || damage.Type == DamageType.Lava || damage.Type == DamageType.Laser);
@@ -104,9 +96,9 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 					AchievementsLogic.Instance.OnEnemyKilledItself();
 				}
 			}
+			BingoController.OnDestroyEntity(this.Entity, damage);
 			if (this.Entity is Enemy)
 			{
-				BingoController.OnDestroyEntity(this.Entity, damage);
 				RandomizerStatsManager.OnKill(damage.Type);
 				if (damage.Type == DamageType.ChargeFlame)
 				{
@@ -141,35 +133,27 @@ public class EntityDamageReciever : DamageReciever, IDynamicGraphicHierarchy, IP
 			}
 			if (this.Entity is PetrifiedPlant)
 			{
-				Randomizer.getPickup(this.Entity.Position);
-				RandomizerPlantManager.DestroyPlant(this.Entity.MoonGuid);
+				RandomizerLocationManager.GivePickup(this.Entity.MoonGuid);
 			}
 		}
 	}
 
-	// Token: 0x060017AD RID: 6061 RVA: 0x00014817 File Offset: 0x00012A17
 	public bool CanDetonateProjectiles()
 	{
 		return this.IgnoreDamageCondition == null || !this.IgnoreDamageCondition(null);
 	}
 
-	// Token: 0x040014FE RID: 5374
 	public Entity Entity;
 
-	// Token: 0x040014FF RID: 5375
 	public EntityDamageReciever.ModifyDamageDelegate OnModifyDamage = delegate
 	{
 	};
 
-	// Token: 0x04001500 RID: 5376
 	public static Action<Entity> OnEntityDeathEvent = delegate
 	{
 	};
 
-	// Token: 0x04001501 RID: 5377
 	public bool CanBeCrushed = true;
 
-	// Token: 0x02000423 RID: 1059
-	// (Invoke) Token: 0x060017B3 RID: 6067
 	public delegate void ModifyDamageDelegate(Damage d);
 }

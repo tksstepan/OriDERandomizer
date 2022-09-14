@@ -2,10 +2,8 @@ using System;
 using Game;
 using UnityEngine;
 
-// Token: 0x020009F7 RID: 2551
 public class RandomizerChaosZoom : RandomizerChaosEffect
 {
-	// Token: 0x0600376F RID: 14191 RVA: 0x000E1448 File Offset: 0x000DF648
 	public override void Clear()
 	{
 		this.Countdown = 0;
@@ -13,7 +11,6 @@ public class RandomizerChaosZoom : RandomizerChaosEffect
 		UI.Cameras.Current.OffsetController.AdditiveDefaultOffset = new Vector3(UI.Cameras.Current.OffsetController.AdditiveDefaultOffset.x, UI.Cameras.Current.OffsetController.AdditiveDefaultOffset.y, this.InitialOffset);
 	}
 
-	// Token: 0x06003770 RID: 14192 RVA: 0x000E14A8 File Offset: 0x000DF6A8
 	public override void Start()
 	{
 		this.Zooming = false;
@@ -52,7 +49,6 @@ public class RandomizerChaosZoom : RandomizerChaosEffect
 		}
 	}
 
-	// Token: 0x06003771 RID: 14193 RVA: 0x000E161C File Offset: 0x000DF81C
 	public override void Update()
 	{
 		if (this.Countdown > 0)
@@ -69,15 +65,11 @@ public class RandomizerChaosZoom : RandomizerChaosEffect
 		}
 	}
 
-	// Token: 0x0400323A RID: 12858
 	public int Countdown;
 
-	// Token: 0x0400323B RID: 12859
 	public float InitialOffset;
 
-	// Token: 0x0400323C RID: 12860
 	public bool Zooming;
 
-	// Token: 0x0400323D RID: 12861
 	public float ZoomRate;
 }

@@ -57,6 +57,10 @@ Doubles:	That Is Faster (Sigmasin and IMRaziel)
 		2018
 Singles:	Sigmasin
 Doubles:	That Is Still Faster (Sigmasin and IMRaziel)
+
+		2021
+Winner:	Cleanfel
+Runner-ups: Tritonite, Xemsys, Dedew
 ", 14));
 
 		// Credits.Add(new KeyValuePair<string, int>("In memory of Grandma Irine", 5));

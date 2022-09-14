@@ -5,7 +5,6 @@ using System.Linq;
 
 public static class RandomizerSwitch
 {
-
     public static void SkillPointPickup()
     {
         PickupMessage("Ability Cell");
@@ -16,7 +15,7 @@ public static class RandomizerSwitch
         Characters.Sein.Level.GainSkillPoint();
         Characters.Sein.Inventory.SkillPointsCollected++;
     }
-    
+
     public static void MaxEnergyContainerPickup() 
     {
         PickupMessage("Energy Cell");
@@ -30,7 +29,7 @@ public static class RandomizerSwitch
             Characters.Sein.Energy.Current = Characters.Sein.Energy.Max;
         }
     }
-    
+
     public static void ExpOrbPickup(int Value)
     {
         PickupMessage(Value.ToString() + " experience");
@@ -40,25 +39,27 @@ public static class RandomizerSwitch
         }
         Characters.Sein.Level.GainExperience(RandomizerBonus.ExpWithBonuses(Value, true));
     }
-    
+
     public static void KeystonePickup() {
         PickupMessage("Keystone");
-        Characters.Sein.Inventory.CollectKeystones(1);     
+        Characters.Sein.Inventory.CollectKeystones(1);
+        Characters.Sein.Inventory.IncRandomizerItem(70, 1);
     }
-    
+
     public static void MaxHealthContainerPickup() 
     {
         PickupMessage("Health Cell");
         Characters.Sein.Mortality.Health.GainMaxHeartContainer();
     }
-    
+
     public static void MapStonePickup() 
     {
         PickupMessage("Map Stone");
         Characters.Sein.Inventory.MapStones++;
+        Characters.Sein.Inventory.IncRandomizerItem(71, 1);
     }
+
     public static void AbilityPickup(int Ability) {
-        Randomizer.GiveAbility = true;
         switch (Ability)
         {
         case 0:
@@ -106,82 +107,9 @@ public static class RandomizerSwitch
             Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Grenade, true);
             break;
         }
-        Randomizer.GiveAbility = false;
         RandomizerStatsManager.FoundSkill(Ability);
     }
-    
-    public static void SilentAbility(int Ability) {
-        bool success = false;
-        try {
-            Randomizer.GiveAbility = true;
-            switch (Ability)
-            {
-            case 0:
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Bash, false);
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Bash, true);
-                success = Characters.Sein.Abilities.Bash.Active;
-                break;
-            case 2:
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.ChargeFlame, false);
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.ChargeFlame, true);
-                success = Characters.Sein.Abilities.ChargeFlame.Active;
-                break;
-            case 3:
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.WallJump, false);
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.WallJump, true);
-                success = Characters.Sein.Abilities.WallJump.Active;
-                break;
-            case 4:
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Stomp, false);
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Stomp, true);
-                success = Characters.Sein.Abilities.Stomp.Active;
-                break;
-            case 5:
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.DoubleJump, false);
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.DoubleJump, true);
-                success = Characters.Sein.Abilities.Stomp.Active;
-                break;
-            case 8:
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.ChargeJump, false);
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.ChargeJump, true);
-                success = Characters.Sein.Abilities.ChargeJump.Active;
-                break;
-            case 12:
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Climb, false);
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Climb, true);
-                success = Characters.Sein.Abilities.GrabWall.Active;
-                break;
-            case 14:
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Glide, false);
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Glide, true);
-                success = Characters.Sein.Abilities.Glide.Active;
-                break;
-            case 15:
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.SpiritFlame, false);
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.SpiritFlame, true);
-                success = Characters.Sein.Abilities.SpiritFlame.Active;
-                break;
-            case 50:
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Dash, false);
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Dash, true);
-                success = Characters.Sein.Abilities.Dash.Active;
-                break;
-            case 51:
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Grenade, false);
-                Characters.Sein.PlayerAbilities.SetAbility(AbilityType.Grenade, true);
-                success = Characters.Sein.Abilities.Grenade.Active;
-                break;
-            }
-        } catch (Exception e) {
-            
-        }
-        finally {
-            Characters.Sein.Prefabs.EnsureRightPrefabsAreThereForAbilities();
-            Randomizer.GiveAbility = false;
-            if(success)
-                Randomizer.FixCutscenePickup = -1;
-        }
-    }
+
     public static void EventPickup(int Value) 
     {
         switch (Value)
@@ -208,11 +136,12 @@ public static class RandomizerSwitch
                 break;
             case 5:
                 PickupMessage("@Warmth Returned@", 300);
+                Sein.World.Events.WarmthReturned = true;
                 break;
         }
         RandomizerStatsManager.FoundEvent(Value);
     }
-    
+
     public static void TeleportPickup(string Value)
     {
         int shardCount = -1;
@@ -254,7 +183,7 @@ public static class RandomizerSwitch
         TeleporterController.Activate(Randomizer.TeleportTable[Value].ToString(), false);
         PickupMessage(colorChar + Value + " teleporter activated" + colorChar);
     }
-    
+
     public static void GivePickup(RandomizerAction Action, int coords, bool found_locally=true)
     {
         try {
@@ -294,8 +223,6 @@ public static class RandomizerSwitch
                     MapStonePickup();
                     break;
                 case "SK":
-                    if(Randomizer.CutscenePickupLocs.Contains(coords))
-                        Randomizer.FixCutscenePickup = (int)Action.Value;
                     AbilityPickup((int)Action.Value);
                     break;
                 case "EV":
@@ -338,18 +265,42 @@ public static class RandomizerSwitch
                     break;
                 case "WS":
                 case "WP":
-                    Randomizer.SaveAfterWarp = Action.Action == "WS";
-                    string[] xy = ((string)Action.Value).Split(',');
-                    if(xy.Length > 2 && xy[2] == "force") {
-                        Randomizer.WarpTo(new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1])), 15);
-                    }
-                    else {
-                        Randomizer.WarpTarget = new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1]));
-                        Randomizer.WarpSource = Characters.Sein.Position;
-                        Randomizer.CanWarp = 7;
+                    // Don't actually warp at spawn, let other code do that.
+                    if (coords != 2) {
+                        Randomizer.SaveAfterWarp = Action.Action == "WS";
+                        string[] xy = ((string)Action.Value).Split(',');
+                        if(xy.Length > 2 && xy[2] == "force") {
+                            Randomizer.WarpTo(new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1])), 15);
+                        }
+                        else {
+                            Randomizer.WarpTarget = new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1]));
+                            Randomizer.WarpSource = Characters.Sein.Position;
+                            Randomizer.CanWarp = 7;
+                        }
                     }
                     break;
                 case "NO":
+                    break;
+                case "TW":
+                    // TW entries are coord|TW|name,x,y
+                    string[] pieces2 = ((string)Action.Value).Split(',');
+                    int warpX;
+                    int.TryParse(pieces2[1], out warpX);
+                    int warpY;
+                    int.TryParse(pieces2[2], out warpY);
+                    TeleporterController.AddCustomTeleporter(pieces2[0], warpX, warpY);
+                    TeleporterController.Activate(pieces2[0]);
+                    PickupMessage(pieces2[0], 120);
+                    break;
+                case "NB":
+                    // NB entries are coord|NB|x,y
+                    string[] pieces3 = ((string)Action.Value).Split(',');
+                    int positionX;
+                    int.TryParse(pieces3[0], out positionX);
+                    int positionY;
+                    int.TryParse(pieces3[1], out positionY);
+                    Randomizer.NightBerryWarpPosition = new UnityEngine.Vector3(positionX, positionY);
+                    Characters.Sein.Inventory.SetRandomizerItem(82, 1);
                     break;
             }
             BingoController.OnItem(Action, coords);
@@ -363,6 +314,7 @@ public static class RandomizerSwitch
         if(found_locally)
             Randomizer.OnCoord(coords);
     }
+
     public static bool SilentMode = false;
     public static void PickupMessage(string text, int frames=120) {
         if(SilentMode)

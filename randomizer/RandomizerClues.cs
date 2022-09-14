@@ -2,24 +2,20 @@ using System;
 using System.Collections.Generic;
 using Sein.World;
 
-// Token: 0x02000A05 RID: 2565
 public static class RandomizerClues
 {
-	// Token: 0x060037BC RID: 14268 RVA: 0x0002BD5B File Offset: 0x00029F5B
 	public static void initialize()
 	{
 		RandomizerClues.RevealOrder = new int[3];
 		RandomizerClues.Clues = new List<string>();
 	}
 
-	// Token: 0x060037BD RID: 14269 RVA: 0x0002BD72 File Offset: 0x00029F72
 	public static void AddClue(string clue, int order)
 	{
 		RandomizerClues.Clues.Add(clue);
 		RandomizerClues.RevealOrder[order] = RandomizerClues.Clues.Count;
 	}
 
-	// Token: 0x060037BE RID: 14270 RVA: 0x000E472C File Offset: 0x000E292C
 	public static string GetClues()
 	{
 		string text = "";
@@ -59,7 +55,7 @@ public static class RandomizerClues
 			"WV: ",
 			array[0],
 			text,
-			" ",
+			"  ",
 			text2,
 			"GS: ",
 			array[1],
@@ -83,9 +79,7 @@ public static class RandomizerClues
 		}
 	}
 
-	// Token: 0x04003289 RID: 12937
 	public static int[] RevealOrder;
 
-	// Token: 0x0400328A RID: 12938
 	public static List<string> Clues;
 }

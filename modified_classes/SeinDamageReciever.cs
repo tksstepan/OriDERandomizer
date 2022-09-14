@@ -5,11 +5,8 @@ using Core;
 using Game;
 using UnityEngine;
 
-// Token: 0x02000315 RID: 789
 public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver, IProjectileDetonatable
 {
-	// Token: 0x1700029E RID: 670
-	// (get) Token: 0x06001026 RID: 4134 RVA: 0x0000E223 File Offset: 0x0000C423
 	public CharacterLeftRightMovement CharacterLeftRightMovement
 	{
 		get
@@ -18,8 +15,6 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		}
 	}
 
-	// Token: 0x1700029F RID: 671
-	// (get) Token: 0x06001027 RID: 4135 RVA: 0x0000E235 File Offset: 0x0000C435
 	public CharacterGravity CharacterGravity
 	{
 		get
@@ -28,8 +23,6 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		}
 	}
 
-	// Token: 0x170002A0 RID: 672
-	// (get) Token: 0x06001028 RID: 4136 RVA: 0x0000E247 File Offset: 0x0000C447
 	public CharacterInstantStop CharacterInstantStop
 	{
 		get
@@ -38,8 +31,6 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		}
 	}
 
-	// Token: 0x170002A1 RID: 673
-	// (get) Token: 0x06001029 RID: 4137 RVA: 0x0000E259 File Offset: 0x0000C459
 	public SeinHealthController HealthController
 	{
 		get
@@ -48,8 +39,6 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		}
 	}
 
-	// Token: 0x170002A2 RID: 674
-	// (get) Token: 0x0600102A RID: 4138 RVA: 0x0000E26B File Offset: 0x0000C46B
 	public PlatformMovement PlatformMovement
 	{
 		get
@@ -58,8 +47,6 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		}
 	}
 
-	// Token: 0x170002A3 RID: 675
-	// (get) Token: 0x0600102B RID: 4139 RVA: 0x0000E27D File Offset: 0x0000C47D
 	public Renderer Sprite
 	{
 		get
@@ -68,7 +55,6 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600102C RID: 4140 RVA: 0x000610D8 File Offset: 0x0005F2D8
 	public void Start()
 	{
 		this.CharacterGravity.ModifyGravityPlatformMovementSettingsEvent += new Action<GravityPlatformMovementSettings>(this.ModifyGravityPlatformMovementSettings);
@@ -76,7 +62,6 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		Game.Checkpoint.Events.OnPostRestore.Add(new Action(this.OnRestoreCheckpoint));
 	}
 
-	// Token: 0x0600102D RID: 4141 RVA: 0x0006112C File Offset: 0x0005F32C
 	public new void OnDestroy()
 	{
 		base.OnDestroy();
@@ -85,19 +70,16 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		Game.Checkpoint.Events.OnPostRestore.Remove(new Action(this.OnRestoreCheckpoint));
 	}
 
-	// Token: 0x0600102E RID: 4142 RVA: 0x0000E294 File Offset: 0x0000C494
 	public override void OnEnter()
 	{
 		this.CharacterInstantStop.Active = false;
 	}
 
-	// Token: 0x0600102F RID: 4143 RVA: 0x0000E2A2 File Offset: 0x0000C4A2
 	public override void OnExit()
 	{
 		this.CharacterInstantStop.Active = true;
 	}
 
-	// Token: 0x06001030 RID: 4144
 	public void OnRecieveDamage(Damage damage)
 	{
 		if (RandomizerBonusSkill.Invincible)
@@ -231,13 +213,11 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		base.StartCoroutine(this.FlashSprite());
 	}
 
-	// Token: 0x06001031 RID: 4145 RVA: 0x0000E2B0 File Offset: 0x0000C4B0
 	public void SetReferenceToSein(SeinCharacter sein)
 	{
 		this.Sein = sein;
 	}
 
-	// Token: 0x06001032 RID: 4146 RVA: 0x000616AC File Offset: 0x0005F8AC
 	public override void UpdateCharacterState()
 	{
 		if (this.Sein.IsSuspended)
@@ -265,7 +245,6 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001033 RID: 4147 RVA: 0x0000E2B9 File Offset: 0x0000C4B9
 	public void ModifyHorizontalPlatformMovementSettings(HorizontalPlatformMovementSettings settings)
 	{
 		if (base.Active)
@@ -275,7 +254,6 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001034 RID: 4148 RVA: 0x0000E2E8 File Offset: 0x0000C4E8
 	public void ModifyGravityPlatformMovementSettings(GravityPlatformMovementSettings settings)
 	{
 		if (base.Active)
@@ -284,26 +262,22 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		}
 	}
 
-	// Token: 0x06001035 RID: 4149 RVA: 0x0000E308 File Offset: 0x0000C508
 	public void MakeInvincible(float duration)
 	{
 		this.m_invincibleTimeRemaining = Mathf.Max(this.m_invincibleTimeRemaining, duration);
 	}
 
-	// Token: 0x06001036 RID: 4150 RVA: 0x0000E31C File Offset: 0x0000C51C
 	public void MakeInvincibleToEnemies(float duration)
 	{
 		this.m_invincibleToEnemiesTimeRemaining = Mathf.Max(this.m_invincibleToEnemiesTimeRemaining, duration);
 	}
 
-	// Token: 0x06001037 RID: 4151 RVA: 0x0000E330 File Offset: 0x0000C530
 	public void ResetInviciblity()
 	{
 		this.m_invincibleTimeRemaining = 0f;
 		this.m_invincibleToEnemiesTimeRemaining = 0f;
 	}
 
-	// Token: 0x06001038 RID: 4152 RVA: 0x00061774 File Offset: 0x0005F974
 	public void OnRestoreCheckpoint()
 	{
 		this.SpriteMaterialTintColor(new Color(0f, 0f, 0f, 0f));
@@ -322,16 +296,19 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		RandomizerBonusSkill.UpdateDrain();
 	}
 
-	// Token: 0x06001039 RID: 4153 RVA: 0x00061818 File Offset: 0x0005FA18
-	[DebuggerHidden]
 	public IEnumerator FlashSprite()
 	{
-		SeinDamageReciever.<FlashSprite>c__Iterator12 <FlashSprite>c__Iterator = new SeinDamageReciever.<FlashSprite>c__Iterator12();
-		<FlashSprite>c__Iterator.<>f__this = this;
-		return <FlashSprite>c__Iterator;
+		yield return new WaitForFixedUpdate();
+		for (int i = 0; i < 8; i++)
+		{
+			this.SpriteMaterialTintColor(Color.red);
+			yield return new WaitForSeconds(0.05f);
+			this.SpriteMaterialTintColor(new Color(0f, 0f, 0f, 0f));
+			yield return new WaitForSeconds(0.05f);
+		}
+		yield break;
 	}
 
-	// Token: 0x0600103A RID: 4154 RVA: 0x0000E348 File Offset: 0x0000C548
 	public void SpriteMaterialTintColor(Color color)
 	{
 		if (this.Sprite)
@@ -340,7 +317,6 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600103B RID: 4155 RVA: 0x0000E370 File Offset: 0x0000C570
 	public void OnEnable()
 	{
 		this.SpriteMaterialTintColor(new Color(0f, 0f, 0f, 0f));
@@ -348,8 +324,6 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		this.m_invincibleToEnemiesTimeRemaining = 0f;
 	}
 
-	// Token: 0x170002A4 RID: 676
-	// (get) Token: 0x0600103C RID: 4156 RVA: 0x0000E3A7 File Offset: 0x0000C5A7
 	public bool IsInvinsible
 	{
 		get
@@ -358,13 +332,11 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		}
 	}
 
-	// Token: 0x0600103D RID: 4157 RVA: 0x0000E3B6 File Offset: 0x0000C5B6
 	public bool ShouldHurtAnimationKeepPlaying()
 	{
 		return !this.PlatformMovement.IsOnGround;
 	}
 
-	// Token: 0x0600103E RID: 4158 RVA: 0x00061834 File Offset: 0x0005FA34
 	public void OnKill(Damage damage)
 	{
 		if (!this.Sein.Active)
@@ -399,7 +371,6 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		GameController.Instance.StartCoroutine(this.OnKillRoutine());
 	}
 
-	// Token: 0x0600103F RID: 4159 RVA: 0x00061934 File Offset: 0x0005FB34
 	private void InstantiateDeathEffect(Damage damage)
 	{
 		GameObject gameObject = (GameObject)InstantiateUtility.Instantiate(this.DeathEffectProvider.Prefab(new DamageContext(damage)));
@@ -410,77 +381,74 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		gameObject.transform.localRotation = transform.localRotation;
 	}
 
-	// Token: 0x06001040 RID: 4160 RVA: 0x000619B8 File Offset: 0x0005FBB8
-	[DebuggerHidden]
 	public IEnumerator OnKillRoutine()
 	{
-		SeinDamageReciever.<OnKillRoutine>c__Iterator13 <OnKillRoutine>c__Iterator = new SeinDamageReciever.<OnKillRoutine>c__Iterator13();
-		<OnKillRoutine>c__Iterator.<>f__this = this;
-		return <OnKillRoutine>c__Iterator;
+		float deathDuration = this.DeathDuration;
+		for (float t = 0f; t < deathDuration; t += ((!this.Sein.IsSuspended) ? Time.deltaTime : 0f))
+		{
+			if (Characters.Sein == null)
+			{
+				yield break;
+			}
+			yield return new WaitForFixedUpdate();
+		}
+		if (DifficultyController.Instance.Difficulty == DifficultyMode.OneLife)
+		{
+			InstantiateUtility.Instantiate(this.GameOverScreen, Vector3.zero, Quaternion.identity);
+		}
+		else
+		{
+			UI.Fader.Fade(this.DeathFadeInDuration, 0f, this.DeathFadeOutDuration, new Action(this.OnKillFadeInComplete), null);
+		}
+		yield return new WaitForSeconds(this.DeathFadeInDuration);
+		SeinDeathCounter.SendTelemetryData();
+		yield break;
 	}
 
-	// Token: 0x06001041 RID: 4161 RVA: 0x0000E3C6 File Offset: 0x0000C5C6
 	public void OnKillFadeInComplete()
 	{
 		GameController.Instance.RestoreCheckpoint(null);
 	}
 
-	// Token: 0x06001042 RID: 4162 RVA: 0x0000E3D3 File Offset: 0x0000C5D3
 	public bool CanDetonateProjectiles()
 	{
 		return this.m_invincibleToEnemiesTimeRemaining == 0f;
 	}
 
-	// Token: 0x06001043 RID: 4163 RVA: 0x0000E3E2 File Offset: 0x0000C5E2
 	public override void Serialize(Archive ar)
 	{
 		base.Serialize(ar);
 		ar.Serialize(ref this.m_serializationFiller);
 	}
 
-	// Token: 0x04000F68 RID: 3944
 	public SeinCharacter Sein;
 
-	// Token: 0x04000F69 RID: 3945
 	public TextureAnimationWithTransitions HurtAnimation;
 
-	// Token: 0x04000F6A RID: 3946
 	public DamageBasedSoundProvider SeinDeathSound;
 
-	// Token: 0x04000F6B RID: 3947
 	public DamageBasedSoundProvider SeinHurtSound;
 
-	// Token: 0x04000F6C RID: 3948
 	public DamageBasedSoundProvider SeinBadlyHurtSound;
 
-	// Token: 0x04000F6D RID: 3949
 	public float BadlyHurtAmount = 4f;
 
-	// Token: 0x04000F6E RID: 3950
 	public bool IsImmortal;
 
-	// Token: 0x04000F6F RID: 3951
 	public float HurtDropPickupSpeed = 20f;
 
-	// Token: 0x04000F70 RID: 3952
 	private float m_invincibleTimeRemaining;
 
-	// Token: 0x04000F71 RID: 3953
 	private float m_invincibleToEnemiesTimeRemaining;
 
-	// Token: 0x04000F72 RID: 3954
 	private bool m_died;
 
-	// Token: 0x04000F73 RID: 3955
 	public GameObject GameOverScreen;
 
-	// Token: 0x04000F74 RID: 3956
 	public float HurtDuration = 0.25f;
 
-	// Token: 0x04000F75 RID: 3957
 	public Vector2 HurtSpeed = new Vector2(6f, 9f);
 
-	// Token: 0x04000F76 RID: 3958
 	public HorizontalPlatformMovementSettings.SpeedMultiplierSet MoveSpeed = new HorizontalPlatformMovementSettings.SpeedMultiplierSet
 	{
 		AccelerationMultiplier = 0f,
@@ -488,39 +456,27 @@ public class SeinDamageReciever : CharacterState, IDamageReciever, ISeinReceiver
 		MaxSpeedMultiplier = 1f
 	};
 
-	// Token: 0x04000F77 RID: 3959
 	public float GravityMultiplier = 2f;
 
-	// Token: 0x04000F78 RID: 3960
 	public GameObject HurtEffect;
 
-	// Token: 0x04000F79 RID: 3961
 	public GameObject HurtDropPickup;
 
-	// Token: 0x04000F7A RID: 3962
 	private float m_hurtTimeRemaining;
 
-	// Token: 0x04000F7B RID: 3963
 	public GameObject KillFader;
 
-	// Token: 0x04000F7C RID: 3964
 	public float DeathDuration;
 
-	// Token: 0x04000F7D RID: 3965
 	public float OneLifeDeathDuration = 2f;
 
-	// Token: 0x04000F7E RID: 3966
 	public float SpawnDuration;
 
-	// Token: 0x04000F7F RID: 3967
 	public float DeathFadeInDuration = 0.05f;
 
-	// Token: 0x04000F80 RID: 3968
 	public float DeathFadeOutDuration = 1f;
 
-	// Token: 0x04000F81 RID: 3969
 	public DamageBasedPrefabProvider DeathEffectProvider;
 
-	// Token: 0x04000F82 RID: 3970
 	private int m_serializationFiller;
 }

@@ -1,56 +1,53 @@
 using System;
 using UnityEngine;
 
-// Token: 0x020007EF RID: 2031
 public class AreaMapIconManager : MonoBehaviour
 {
-	// Token: 0x06002BC5 RID: 11205 RVA: 0x00002858 File Offset: 0x00000A58
-	public AreaMapIconManager()
-	{
-	}
-
-	// Token: 0x06002BC6 RID: 11206 RVA: 0x00002EE7 File Offset: 0x000010E7
 	public void Awake()
 	{
 	}
 
-	// Token: 0x06002BC7 RID: 11207
 	public void ShowAreaIcons()
 	{
 		for (int i = 0; i < GameWorld.Instance.RuntimeAreas.Count; i++)
 		{
 			RuntimeGameWorldArea runtimeGameWorldArea = GameWorld.Instance.RuntimeAreas[i];
-			foreach (MoonGuid guid in RandomizerPlantManager.Plants.Keys)
+			foreach (var icon in RandomizerWorldMapIconManager.Icons)
 			{
-				RandomizerPlantManager.PlantData plant = RandomizerPlantManager.Plants[guid];
-				if (runtimeGameWorldArea.Area.InsideFace(plant.Position))
+				if (!runtimeGameWorldArea.Area.InsideFace(icon.Position))
+					continue;
+				
+				RuntimeWorldMapIcon runtimeWorldMapIcon = null;
+				for (int j = 0; j < runtimeGameWorldArea.Icons.Count; j++)
 				{
-					RuntimeWorldMapIcon runtimeWorldMapIcon = null;
-					for (int j = 0; j < runtimeGameWorldArea.Icons.Count; j++)
+					if (runtimeGameWorldArea.Icons[j].Guid == icon.Guid)
 					{
-						if (runtimeGameWorldArea.Icons[j].Guid == guid)
-						{
-							runtimeWorldMapIcon = runtimeGameWorldArea.Icons[j];
-							break;
-						}
-					}
-					if (runtimeWorldMapIcon == null && RandomizerPlantManager.Display(guid))
-					{
-						GameWorldArea.WorldMapIcon icon = new GameWorldArea.WorldMapIcon
-						{
-							Guid = guid,
-							Icon = WorldMapIconType.Experience,
-							IsSecret = false,
-							Position = plant.Position
-						};
-						runtimeGameWorldArea.Icons.Add(new RuntimeWorldMapIcon(icon, runtimeGameWorldArea));
-					}
-					else if (runtimeWorldMapIcon != null)
-					{
-						runtimeWorldMapIcon.Icon = (RandomizerPlantManager.Display(guid) ? WorldMapIconType.Experience : WorldMapIconType.Invisible);
+						runtimeWorldMapIcon = runtimeGameWorldArea.Icons[j];
+						break;
 					}
 				}
+
+				bool collected = RandomizerLocationManager.IsPickupCollected(icon.Guid);
+				if (runtimeWorldMapIcon == null && !collected)
+				{
+					GameWorldArea.WorldMapIcon worldMapIcon = new GameWorldArea.WorldMapIcon
+					{
+						Guid = icon.Guid,
+						Icon = WorldMapIconType.HealthUpgrade,
+						IsSecret = false,
+						Position = icon.Position
+					};
+					runtimeGameWorldArea.Icons.Add(new RuntimeWorldMapIcon(worldMapIcon, runtimeGameWorldArea)
+					{
+						RandomizerIconType = icon.Type
+					});
+				}
+				else if (runtimeWorldMapIcon != null)
+				{
+					runtimeWorldMapIcon.Icon = collected ? WorldMapIconType.Invisible : WorldMapIconType.HealthUpgrade;
+				}
 			}
+
 			for (int k = 0; k < runtimeGameWorldArea.Icons.Count; k++)
 			{
 				runtimeGameWorldArea.Icons[k].Hide();
@@ -69,7 +66,6 @@ public class AreaMapIconManager : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06002BC8 RID: 11208 RVA: 0x000BF190 File Offset: 0x000BD390
 	public GameObject GetIcon(WorldMapIconType iconType)
 	{
 		switch (iconType)
@@ -124,85 +120,55 @@ public class AreaMapIconManager : MonoBehaviour
 		return null;
 	}
 
-	// Token: 0x04002755 RID: 10069
 	public AreaMapIconManager.IconGameObjects Icons;
 
-	// Token: 0x020007F0 RID: 2032
 	[Serializable]
 	public class IconGameObjects
 	{
-		// Token: 0x06002BC9 RID: 11209 RVA: 0x00002AFF File Offset: 0x00000CFF
-		public IconGameObjects()
-		{
-		}
-
-		// Token: 0x04002756 RID: 10070
 		public GameObject Keystone;
 
-		// Token: 0x04002757 RID: 10071
 		public GameObject Mapstone;
 
-		// Token: 0x04002758 RID: 10072
 		public GameObject BreakableWall;
 
-		// Token: 0x04002759 RID: 10073
 		public GameObject BreakableWallBroken;
 
-		// Token: 0x0400275A RID: 10074
 		public GameObject StompableFloor;
 
-		// Token: 0x0400275B RID: 10075
 		public GameObject StompableFloorBroken;
 
-		// Token: 0x0400275C RID: 10076
 		public GameObject EnergyGateOpen;
 
-		// Token: 0x0400275D RID: 10077
 		public GameObject KeystoneDoorTwo;
 
-		// Token: 0x0400275E RID: 10078
 		public GameObject KeystoneDoorFour;
 
-		// Token: 0x0400275F RID: 10079
 		public GameObject KeystoneDoorOpen;
 
-		// Token: 0x04002760 RID: 10080
 		public GameObject AbilityPedestal;
 
-		// Token: 0x04002761 RID: 10081
 		public GameObject HealthUpgrade;
 
-		// Token: 0x04002762 RID: 10082
 		public GameObject EnergyUpgrade;
 
-		// Token: 0x04002763 RID: 10083
 		public GameObject SavePedestal;
 
-		// Token: 0x04002764 RID: 10084
 		public GameObject AbilityPoint;
 
-		// Token: 0x04002765 RID: 10085
 		public GameObject Experience;
 
-		// Token: 0x04002766 RID: 10086
 		public GameObject MapstonePickup;
 
-		// Token: 0x04002767 RID: 10087
 		public GameObject EnergyGateTwelve;
 
-		// Token: 0x04002768 RID: 10088
 		public GameObject EnergyGateTen;
 
-		// Token: 0x04002769 RID: 10089
 		public GameObject EnergyGateEight;
 
-		// Token: 0x0400276A RID: 10090
 		public GameObject EnergyGateSix;
 
-		// Token: 0x0400276B RID: 10091
 		public GameObject EnergyGateFour;
 
-		// Token: 0x0400276C RID: 10092
 		public GameObject EnergyGateTwo;
 	}
 }
