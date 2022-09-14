@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text.RegularExpressions;
 using Game;
 using Protogen;
@@ -30,10 +31,16 @@ public class RandomizerLocationManager
 			}
 			line = reader.ReadLine();
 		}
+		if(!HaveDownloadedAreas && (DLThread == null)) {
+			DLThread = new Thread(DownloadAreas);
+			DLThread.Start();
+		}
+
 	}
 
 	public static void InitializeLogic()
 	{
+		if(!HaveDownloadedAreas) return; //Areas thread hasn't returned yet, skip. It'll run this on its own on completion.
 		
 		HashSet<string> paths = new HashSet<string>();
 		int firstComma = Randomizer.SeedMeta.IndexOf(',');
@@ -187,6 +194,22 @@ public class RandomizerLocationManager
 		
 	}
 
+	public static void DownloadAreas() {
+		var webClient = new WebClient();
+		try {
+			if(File.Exists("areas.ori")) File.Move("areas.ori", "areas.ori.old"); // backup
+			ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) => true;
+			webClient.DownloadFile(AreasURL, "areas.ori");
+			if(File.Exists("areas.ori.old")) File.Delete("areas.ori.old"); // clean backup
+		} catch(Exception e) {
+			Randomizer.LogError($"Failed to download areas.ori: ${e}");
+			if(File.Exists("areas.ori")) File.Delete("areas.ori");  					 // remove broken / failed
+			if(File.Exists("areas.ori.old")) File.Move("areas.ori.old", "areas.ori");    // restore backup
+		}
+		HaveDownloadedAreas = true;
+		InitializeLogic();
+	}
+
 	public static void UpdateReachableWorker() {
 			Inventory currentInventory = Inventory.FromCharacter();
 			currentInventory.Unlocks.Add("Mapstone");
@@ -254,6 +277,12 @@ public class RandomizerLocationManager
 	public static AreaGraph Areas;
 
 	public static Thread LogicThread;
+
+	public static Thread DLThread;
+
+	public static bool HaveDownloadedAreas = false;
+
+	public static string AreasURL = "http://orirandov3.appspot.com/netcode/areas";
 
 	private static DateTime s_logicLastUpdated = DateTime.MinValue;
 
