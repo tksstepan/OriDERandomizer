@@ -405,8 +405,12 @@ public static class RandomizerStatsManager {
 				float ppm_max = (float)get(PPM_max) / 100f;
 				statsPage = "ALIGNLEFTANCHORTOPPADDING_0_2_0_0_PARAMS_16_12_1_\nSaves:					" + get(Saves).ToString();
 				statsPage += "\nReloads:					" + get(Reloads).ToString();
-				statsPage += "\nAlt+Rs Used:				" + get(AltRCount).ToString();
-				statsPage += "\nTeleporters Used:			" + get(TeleporterCount).ToString();
+				var altrc = get(AltRCount);
+				if(altrc > 0) {
+					statsPage += "\nAlt+Rs Used:				" + get(AltRCount).ToString();
+					statsPage += "\nTeleporters Used:			" + get(TeleporterCount).ToString();
+				} else 
+					statsPage += "\nTimes Warped:				" + get(TeleporterCount).ToString();
 				statsPage += "\nEnemies Killed:				" + get(EnemiesKilled).ToString();
 				statsPage += "\nBy Leveling up:				" + get(LevelUpKills).ToString();
 				statsPage += "\nExp collected:				" + get(ExpGained).ToString();
