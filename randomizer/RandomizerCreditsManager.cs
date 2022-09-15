@@ -29,11 +29,13 @@ Sigmasin
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_7.5_2_Major contributions by:
 DevilSquirrel
+RefinedSpite
+Xemsys
 Kirefel
 
 Community Contributions by:
 GreeZ  Hydra  Jitaenow  LusTher
-Phant  Skulblaka  Terra  Xemsys", 14));
+Phant  Skulblaka  Terra", 14));
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_12_2_Additional community contributions by:
 Athos213    AvengedRuler    Cereberon    Cleanfel

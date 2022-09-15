@@ -90,16 +90,23 @@ namespace Protogen
             if (Characters.Sein.PlayerAbilities.ChargeFlame.HasAbility)
             {
                 currentInventory.Unlocks.Add("ChargeFlame");
+                if (currentInventory.Acs >= 3) {
+                    currentInventory.Unlocks.Add("ChargeFlameBurn");
+                }
             }
 
             if (Characters.Sein.PlayerAbilities.DoubleJump.HasAbility)
             {
                 currentInventory.Unlocks.Add("DoubleJump");
+                if (currentInventory.Acs >= 12) {
+                    currentInventory.Unlocks.Add("TripleJump");
+                }
             }
 
             if (Characters.Sein.PlayerAbilities.Bash.HasAbility)
             {
                 currentInventory.Unlocks.Add("Bash");
+                currentInventory.Unlocks.Add("DoubleBash");
             }
 
             if (Characters.Sein.PlayerAbilities.Stomp.HasAbility)
@@ -130,7 +137,41 @@ namespace Protogen
             if (Characters.Sein.PlayerAbilities.Dash.HasAbility)
             {
                 currentInventory.Unlocks.Add("Dash");
+                if (currentInventory.Acs >= 3) {
+                    currentInventory.Unlocks.Add("AirDash");
+                }
+                if (currentInventory.Acs >= 6) {
+                    currentInventory.Unlocks.Add("ChargeDash");
+                    currentInventory.Unlocks.Add("RocketJump");
+                }
             }
+
+            if (Characters.Sein.PlayerAbilities.ChargeJump.HasAbility && Characters.Sein.PlayerAbilities.Climb.HasAbility && Characters.Sein.PlayerAbilities.Grenade.HasAbility)
+            {
+                currentInventory.Unlocks.Add("GrenadeJump");
+            }
+
+            if (Characters.Sein.PlayerAbilities.Bash.HasAbility && Characters.Sein.PlayerAbilities.Grenade.HasAbility)
+            {
+                currentInventory.Unlocks.Add("BashGrenade");
+            }
+
+            // Currently the equivalent of Ability=0, so always expected.
+            currentInventory.Unlocks.Add("Rekindle");
+
+            if (currentInventory.Acs >= 3) {
+                currentInventory.Unlocks.Add("Regroup");
+            }
+
+            if (currentInventory.Acs >= 6) {
+                currentInventory.Unlocks.Add("UltraSoulLink");
+            }
+
+            if (currentInventory.Acs >= 12) {
+                currentInventory.Unlocks.Add("UltraDefense");
+            }
+
+            currentInventory.Unlocks.Add("Lure");
 
             if (Sein.World.Events.WaterPurified)
             {

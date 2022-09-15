@@ -248,12 +248,8 @@ public static class BingoController
     }
 
     public static void OnActivateTeleporter(string identifier) {
-        try {
-            if(!Active) return;
-            MultiBoolGoals["ActivateTeleporter"][identifier] = true;
-        } catch(Exception e) {
-            Randomizer.LogError("OnActivateTP: " + e.Message);
-        }
+        if(!Active || !MultiBoolGoals["ActivateTeleporter"].Subgoals.ContainsKey(identifier)) return;
+        MultiBoolGoals["ActivateTeleporter"][identifier] = true;
     }
 
     public static void OnTouchMapstone() {
