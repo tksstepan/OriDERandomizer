@@ -251,7 +251,7 @@ public class SaveSceneManager : MonoBehaviour
 			}
 			catch (Exception ex)
 			{
-				Randomizer.log("Bootstrap exception: "+ ex.ToString());
+				Randomizer.log("Bootstrap exception: " + ex.ToString());
 			}
 		}
 	}
@@ -281,7 +281,7 @@ public class SaveSceneManager : MonoBehaviour
 			}
 			catch (Exception ex)
 			{
-				Randomizer.log("Bootstrap exception: "+ ex.ToString());
+				Randomizer.log("Bootstrap exception: " + ex.ToString());
 			}
 		}
 	}
