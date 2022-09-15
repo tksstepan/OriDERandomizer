@@ -245,7 +245,14 @@ public class SaveSceneManager : MonoBehaviour
 			}
 		}
 		if (bootstrapHook != null) {
-			bootstrapHook(sceneRoot);
+			try
+			{
+				bootstrapHook(sceneRoot);
+			}
+			catch (Exception ex)
+			{
+				Randomizer.log("Bootstrap exception: "+ ex.ToString());
+			}
 		}
 	}
 
@@ -268,7 +275,14 @@ public class SaveSceneManager : MonoBehaviour
 			}
 		}
 		if (bootstrapHook != null) {
-			bootstrapHook(sceneRoot);
+			try
+			{
+				bootstrapHook(sceneRoot);
+			}
+			catch (Exception ex)
+			{
+				Randomizer.log("Bootstrap exception: "+ ex.ToString());
+			}
 		}
 	}
 
