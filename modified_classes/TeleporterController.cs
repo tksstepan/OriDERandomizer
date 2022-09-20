@@ -384,6 +384,16 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		TeleporterController.Instance.Teleporters.Add(teleporter);
     }
 
+	public static bool IsTeleporting
+	{
+		get {
+			if (TeleporterController.Instance == null) {
+				return false;
+			}
+			return TeleporterController.Instance.m_isTeleporting;
+		}
+	}
+
 	public bool IsSuspended { get; set; }
 
 	public static TeleporterController Instance;
