@@ -582,15 +582,10 @@ public static class Randomizer
                 Randomizer.printInfo("Return to start is disabled!");
                 return;
             }
-
-            if (RandomizerSettings.Game.UseTeleportAnywhere)
-            {
-                Randomizer.TeleportAnywhere();
-            }
-            else
-            {
+            if (get(1104)>0)
                 Randomizer.returnToStart();
-            }
+            else
+                Randomizer.TeleportAnywhere();
             return;
         }
         if (RandomizerRebinding.ShowProgress.IsPressed() && Characters.Sein)

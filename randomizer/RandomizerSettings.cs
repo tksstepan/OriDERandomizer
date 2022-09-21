@@ -174,7 +174,6 @@ public static class RandomizerSettings
 
 		Game.ImprovedSpiritFlame = new BoolSetting("Improved Spirit Flame", true, false);
 		Game.BlackrootOrbRoomClimbAssist = new BoolSetting("Blackroot Orb Room Climb Assist", true, false);
-		Game.UseTeleportAnywhere = new BoolSetting("Use Teleport Anywhere for Alt+R", true, false);
 		Game.DefaultDifficulty = new EnumSetting<Difficulty>("Default Difficulty", Difficulty.Relaxing, false);
 
 		Accessibility.ApplySoundCompression = new BoolSetting("Apply Sound Compression", false, false);
@@ -280,8 +279,6 @@ public static class RandomizerSettings
 		public static BoolSetting ImprovedSpiritFlame;
 
 		public static BoolSetting BlackrootOrbRoomClimbAssist;
-
-		public static BoolSetting UseTeleportAnywhere;
 
 		public static EnumSetting<Difficulty> DefaultDifficulty;
 	}

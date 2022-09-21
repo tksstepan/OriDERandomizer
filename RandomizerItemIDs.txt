@@ -173,6 +173,7 @@
 1101 - Frag-Sense variant online
 1102 - Free Level Explosion
 1103 - Disable Alt-R soft-lock fixes
+1104 - Use old Alt-R behavior
 
 ==== Begin Persists Through Death Zone ===
 1500 - Deaths
