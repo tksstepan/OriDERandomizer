@@ -239,13 +239,13 @@ public class RandomizerLocationManager
 			if (RandomizerLocationManager.Areas != null)
 			{
 				reachable = OriReachable.Reachable(RandomizerLocationManager.Areas, currentInventory, spawnNodeName);
-				reachable.Add("FirstEnergyCell");
-				reachable.Add("Sein");
+				if(reachable.Contains("FronkeyFight")) { // hacky hack hack
+					reachable.Add("FirstEnergyCell");
+					reachable.Add("Sein");
+				}
 
 				if (reachable.Contains("ForlornEscape"))
-				{
 					reachable.Add("ForlornEscapePlant");
-				}
 				foreach (var item in RandomizerLocationManager.LocationsByName) 
 					item.Value.Reachable = reachable.Contains(item.Key);
 /* can toggle this on for debugging but logging in a thread is spoopy and the conditionals are more work than overwriting bools
