@@ -285,20 +285,17 @@ public class RandomizerBootstrap
 
 	private static void BootstrapMoonGrottoBridge(SceneRoot sceneRoot)
 	{
-		if (RandomizerSettings.Game.FixGrottoBridgeDrop)
-		{
-			// add an ActionSequenceSerializer to the bridge so that the sequence continues and activates the final colliders even after glitching it,
-			// but delay that activation so the skip acts more like the vanilla skip.
-			GameObject bridgeSequenceGameObject = sceneRoot.transform.FindChild("*gumoBridgeSetup/group/action").gameObject;
-			ActionSequenceSerializer serializer = bridgeSequenceGameObject.AddComponent<ActionSequenceSerializer>();
-			ActionSequence bridgeSequence = sceneRoot.transform.FindChild("*gumoBridgeSetup/group/action").GetComponent<ActionSequence>();
-			WaitAction waitAction = bridgeSequence.gameObject.AddComponent<WaitAction>();
-			waitAction.Duration = 10f;
-			bridgeSequence.Actions.Insert(16, waitAction);
-			RandomizerBootstrap.SetGuidAndSave(sceneRoot, waitAction, new MoonGuid(705566895, 1206307123, -626862952, 223115723));
-			serializer.OnValidate();
-			RandomizerBootstrap.SetGuidAndSave(sceneRoot, serializer, new MoonGuid(1360931587, 1176121670, -1051255642, 855352030));
-		}
+		// add an ActionSequenceSerializer to the bridge so that the sequence continues and activates the final colliders even after glitching it,
+		// but delay that activation so the skip acts more like the vanilla skip.
+		GameObject bridgeSequenceGameObject = sceneRoot.transform.FindChild("*gumoBridgeSetup/group/action").gameObject;
+		ActionSequenceSerializer serializer = bridgeSequenceGameObject.AddComponent<ActionSequenceSerializer>();
+		ActionSequence bridgeSequence = sceneRoot.transform.FindChild("*gumoBridgeSetup/group/action").GetComponent<ActionSequence>();
+		WaitAction waitAction = bridgeSequence.gameObject.AddComponent<WaitAction>();
+		waitAction.Duration = 10f;
+		bridgeSequence.Actions.Insert(16, waitAction);
+		RandomizerBootstrap.SetGuidAndSave(sceneRoot, waitAction, new MoonGuid(705566895, 1206307123, -626862952, 223115723));
+		serializer.OnValidate();
+		RandomizerBootstrap.SetGuidAndSave(sceneRoot, serializer, new MoonGuid(1360931587, 1176121670, -1051255642, 855352030));
 	}
 
 	private static void BootstrapMountHoruHub(SceneRoot sceneRoot)
