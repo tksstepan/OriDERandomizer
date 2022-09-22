@@ -155,8 +155,11 @@ public static class RandomizerColorManager
 						float scaleFactor = distance / scale;
 						Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = new Color(Mathf.Lerp(hotColor.r, coldColor.r, scaleFactor), Mathf.Lerp(hotColor.g, coldColor.g, scaleFactor), Mathf.Lerp(hotColor.b, coldColor.b, scaleFactor), Mathf.Lerp(hotColor.a, coldColor.a, scaleFactor));
 					}
-					else
+					else {
 						colorIndex += (int)(20f * (1f - distance / scale));
+						Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = colors[colorIndex];
+					}
+					return;
 				} 
 			}
 			if (customRotation)
