@@ -34,6 +34,7 @@ public static class RandomizerSyncManager
 		TeleportInfos.Add(new TeleportInfoLine("Ginso", 6));
 		TeleportInfos.Add(new TeleportInfoLine("Horu", 7));
 		TeleportInfos.Add(new TeleportInfoLine("Blackroot", 8));
+		TeleportInfos.Add(new TeleportInfoLine("Glades", 9));
 		SkillInfos.Add(new SkillInfoLine(0, 0, AbilityType.Bash));
 		SkillInfos.Add(new SkillInfoLine(2, 1, AbilityType.ChargeFlame));
 		SkillInfos.Add(new SkillInfoLine(3, 2, AbilityType.WallJump));
