@@ -262,6 +262,7 @@ public static class RandomizerSyncManager
 
 	public static void RetryOnFail(object sender, DownloadStringCompletedEventArgs e)
 	{
+		int ln = 0;
 		try
 		{
 			if(SendingPickup == null)
@@ -269,14 +270,20 @@ public static class RandomizerSyncManager
 				Randomizer.log("Error: no sending pickup found!");
 				return;
 			}
+			ln = 1;
 			if (e.Cancelled || e.Error != null)
 			{
+				ln = 2;
 				if (e.Error.GetType().Name == "WebException")
 				{
+					ln = 3;
 					HttpStatusCode statusCode = ((HttpWebResponse)((WebException)e.Error).Response).StatusCode;
+					ln = 4;
 					if (statusCode == HttpStatusCode.Gone) {
+						ln = 5;
 						if (SendingPickup.type == "RB")
 						{
+							ln = 6;
 							RandomizerBonus.UpgradeID(-int.Parse(SendingPickup.id));
 						}
 					} else if (statusCode != HttpStatusCode.NotAcceptable) {
@@ -291,7 +298,11 @@ public static class RandomizerSyncManager
 			}
 			SendingPickup = null;
 		} catch(Exception ee) {
-			Randomizer.LogError("RetryOnFail: " + ee.Message);
+			Randomizer.LogError($"RetryOnFail: {ee.Message}, e: {e}, ln {ln}");
+			if(ee.Message == "Object reference not set to an instance of an object") {
+				Randomizer.printInfo("Strange Network Error! Ping Eiko in the ori discord if you see this");
+				SendingPickup = null;
+			}
 		}
 	}
 
