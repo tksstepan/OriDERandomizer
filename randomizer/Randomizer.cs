@@ -646,9 +646,7 @@ public static class Randomizer
     public static void showChaosEffect(string message)
     {
         if (Randomizer.ChaosVerbose)
-        {
             Randomizer.printInfo(message);
-        }
     }
 
     public static void showChaosMessage(string message)
@@ -660,82 +658,57 @@ public static class Randomizer
     {
         try {
             string text = "";
+            string g = "";
             if(Randomizer.ForceTrees || Randomizer.CluesMode)
             {
-                if (RandomizerBonus.SkillTreeProgression() == 10)
-                {
-                    text += "$Trees (10/10)$  ";
-                }
-                else
-                {
-                    text = text + "Trees (" + RandomizerBonus.SkillTreeProgression().ToString() + "/10)  ";
-                }
+                int trees = RandomizerBonus.SkillTreeProgression();
+                g = trees >= 10 ? "$" : "";
+                text += $"{g}Trees ({trees}/10){g}  ";
             }    
             if (Randomizer.WorldTour && Characters.Sein) {
                 int relics = get(302);
-                if(relics < Randomizer.RelicCount) {
-                    text += "Relics (" + relics.ToString() + "/"+Randomizer.RelicCount.ToString() + ")  ";
-                } else {
-                    text += "$Relics (" + relics.ToString() + "/"+Randomizer.RelicCount.ToString() + ")$  ";
-                }
+                g = relics >= Randomizer.RelicCount ? "$" : "";
+                text += $"{g}Relics ({relics}/{Randomizer.RelicCount}){g}  ";
             }
-            if (RandomizerBonus.MapStoneProgression() == 9 && Randomizer.ForceMaps)
-            {
-                text += "$Maps (9/9)$  ";
-            }
-            else
-            {
-                text = text + "Maps (" + RandomizerBonus.MapStoneProgression().ToString() + "/9)  ";
-            }
-            text = text + "Total (" + get(1600).ToString() + "/256)\n";
+            int maps = RandomizerBonus.MapStoneProgression();
+            g = maps >= 9 ? "$" : "";
+            text += $"{g}Maps ({maps}/9){g}  ";
+            int pickups = get(1600);
+            g = pickups >= 256 ? "$" : "";
+
+            text += $"{g}Total ({pickups}/256){g}\n";
             if (Randomizer.CluesMode)
-            {
                 text += RandomizerClues.GetClues();
-            }
-            else
-            {
+            else if(Randomizer.Shards) {
                 if (Keys.GinsoTree)
-                {
                     text += "*WV (3/3)*  ";
-                }
                 else
-                {
-                    text = text + " *WV* (" + RandomizerBonus.WaterVeinShards().ToString() + "/3)  ";
-                }
+                    text += $"*WV* ({RandomizerBonus.WaterVeinShards()}/3)  ";
                 if (Keys.ForlornRuins)
-                {
                     text += "#GS (3/3)#  ";
-                }
                 else
-                {
-                    text = text + "#GS# (" + RandomizerBonus.GumonSealShards().ToString() + "/3)  ";
-                }
+                    text += $"#GS# ({RandomizerBonus.GumonSealShards()}/3)  ";
                 if (Keys.MountHoru)
-                {
                     text += "@SS (3/3)@";
-                }
                 else
-                {
-                    text = text + "@SS@ (" + RandomizerBonus.SunstoneShards().ToString() + "/3)";
-                }
-            }
+                    text += $"@SS@ ({RandomizerBonus.SunstoneShards()}/3)  ";
+            } else  // the below is ugly code, but otoh it's also code that will only run for people who are playing clueless shardless seeds, and. :orishrug: they had it coming, or something.
+                text += $"*WV{(Keys.GinsoTree ? ": Found*" : "*: ????")}  #GS{(Keys.ForlornRuins ? ": Found#" : "#: ????")}  @SS{(Keys.MountHoru ? ": Found@" : "@: ????")}";
             if (Randomizer.fragsEnabled)
             {
-                text = string.Concat(new string[] { text, " Frags: (", RandomizerBonus.WarmthFrags().ToString(), "/", Randomizer.fragKeyFinish.ToString(), ")" });
+                int frags = RandomizerBonus.WarmthFrags();
+                g = frags >= Randomizer.fragKeyFinish ? "$" : "";
+                text += $" {g}Frags: ({RandomizerBonus.WarmthFrags()}/{Randomizer.fragKeyFinish}){g}";
             }
             if(RandomizerBonus.ForlornEscapeHint())
             {
-                string s_color = "";
+                string s = "";
                 string g_color = "";
-                 if(Characters.Sein)
-                 {
-                    if(Characters.Sein.PlayerAbilities.HasAbility(AbilityType.Stomp))
-                        s_color = "$";
-                    if(Characters.Sein.PlayerAbilities.HasAbility(AbilityType.Grenade))
-                        g_color = "$";
-                 }
-
-                text += "\n" +s_color + "Stomp: " + StompZone + s_color + g_color+ "    Grenade: "+ GrenadeZone + g_color;
+                 if(Characters.Sein) {
+                    s = Characters.Sein.PlayerAbilities.HasAbility(AbilityType.Stomp)   ? "$" : "";
+                    g = Characters.Sein && Characters.Sein.PlayerAbilities.HasAbility(AbilityType.Grenade) ? "$" : "";
+                }
+                text += $"\n{s}Stomp: {StompZone}{s}{g}    Grenade: {GrenadeZone}{g}";
             }
             Randomizer.printInfo(text);
         }
