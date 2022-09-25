@@ -274,10 +274,10 @@ public static class RandomizerSyncManager
 			if (e.Cancelled || e.Error != null)
 			{
 				ln = 2;
-				if (e.Error.GetType().Name == "WebException")
+				if (e.Error is WebException we && we.Response != null)
 				{
 					ln = 3;
-					HttpStatusCode statusCode = ((HttpWebResponse)((WebException)e.Error).Response).StatusCode;
+					HttpStatusCode statusCode = ((HttpWebResponse)we.Response).StatusCode;
 					ln = 4;
 					if (statusCode == HttpStatusCode.Gone) {
 						ln = 5;
@@ -294,7 +294,7 @@ public static class RandomizerSyncManager
 					return;
 				}
 				if(e.Error != null)
-					Randomizer.log("RetryOnFail got non-web excpetion: " + e.Error.ToString());
+					Randomizer.log($"RetryOnFail (ln: {ln}) got responseless excpetion: {e}");
 			}
 			SendingPickup = null;
 		} catch(Exception ee) {
