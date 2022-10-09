@@ -25,8 +25,10 @@ namespace Protogen
 
             List<string> logicLines = File.ReadAllLines(filename).ToList();
 
-            foreach (string line in logicLines)
+            foreach (string rawLine in logicLines)
             {
+                int commStart = rawLine.IndexOf("--");
+                string line = ((commStart == -1) ? rawLine : rawLine.Substring(0, commStart)).Trim();
                 if (line.StartsWith("--") || line == "")
                     continue;
                 var segments = line.Split(new char[]{' '}, StringSplitOptions.RemoveEmptyEntries);
