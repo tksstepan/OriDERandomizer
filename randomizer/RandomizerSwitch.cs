@@ -30,9 +30,9 @@ public static class RandomizerSwitch
         }
     }
 
-    public static void ExpOrbPickup(int Value)
+    public static void ExpOrbPickup(int Value, int coords)
     {
-        PickupMessage(Value.ToString() + " experience");
+        PickupMessage(Value.ToString() + " " + Randomizer.ExpName(coords));
         if(Randomizer.ZeroXP)
         {
             return;
@@ -211,7 +211,7 @@ public static class RandomizerSwitch
                     MaxEnergyContainerPickup();
                     break;
                 case "EX":
-                    ExpOrbPickup((int)Action.Value);
+                    ExpOrbPickup((int)Action.Value, coords);
                     break;
                 case "KS":
                     KeystonePickup();

@@ -12,7 +12,7 @@ using UnityEngine;
 
 public static class Randomizer
 {
-    public static string VERSION = "4.0.4";
+    public static string VERSION = "4.0.5";
     public static void initialize()
     {
         try {
@@ -27,6 +27,14 @@ public static class Randomizer
             Randomizer.ForceMaps = false;
             Randomizer.SyncMode = 4;
             Randomizer.StringKeyPickupTypes = new List<string> {"TP", "SH", "NO", "WT", "MU", "HN", "WP", "RP", "WS", "TW", "NB"};
+            Randomizer.RandomExpNames  = new List<String>() { "Apples",  "Bananas",  "Bells",  "Bits",  "Bolts",  "Boonbucks",  "Boxings",  "Brick",  "Brownie Points", 
+     "Bytes",  "Cash",  "Coins",  "Comments",  "Credits",  "Crowns",  "Diamonds",  "Dollars",  "Dollerydoos",  "Doubloons",  "Drams",  "EXP",  "Echoes",  "Emeralds",  "Euros",
+     "Exalted Orbs",  "Experience",  "Farthings",  "Fish",  "Fun",  "GP",  "Gallons",  "Geo",  "Gil",  "Glod",  "Gold",  "Hryvnia",  "Hugs",  "Kalganids",  "Leaves",  "Likes",
+     "Marbles",  "Minerals",  "Money",  "Munny",  "Nobles",  "Notes",  "Nuts",  "Nuyen",  "Ori Money",  "Pesos",  "Pieces of Eight",  "Points",  "Poké",  "Pons",  "Pounds Sterling", 
+     "Quatloos",  "Quills",  "Rings",  "Rubies",  "Runes",  "Rupees",  "Sapphires",  "Sheep",  "Shillings",  "Silver",  "Slivers",  "Socks",  "Solari",  "Souls",  "Sovereigns", 
+     "Spheres",  "Spirit Bucks",  "Spirit Light",  "Stamps",  "Stonks",  "Strawberries",  "Subs",  "Tickets",  "Tokens",  "Vespine Gas",  "Wheat",  "Widgets",  "Wood",  "XP",
+     "Yen",  "Zenny",  "Zloty"};
+ 
             RandomizerChaosManager.initialize();
             Randomizer.DamageModifier = 1f;
             Randomizer.GridFactor = 4.0;
@@ -1474,6 +1482,12 @@ public static class Randomizer
         }
     }
 
+    public static string ExpName(int p) {
+            if(RandomizerSettings.Customization.RandomizedExpNames) 
+                return RandomExpNames[new System.Random(31 * Randomizer.SeedMeta.GetHashCode() + p).Next(RandomExpNames.Count)];
+            return "Experience";
+    }
+
     public static bool SafeIsBashing {get => (Characters.Sein.Abilities.Bash && Characters.Sein.Abilities.Bash.IsBashing) || false; }
 
     public static RandomizerInventory Inventory { get; private set; }
@@ -1546,6 +1560,8 @@ public static class Randomizer
     public static int RelicCount;
 
     public static ArrayList ValleyStompDoorData;
+
+    public static List<String> RandomExpNames;
 
     public static string GrenadeZone;
     // welcome to the...

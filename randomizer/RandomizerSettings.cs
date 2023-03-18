@@ -168,6 +168,7 @@ public static class RandomizerSettings
 		Customization.WarpTeleporterColor = new ColorSetting("Warp Teleporter Color", new Color(202f/255f, 57f/255f, 243f/255f, 1f), 255f);
 		Customization.DefaultMapFilter = new EnumSetting<MapFilterMode>("Default Map Filter", MapFilterMode.InLogic, false);
 		Customization.HintLevel = new EnumSetting<HintLevels>("Hints", HintLevels.NewPlayer, false);
+		Customization.RandomizedExpNames = new RandomizerSettings.BoolSetting("Randomized Experience Names", false, false);
 
 		QOL.AbilityMenuOpacity = new FloatSetting("Ability Menu Opacity", 0.5f);
 		QOL.CursorLock = new BoolSetting("Cursor Lock", false, false);
@@ -265,6 +266,8 @@ public static class RandomizerSettings
 		public static EnumSetting<MapFilterMode> DefaultMapFilter;
 
 		public static EnumSetting<HintLevels> HintLevel;
+
+		public static BoolSetting RandomizedExpNames;
 	}
 
 	public static class QOL
