@@ -115,6 +115,9 @@ public static class Randomizer
                     List<String> allLines = File.ReadAllLines(Randomizer.SeedFilePath).ToList();
                     string[] flagLine = allLines[0].Split('|');
                     string s = flagLine[1];
+                    if(s.Contains("ForlornAutoHintTESTONLY")) {
+                        set(1105, 1);
+                    }
                     string[] flags = flagLine[0].Split(',');
                     Randomizer.SeedMeta = allLines[0];
                     bool doBingo = Randomizer.ParseFlags(s, flags);
@@ -982,6 +985,8 @@ public static class Randomizer
                         {
                             RandomizerCreditsManager.CreditsDone = false;
                         }
+                    } else if(get(1105) > 0 && scene == "forlornRuinsNestC") {
+                            RandomizerBonus.UpgradeID(81);
                     }
                     else if(scene == "creditsScreen")
                     {
