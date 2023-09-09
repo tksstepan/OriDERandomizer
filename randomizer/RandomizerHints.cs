@@ -52,7 +52,7 @@ public static class RandomizerHints {
 	public static void TryShowSenseHint() {
 		try {
 			if(File.GetLastWriteTime("RandomizerSettings.txt") > new DateTime(2023,9,9,0,0,0)) return;
-			Randomizer.Print("In patch 4.0.7 onwards, #Sense# only changes Ori's color from the default (or custom) color when it is detecting an item.\nIf you previously set your #Sense cold# color to be similar to your normal color, consider changing one or both.\n(Don't want to see this message anymore? Add a blank line to the bottom of your RandomizerSettings.txt file and it will stop showing up.)", 15, false, false, false, true);
+			Randomizer.Print("In patch 4.0.7 onwards, #Sense# only changes Ori's color from the default (or custom) color when it is detecting an item.\nIf you previously set your Sense #cold color# to be similar to your normal color, consider changing one or both.\n(Don't want to see this message anymore? Add a blank line to the bottom of your RandomizerSettings.txt file and it will stop showing up.)", 15, false, false, false, true);
 		} catch(Exception e) { Randomizer.LogError($"TryShowSenseHint: {e.Message}"); }
 	}
 
