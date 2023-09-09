@@ -483,7 +483,7 @@ public class RandomizerBootstrap
 		ActionSequence treeSequence = sceneRoot.transform.FindChild("*abilityPedestalWallJump/pedestal/actionSequence").GetComponent<ActionSequence>();	
 		ShowHintAction hint = treeSequence.gameObject.AddComponent<ShowHintAction>();
 		RandomizerMessageProvider message = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
-		string text = "Stuck? You can use Return To Start (" + RandomizerRebinding.ReturnToStart.FirstBindName() + ") to go somewhere useful!";
+		string text = "Stuck? You can use Warp (" + RandomizerRebinding.ReturnToStart.FirstBindName() + ") to go somewhere else!";
 		message.SetMessage(text);
 		hint.HintMessage = message;
 		hint.Duration = 5f;
@@ -501,10 +501,10 @@ public class RandomizerBootstrap
 		ActionSequence getSeinSequence = sceneRoot.transform.FindChild("*setups/*story/findingOri/seinInterestZone/trigger/activateSequence").GetComponent<ActionSequence>();	
 		ShowHintAction hint = getSeinSequence.gameObject.AddComponent<ShowHintAction>();
 		RandomizerMessageProvider message = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
-		string text = "Tip: You can use Return To Start (" + RandomizerRebinding.ReturnToStart.FirstBindName() + ") to skip this fight!";
+		string text = "Tip: You can Warp (" + RandomizerRebinding.ReturnToStart.FirstBindName() + ") away without fighting these Fronkeys";
 		message.SetMessage(text);
 		hint.HintMessage = message;
-		hint.Duration = 5f;
+		hint.Duration = 10f;
 		getSeinSequence.Actions.Insert(17, hint);
 	}
 
@@ -649,7 +649,7 @@ public class RandomizerBootstrap
 		reentryHintTransform.localScale = new Vector3(5, 20);
 
 		RandomizerMessageProvider reentryText = ScriptableObject.CreateInstance<RandomizerMessageProvider>();
-		reentryText.SetMessage("You can change the misty layout at the orb pedestal");
+		reentryText.SetMessage("You can change the Misty layout at the orb pedestal");
 		ShowSpiritTreeTextAction reentryHint = reentryHintTransform.gameObject.AddComponent<ShowSpiritTreeTextAction>();
 		reentryHint.Message = reentryText;
 		// Location of the text.

@@ -35,6 +35,8 @@ public static class RandomizerHints {
 		new StringMaker(() => "Extra Air Dash lets you dash an additional time in the air.\nRequires *Dash* and #Air Dash# in the *Blue* #Ability Tree#\n(See all Bonus Item Descriptions in the Bonus Item Glossary at orirando.com/faq)"),
 		new StringMaker(() => "Health Regeneration restores your Health slowly over time\n(See all Bonus Item Descriptions in the Bonus Item Glossary at orirando.com/faq)"),
 		new StringMaker(() => "Energy Regeneration restores your Energy slowly over time\n(See all Bonus Item Descriptions in the Bonus Item Glossary at orirando.com/faq)"),
+		new StringMaker(() => "Once you've cleared the fog in #Misty Woods#\nyou can change the layout by interacting with the orb pedestal"),
+		new StringMaker(() => "If you start the #Forlorn# escape and Warp away immediately,\nyou can retry it later by returning to the start room and jumping.\nBe sure not to Warp out halfway through!"),
 		new StringMaker(() => "Join the Ori community at orirando.com/discord"),
 		new StringMaker(() => "Use the *Logic Helper* map filter to check which pickups are currently in logic"),
 		new StringMaker(() => "Some enemies are immune to some spikes, allowing them to be lured surprising distances"),
