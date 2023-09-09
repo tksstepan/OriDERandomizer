@@ -140,14 +140,11 @@ public static class RandomizerColorManager
 				{
 					distance = Vector3.Distance(HotColdTarget, Characters.Sein.Position);
 				}
-				if (distance >= scale)
+				if (distance < scale)
 				{
-					if (!(customRotation && RandomizerSettings.Customization.DiscoSense))
-					{
-						Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = RandomizerSettings.Customization.ColdColor;
-						return;
+					if(colorBeforeSense.Count == 0) {
+						colorBeforeSense.Add(Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color);
 					}
-				} else {
 					if (!(customRotation && RandomizerSettings.Customization.DiscoSense))
 					{
 						Color hotColor = RandomizerSettings.Customization.HotColor;
@@ -159,8 +156,12 @@ public static class RandomizerColorManager
 						colorIndex += (int)(20f * (1f - distance / scale));
 						Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = colors[colorIndex];
 					}
-					return;
-				} 
+				return;
+				}
+				if(!(customRotation || customColor) && colorBeforeSense.Count > 0) {
+					Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = colorBeforeSense[0];
+					colorBeforeSense.Clear();
+				}
 			}
 			if (customRotation)
 			{
@@ -215,6 +216,8 @@ public static class RandomizerColorManager
 	private static bool customRotation = false;
 
 	private static List<Color> colors = new List<Color>();
+
+	private static List<Color> colorBeforeSense = new List<Color>(); // this is an Optional actually
 
 	private static int colorIndex = 0;
 
