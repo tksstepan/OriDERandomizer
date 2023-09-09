@@ -1014,11 +1014,11 @@ public static class Randomizer
                             Characters.Sein.Position = new Vector3(750f, -120f);
                             return;
                         }
-                        if (get(1106) > 0 && Characters.Sein.Position.y > -225f && Scenes.Manager.CurrentScene.Scene == "forlornRuinsResurrection")
+                        if (get(1106) > 0 && Characters.Sein.Position.y > -235f && Scenes.Manager.CurrentScene.Scene == "forlornRuinsResurrection")
                         {
                             if (SafeIsBashing)
                                 Characters.Sein.Abilities.Bash.BashGameComplete(0f);
-                            Characters.Sein.Position = new Vector3(-1350f, -420f);
+                            Characters.Sein.Position = new Vector3(-1350f, -410f);
                             return;
                         }                        
                         if (Scenes.Manager.CurrentScene.Scene == "catAndMouseResurrectionRoom" && !Randomizer.canFinalEscape()) {
