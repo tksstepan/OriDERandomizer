@@ -165,12 +165,7 @@ public static class RandomizerBonus
                     RandomizerSwitch.PickupMessage("*Water Vein Shard (" + RandomizerBonus.WaterVeinShards().ToString() + "/3)*");
                 }
             }
-            else if (RandomizerBonus.WaterVeinShards() >= 3)
-            {
-                RandomizerSwitch.PickupMessage("*Water Vein Shard (extra)*");
-            }
-            else
-            {
+            else {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
                 RandomizerSwitch.PickupMessage("*Water Vein Shard (" + RandomizerBonus.WaterVeinShards().ToString() + "/3)*", 300);
             }
@@ -187,12 +182,7 @@ public static class RandomizerBonus
                     RandomizerSwitch.PickupMessage("#Gumon Seal Shard (" + RandomizerBonus.GumonSealShards().ToString() + "/3)#");
                 }
             }
-            else if (RandomizerBonus.GumonSealShards() >= 3)
-            {
-                RandomizerSwitch.PickupMessage("#Gumon Seal Shard (extra)#");
-            }
-            else
-            {
+            else {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
                 RandomizerSwitch.PickupMessage("#Gumon Seal Shard (" + RandomizerBonus.GumonSealShards().ToString() + "/3)#", 300);
             }
@@ -209,12 +199,7 @@ public static class RandomizerBonus
                     RandomizerSwitch.PickupMessage("@Sunstone Shard (" + RandomizerBonus.SunstoneShards().ToString() + "/3)@");
                 }
             }
-            else if (RandomizerBonus.SunstoneShards() >= 3)
-            {
-                RandomizerSwitch.PickupMessage("@Sunstone Shard (extra)@");
-            }
-            else
-            {
+            else {
                 Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
                 RandomizerSwitch.PickupMessage("@Sunstone Shard (" + RandomizerBonus.SunstoneShards().ToString() + "/3)@", 300);
             }
@@ -520,6 +505,8 @@ public static class RandomizerBonus
 
     public static int UpgradeCount(int ID)
     {
+        if(ID == 17 || ID == 19 || ID == 21)
+            return Math.Min(Characters.Sein.Inventory.GetRandomizerItem(ID), 3); 
         return Characters.Sein.Inventory.GetRandomizerItem(ID);
     }
 

@@ -12,7 +12,7 @@ using UnityEngine;
 
 public static class Randomizer
 {
-    public static string VERSION = "4.0.6";
+    public static string VERSION = "4.0.7";
     public static void initialize()
     {
         try {
@@ -689,15 +689,15 @@ public static class Randomizer
                 text += RandomizerClues.GetClues();
             else if(Randomizer.Shards) {
                 if (Keys.GinsoTree)
-                    text += "*WV (3/3)*  ";
+                    text += $"*WV ({RandomizerBonus.WaterVeinShards()}/3)*  ";
                 else
                     text += $"*WV* ({RandomizerBonus.WaterVeinShards()}/3)  ";
                 if (Keys.ForlornRuins)
-                    text += "#GS (3/3)#  ";
+                    text += $"#GS ({RandomizerBonus.GumonSealShards()}/3)#  ";
                 else
                     text += $"#GS# ({RandomizerBonus.GumonSealShards()}/3)  ";
                 if (Keys.MountHoru)
-                    text += "@SS (3/3)@";
+                    text += $"@SS ({RandomizerBonus.SunstoneShards()}/3)@  ";
                 else
                     text += $"@SS@ ({RandomizerBonus.SunstoneShards()}/3)  ";
             } else  // the below is ugly code, but otoh it's also code that will only run for people who are playing clueless shardless seeds, and. :orishrug: they had it coming, or something.
