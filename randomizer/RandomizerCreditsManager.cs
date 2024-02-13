@@ -35,14 +35,14 @@ Kirefel
 
 Community Contributions by:
 GreeZ  Hydra  Jitaenow  LusTher
-Phant  Skulblaka  Terra  2Kil", 14));
+Phant  Skulblaka  Terra  2Kil", 17));
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_12_2_Additional community contributions by:
 Athos213    AvengedRuler    Cereberon    Cleanfel
 CovertMuffin   Grimelios   iRobin   JHobz   Roryrai
 Jitaenow    shedd    madinsane    Mattermonkey
 RainbowPoogle   UncleRonny   Wingheart   spinesheath
-SeaAverage   DireKrow   Eph   xaviershay", 14));
+SeaAverage   DireKrow   Eph   xaviershay", 17));
 
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_10_2_Ori DE Randomizer inspired by:
@@ -50,7 +50,7 @@ Chicken_Supreme's Ori 'remix'
 A Link to the Past Randomizer", 10));
 
 		Credits.Add(new KeyValuePair<string, int>(
-@"ALIGNLEFTANCHORTOPPARAMS_20_10_2_        Ori Randomizer Tournament Champions
+@"ALIGNLEFTANCHORTOPPARAMS_24_12_2_        Ori Randomizer Tournament Champions
 
 		2017
 Singles:	Covert_Muffin
@@ -63,17 +63,26 @@ Doubles:	That Is Still Faster (Sigmasin and IMRaziel)
 		2021
 Winner:	Cleanfel
 Runner-ups: Tritonite, Xemsys, Dedew
-", 14));
 
-		// Credits.Add(new KeyValuePair<string, int>("In memory of Grandma Irine", 5));
+		2023
+Winners:	Team StoryTime (Dedew and Covert_Muffin)
+2nd Place:	Bizarre Adventurers (lifdoff and Sirius)
+3rd Place:	Ku's Bird Bath (Cleanfel and J Halcyon)
+", 18));
+
+// i wish things could have been different. you deserved better.
+Credits.Add(new KeyValuePair<string, int>("In memory of Mari L.", 3));
+
+// Credits.Add(new KeyValuePair<string, int>("In memory of Grandma Irine", 5));
+
 		try {
-			Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(0), 50));
-			Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(1), 50));
-			Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(2), 50));
+			Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(0), 45));
+			Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(1), 45));
+			Credits.Add(new KeyValuePair<string, int>(RandomizerStatsManager.GetStatsPage(2), 45));
 			Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_12_2_Thanks for playing!
 Website: orirando.com
-Join the Ori community: orirando.com/discord", 40));
+Join the Ori community: orirando.com/discord", 50));
         } catch(Exception e) {
             Randomizer.LogError("Init credits: " + e.Message);
         }
