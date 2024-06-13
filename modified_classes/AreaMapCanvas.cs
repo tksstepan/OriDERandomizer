@@ -106,7 +106,7 @@ public class AreaMapCanvas : MonoBehaviour
 			{
 				return Color.white;
 			}
-			return Color.clear;
+			return Color.red;
 		case WorldMapAreaState.Discovered:
 			return Color.red;
 		case WorldMapAreaState.Visited:
