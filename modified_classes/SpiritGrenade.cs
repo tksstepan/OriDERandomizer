@@ -60,6 +60,7 @@ public class SpiritGrenade : MonoBehaviour, IDamageReciever, IAttackable, IBashA
 	{
 		InstantiateUtility.Destroy(base.gameObject);
 		InstantiateUtility.Instantiate(this.Explosion, base.transform.position, Quaternion.identity);
+        HasExploded = true;
 	}
 
 	public void SetTrajectory(Vector2 speed)
@@ -192,6 +193,16 @@ public class SpiritGrenade : MonoBehaviour, IDamageReciever, IAttackable, IBashA
 		}
 	}
 
+    public void OnCollisionEnter(Collision collision)
+    {
+        // If the collision causes it explode then the explosion happens before this collision callback.
+        PetrifiedPlant plant = collision.gameObject.GetComponent<PetrifiedPlant>();
+        if (plant != null && !HasExploded)
+        {
+            Explode();
+        }
+    }
+
 	public float Gravity;
 
 	public DamageDealer DamageDealer;
@@ -207,4 +218,6 @@ public class SpiritGrenade : MonoBehaviour, IDamageReciever, IAttackable, IBashA
 	private IgnitableSpiritTorch m_ignitableTorch;
 
 	public bool Bashable = true;
+
+    public bool HasExploded = false;
 }
