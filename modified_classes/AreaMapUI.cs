@@ -96,6 +96,13 @@ public class AreaMapUI : MonoBehaviour, ISuspendable
 		this.Navigation.UpdateScrollLimits();
 		this.PlayerPositionOffset = Vector2.zero;
 		this.Navigation.Init();
+		Transform fog = base.transform.FindChild("mapPivot/mistyWoodsFog");
+		fog.gameObject.SetActive(false);
+		foreach (AreaMapCanvas areaMapCanvas in this.Canvases)
+		{
+			areaMapCanvas.RuntimeArea.DiscoverAllAreas();
+		}
+		this.Navigation.UpdateScrollLimits();
 	}
 
 	public void FixedUpdate()

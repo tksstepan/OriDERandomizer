@@ -207,22 +207,6 @@ public class AreaMapNavigation : MonoBehaviour
 			{
 				vector.y = 0f;
 			}
-			foreach (AreaMapScrollLimit areaMapScrollLimit in this.m_scrollLimits)
-			{
-				if (areaMapScrollLimit.Active)
-				{
-					Rect area = areaMapScrollLimit.Area;
-					Vector2 scrollPosition = this.ScrollPosition;
-					if (area.Contains(scrollPosition + new Vector2(vector.x, 0f)))
-					{
-						vector.x = 0f;
-					}
-					if (area.Contains(scrollPosition + new Vector2(0f, vector.y)))
-					{
-						vector.y = 0f;
-					}
-				}
-			}
 			this.ScrollPosition += vector;
 			if (this.ScrollSound && !this.ScrollSound.IsPlaying && (double)vector.magnitude >= 0.3)
 			{
@@ -264,23 +248,20 @@ public class AreaMapNavigation : MonoBehaviour
 			{
 				Rect rect = facesAsRectangles[i];
 				int id = area.CageStructureTool.Faces[i].ID;
-				if (runtimeGameWorldArea.FaceIsDiscoveredOrVisited(id) || AreaMapUI.Instance.DebugNavigation.UndiscoveredMapVisible)
+				if (flag)
 				{
-					if (flag)
-					{
-						num = Mathf.Min(num, rect.xMin);
-						num2 = Mathf.Min(num2, rect.yMin);
-						num3 = Mathf.Max(num3, rect.xMax);
-						num4 = Mathf.Max(num4, rect.yMax);
-					}
-					else
-					{
-						flag = true;
-						num = rect.xMin;
-						num2 = rect.yMin;
-						num3 = rect.xMax;
-						num4 = rect.yMax;
-					}
+					num = Mathf.Min(num, rect.xMin);
+					num2 = Mathf.Min(num2, rect.yMin);
+					num3 = Mathf.Max(num3, rect.xMax);
+					num4 = Mathf.Max(num4, rect.yMax);
+				}
+				else
+				{
+					flag = true;
+					num = rect.xMin;
+					num2 = rect.yMin;
+					num3 = rect.xMax;
+					num4 = rect.yMax;
 				}
 			}
 		}

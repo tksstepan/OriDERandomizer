@@ -11,14 +11,7 @@ public class AreaMapCanvas : MonoBehaviour
 
 	public void ResetMap()
 	{
-		if (this.Area.VisitableCondition && !this.Area.VisitableCondition.Validate(null))
-		{
-			base.gameObject.SetActive(false);
-		}
-		else
-		{
-			base.gameObject.SetActive(true);
-		}
+		base.gameObject.SetActive(true);
 		this.MapPlaneTexture.localScale = new Vector3(this.Bounds.size.x, this.Bounds.size.y);
 		this.MapPlaneTexture.localPosition = this.Bounds.center;
 		if (this.WorldMapTexture)
