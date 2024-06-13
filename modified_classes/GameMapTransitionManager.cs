@@ -51,6 +51,10 @@ public class GameMapTransitionManager : MonoBehaviour
 
 	public void ZoomToWorldMap()
 	{
+        if (!GameMapUI.Instance.ShowingTeleporters)
+		{
+			return;
+		}
 		if (this.ZoomOutSound)
 		{
 			this.ZoomOutSound.Play();
@@ -161,6 +165,7 @@ public class GameMapTransitionManager : MonoBehaviour
 			if (this.m_zoomTime == 1f)
 			{
 				WorldMapUI.Instance.Deactivate();
+                return;
 			}
 		}
 		else if (!this.m_areaMode)
