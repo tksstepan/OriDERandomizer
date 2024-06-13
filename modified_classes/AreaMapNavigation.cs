@@ -333,7 +333,7 @@ public class AreaMapNavigation : MonoBehaviour
 		}
 
 		Vector3 candidatePosition = this.WorldToMapPosition(candidate.Position);
-		candidatePosition.y -= 0.20f;
+		candidatePosition.y -= 0.35f;
 		AreaMapUI.Instance.RandomizerTooltip.transform.position = candidatePosition;
 
 		RandomizerLocationManager.Location pickupLocation = RandomizerLocationManager.LocationsByWorldMapGuid[candidate.Guid];

@@ -309,7 +309,7 @@ public class RandomizerLocationManager
 		{
 			string[] parts = locationData.Split();
 			this.Name = parts[0];
-			this.FriendlyName = Regex.Replace(this.Name, "([A-Z0-9]+)", " $1");
+			this.FriendlyName = Regex.Replace(this.Name, "([A-Z0-9]+)", " $1") + "\n" + parts[5];
 			this.Position = new Vector2(float.Parse(parts[1]), float.Parse(parts[2]));
 			this.Type = (LocationType)Enum.Parse(typeof(LocationType), parts[3]);
 			this.Difficulty = int.Parse(parts[4]);
