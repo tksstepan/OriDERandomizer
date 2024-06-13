@@ -100,6 +100,15 @@ public class RuntimeWorldMapIcon
 			case RandomizerWorldMapIconType.SkillTree:
 				InitStandardIcon(WorldMapIconType.AbilityPedestal);
 				break;
+			case RandomizerWorldMapIconType.GumonSeal:
+				CreateIconFromInventory("forlornRuins/forlornKeyGraphic", 10f);
+				break;
+			case RandomizerWorldMapIconType.Keystone:
+				InitStandardIcon(WorldMapIconType.Keystone);
+				break;
+			case RandomizerWorldMapIconType.Experience:
+				InitStandardIcon(WorldMapIconType.Experience);
+				break;
 			default:
 				break;
 		}
