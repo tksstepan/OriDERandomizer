@@ -234,6 +234,11 @@ public class RandomizerLocationManager
 				currentInventory.Unlocks.Add("OpenWorld");
 			}
 
+            if (Randomizer.InLogicWarps)
+			{
+				currentInventory.Unlocks.Add("InLogicWarps");
+			}
+			
 			HashSet<string> reachable = null;
 
 			if (RandomizerLocationManager.Areas != null)

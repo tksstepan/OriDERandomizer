@@ -104,6 +104,8 @@ public static class Randomizer
             Randomizer.AllowOrbWarps = false;
             Randomizer.RandomizedFirstEnergy = false;
             Randomizer.NightBerryWarpPosition = new Vector3(-910f, -300f);
+            Randomizer.InLogicWarps = false;
+			Randomizer.WarpLogicLocations = new Hashtable();
 
             if (Randomizer.SeedFilePath == null)
             {
@@ -1252,6 +1254,10 @@ public static class Randomizer
             {
                 Randomizer.RandomizedFirstEnergy = true;
             }
+            if (flag == "inlogicwarps")
+			{
+				Randomizer.InLogicWarps = true;
+			}
         }
         return doBingo;
     }
@@ -1350,6 +1356,18 @@ public static class Randomizer
         {
             RandomizerClues.AddClue(area, id_number / 2);
         }
+        if (code == "TW")
+		{
+            //6399872|TW|Warp to Spirit Cavern AC,-219,-176,SpiritCavernsACWarp|Swamp
+			string[] Pieces = id.Split(new char[]
+			{
+				','
+			});
+			if (Pieces.Length > 3)
+			{
+				Randomizer.WarpLogicLocations.Add(Pieces[0], Pieces[3]);
+			}
+		}
     }
 
     private static int get(int item) { return Characters.Sein.Inventory.GetRandomizerItem(item); }
@@ -1620,4 +1638,8 @@ public static class Randomizer
     public static Vector3 NightBerryWarpPosition;
 
     public static int HotColdSaveId;
+
+    public static bool InLogicWarps;
+
+	public static Hashtable WarpLogicLocations;
 }
