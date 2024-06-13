@@ -58,7 +58,7 @@ namespace Protogen
                 foreach (var connection in newNodes.SelectMany(node => graph.OutgoingConnections[node]?.Where(conn =>
                     conn.Requirement.Keystones > 0 && !usedKeystoneConnections.Contains(conn))))
                 {
-                    if (!openWorld || connection.Source.Name != "SunkenGladesRunaway" || connection.Destination.Name != "GladesMain")
+                    if (!openWorld || connection.Source.Name != "GladesFirstKeyDoor" || connection.Destination.Name != "GladesFirstKeyDoorOpened")
                     {
                         keystoneConnections.Add(connection);
                     }
