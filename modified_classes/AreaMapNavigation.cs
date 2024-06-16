@@ -54,7 +54,7 @@ public class AreaMapNavigation : MonoBehaviour
 	{
 		this.m_areaMapUi = base.GetComponent<AreaMapUI>();
 		this.m_scrollLimits = base.GetComponentsInChildren<AreaMapScrollLimit>();
-		this.AreaMapZoomLevel = 1f;
+		this.AreaMapZoomLevel = 0.65f;
 	}
 
 	public void OnDisable()
