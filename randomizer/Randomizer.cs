@@ -1499,6 +1499,7 @@ public static class Randomizer
                 spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), int.Parse(SpawnWith.Substring(2)));
             }
             RandomizerSwitch.GivePickup(spawnItem, 2, true);
+            RandomizerLocationManager.UpdateReachable();
         }
     }
 

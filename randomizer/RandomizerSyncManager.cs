@@ -137,6 +137,7 @@ public static class RandomizerSyncManager
 			{
 				if(!Characters.Sein)
 					return;
+				bool mustRefreshLogic = false;
 				string[] array = System.Text.Encoding.UTF8.GetString(e.Result).Split(new char[]
 				{
 					','
@@ -147,6 +148,7 @@ public static class RandomizerSyncManager
 					if (getBit(bf, skillInfoLine.bit) && !Characters.Sein.PlayerAbilities.HasAbility(skillInfoLine.skill))
 					{
 						RandomizerSwitch.GivePickup(new RandomizerAction("SK", skillInfoLine.id), 0, false);
+						mustRefreshLogic = true;
 					}
 				}
 				int bf2 = int.Parse(array[1]);
@@ -155,6 +157,7 @@ public static class RandomizerSyncManager
 					if (getBit(bf2, eventInfoLine.bit) && !eventInfoLine.checker())
 					{
 						RandomizerSwitch.GivePickup(new RandomizerAction("EV", eventInfoLine.id), 0, false);
+						mustRefreshLogic = true;
 					}
 				}
 				int bf4 = int.Parse(array[2]);
@@ -163,6 +166,7 @@ public static class RandomizerSyncManager
 					if (getBit(bf4, teleportInfoLine.bit) && !isTeleporterActivated(teleportInfoLine.id))
 					{
 						RandomizerSwitch.GivePickup(new RandomizerAction("TP", teleportInfoLine.id), 0, false);
+						mustRefreshLogic = true;
 					}
 				}
 				if(array[3] != "")
@@ -190,8 +194,10 @@ public static class RandomizerSyncManager
 							}
 						} else if(RandomizerBonus.UpgradeCount(id) < cnt) {
 							RandomizerBonus.UpgradeID(id);
+							mustRefreshLogic = true;
 						} else if(!PickupQueue.Where((Pickup p) => p.type == "RB" && p.id == splitpair[0]).Any() && RandomizerBonus.UpgradeCount(id) > cnt) {
 							RandomizerBonus.UpgradeID(-id);
+							mustRefreshLogic = true;
 						}
 					}
 				}
@@ -229,6 +235,7 @@ public static class RandomizerSyncManager
 								action = new RandomizerAction(parts[0], pickup_id);
 							}
 							RandomizerSwitch.GivePickup(action, 0, false);
+							mustRefreshLogic = true;
 						}
 						else if (text == "spawnChaos")
 						{
@@ -242,6 +249,9 @@ public static class RandomizerSyncManager
 					}
 				} else {
 					CurrentSignals.Clear();
+				}
+				if (mustRefreshLogic) {
+					RandomizerLocationManager.UpdateReachable();					
 				}
 				return;
 			}
