@@ -54,27 +54,66 @@ public class RandomizerLocationManager
 		switch(preset)
 		{
 		case "Casual":
-			paths.Add("casual");
+			paths.Add("casual-core");
+			paths.Add("casual-dboost");
 			break;
 		case "Standard":
-			paths.Add("casual");
-			paths.Add("standard");
+			paths.Add("casual-core");
+			paths.Add("casual-dboost");
+			paths.Add("standard-core");
+			paths.Add("standard-dboost");
+			paths.Add("standard-lure");
+			paths.Add("standard-abilities");
 			break;
 		case "Expert":
-			paths.Add("casual");
-			paths.Add("standard");
-			paths.Add("expert");
+			paths.Add("casual-core");
+			paths.Add("casual-dboost");
+			paths.Add("standard-core");
+			paths.Add("standard-dboost");
+			paths.Add("standard-lure");
+			paths.Add("standard-abilities");
+			paths.Add("expert-core");
+			paths.Add("expert-dboost");
+			paths.Add("expert-lure");
+			paths.Add("expert-abilities");
 			paths.Add("dbash");
 			break;
 		case "Master":
-			paths.Add("casual");
-			paths.Add("standard");
-			paths.Add("expert");
+			paths.Add("casual-core");
+			paths.Add("casual-dboost");
+			paths.Add("standard-core");
+			paths.Add("standard-dboost");
+			paths.Add("standard-lure");
+			paths.Add("standard-abilities");
+			paths.Add("expert-core");
+			paths.Add("expert-dboost");
+			paths.Add("expert-lure");
+			paths.Add("expert-abilities");
 			paths.Add("dbash");
-			paths.Add("master");
-			paths.Add("gjump");
+			paths.Add("master-core");
+			paths.Add("master-dboost");
+			paths.Add("master-lure");
+			paths.Add("master-abilities");
+			paths.Add("gjump");		
+			break;
+		default:
+			if (preset.StartsWith("Custom"))
+			{
+				int pathMask = 0;
+				if (int.TryParse(preset.Remove(0, "Custom".Length), out pathMask))
+				{
+					HashSet<string> newPaths = OriParse.PathMaskToPathSet(pathMask);
+					if (newPaths != null)
+					{
+						//Randomizer.log("Got custom pathset: " + OriParse.PathMaskToString(pathMask));
+						paths = newPaths;
+					}
+				}
+			}
+			paths.Add("casual-core");
 			break;
 		}
+
 
 		if (!File.Exists("areas.ori"))
 		{
@@ -234,6 +273,11 @@ public class RandomizerLocationManager
 				currentInventory.Unlocks.Add("OpenWorld");
 			}
 
+            if (Randomizer.InLogicWarps)
+			{
+				currentInventory.Unlocks.Add("InLogicWarps");
+			}
+			
 			HashSet<string> reachable = null;
 
 			if (RandomizerLocationManager.Areas != null)
@@ -309,7 +353,7 @@ public class RandomizerLocationManager
 		{
 			string[] parts = locationData.Split();
 			this.Name = parts[0];
-			this.FriendlyName = Regex.Replace(this.Name, "([A-Z0-9]+)", " $1");
+			this.FriendlyName = Regex.Replace(this.Name, "([A-Z0-9]+)", " $1") + "\n" + parts[5];
 			this.Position = new Vector2(float.Parse(parts[1]), float.Parse(parts[2]));
 			this.Type = (LocationType)Enum.Parse(typeof(LocationType), parts[3]);
 			this.Difficulty = int.Parse(parts[4]);

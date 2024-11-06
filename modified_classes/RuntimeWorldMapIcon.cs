@@ -17,14 +17,27 @@ public class RuntimeWorldMapIcon
 
 	public bool IsVisible(AreaMapUI areaMap)
 	{
-
+		// Sein.
+		if (this.Guid == new MoonGuid(-550456551, 1312223365, -251340902, -293109681)) {
+			MoonGuid fronkeyFight = new MoonGuid(686741138, 1236491904, -1735338082, 532353037);
+			RandomizerLocationManager.Location loc = RandomizerLocationManager.LocationsByGuid[fronkeyFight];
+			return !(Characters.Sein.PlayerAbilities.SpiritFlame.HasAbility && loc.Collected);
+		}
 		// show randomizer pickup icons only if they're reachable and not yet collected
 		if (RandomizerSettings.CurrentFilter == RandomizerSettings.MapFilterMode.InLogic && RandomizerLocationManager.LocationsByWorldMapGuid.ContainsKey(this.Guid))
 		{
 			RandomizerLocationManager.Location loc = RandomizerLocationManager.LocationsByWorldMapGuid[this.Guid];
 			return loc.Reachable && !loc.Collected;
 		}
-
+		// There are two Ginso Trees, with apparently different Guids. This is the second one that doesn't get automatically turned off.
+		if (this.Guid == new MoonGuid(-1906535857, 1336220761, 1768076162, -2078859709)) {
+			return false;
+		}
+		// This will remove already collected ones from the map.
+		if (RandomizerLocationManager.LocationsByWorldMapGuid.ContainsKey(this.Guid)) {
+			RandomizerLocationManager.Location loc = RandomizerLocationManager.LocationsByWorldMapGuid[this.Guid];
+			return !loc.Collected;	
+		}
 		return true;
 	}
 
@@ -99,6 +112,15 @@ public class RuntimeWorldMapIcon
 				break;
 			case RandomizerWorldMapIconType.SkillTree:
 				InitStandardIcon(WorldMapIconType.AbilityPedestal);
+				break;
+			case RandomizerWorldMapIconType.GumonSeal:
+				CreateIconFromInventory("forlornRuins/forlornKeyGraphic", 8f);
+				break;
+			case RandomizerWorldMapIconType.Keystone:
+				InitStandardIcon(WorldMapIconType.Keystone);
+				break;
+			case RandomizerWorldMapIconType.Experience:
+				InitStandardIcon(WorldMapIconType.Experience);
 				break;
 			default:
 				break;

@@ -7,5 +7,8 @@ public enum RandomizerWorldMapIconType
     CleanWater,
     WindRestored,
     HoruRoom,
-    SkillTree
+    SkillTree,
+    GumonSeal,
+    Keystone,
+    Experience
 }

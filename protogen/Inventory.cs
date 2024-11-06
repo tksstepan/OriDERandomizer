@@ -228,7 +228,14 @@ namespace Protogen
                     case "mountHoru":
                         currentInventory.Unlocks.Add("TPHoru");
                         break;
+                    case "sunkenGlades":
+						currentInventory.Unlocks.Add("TPGlades");
+                        break;
                     }
+                }
+                if (Randomizer.WarpLogicLocations.Contains(teleporter.Identifier))
+                {
+                    currentInventory.Unlocks.Add("WARPTO:" + Randomizer.WarpLogicLocations[teleporter.Identifier]);
                 }
             }
 

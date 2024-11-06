@@ -52,15 +52,12 @@ public class AreaMapIconManager : MonoBehaviour
 			{
 				runtimeGameWorldArea.Icons[k].Hide();
 			}
-			if (!runtimeGameWorldArea.Area.VisitableCondition || runtimeGameWorldArea.Area.VisitableCondition.Validate(null))
+			for (int l = 0; l < runtimeGameWorldArea.Icons.Count; l++)
 			{
-				for (int l = 0; l < runtimeGameWorldArea.Icons.Count; l++)
+				RuntimeWorldMapIcon runtimeWorldMapIcon2 = runtimeGameWorldArea.Icons[l];
+				if (!GameMapUI.Instance.ShowingTeleporters || runtimeWorldMapIcon2.Icon != WorldMapIconType.SavePedestal)
 				{
-					RuntimeWorldMapIcon runtimeWorldMapIcon2 = runtimeGameWorldArea.Icons[l];
-					if (!GameMapUI.Instance.ShowingTeleporters || runtimeWorldMapIcon2.Icon != WorldMapIconType.SavePedestal)
-					{
-						runtimeWorldMapIcon2.Show();
-					}
+					runtimeWorldMapIcon2.Show();
 				}
 			}
 		}

@@ -43,7 +43,19 @@ public class RandomizerWorldMapIconManager
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Plant, new Vector3(-606.7f, -313.9f), "RightForlornPlant"),
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Plant, new Vector3(-629.3f, 249.6f), "LeftSorrowPlant"),
         new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Plant, new Vector3(-477.1f, 586f), "SunstonePlant"),
-        new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Plant, new Vector3(318.5f, 245.6f), "HoruR3Plant")
+        new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Plant, new Vector3(318.5f, 245.6f), "HoruR3Plant"),
+
+        new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Experience, new Vector3(-979.3f, 23.6f), "MistyFrogNookExp"),
+		new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Experience, new Vector3(-1083f, 8.3f), "MistyMortarCorridorUpperExp"),
+		new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Experience, new Vector3(-1009f, -35f), "MistyMortarCorridorHiddenExp"),
+		new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Plant, new Vector3(-1102f, -67f), "MistyPlant"),
+		new RandomizerWorldMapIcon(RandomizerWorldMapIconType.SkillTree, new Vector3(-1188f, -100f), "ClimbSkillTree"),
+		new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Keystone, new Vector3(-912f, -36f), "MistyKeystone3"),
+		new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Experience, new Vector3(-837.7f, -123.5f), "MistyPostClimbSpikeCave"),
+		new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Experience, new Vector3(-796f, -144f), "MistyPostClimbAboveSpikePit"),
+		new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Keystone, new Vector3(-768f, -144f), "MistyKeystone4"),
+		new RandomizerWorldMapIcon(RandomizerWorldMapIconType.Experience, new Vector3(-671.9f, -39.4f), "MistyGrenade"),
+		new RandomizerWorldMapIcon(RandomizerWorldMapIconType.GumonSeal, new Vector3(-720f, -24f), "GumonSeal")
     };
 
     public class RandomizerWorldMapIcon

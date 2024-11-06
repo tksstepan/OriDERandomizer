@@ -53,12 +53,22 @@ namespace Protogen
                 reachable.Add("GladesMain");
             }
 
+            if (inventory.Unlocks.Contains("InLogicWarps")) 
+            {
+                foreach (string unlock in inventory.Unlocks) {
+                    if (unlock.StartsWith("WARPTO:"))
+                    {
+                        reachable.Add(unlock.Remove(0, "WARPTO:".Length));
+                    }
+                }
+            }
+
             do
             {
                 foreach (var connection in newNodes.SelectMany(node => graph.OutgoingConnections[node]?.Where(conn =>
                     conn.Requirement.Keystones > 0 && !usedKeystoneConnections.Contains(conn))))
                 {
-                    if (!openWorld || connection.Source.Name != "SunkenGladesRunaway" || connection.Destination.Name != "GladesMain")
+                    if (!openWorld || connection.Source.Name != "GladesFirstKeyDoor" || connection.Destination.Name != "GladesFirstKeyDoorOpened")
                     {
                         keystoneConnections.Add(connection);
                     }
