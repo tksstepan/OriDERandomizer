@@ -14,8 +14,8 @@ public static class RandomizerCreditsManager {
 			Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_7.5_2_Ori DE Randomizer (" + Randomizer.VERSION + @")
 Developed by:
-Sigmasin
-*Eiko*  #Meldon#  @Vulajin@
+Torin
+*Eiko*  #Melody#  @Vulajin@
 
 Bingo by *Eiko*", 14));
 		else
@@ -23,8 +23,8 @@ Bingo by *Eiko*", 14));
 @"ANCHORTOPPARAMS_20_7.5_2_Ori DE Randomizer (" + Randomizer.VERSION + @")
 
 Developed by:
-Sigmasin
-*Eiko*  #Meldon#  @Vulajin@", 14));
+Torin
+*Eiko*  #Melody#  @Vulajin@", 14));
 
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_7.5_2_Major contributions by:
@@ -35,14 +35,14 @@ Kirefel
 
 Community Contributions by:
 GreeZ  Hydra  Jitaenow  LusTher
-Phant  Skulblaka  Terra  2Kil", 17));
+Phant  Skulblaka  Terra  2Kil", 16));
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_12_2_Additional community contributions by:
 Athos213    AvengedRuler    Cereberon    Cleanfel
 CovertMuffin   Grimelios   iRobin   JHobz   Roryrai
 Jitaenow    shedd    madinsane    Mattermonkey
 RainbowPoogle   UncleRonny   Wingheart   spinesheath
-SeaAverage   DireKrow   Eph   xaviershay", 17));
+SeaAverage   DireKrow   Eph   xaviershay", 16));
 
 		Credits.Add(new KeyValuePair<string, int>(
 @"ANCHORTOPPARAMS_20_10_2_Ori DE Randomizer inspired by:
@@ -54,11 +54,11 @@ A Link to the Past Randomizer", 10));
 
 		2017
 Singles:	Covert_Muffin
-Doubles:	That Is Faster (Sigmasin and IMRaziel)
+Doubles:	That Is Faster (Torin and IMRaziel)
 
 		2018
-Singles:	Sigmasin
-Doubles:	That Is Still Faster (Sigmasin and IMRaziel)
+Singles:	Torin
+Doubles:	That Is Still Faster (Torin and IMRaziel)
 
 		2021
 Winner:	Cleanfel
