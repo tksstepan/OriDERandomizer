@@ -407,7 +407,7 @@ public static class RandomizerStatsManager {
 				statsPage += "\nReloads:					" + get(Reloads).ToString();
 				var altrc = get(AltRCount);
 				if(altrc > 0) {
-					statsPage += "\nAlt+Rs Used:				" + get(AltRCount).ToString();
+					statsPage += "\nAlt+Rs Used:				" + get(altrc).ToString();
 					statsPage += "\nTeleporters Used:			" + get(TeleporterCount).ToString();
 				} else 
 					statsPage += "\nTimes Warped:				" + get(TeleporterCount).ToString();
