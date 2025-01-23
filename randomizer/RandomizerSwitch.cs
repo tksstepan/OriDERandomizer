@@ -205,22 +205,37 @@ public static class RandomizerSwitch
                     SilentMode = false;
                     break;
                 case "AC":
-                    SkillPointPickup();
+                    if((int)Action.value < 0)
+                        LoseAC();
+                    else
+                        SkillPointPickup();
                     break;
                 case "EC":
-                    MaxEnergyContainerPickup();
+                    if((int)Action.value < 0)
+                        LoseEC();
+                    else
+                        MaxEnergyContainerPickup();
                     break;
                 case "EX":
                     ExpOrbPickup((int)Action.Value, coords);
                     break;
                 case "KS":
-                    KeystonePickup();
+                    if((int)Action.value < 0)
+                        LoseKS();
+                    else
+                        KeystonePickup();
                     break;
                 case "HC":
-                    MaxHealthContainerPickup();
+                    if((int)Action.value < 0)
+                        LoseHC();
+                    else
+                        MaxHealthContainerPickup();
                     break;
                 case "MS":
-                    MapStonePickup();
+                    if((int)Action.value < 0)
+                        LoseMS();
+                    else
+                        MapStonePickup();
                     break;
                 case "SK":
                     AbilityPickup((int)Action.Value);
@@ -314,6 +329,37 @@ public static class RandomizerSwitch
         if(found_locally)
             Randomizer.OnCoord(coords);
     }
+
+    public static void LoseHC() {
+        PickupMessage("Health Cell Lost!");
+        Characters.Sein.Mortality.Health.MaxHealth -= 4;
+        if(Characters.Sein.Mortality.Health.Amount > Characters.Sein.Mortality.Health.MaxHealth) 
+            Characters.Sein.Mortality.Health.Amount = Characters.Sein.Mortality.Health.MaxHealth;
+    }
+
+    public static void LoseEC() {
+        PickupMessage("Energy Cell Lost!");
+        Characters.Sein.Energy.Max--;
+        if(Characters.Sein.Energy.Current > Characters.Sein.Energy.Max) 
+            Characters.Sein.Energy.Current = Characters.Sein.Energy.Max;
+    }
+
+    public static void LoseAC() {
+        PickupMessage("Ability Cell Lost!");
+        Characters.Sein.Level.SkillPoints--;
+    }
+
+    public static void loseMS() {
+        PickupMessage("Mapstone Lost!");
+        Characters.Sein.Inventory.MapStones--;
+        Characters.Sein.Inventory.IncRandomizerItem(71, -1);
+    }
+    public static void loseKS() {
+        PickupMessage("Keystone Lost!");
+        Characters.Sein.Inventory.Keystones--;
+        Characters.Sein.Inventory.IncRandomizerItem(70, -1);
+    }
+
 
     public static bool SilentMode = false;
     public static void PickupMessage(string text, int frames=120) {
