@@ -205,13 +205,13 @@ public static class RandomizerSwitch
                     SilentMode = false;
                     break;
                 case "AC":
-                    if((int)Action.value < 0)
+                    if((int)Action.Value < 0)
                         LoseAC();
                     else
                         SkillPointPickup();
                     break;
                 case "EC":
-                    if((int)Action.value < 0)
+                    if((int)Action.Value < 0)
                         LoseEC();
                     else
                         MaxEnergyContainerPickup();
@@ -220,19 +220,19 @@ public static class RandomizerSwitch
                     ExpOrbPickup((int)Action.Value, coords);
                     break;
                 case "KS":
-                    if((int)Action.value < 0)
+                    if((int)Action.Value < 0)
                         LoseKS();
                     else
                         KeystonePickup();
                     break;
                 case "HC":
-                    if((int)Action.value < 0)
+                    if((int)Action.Value < 0)
                         LoseHC();
                     else
                         MaxHealthContainerPickup();
                     break;
                 case "MS":
-                    if((int)Action.value < 0)
+                    if((int)Action.Value < 0)
                         LoseMS();
                     else
                         MapStonePickup();
@@ -330,12 +330,12 @@ public static class RandomizerSwitch
             Randomizer.OnCoord(coords);
     }
 
-    public static void LoseHC() {
+        public static void LoseHC() {
         PickupMessage("Health Cell Lost!");
         Characters.Sein.Mortality.Health.MaxHealth -= 4;
         if(Characters.Sein.Mortality.Health.Amount > Characters.Sein.Mortality.Health.MaxHealth) 
             Characters.Sein.Mortality.Health.Amount = Characters.Sein.Mortality.Health.MaxHealth;
-    }
+}
 
     public static void LoseEC() {
         PickupMessage("Energy Cell Lost!");
@@ -349,12 +349,12 @@ public static class RandomizerSwitch
         Characters.Sein.Level.SkillPoints--;
     }
 
-    public static void loseMS() {
+    public static void LoseMS() {
         PickupMessage("Mapstone Lost!");
         Characters.Sein.Inventory.MapStones--;
         Characters.Sein.Inventory.IncRandomizerItem(71, -1);
     }
-    public static void loseKS() {
+    public static void LoseKS() {
         PickupMessage("Keystone Lost!");
         Characters.Sein.Inventory.Keystones--;
         Characters.Sein.Inventory.IncRandomizerItem(70, -1);
