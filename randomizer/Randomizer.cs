@@ -1181,7 +1181,6 @@ public static class Randomizer
             if (flag == "noextraexp")
                 Randomizer.IgnoreEnemyExp = true;
 
-            if (flag == "0xp")
             if (flag == "0xp") {
                 Randomizer.IgnoreEnemyExp = true;
                 Randomizer.ZeroXP = true;                
