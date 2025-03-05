@@ -1182,8 +1182,10 @@ public static class Randomizer
                 Randomizer.IgnoreEnemyExp = true;
 
             if (flag == "0xp")
+            if (flag == "0xp") {
                 Randomizer.IgnoreEnemyExp = true;
-                Randomizer.ZeroXP = true;
+                Randomizer.ZeroXP = true;                
+            }
 
             if (flag == "nobonus")
                 Randomizer.BonusActive = false;
