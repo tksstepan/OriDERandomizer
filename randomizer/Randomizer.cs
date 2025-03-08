@@ -39,6 +39,8 @@ public static class Randomizer
             Randomizer.DamageModifier = 1f;
             Randomizer.GridFactor = 4.0;
             Randomizer.Message = "Good luck on your rando!";
+            Randomizer.LastMessageCredits = false;
+            Randomizer.PlayedGoodLuckOnce = false;
             Randomizer.MessageProvider = (RandomizerMessageProvider)ScriptableObject.CreateInstance(typeof(RandomizerMessageProvider));
             RandomizerUI.Instance.ClearRecentNotifications();
             Randomizer.ProgressiveMapStones = true;
@@ -191,6 +193,8 @@ public static class Randomizer
 
         UnityDragAndDropHook.InstallHook();
         UnityDragAndDropHook.OnDroppedFiles += Randomizer.OnDroppedFiles;
+
+        Randomizer.unseededRandom = new System.Random();
     }
 
     public static void OnApplicationQuit()
@@ -327,7 +331,8 @@ public static class Randomizer
 
     public static void showHint(string message)
     {
-        LastMessageCredits = false;
+        Randomizer.LastMessageCredits = false;
+        Randomizer.PlayedGoodLuckOnce = false;
         Randomizer.Message = message;
 
         if (RandomizerSettings.Customization.MultiplePickupMessages)
@@ -342,7 +347,8 @@ public static class Randomizer
 
     public static void showHint(string message, int frames)
     {
-        LastMessageCredits = false;
+        Randomizer.LastMessageCredits = false;
+        Randomizer.PlayedGoodLuckOnce = false;
         Randomizer.Message = message;
 
         if (RandomizerSettings.Customization.MultiplePickupMessages)
@@ -367,10 +373,39 @@ public static class Randomizer
 
     public static void playLastMessage()
     {
-        if(LastMessageCredits)
+        if (LastMessageCredits)
+        {
             Randomizer.showCredits(Randomizer.Message, 5);
+        }
+        else if (Randomizer.Message == "Good luck on your rando!" || Randomizer.Message == "Good luck on your bingo!")
+        {
+            if (Randomizer.PlayedGoodLuckOnce)
+            {
+                var split = Randomizer.Message.Substring(0, Randomizer.Message.Length - 1).ToLower().Split(new char[]{' '});
+                int n = split.Count();
+                while (n > 1)
+                {
+                    int k = Randomizer.unseededRandom.Next(n--);
+                    string value = split[k];
+                    split[k] = split[n];
+                    split[n] = value;
+                }
+
+                split[0] = split[0][0].ToString().ToUpper() + split[0].Substring(1);
+                var shuffled = String.Join(" ", split) + "!";
+                Randomizer.MessageQueue.Enqueue(shuffled);
+            }
+            else
+            {
+                Randomizer.MessageQueue.Enqueue(Randomizer.Message);
+            }
+
+            Randomizer.PlayedGoodLuckOnce = true;
+        }
         else
+        {
             Randomizer.MessageQueue.Enqueue(Randomizer.Message);
+        }
     }
 
     public static void log(string message)
@@ -1643,4 +1678,8 @@ public static class Randomizer
     public static bool InLogicWarps;
 
 	public static Hashtable WarpLogicLocations;
+
+    public static bool PlayedGoodLuckOnce;
+
+    private static System.Random unseededRandom;
 }
