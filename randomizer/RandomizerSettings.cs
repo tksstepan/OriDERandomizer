@@ -180,6 +180,8 @@ public static class RandomizerSettings
 		Accessibility.ApplySoundCompression = new BoolSetting("Apply Sound Compression", false, false);
 		Accessibility.SoundCompressionFactor = new FloatSetting("Sound Compression Factor", 0.6f, false);
 		Accessibility.CameraShakeFactor = new FloatSetting("Camera Shake Factor", 1f, false);
+
+		Misc.AreasOri = new BoolSetting("Keep Areas.Ori Updated", true, false);
 	}
 
 	public static Dictionary<string, SettingBase> All = new Dictionary<string, SettingBase>();
@@ -293,6 +295,10 @@ public static class RandomizerSettings
 		public static FloatSetting SoundCompressionFactor;
 
 		public static FloatSetting CameraShakeFactor;
+	}
+
+	public static class Misc {
+		public static BoolSetting AreasOri;
 	}
 
 	public abstract class SettingBase
