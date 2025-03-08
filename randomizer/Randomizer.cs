@@ -12,7 +12,7 @@ using UnityEngine;
 
 public static class Randomizer
 {
-    public static string VERSION = "4.0.10";
+    public static string VERSION = "4.0.11";
     public static void initialize()
     {
         try {
@@ -105,6 +105,7 @@ public static class Randomizer
             Randomizer.RandomizedFirstEnergy = false;
             Randomizer.NightBerryWarpPosition = new Vector3(-910f, -300f);
             Randomizer.InLogicWarps = false;
+            Randomizer.TeleportersLockedByClues = false;
 			Randomizer.WarpLogicLocations = new Hashtable();
 
             if (Randomizer.SeedFilePath == null)
@@ -1049,7 +1050,7 @@ public static class Randomizer
                         {
                             if(gameMapTP.Activated)
                                 continue;
-                            if(gameMapTP.Identifier == "ginsoTree" && get(1024) == 1 && RandomizerBonus.WaterVeinShards() >= 2)
+                            if(gameMapTP.Identifier == "ginsoTree" && get(1024) == 1 && (RandomizerBonus.WaterVeinShards() >= 2 || RandomizerClues.IsClueActive("WV")))
                             {
                                 TeleporterController.Activate(Randomizer.TeleportTable["Ginso"].ToString(), false);
                                 if (RandomizerSettings.Customization.MultiplePickupMessages)
@@ -1061,7 +1062,7 @@ public static class Randomizer
                                     Randomizer.MessageQueue.Enqueue("*Ginso teleporter activated*");
                                 }
                             }
-                            else if(gameMapTP.Identifier == "forlorn" && get(1025) == 1 && RandomizerBonus.GumonSealShards() >= 2)
+                            else if(gameMapTP.Identifier == "forlorn" && get(1025) == 1 && (RandomizerBonus.GumonSealShards() >= 2 || RandomizerClues.IsClueActive("GS")))
                             {
                                 TeleporterController.Activate(Randomizer.TeleportTable["Forlorn"].ToString(), false);
                                 if (RandomizerSettings.Customization.MultiplePickupMessages)
@@ -1073,7 +1074,7 @@ public static class Randomizer
                                     Randomizer.MessageQueue.Enqueue("#Forlorn teleporter activated#");
                                 }
                             }
-                            else if(gameMapTP.Identifier == "mountHoru" && get(1026) == 1 && RandomizerBonus.SunstoneShards() >= 2)
+                            else if(gameMapTP.Identifier == "mountHoru" && get(1026) == 1 && (RandomizerBonus.SunstoneShards() >= 2 || RandomizerClues.IsClueActive("SS")))
                             {
                                 TeleporterController.Activate(Randomizer.TeleportTable["Horu"].ToString(), false);
                                 if (RandomizerSettings.Customization.MultiplePickupMessages)
@@ -1238,6 +1239,9 @@ public static class Randomizer
 
             if (flag == "inlogicwarps")
 				Randomizer.InLogicWarps = true;
+
+            if (flag == "cluelockedtps")
+                Randomizer.TeleportersLockedByClues = true;
 
         }
         return doBingo;
@@ -1624,4 +1628,6 @@ public static class Randomizer
     public static bool InLogicWarps;
 
 	public static Hashtable WarpLogicLocations;
+
+    public static bool TeleportersLockedByClues;
 }

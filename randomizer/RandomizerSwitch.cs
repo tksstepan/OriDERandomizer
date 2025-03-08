@@ -117,6 +117,7 @@ public static class RandomizerSwitch
             case 0:
                 PickupMessage("*Water Vein*", 300);
                 Keys.GinsoTree = true;
+
                 break;
             case 1:
                 PickupMessage("*Clean Water*#", 300);
@@ -147,11 +148,13 @@ public static class RandomizerSwitch
         int shardCount = -1;
         char colorChar = ' ';
         string shardPart = "";
+        string dungeonAbbr = "";
         if(Value == "Ginso")
         {
             Characters.Sein.Inventory.SetRandomizerItem(1024, 1);
             shardCount = RandomizerBonus.WaterVeinShards();
             shardPart = "Water Vein";
+            dungeonAbbr = "WV";
             colorChar = '*';
         }
         if(Value == "Forlorn")
@@ -159,6 +162,7 @@ public static class RandomizerSwitch
             Characters.Sein.Inventory.SetRandomizerItem(1025, 1);
             shardCount = RandomizerBonus.GumonSealShards();
             shardPart = "Gumon Seal";
+            dungeonAbbr = "GS";
             colorChar = '#';
         }
         if(Value == "Horu")
@@ -166,6 +170,7 @@ public static class RandomizerSwitch
             Characters.Sein.Inventory.SetRandomizerItem(1026, 1);
             shardCount = RandomizerBonus.SunstoneShards();
             shardPart = "Sunstone";
+            dungeonAbbr = "S";
             colorChar = '@';
         }
 
@@ -178,6 +183,9 @@ public static class RandomizerSwitch
                 shardPart = "2 " + shardPart + " shards to activate";  
             }
             PickupMessage(colorChar + "Broken " + Value + " teleporter\nCollect " + shardPart + colorChar, 300);
+            return;
+        } else if(colorChar != ' ' && Randomizer.CluesMode && Randomizer.TeleportersLockedByClues && !RandomizerClues.IsClueActive(dungeonAbbr)) {
+            PickupMessage($"{colorChar}Broken {Value} teleporter\nGet the {shardPart} clue to activate{colorChar}", 300);
             return;
         }
         TeleporterController.Activate(Randomizer.TeleportTable[Value].ToString(), false);
