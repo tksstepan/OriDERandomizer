@@ -41,6 +41,7 @@ public class TeleporterController : SaveSerialize, ISuspendable
 			{	
 				this.Teleporters.RemoveAt(this.Teleporters.Count - 1);
 			}
+			this.customWarps.Clear();
 			// Create or modify teleporters.
 			for (int i = 0; i < requiredCustomTeleporterCount; i++)
 			{
@@ -59,6 +60,7 @@ public class TeleporterController : SaveSerialize, ISuspendable
 					GameMapTeleporter gameMapTeleporter = new GameMapTeleporter(name, position, activated);
 					this.Teleporters.Add(gameMapTeleporter);
 				}
+				this.customWarps.Add(name);
 			}
 		} else {
 			// Writing.
@@ -359,11 +361,19 @@ public class TeleporterController : SaveSerialize, ISuspendable
 		}
 	}
 
+	public static bool HasCustomWarp(string name){
+		if (TeleporterController.Instance == null) {
+			return false;
+		}
+		return TeleporterController.Instance.customWarps.Contains(name);
+	}
+
 	public static void RemoveCustomTeleporters()
 	{
 		if (TeleporterController.Instance != null)
 		{
 			TeleporterController.Instance.Teleporters.RemoveAll((GameMapTeleporter teleporter) => teleporter.Name.GetType() == typeof(RandomizerMessageProvider));
+			TeleporterController.Instance.customWarps.Clear();
 		}
 	}
 
@@ -373,13 +383,10 @@ public class TeleporterController : SaveSerialize, ISuspendable
 			return;
 		}
 		// If we already have that teleporter don't add it.
-		for (int i = 0; i < TeleporterController.Instance.Teleporters.Count; i++) 
-		{
-			if (TeleporterController.Instance.Teleporters[i].Identifier == name)
-			{
-				return;
-			}
-		}
+		if(TeleporterController.Instance.customWarps.Contains(name) )
+			return;
+		else
+			TeleporterController.Instance.customWarps.Add(name);
 		GameMapTeleporter teleporter = new GameMapTeleporter(name, warpX, warpY);
 		TeleporterController.Instance.Teleporters.Add(teleporter);
     }
@@ -421,6 +428,8 @@ public class TeleporterController : SaveSerialize, ISuspendable
 	public float NoTeleportAnimationTime = 6f;
 
 	public List<GameMapTeleporter> Teleporters = new List<GameMapTeleporter>();
+
+	private HashSet<string> customWarps = new HashSet<string>();
 
 	public GameObject BloomFade;
 

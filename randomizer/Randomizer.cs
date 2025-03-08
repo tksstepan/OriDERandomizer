@@ -12,7 +12,7 @@ using UnityEngine;
 
 public static class Randomizer
 {
-    public static string VERSION = "4.0.9";
+    public static string VERSION = "4.0.11";
     public static void initialize()
     {
         try {
@@ -107,6 +107,7 @@ public static class Randomizer
             Randomizer.RandomizedFirstEnergy = false;
             Randomizer.NightBerryWarpPosition = new Vector3(-910f, -300f);
             Randomizer.InLogicWarps = false;
+            Randomizer.TeleportersLockedByClues = false;
 			Randomizer.WarpLogicLocations = new Hashtable();
 
             if (Randomizer.SeedFilePath == null)
@@ -1084,7 +1085,7 @@ public static class Randomizer
                         {
                             if(gameMapTP.Activated)
                                 continue;
-                            if(gameMapTP.Identifier == "ginsoTree" && get(1024) == 1 && RandomizerBonus.WaterVeinShards() >= 2)
+                            if(gameMapTP.Identifier == "ginsoTree" && get(1024) == 1 && (RandomizerBonus.WaterVeinShards() >= 2 || RandomizerClues.IsClueActive("WV")))
                             {
                                 TeleporterController.Activate(Randomizer.TeleportTable["Ginso"].ToString(), false);
                                 if (RandomizerSettings.Customization.MultiplePickupMessages)
@@ -1096,7 +1097,7 @@ public static class Randomizer
                                     Randomizer.MessageQueue.Enqueue("*Ginso teleporter activated*");
                                 }
                             }
-                            else if(gameMapTP.Identifier == "forlorn" && get(1025) == 1 && RandomizerBonus.GumonSealShards() >= 2)
+                            else if(gameMapTP.Identifier == "forlorn" && get(1025) == 1 && (RandomizerBonus.GumonSealShards() >= 2 || RandomizerClues.IsClueActive("GS")))
                             {
                                 TeleporterController.Activate(Randomizer.TeleportTable["Forlorn"].ToString(), false);
                                 if (RandomizerSettings.Customization.MultiplePickupMessages)
@@ -1108,7 +1109,7 @@ public static class Randomizer
                                     Randomizer.MessageQueue.Enqueue("#Forlorn teleporter activated#");
                                 }
                             }
-                            else if(gameMapTP.Identifier == "mountHoru" && get(1026) == 1 && RandomizerBonus.SunstoneShards() >= 2)
+                            else if(gameMapTP.Identifier == "mountHoru" && get(1026) == 1 && (RandomizerBonus.SunstoneShards() >= 2 || RandomizerClues.IsClueActive("SS")))
                             {
                                 TeleporterController.Activate(Randomizer.TeleportTable["Horu"].ToString(), false);
                                 if (RandomizerSettings.Customization.MultiplePickupMessages)
@@ -1166,16 +1167,15 @@ public static class Randomizer
     public static bool ParseFlags(string seed, string[] rawFlags) {
         bool doBingo = false;
 
-        foreach (string rawFlag in rawFlags)
-        {
+        foreach (string rawFlag in rawFlags) {
             string flag = rawFlag.ToLower();
+
             if (flag == "ohko")
-            {
                 Randomizer.OHKO = true;
-            }
-            if (flag == "race") {
+
+            if (flag == "race") 
                 SeedMeta = $"{String.Join(",", rawFlags.Select(f => f.ToLower().StartsWith("sync") ? "Sync" + cct(f.Skip(f.IndexOf('.') - 1)) : f).ToArray())}|{cct(seed.Skip(1).SkipWhile(c => Char.IsLower(c)))}"; // yeah that's right we're LINQ wizards baby anyways this is just a bit of censorship to make things a bit harder for people trying to cheat
-            }
+
             if (flag.StartsWith("worldtour"))
             {
                 Randomizer.WorldTour = true;
@@ -1212,87 +1212,72 @@ public static class Randomizer
                 Randomizer.SyncMode = syncMode;
             }
             if(flag == "bingo")
-            {
                 doBingo = true;
-            }
+
             if (flag == "noextraexp")
-            {
                 Randomizer.IgnoreEnemyExp = true;
-            }
-            if (flag == "0xp")
-            {
+
+            if (flag == "0xp") {
                 Randomizer.IgnoreEnemyExp = true;
-                Randomizer.ZeroXP = true;
+                Randomizer.ZeroXP = true;                
             }
+
             if (flag == "nobonus")
-            {
                 Randomizer.BonusActive = false;
-            }
+
             if (flag == "nonprogressivemapstones")
-            {
                 Randomizer.ProgressiveMapStones = false;
-            }
+
             if (flag == "forcetrees")
-            {
                 Randomizer.ForceTrees = true;
-            }
+
             if (flag == "forcemaps")
-            {
                 Randomizer.ForceMaps = true;
-            }
+
             if (flag == "clues")
-            {
                 Randomizer.CluesMode = true;
-            }
+
             if (flag == "shards")
-            {
                 Randomizer.Shards = true;
-            }
+
             if (flag == "entrance")
-            {
                 Randomizer.Entrance = true;
-            }
+
             if (flag == "closeddungeons")
-            {
                 Randomizer.OpenMode = false;
-            }
+
             if (flag == "openworld")
-            {
                 Randomizer.OpenWorld = true;
-            }
+
             if (flag.StartsWith("hotcold="))
             {
                 Randomizer.HotCold = true;
                 Randomizer.HotColdTypes = new HashSet<string>(rawFlag.Substring(8).Split(new char[]{'+'}).ToList<string>());
             }
             if (flag.StartsWith("sense="))
-            {
                 Randomizer.HotColdTypes = new HashSet<string>(rawFlag.Substring(6).Split(new char[]{'+'}).ToList<string>());
-            }
+
             if (flag == "noaltr")
-            {
                 Randomizer.AltRDisabled = true;
-            }
+
             if (flag == "stomptriggers")
-            {
                 Randomizer.StompTriggers = true;
-            }
+
             if (flag == "goalmodefinish")
-            {
                 Randomizer.GoalModeFinish = true;
-            }
+
             if (flag == "orbwarp")
-            {
                 Randomizer.AllowOrbWarps = true;
-            }
+
             if (flag == "randomizedfirstenergy")
-            {
                 Randomizer.RandomizedFirstEnergy = true;
-            }
+
             if (flag == "inlogicwarps")
-			{
 				Randomizer.InLogicWarps = true;
-			}
+
+            if (flag == "cluelockedtps")
+                Randomizer.TeleportersLockedByClues = true;
+
         }
         return doBingo;
     }
@@ -1678,6 +1663,8 @@ public static class Randomizer
     public static bool InLogicWarps;
 
 	public static Hashtable WarpLogicLocations;
+
+    public static bool TeleportersLockedByClues;
 
     public static bool PlayedGoodLuckOnce;
 

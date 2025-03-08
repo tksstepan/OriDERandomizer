@@ -79,6 +79,9 @@ public static class RandomizerClues
 		}
 	}
 
+	public static bool IsClueActive(string dungeonAbbr) => Randomizer.CluesMode && !GetClues().Contains($"{dungeonAbbr}: ?");
+
+	// index 0: WV, index 1: GS, index 2: SS
 	public static int[] RevealOrder;
 
 	public static List<string> Clues;

@@ -117,6 +117,7 @@ public static class RandomizerSwitch
             case 0:
                 PickupMessage("*Water Vein*", 300);
                 Keys.GinsoTree = true;
+
                 break;
             case 1:
                 PickupMessage("*Clean Water*#", 300);
@@ -147,11 +148,13 @@ public static class RandomizerSwitch
         int shardCount = -1;
         char colorChar = ' ';
         string shardPart = "";
+        string dungeonAbbr = "";
         if(Value == "Ginso")
         {
             Characters.Sein.Inventory.SetRandomizerItem(1024, 1);
             shardCount = RandomizerBonus.WaterVeinShards();
             shardPart = "Water Vein";
+            dungeonAbbr = "WV";
             colorChar = '*';
         }
         if(Value == "Forlorn")
@@ -159,6 +162,7 @@ public static class RandomizerSwitch
             Characters.Sein.Inventory.SetRandomizerItem(1025, 1);
             shardCount = RandomizerBonus.GumonSealShards();
             shardPart = "Gumon Seal";
+            dungeonAbbr = "GS";
             colorChar = '#';
         }
         if(Value == "Horu")
@@ -166,6 +170,7 @@ public static class RandomizerSwitch
             Characters.Sein.Inventory.SetRandomizerItem(1026, 1);
             shardCount = RandomizerBonus.SunstoneShards();
             shardPart = "Sunstone";
+            dungeonAbbr = "S";
             colorChar = '@';
         }
 
@@ -178,6 +183,9 @@ public static class RandomizerSwitch
                 shardPart = "2 " + shardPart + " shards to activate";  
             }
             PickupMessage(colorChar + "Broken " + Value + " teleporter\nCollect " + shardPart + colorChar, 300);
+            return;
+        } else if(colorChar != ' ' && Randomizer.CluesMode && Randomizer.TeleportersLockedByClues && !RandomizerClues.IsClueActive(dungeonAbbr)) {
+            PickupMessage($"{colorChar}Broken {Value} teleporter\nGet the {shardPart} clue to activate{colorChar}", 300);
             return;
         }
         TeleporterController.Activate(Randomizer.TeleportTable[Value].ToString(), false);
@@ -205,13 +213,13 @@ public static class RandomizerSwitch
                     SilentMode = false;
                     break;
                 case "AC":
-                    if((int)Action.value < 0)
+                    if((int)Action.Value < 0)
                         LoseAC();
                     else
                         SkillPointPickup();
                     break;
                 case "EC":
-                    if((int)Action.value < 0)
+                    if((int)Action.Value < 0)
                         LoseEC();
                     else
                         MaxEnergyContainerPickup();
@@ -220,19 +228,19 @@ public static class RandomizerSwitch
                     ExpOrbPickup((int)Action.Value, coords);
                     break;
                 case "KS":
-                    if((int)Action.value < 0)
+                    if((int)Action.Value < 0)
                         LoseKS();
                     else
                         KeystonePickup();
                     break;
                 case "HC":
-                    if((int)Action.value < 0)
+                    if((int)Action.Value < 0)
                         LoseHC();
                     else
                         MaxHealthContainerPickup();
                     break;
                 case "MS":
-                    if((int)Action.value < 0)
+                    if((int)Action.Value < 0)
                         LoseMS();
                     else
                         MapStonePickup();
@@ -330,12 +338,12 @@ public static class RandomizerSwitch
             Randomizer.OnCoord(coords);
     }
 
-    public static void LoseHC() {
+        public static void LoseHC() {
         PickupMessage("Health Cell Lost!");
         Characters.Sein.Mortality.Health.MaxHealth -= 4;
         if(Characters.Sein.Mortality.Health.Amount > Characters.Sein.Mortality.Health.MaxHealth) 
             Characters.Sein.Mortality.Health.Amount = Characters.Sein.Mortality.Health.MaxHealth;
-    }
+}
 
     public static void LoseEC() {
         PickupMessage("Energy Cell Lost!");
@@ -349,12 +357,12 @@ public static class RandomizerSwitch
         Characters.Sein.Level.SkillPoints--;
     }
 
-    public static void loseMS() {
+    public static void LoseMS() {
         PickupMessage("Mapstone Lost!");
         Characters.Sein.Inventory.MapStones--;
         Characters.Sein.Inventory.IncRandomizerItem(71, -1);
     }
-    public static void loseKS() {
+    public static void LoseKS() {
         PickupMessage("Keystone Lost!");
         Characters.Sein.Inventory.Keystones--;
         Characters.Sein.Inventory.IncRandomizerItem(70, -1);

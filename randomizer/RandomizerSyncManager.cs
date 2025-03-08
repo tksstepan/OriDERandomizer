@@ -175,6 +175,14 @@ public static class RandomizerSyncManager
 					foreach(string rawUpgrade in upgrades)
 					{
 						string[] splitpair = rawUpgrade.Split('x');
+						if(splitpair[0].Contains("_")) {
+							if(WarpDatas.ContainsKey(splitpair[0])) {
+								WarpDatas[splitpair[0]].GrantFromNetwork();
+								continue;
+							} else {
+								Randomizer.LogError($"Unknown ?Warp? {rawUpgrade}");
+							}
+						}
 						int id = int.Parse(splitpair[0]);
 						int cnt = int.Parse(splitpair[1]);
 						if(id >= 100) {
@@ -599,4 +607,71 @@ public static class RandomizerSyncManager
 
 		public int bit;
 	}
+
+	public class WarpData {
+		public WarpData(string _name,string _area, int _x,int _y) {
+			this.x = _x;
+			this.y = _y;
+			this.name = $"Warp to {_name}";
+			this.area = _area;
+		}
+		public int x;
+		public int y;
+		public string name;
+		public string area;
+		public override int GetHashCode() {
+			return this.name.GetHashCode();
+		}
+		public void GrantFromNetwork() {
+			if(TeleporterController.HasCustomWarp(this.name))
+				return;
+			if(!Randomizer.WarpLogicLocations.ContainsKey(this.name)) {
+				Randomizer.WarpLogicLocations.Add(this.name, this.area);
+			}
+			RandomizerSwitch.GivePickup(new RandomizerAction("TW", $"{this.name},{this.x},{this.y}"),0,false);
+		}
+	}
+
+
+	public static Dictionary<string, WarpData> WarpDatas = new Dictionary<string,WarpData>(){
+		{"917_-70", new WarpData("Stomp Tree Roof", "StompAreaRoofExpWarp",917, -70)},
+		{"790_-195", new WarpData("Swamp Swim", "SwampWaterWarp",790, -195)},
+		{"720_-95", new WarpData("Inner Swamp EC", "InnerSwampSkyArea",720, -95)},
+		{"580_-345", new WarpData("Above Grotto Crushers", "AboveGrottoCrushersWarp",580, -345)},
+		{"513_-440", new WarpData("Grotto Energy Vault", "GrottoEnergyVaultWarp",513, -440)},
+		{"506_-246", new WarpData("Water Vein", "WaterVeinArea",506, -246)},
+		{"310_-230", new WarpData("Dash Plant", "DashPlantAccess",310, -230)},
+		{"258_-382", new WarpData("Right of Grenade Area", "GrenadeAreaAccess",258, -382)},
+		{"499_-505", new WarpData("Lost Grove Laser Lever", "LostGroveLaserLeverWarp",499, -505)},
+		{"-13_-96", new WarpData("Above Cflame Tree EX", "AboveChargeFlameTreeExpWarp",-13, -96)},
+		{"70_-110", new WarpData("Spidersack Energy Door", "SpiderSacEnergyDoorWarp",70, -110)},
+		{"328_-176", new WarpData("Death Gauntlet Roof", "DeathGauntletRoof",328, -176)},
+		{"77_11", new WarpData("Horu Fields Push Block", "HoruFieldsPushBlock",77, 11)},
+		{"330_-63", new WarpData("Kuro CS AC", "HollowGroveTreeAbilityCellWarp",330, -63)},
+		{"380_-143", new WarpData("Butter Cell Floor", "GroveWaterStompAbilityCellWarp",380, -143)},
+		{"585_-68", new WarpData("Outer Swamp HC", "OuterSwampHealthCellWarp",585, -68)},
+		{"505_-108", new WarpData("Outer Swamp AC", "OuterSwampMortarAbilityCellLedge",505, -108)},
+		{"646_-127", new WarpData("Triforce AC", "SwampDrainlessArea",646, -127)},
+		{"-224_-85", new WarpData("Valley entry (upper)", "ValleyEntryTree",-224, -85)},
+		{"-605_-255", new WarpData("Forlorn entrance", "OutsideForlorn",-605, -255)},
+		{"-354_-98", new WarpData("Three Bird AC", "VallleyThreeBirdACWarp",-354, -98)},
+		{"-570_156", new WarpData("Wilhelm EX", "WilhelmExpWarp",-570, 156)},
+		{"-358_65", new WarpData("Stompless AC", "ValleyRightFastStomplessCellWarp",-358, 65)},
+		{"-578_-25", new WarpData("Misty Entrance", "MistyEntrance",-578, -25)},
+		{"-500_587", new WarpData("Sunstone Plant", "SunstoneArea",-500, 587)},
+		{"-432_322", new WarpData("Sorrow Mapstone", "SorrowMapstoneWarp",-432, 322)},
+		{"-595_385", new WarpData("Tumbleweed Keystone Door", "LeftSorrowTumbleweedDoorWarp",-595, 385)},
+		{"510_910", new WarpData("Ginso Escape", "GinsoEscape",510, 910)},
+		{"539_434", new WarpData("Upper Ginso EC", "UpperGinsoEnergyCellWarp",539, 434)},
+		{"520_274", new WarpData("Lower Ginso Keystones", "GinsoMiniBossDoor",520, 274)},
+		{"69_96", new WarpData("Horu Escape Access", "HoruBasement",69, 96)},
+		{"155_362", new WarpData("Horu R1 Mapstone", "HoruR1MapstoneSecret",155, 362)},
+		{"254_188", new WarpData("Horu R4 Cutscene Rock", "HoruR4CutsceneTrigger",254, 188)},
+		{"-610_-312", new WarpData("Forlorn HC", "RightForlorn",-610, -312)},
+		{"-747_-407", new WarpData("Forlorn Orb", "ForlornOrbPossession",-747, -407)},
+		{"-820_-265", new WarpData("Forlorn Plant", "ForlornOrbPossession",-820, -265)},
+		{"-219_-176", new WarpData("Spirit Cavern AC", "SpiritCavernsACWarp",-219, -176)},
+		{"-162_-175", new WarpData("Above Gladeser", "GladesLaserArea",-162, -175)},
+		{"-241_-211", new WarpData("Glades Loop Keystone", "UpperLeftGlades",-241, -211)},
+		};
 }
