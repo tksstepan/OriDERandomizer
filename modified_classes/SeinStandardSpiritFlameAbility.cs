@@ -127,7 +127,7 @@ public class SeinStandardSpiritFlameAbility : CharacterState, ISeinReceiver
 		{
 			this.ProcessRapidFire(pressed);
 		}
-		else if (RandomizerSettings.Game.ImprovedSpiritFlame)
+		else if (RandomizerSettings.DevSettings.ImprovedSpiritFlame)
 		{
 			this.ProcessImprovedSpiritFlame(pressed);
 		}

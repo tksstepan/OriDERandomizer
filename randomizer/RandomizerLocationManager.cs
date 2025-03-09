@@ -234,7 +234,7 @@ public class RandomizerLocationManager
 	}
 
 	public static void DownloadAreas() {
-		if(!RandomizerSettings.AreasOri.Value)
+		if(!RandomizerSettings.DevSettings.AreasOri.Value)
 			return;
 		var webClient = new WebClient();
 		try {

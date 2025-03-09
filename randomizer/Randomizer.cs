@@ -1438,7 +1438,7 @@ public static class Randomizer
 
     public static void ApplyGrabForgiveness()
     {
-        if (!RandomizerSettings.Game.BlackrootOrbRoomClimbAssist)
+        if (!RandomizerSettings.DevSettings.BlackrootOrbRoomClimbAssist)
         {
             Randomizer.GrabForgivenessFrames = 0f;
             return;
