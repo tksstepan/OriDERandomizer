@@ -1501,7 +1501,7 @@ public static class Randomizer
         }
         // grant other spawn items determined by the seed
         if (Randomizer.SpawnWith != "") {
-            RandomizerAction spawnItems;
+            RandomizerAction spawnItem;
 
             // honestly i should make a helper for this shit
             if (Randomizer.StringKeyPickupTypes.Contains(SpawnWith.Substring(0, 2)))
@@ -1509,17 +1509,17 @@ public static class Randomizer
             else
                 spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), int.Parse(SpawnWith.Substring(2)));
 
-            spawnItems = spawnItem.Decompose();
+            var spawnItems = spawnItem.Decompose();
             // is it stupid to do it this way? yes. does it technically cover the edge case where your spawn item has HC/1/HC/1/HC/-1? also yes
             // does it make HC|4 valid but literally only on spawn? haha don't even worry about that my friends
             spawnHCs += spawnItems.Where(item => item.Action == "HC").Select(item => (int)item.Value).Aggregate(1, (acc, next) => acc+next);
             spawnECs += spawnItems.Where(item => item.Action == "EC").Select(item => (int)item.Value).Aggregate(1, (acc, next) => acc+next);
             // let the survivors regroup
-            spawnItems = spawnItems.Where(item => item.Action != "HC" || item.Action != "EC").toList();
+            spawnItems = spawnItems.Where(item => item.Action != "HC" || item.Action != "EC").ToList();
             if(spawnItems.Count == 1) 
                 RandomizerSwitch.GivePickup(spawnItems[0], 2, true);
             else if(spawnItems.Count > 1)
-               Randomizer.GivePickup(RandomizerAction.AsMulti(spawnItems), 2, true);
+               RandomizerSwitch.GivePickup(RandomizerAction.AsMulti(spawnItems), 2, true);
         }
         Characters.Sein.Energy.Max += spawnECs;
         Characters.Sein.Mortality.Health.MaxHealth += 4*spawnHCs;
