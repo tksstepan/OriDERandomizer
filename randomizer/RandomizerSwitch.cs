@@ -170,7 +170,7 @@ public static class RandomizerSwitch
             Characters.Sein.Inventory.SetRandomizerItem(1026, 1);
             shardCount = RandomizerBonus.SunstoneShards();
             shardPart = "Sunstone";
-            dungeonAbbr = "S";
+            dungeonAbbr = "SS";
             colorChar = '@';
         }
 
