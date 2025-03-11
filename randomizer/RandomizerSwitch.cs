@@ -326,14 +326,14 @@ public static class RandomizerSwitch
                     Characters.Sein.Inventory.SetRandomizerItem(82, 1);
                     break;
             }
-            BingoController.OnItem(Action, coords);
+            BingoController.OnItem(action, coords);
             RandomizerTrackedDataManager.UpdateBitfields();
         }
         catch(Exception e) {
             Randomizer.LogError($"Give Pickup({action}, {coords}): {e.Message}");
         }
         if(found_locally && Randomizer.Sync)
-            RandomizerSyncManager.FoundPickup(Action, coords);
+            RandomizerSyncManager.FoundPickup(action, coords);
         if(found_locally)
             Randomizer.OnCoord(coords);
     }
