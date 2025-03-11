@@ -192,13 +192,13 @@ public static class RandomizerSwitch
         PickupMessage(colorChar + Value + " teleporter activated" + colorChar);
     }
 
-    public static void GivePickup(RandomizerAction Action, int coords, bool found_locally=true)
+    public static void GivePickup(RandomizerAction action, int coords, bool found_locally=true)
     {
         try {
-            switch (Action.Action) {
+            switch (action.Action) {
                 case "RP":
                 case "MU":
-                    string[] pieces = ((string)Action.Value).Split('/');
+                    string[] pieces = ((string)action.Value).Split('/');
                     for(int i = 0; i < pieces.Length; i+=2)
                     {
                         string code = pieces[i];
@@ -213,52 +213,52 @@ public static class RandomizerSwitch
                     SilentMode = false;
                     break;
                 case "AC":
-                    if((int)Action.Value < 0)
+                    if((int)action.Value < 0)
                         LoseAC();
                     else
                         SkillPointPickup();
                     break;
                 case "EC":
-                    if((int)Action.Value < 0)
+                    if((int)action.Value < 0)
                         LoseEC();
                     else
                         MaxEnergyContainerPickup();
                     break;
                 case "EX":
-                    ExpOrbPickup((int)Action.Value, coords);
+                    ExpOrbPickup((int)action.Value, coords);
                     break;
                 case "KS":
-                    if((int)Action.Value < 0)
+                    if((int)action.Value < 0)
                         LoseKS();
                     else
                         KeystonePickup();
                     break;
                 case "HC":
-                    if((int)Action.Value < 0)
+                    if((int)action.Value < 0)
                         LoseHC();
                     else
                         MaxHealthContainerPickup();
                     break;
                 case "MS":
-                    if((int)Action.Value < 0)
+                    if((int)action.Value < 0)
                         LoseMS();
                     else
                         MapStonePickup();
                     break;
                 case "SK":
-                    AbilityPickup((int)Action.Value);
+                    AbilityPickup((int)action.Value);
                     break;
                 case "EV":
-                    EventPickup((int)Action.Value);
+                    EventPickup((int)action.Value);
                     break;
                 case "RB":
-                    RandomizerBonus.UpgradeID((int)Action.Value);
+                    RandomizerBonus.UpgradeID((int)action.Value);
                     break;
                 case "TP":
-                    TeleportPickup((string)Action.Value);
+                    TeleportPickup((string)action.Value);
                     break;
                 case "SH":
-                    string message = ((string)Action.Value).Replace("AltR", RandomizerRebinding.ReturnToStart.FirstBindName());
+                    string message = ((string)action.Value).Replace("AltR", RandomizerRebinding.ReturnToStart.FirstBindName());
                     if(message.Length > 1 && message[1] == '=') {
                         var parts = message.Split(',').ToList();
                         var flags = parts.FindAll(ele => ele.Length >= 2 && ele[1] == '=');
@@ -278,20 +278,20 @@ public static class RandomizerSwitch
                         Randomizer.showHint(message);
                     break;
                 case "WT":
-                    RandomizerTrackedDataManager.SetRelic(Randomizer.RelicZoneLookup[(string)Action.Value]);
+                    RandomizerTrackedDataManager.SetRelic(Randomizer.RelicZoneLookup[(string)action.Value]);
                     int relics = Characters.Sein.Inventory.GetRandomizerItem(302);
                     string relicStr = "\n("+relics.ToString() + "/" + Randomizer.RelicCount.ToString() + ")";
                     if(relics >= Randomizer.RelicCount) {
                         relicStr = "$" + relicStr + "$";
                     }
-                    PickupMessage((string)Action.Value + relicStr, 480);
+                    PickupMessage((string)action.Value + relicStr, 480);
                     break;
                 case "WS":
                 case "WP":
                     // Don't actually warp at spawn, let other code do that.
                     if (coords != 2) {
-                        Randomizer.SaveAfterWarp = Action.Action == "WS";
-                        string[] xy = ((string)Action.Value).Split(',');
+                        Randomizer.SaveAfterWarp = action.Action == "WS";
+                        string[] xy = ((string)action.Value).Split(',');
                         if(xy.Length > 2 && xy[2] == "force") {
                             Randomizer.WarpTo(new UnityEngine.Vector3(float.Parse(xy[0]), float.Parse(xy[1])), 15);
                         }
@@ -306,7 +306,7 @@ public static class RandomizerSwitch
                     break;
                 case "TW":
                     // TW entries are coord|TW|name,x,y
-                    string[] pieces2 = ((string)Action.Value).Split(',');
+                    string[] pieces2 = ((string)action.Value).Split(',');
                     int warpX;
                     int.TryParse(pieces2[1], out warpX);
                     int warpY;
@@ -317,7 +317,7 @@ public static class RandomizerSwitch
                     break;
                 case "NB":
                     // NB entries are coord|NB|x,y
-                    string[] pieces3 = ((string)Action.Value).Split(',');
+                    string[] pieces3 = ((string)action.Value).Split(',');
                     int positionX;
                     int.TryParse(pieces3[0], out positionX);
                     int positionY;
@@ -330,7 +330,7 @@ public static class RandomizerSwitch
             RandomizerTrackedDataManager.UpdateBitfields();
         }
         catch(Exception e) {
-            Randomizer.LogError("Give Pickup(" + Action.ToString() + ", " + coords.ToString() + "): " + e.Message);
+            Randomizer.LogError($"Give Pickup({action}, {coords}): {e.Message}");
         }
         if(found_locally && Randomizer.Sync)
             RandomizerSyncManager.FoundPickup(Action, coords);
