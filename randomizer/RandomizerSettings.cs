@@ -105,7 +105,19 @@ public static class RandomizerSettings {
 			return;
 
 		using (var writer = new StreamWriter("RandomizerSettings.txt", false)) {
-				writer.WriteLine("// This file contains a variety of randomizer-specific settings");
+			writer.WriteLine("// This file contains a variety of randomizer-specific settings.");
+			writer.WriteLine("// Lines that start with // are comments - they explain what this file does and how it works");
+			writer.WriteLine("// Edit values of settings by changing the text after the \":\" and then saving the file.");
+			writer.WriteLine("// After saving, reload the randomizer (alt+L by default) to update your settings without restarting the game.");
+			writer.WriteLine("");
+			writer.WriteLine("// Words in square brackets ([]) are Ori base game binds (e.g. [Jump], [Climb]).");
+			writer.WriteLine("//    These binds can be changed in the in-game rebinding editor, or using the editor at orirando.com/rebinds");
+			writer.WriteLine("// Words double square brackets ([[]]) are rando-specific binds (e.g. [[Grenade Jump]])");
+			writer.WriteLine("//    and can be changed in RandomizerRebinding.txt");
+			writer.WriteLine("");
+			writer.WriteLine("// If you have any questions, please ask for help in the discord (orirando.com/discord, #bf-randomizer)");
+			writer.WriteLine("");
+			writer.WriteLine("");
 			foreach (var setting in All) {
 				if (setting.Value.Hidden && !Dev.Value && setting.Value.IsDefault())
 					continue;
@@ -139,30 +151,30 @@ public static class RandomizerSettings {
 	}
 
 	static RandomizerSettings() {
-		Controls.BashDeadzone = new FloatSetting("Controller Bash Deadzone", 0.5f, "(0.0-1.0,  Default=0.5): Size of the controller stick deadzone when aiming Bash.");
-		Controls.FastGrenadeAim = new BoolSetting("Instant Grenade Aim", false, "True: When aiming Grenade on a controller, throw the grenade in the direction the stick is aimed.\nFalse (Default): Vanilla behavior (move the stick to move the target location).");
+		Controls.BashDeadzone = new FloatSetting("Controller Bash Deadzone", 0.5f, "(0.0-1.0, Default=0.5): Size of the controller stick deadzone when aiming Bash.");
+		Controls.FastGrenadeAim = new BoolSetting("Instant Grenade Aim", false, "True: When aiming Grenade on a controller, throw the grenade in the direction and distance the stick is aimed.\nFalse (Default): Vanilla behavior (move the stick to move the target location).");
 		Controls.GrenadeAimSpeed = new FloatSetting("Grenade Aim Speed", 1.0f, "(Default 1.0 - higher numbers are faster): The speed at which controller/wsad inputs move the Grenade target.");
-		Controls.InvertSwim = new BoolSetting("Invert Swim", false, "True: Ori swims fast by default, and slows down while pressing [Jump].\nFalse (default): Vanilla behavior (hold [Jump] to swim faster.");
-		Controls.InvertClimb = new BoolSetting("Invert Climb", false, "True: Ori Climbs on walls by default, and lets when holding [Climb]\nFalse (default): Vanilla behavior (hold [Climb] to Climb.");
+		Controls.InvertSwim = new BoolSetting("Invert Swim", false, "True: Ori swims fast by default, and slows down while pressing [Jump].\nFalse (default): Vanilla behavior (hold [Jump] to swim faster).");
+		Controls.InvertClimb = new BoolSetting("Invert Climb", false, "True: Ori Climbs on walls by default, and lets go when holding [Climb]\nFalse (default): Vanilla behavior (hold [Climb] to Climb).");
 		Controls.GrenadeJump = new EnumSetting<GrenadeJumpMode>("Grenade Jump Mode", GrenadeJumpMode.Auto, "Auto (default): Grenade Jump by pressing [[Grenade Jump]] (Default [Grenade]+[Jump]).\nManual: Vanilla behavior (Grenade Jump by using Grenade, then Jump 1 frame later).");
 		Controls.WallChargeMouseAim = new BoolSetting("Wall Charge Mouse Aim", true, "True (default): On Keyboard+Mouse, allows aiming Wall Charge Jumps with the mouse.\nFalse: Vanilla behavior.");
 		Controls.SwimmingMouseAim = new BoolSetting("Swimming Mouse Aim", false, "True: On Keyboard+Mouse, Ori will swim towards the mouse cursor.\nFalse (default): Vanilla behavior.");
 		Controls.SlowClimbVault = new BoolSetting("Slow Climb Vault", true, "True (default): slightly slows Climb vaults, making it easier to land on small vertical platforms with Climb.\nFalse: Vanilla behavior.");
 		Controls.Autofire = new EnumSetting<AutofireMode>("Autofire", AutofireMode.Off, "Hold: When [SpiritFlame] is held, autofire - (Charge Flame by holding [[Suppress Autofire]] and [SpiritFlame]).\nToggle: Press [SpiritFlame] to start autofiring. Press it again to stop. (Charge Flame as normal).\nOff: Vanilla behavior (no autofire).");
-		Controls.LongerBashAimTime = new BoolSetting("Longer Bash Aim Time", false, "True: Allows holding [Bash] for about 3x as long, giving you more time to aim.\nFalse (default): Vanilla behavior (about 1.3 seconds of Bash aiming time).");
+		Controls.LongerBashAimTime = new BoolSetting("Longer Bash Aim Time", false, "True: Allows holding [Bash] for about 3x as long, giving you more time to aim.\nFalse (default): Vanilla behavior (about 1.7 seconds of Bash aiming time).");
 
 		Customization.ColdColor = new ColorSetting("Cold Color", new Color(0f, 0.5f, 0.5f, 0.5f), 511f, "Red, Blue, Green, Transparency (0-255 for each): The color Ori turns when Sensing an item at max range.");
 		Customization.HotColor = new ColorSetting("Hot Color", new Color(0.5f, 0.1666667f, 0f, 0.5f), 511f, "Red, Blue, Green, Transparency (0-255 for each): The color Ori turns when Sensing an item at range 0.");
-		Customization.DiscoSense = new BoolSetting("Disco Sense", false, "True: Ignore sense colors, and instead speed up the color.txt rotation when sense is triggering.\nFalse (default): colors.txt rotation is overwritten by Sense colors.",false);
-		Customization.MultiplePickupMessages = new BoolSetting("Display Multiple Pickup Messages", false, "True: Allows up to 5 pickup messages to be visible at once, on left side of the screen. Hold [[Replay Message]] to show more.\nFalse (default): New pickup messages are queued behind old ones, and display at the top center of the screen.", false);
-		Customization.AlwaysShowLastFivePickups = new BoolSetting("Always Show Last Five Pickup Messages", false, "True: Always show the last 5 pickups gained.\nFalse (default): Only show pickups when found or on pressing [[Replay Message]].", false);
+		Customization.DiscoSense = new BoolSetting("Disco Sense", false, "True: Ignore sense colors, and instead speed up the color.txt rotation when sense is active.\nFalse (default): colors.txt rotation is overwritten by Sense colors.",false);
+		Customization.MultiplePickupMessages = new BoolSetting("Display Multiple Pickup Messages", false, "True: Shows up to 5 pickup messages at once on the left side of the screen. Hold [[Replay Message]] to show more.\nFalse (default): New pickup messages display one at a time at the top center of the screen.", false);
+		Customization.AlwaysShowLastFivePickups = new BoolSetting("Always Show Last Five Pickup Messages", false, "True: (Only works if Display Multiple PickAlways show the last 5 pickup messages.\nFalse (default): Only show pickups when found or on pressing [[Replay Message]].", false);
 		Customization.WarpTeleporterColor = new ColorSetting("Warp Teleporter Color", new Color(202f/255f, 57f/255f, 243f/255f, 1f), 255f, "Red, Blue, Green, Transparency (0-255 for each): The color that Warp-created Teleporters are on the map.");
 		Customization.DefaultMapFilter = new EnumSetting<MapFilterMode>("Default Map Filter", MapFilterMode.InLogic, "InLogic (default): Select the In Logic map filter when first opening the map.\nUncollected: Select the Uncollected map filter when first opening the map.", false);
-		Customization.HintLevel = new EnumSetting<HintLevels>("Hints", HintLevels.NewPlayer, "NewPlayer (default): Show loading tips intended for new rando players.\nExperienced: Show loading tips intended for more experienced rando players.\nDisabled: do not show loading screen tips.",  false);
-		Customization.RandomizedExpNames = new BoolSetting("Randomized Experience Names", false, "True: Replace the word \"Experience\" with a random currency name whenever you gain experience from a pickup.\nFalse (default): Do not do this.", false);
+		Customization.HintLevel = new EnumSetting<HintLevels>("Hints", HintLevels.NewPlayer, "NewPlayer (default): Show loading tips intended for new rando players.\nExperienced: Show loading tips intended for more experienced rando players.\nDisabled: do not show loading screen tips.", false);
+		Customization.RandomizedExpNames = new BoolSetting("Randomized Experience Names", false, "True: Replace the word \"Experience\" with a random currency name whenever you gain experience from a pickup.\nFalse (default): Experience pickups are just called Experience.", false);
 
 		QOL.AbilityMenuOpacity = new FloatSetting("Ability Menu Opacity", 0.5f, "(0.0-1.0) The opacity of the ability menu when performing a Save Anywhere.", false);
-		QOL.CursorLock = new BoolSetting("Cursor Lock", false, "True: Locks the mouse cursor inside the window\nFalse (default): Do not do this.", false);
+		QOL.CursorLock = new BoolSetting("Cursor Lock", false, "True: Locks the mouse cursor inside the window\nFalse (default): Vanilla behavior (cursor can leave the Ori window in borderless / windowed mode).", false);
 
 		Game.DefaultDifficulty = new EnumSetting<Difficulty>("Default Difficulty", Difficulty.Relaxing, "(Relaxing (default), Challenging, Punishing, OneLife): The default difficulty on new file selection.", false);
 
@@ -171,14 +183,15 @@ public static class RandomizerSettings {
 		Accessibility.CameraShakeFactor = new FloatSetting("Camera Shake Factor", 1f, "(0.0-1.0) Reduce the intensity of camera shake effects in the game. Set to 0 to disable camera shake entirely.", false);
 
 		Dev = new BoolSetting("Dev", false, "", false, true);
-		DevSettings.AreasOri = new BoolSetting("Keep Areas.Ori Updated", true, "", false, true);
+
+		DevSettings.AreasOri = new BoolSetting("Keep Areas.Ori Updated", true, "Update areas.ori from the server. Set to False to disable for local development.", false, true);
 		DevSettings.ImprovedSpiritFlame = new BoolSetting("Improved Spirit Flame", true, "", false, true);
 		DevSettings.BlackrootOrbRoomClimbAssist = new BoolSetting("Blackroot Orb Room Climb Assist", true, "", false, true);
 	}
 
 	public static Dictionary<string, SettingBase> All = new Dictionary<string, SettingBase>();
 
-	public static BoolSetting Dev = new BoolSetting("Dev", false, "", false, true);
+	public static BoolSetting Dev;
 
 	public static MapFilterMode CurrentFilter = MapFilterMode.InLogic;
 
