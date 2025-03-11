@@ -198,18 +198,8 @@ public static class RandomizerSwitch
             switch (action.Action) {
                 case "RP":
                 case "MU":
-                    string[] pieces = ((string)action.Value).Split('/');
-                    for(int i = 0; i < pieces.Length; i+=2)
-                    {
-                        string code = pieces[i];
-                        if(Randomizer.StringKeyPickupTypes.Contains(code)) {
-                            RandomizerSwitch.GivePickup(new RandomizerAction(code, pieces[i+1]), coords, false);
-                        } else {
-                            int id;
-                            int.TryParse(pieces[i+1], out id);
-                            RandomizerSwitch.GivePickup(new RandomizerAction(code, id), coords, false);
-                        }
-                    }
+                    foreach(RandomizerAction subpart in action.Decompose())
+                        RandomizerSwitch.GivePickup(subpart, coords, false);
                     SilentMode = false;
                     break;
                 case "AC":

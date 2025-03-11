@@ -1473,23 +1473,17 @@ public static class Randomizer
     {
         Randomizer.Inventory.Clear();
         TeleporterController.RemoveCustomTeleporters();
-
+        int spawnHCs = 0;
+        int spawnECs = 0;
         // start everyone with 1 energy on all difficulties if "RandomizedFirstEnergy" flag set
         if (Randomizer.RandomizedFirstEnergy)
-        {
-            Characters.Sein.Energy.Max += 1f;
-            Characters.Sein.Energy.SetCurrent(Characters.Sein.Energy.Max);
-        }
+            spawnECs += 1;
 
         // relaxed difficulty players start with +1 health and +1 energy, plus the first ability in each tree
         if (DifficultyController.Instance.Difficulty == DifficultyMode.Easy)
         {
-            Characters.Sein.Mortality.Health.MaxHealth += 4;
-            Characters.Sein.Mortality.Health.SetAmount(Characters.Sein.Mortality.Health.MaxHealth);
-
-            Characters.Sein.Energy.Max += 1f;
-            Characters.Sein.Energy.SetCurrent(Characters.Sein.Energy.Max);
-
+            spawnHCs += 1;
+            spawnECs += 1;
             Characters.Sein.PlayerAbilities.Rekindle.HasAbility = true;
             Characters.Sein.PlayerAbilities.Magnet.HasAbility = true;
             Characters.Sein.PlayerAbilities.QuickFlame.HasAbility = true;
@@ -1505,22 +1499,33 @@ public static class Randomizer
         {
             set(801, 1);
         }
-
         // grant other spawn items determined by the seed
-        if (Randomizer.SpawnWith != "")
-        {
-            RandomizerAction spawnItem;
+        if (Randomizer.SpawnWith != "") {
+            RandomizerAction spawnItems;
+
+            // honestly i should make a helper for this shit
             if (Randomizer.StringKeyPickupTypes.Contains(SpawnWith.Substring(0, 2)))
-            {
                 spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), SpawnWith.Substring(2));
-            }
             else
-            {
                 spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), int.Parse(SpawnWith.Substring(2)));
-            }
-            RandomizerSwitch.GivePickup(spawnItem, 2, true);
-            RandomizerLocationManager.UpdateReachable();
+
+            spawnItems = spawnItem.Decompose();
+            // is it stupid to do it this way? yes. does it technically cover the edge case where your spawn item has HC/1/HC/1/HC/-1? also yes
+            // does it make HC|4 valid but literally only on spawn? haha don't even worry about that my friends
+            spawnHCs += spawnItems.Where(item => item.Action == "HC").Select(item => (int)item.Value).Aggregate(1, (acc, next) => acc+next);
+            spawnECs += spawnItems.Where(item => item.Action == "EC").Select(item => (int)item.Value).Aggregate(1, (acc, next) => acc+next);
+            // let the survivors regroup
+            spawnItems = spawnItems.Where(item => item.Action != "HC" || item.Action != "EC").toList();
+            if(spawnItems.Count == 1) 
+                RandomizerSwitch.GivePickup(spawnItems[0], 2, true);
+            else if(spawnItems.Count > 1)
+               Randomizer.GivePickup(RandomizerAction.AsMulti(spawnItems), 2, true);
         }
+        Characters.Sein.Energy.Max += spawnECs;
+        Characters.Sein.Mortality.Health.MaxHealth += 4*spawnHCs;
+        Characters.Sein.Mortality.Health.SetAmount(Characters.Sein.Mortality.Health.MaxHealth);
+        Characters.Sein.Energy.SetCurrent(Characters.Sein.Energy.Max);
+        RandomizerLocationManager.UpdateReachable();
     }
 
     public static string ExpName(int p) {
