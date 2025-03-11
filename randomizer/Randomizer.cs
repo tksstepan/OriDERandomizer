@@ -108,7 +108,7 @@ public static class Randomizer
             Randomizer.NightBerryWarpPosition = new Vector3(-910f, -300f);
             Randomizer.InLogicWarps = false;
             Randomizer.TeleportersLockedByClues = false;
-			Randomizer.WarpLogicLocations = new Hashtable();
+            Randomizer.WarpLogicLocations = new Hashtable();
 
             if (Randomizer.SeedFilePath == null)
             {
@@ -1273,7 +1273,7 @@ public static class Randomizer
                 Randomizer.RandomizedFirstEnergy = true;
 
             if (flag == "inlogicwarps")
-				Randomizer.InLogicWarps = true;
+                Randomizer.InLogicWarps = true;
 
             if (flag == "cluelockedtps")
                 Randomizer.TeleportersLockedByClues = true;
@@ -1377,17 +1377,17 @@ public static class Randomizer
             RandomizerClues.AddClue(area, id_number / 2);
         }
         if (code == "TW")
-		{
+        {
             //6399872|TW|Warp to Spirit Cavern AC,-219,-176,SpiritCavernsACWarp|Swamp
-			string[] Pieces = id.Split(new char[]
-			{
-				','
-			});
-			if (Pieces.Length > 3)
-			{
-				Randomizer.WarpLogicLocations.Add(Pieces[0], Pieces[3]);
-			}
-		}
+            string[] Pieces = id.Split(new char[]
+            {
+                ','
+            });
+            if (Pieces.Length > 3)
+            {
+                Randomizer.WarpLogicLocations.Add(Pieces[0], Pieces[3]);
+            }
+        }
     }
 
     private static int get(int item) { return Characters.Sein.Inventory.GetRandomizerItem(item); }
@@ -1667,7 +1667,7 @@ public static class Randomizer
 
     public static bool InLogicWarps;
 
-	public static Hashtable WarpLogicLocations;
+    public static Hashtable WarpLogicLocations;
 
     public static bool TeleportersLockedByClues;
 
