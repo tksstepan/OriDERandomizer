@@ -4,11 +4,14 @@ using System.Collections.Generic;
 
 public class RandomizerAction
 {
-    public RandomizerAction(string Action, object Value)
-    {
-        this.Action = Action;
-        this.Value = Value;
+    public static List<string> StringValPickupTypes = new List<string> {"TP", "SH", "NO", "WT", "MU", "HN", "WP", "RP", "WS", "TW", "NB"};
+
+    public RandomizerAction(string action, object value) {
+        this.Action = action;
+        this.Value = StringValPickupTypes.Contains(action) ? value : int.Parse((string)value);
     }
+
+    public bool IsStringVal() => StringValPickupTypes.Contains(this.Action);
 
     public string Action;
 
@@ -29,7 +32,7 @@ public class RandomizerAction
             }
         } else {
             ret.Add(this);
-        }
+        }   
         return ret;
     }
 

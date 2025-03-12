@@ -147,7 +147,7 @@ public static class RandomizerSyncManager
 				{
 					if (getBit(bf, skillInfoLine.bit) && !Characters.Sein.PlayerAbilities.HasAbility(skillInfoLine.skill))
 					{
-						RandomizerSwitch.GivePickup(new RandomizerAction("SK", skillInfoLine.id), 0, false);
+						RandomizerSwitch.GivePickup(new RandomizerAction("SK", $"{skillInfoLine.id}"), 0, false);
 						mustRefreshLogic = true;
 					}
 				}
@@ -156,7 +156,7 @@ public static class RandomizerSyncManager
 				{
 					if (getBit(bf2, eventInfoLine.bit) && !eventInfoLine.checker())
 					{
-						RandomizerSwitch.GivePickup(new RandomizerAction("EV", eventInfoLine.id), 0, false);
+						RandomizerSwitch.GivePickup(new RandomizerAction("EV", $"{eventInfoLine.id}"), 0, false);
 						mustRefreshLogic = true;
 					}
 				}
@@ -165,7 +165,7 @@ public static class RandomizerSyncManager
 				{
 					if (getBit(bf4, teleportInfoLine.bit) && !isTeleporterActivated(teleportInfoLine.id))
 					{
-						RandomizerSwitch.GivePickup(new RandomizerAction("TP", teleportInfoLine.id), 0, false);
+						RandomizerSwitch.GivePickup(new RandomizerAction("TP", $"{teleportInfoLine.id}"), 0, false);
 						mustRefreshLogic = true;
 					}
 				}
@@ -235,13 +235,7 @@ public static class RandomizerSyncManager
 						{
 							string[] parts = text.Substring(7).Split(new char[] { '|' });
 							RandomizerAction action;
-							if(Randomizer.StringKeyPickupTypes.Contains(parts[0])) {
-								 action = new RandomizerAction(parts[0], parts[1]);
-							} else {
-								int pickup_id;
-								int.TryParse(parts[1], out pickup_id);
-								action = new RandomizerAction(parts[0], pickup_id);
-							}
+							 action = new RandomizerAction(parts[0], parts[1]);
 							RandomizerSwitch.GivePickup(action, 0, false);
 							mustRefreshLogic = true;
 						}
@@ -459,7 +453,7 @@ public static class RandomizerSyncManager
 		public Pickup(RandomizerAction action, int _coords)
 		{
 			this.type = action.Action;
-			this.id = (Randomizer.StringKeyPickupTypes.Contains(this.type) ? ((string)action.Value) : ((int)action.Value).ToString());
+			this.id = (string)action.Value;
 			this.coords = _coords;
 		}
 

@@ -272,7 +272,7 @@ public static class BingoController
 
     public static void OnResetAP() {
         if(!Active) return;
-        MultiBoolGoals["GetAbility"]["Spirit Light Efficiency"] = false;
+        MultiBoolGoals["GetAbility"]["Spirit Potency"] = false;
         MultiBoolGoals["GetAbility"]["Ultra Defense"] = false;
         MultiBoolGoals["GetAbility"]["Ultra Stomp"] = false;
     }
@@ -287,7 +287,7 @@ public static class BingoController
                 MultiBoolGoals["GetAbility"]["Ultra Defense"] = true;
                 break;
             case AbilityType.SoulEfficiency:
-                MultiBoolGoals["GetAbility"]["Spirit Light Efficiency"] = true;
+                MultiBoolGoals["GetAbility"]["Spirit Potency"] = true;
                 break;
             default:
                 break;

@@ -234,7 +234,14 @@ public class RandomizerLocationManager
     }
 
     public static void DownloadAreas() {
-        if(RandomizerSettings.DevSettings.AreasOri.Value) {
+		bool checkAreasOri;
+		try {
+			checkAreasOri = RandomizerSettings.DevSettings.AreasOri.Value;
+		}catch(Exception) {
+			checkAreasOri = RandomizerSettings.DevSettings.AreasOri.Default;
+		}
+		if (checkAreasOri)
+		{
             var webClient = new WebClient();
             try {
                 if(File.Exists("areas.ori")) File.Move("areas.ori", "areas.ori.old"); // backup

@@ -12,7 +12,7 @@ using UnityEngine;
 
 public static class Randomizer
 {
-    public static string VERSION = "4.0.11";
+    public static string VERSION = "4.0.12";
     public static void initialize()
     {
         try {
@@ -146,16 +146,10 @@ public static class Randomizer
                         {
                             Randomizer.SpawnWith = lineParts[1] + lineParts[2];
                         }
-                        else if (Randomizer.StringKeyPickupTypes.Contains(lineParts[1]))
+                        else if (lineParts[1] != "EN")
                         {
                             bool repeatable = lineParts[1] == "RP";
                             RandomizerLocationManager.PlacePickup(coords, lineParts[1], lineParts[2], repeatable);
-                        }
-                        else if (lineParts[1] != "EN")
-                        {
-                            int id_number;
-                            int.TryParse(lineParts[2], out id_number);
-                            RandomizerLocationManager.PlacePickup(coords, lineParts[1], id_number, false);
                         }
                     }
                     Randomizer.HotColdMaps.Sort();
@@ -1503,11 +1497,8 @@ public static class Randomizer
         if (Randomizer.SpawnWith != "") {
             RandomizerAction spawnItem;
 
-            // honestly i should make a helper for this shit
-            if (Randomizer.StringKeyPickupTypes.Contains(SpawnWith.Substring(0, 2)))
-                spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), SpawnWith.Substring(2));
-            else
-                spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), int.Parse(SpawnWith.Substring(2)));
+            // horrible idea thanks
+            spawnItem = new RandomizerAction(SpawnWith.Substring(0, 2), SpawnWith.Substring(2));
 
             var spawnItems = spawnItem.Decompose();
             // is it stupid to do it this way? yes. does it technically cover the edge case where your spawn item has HC/1/HC/1/HC/-1? also yes
