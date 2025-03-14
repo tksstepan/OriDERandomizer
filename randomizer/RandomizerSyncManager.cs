@@ -324,7 +324,7 @@ public static class RandomizerSyncManager
 			Pickup pickup = new Pickup(action, coords);
 			PickupQueue.Enqueue(pickup);
 		} catch(Exception e) {
-			Randomizer.LogError("FoundPickup: " + e.Message);
+			Randomizer.LogError($"FoundPickup: {action.Action}: {e.Message}\n{e.StackTrace}");
 		}
 	}
 
@@ -453,7 +453,7 @@ public static class RandomizerSyncManager
 		public Pickup(RandomizerAction action, int _coords)
 		{
 			this.type = action.Action;
-			this.id = (string)action.Value;
+			this.id = action.ValAsStr();
 			this.coords = _coords;
 		}
 

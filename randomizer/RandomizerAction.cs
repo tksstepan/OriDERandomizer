@@ -13,6 +13,8 @@ public class RandomizerAction
 
     public bool IsStringVal() => StringValPickupTypes.Contains(this.Action);
 
+    public string ValAsStr() => StringValPickupTypes.Contains(this.Action) ? (string)this.Value : ((int)this.Value).ToString();
+
     public string Action;
 
     public object Value;
