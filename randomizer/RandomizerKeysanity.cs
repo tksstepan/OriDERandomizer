@@ -1,6 +1,7 @@
 using Game;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 public class RandomizerKeysanity {
@@ -65,12 +66,27 @@ public class RandomizerKeysanity {
         Characters.Sein.Inventory.Keystones = 0;
     }
 
-    public void ShowPickupHint(int id) {
+    private string GetProgress(int id) {
         if (_hintMap.TryGetValue(id, out var baseHint)) {
-            RandomizerSwitch.PickupMessage($"{baseHint} ({_inventory.GetRandomizerItem(id)} / {(id < 304 ? 2 : 4)})");
+            return $"{baseHint} ({_inventory.GetRandomizerItem(id)} / {(id < 304 ? 2 : 4)})";
         }
+        return string.Empty;
+    }
 
-        return;
+    public void ShowPickupHint(int id) {
+        RandomizerSwitch.PickupMessage(GetProgress(id));
+    }
+
+    public void ShowKeyProgress() {
+        var sb = new StringBuilder();
+        for (var id = 300; id < 312;) {
+            sb.Append(GetProgress(id++));
+            sb.Append(GetProgress(id++));
+            sb.Append(GetProgress(id++));
+            sb.Append(GetProgress(id++));
+            sb.Append("\n");
+        }
+        Randomizer.showHint(sb.ToString());
     }
 
 }
