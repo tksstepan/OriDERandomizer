@@ -109,6 +109,7 @@ public static class Randomizer
             Randomizer.InLogicWarps = false;
             Randomizer.TeleportersLockedByClues = false;
             Randomizer.WarpLogicLocations = new Hashtable();
+            Keysanity.IsActive = false;
 
             if (Randomizer.SeedFilePath == null)
             {
@@ -185,6 +186,7 @@ public static class Randomizer
         RandomizerUI.Initialize();
         RandomizerBootstrap.Initialize();
         Inventory = RandomizerInventory.Initialize();
+        Keysanity = new RandomizerKeysanity(Inventory);
 
         UnityDragAndDropHook.InstallHook();
         UnityDragAndDropHook.OnDroppedFiles += Randomizer.OnDroppedFiles;
@@ -1271,6 +1273,9 @@ public static class Randomizer
 
             if (flag == "cluelockedtps")
                 Randomizer.TeleportersLockedByClues = true;
+            
+            if (flag == "keysanity")
+                Keysanity.IsActive = true;
 
         }
         return doBingo;
@@ -1528,6 +1533,7 @@ public static class Randomizer
     public static bool SafeIsBashing {get => (Characters.Sein.Abilities.Bash && Characters.Sein.Abilities.Bash.IsBashing) || false; }
 
     public static RandomizerInventory Inventory { get; private set; }
+    public static RandomizerKeysanity Keysanity { get; private set; }
 
     public static double GridFactor;
     public static RandomizerMessageProvider MessageProvider;

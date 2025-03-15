@@ -18,6 +18,17 @@ public static class RandomizerBonus
             RandomizerBonusSkill.FoundBonusSkill(ID);
             return;
         }
+
+        // keysanity
+        if (ID >= 300 && ID < 312) {
+            if(flag)
+                Characters.Sein.Inventory.IncRandomizerItem(ID, -1);
+            else
+                Characters.Sein.Inventory.IncRandomizerItem(ID, 1);
+            Randomizer.Keysanity.ShowPickupHint(ID);
+            return;
+        }
+
         if(ID >= 200 && ID < 260)
         {
             int abilityId = (ID - 200) % 30;

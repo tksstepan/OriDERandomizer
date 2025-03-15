@@ -125,6 +125,20 @@
 258 - Remove Triple Jump
 259 - Remove Ultra Defense
 
+=== Keysanity ===
+300 - Glades Pool (2)
+301 - Spirit Caverns Lower (2)
+302 - Spirit Caverns Upper (4)
+303 - Grotto (2)
+304 - Ginso Lower (4)
+305 - Ginso Upper (4)
+306 - Swamp (2)
+307 - Misty (4)
+308 - Forlorn (4)
+309 - Sorrow Lower (4)
+310 - Sorrow Middle (4)
+311 - Sorrow Upper (4)
+
 800 - Open World
 801 - Closed Dungeons
 

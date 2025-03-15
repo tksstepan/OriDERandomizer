@@ -45,6 +45,7 @@ public class DoorWithSlots : SaveSerialize
 		{
 			Sound.Play(this.OnOriEnterSoundProvider.GetSound(null), this.m_transform.position, null);
 		}
+		Randomizer.Keysanity.ApplyKeystoneCount(this.MoonGuid, this.NumberOfOrbsUsed);
 	}
 
 	public void Unhighlight()
@@ -64,6 +65,7 @@ public class DoorWithSlots : SaveSerialize
 		{
 			Sound.Play(this.OnOriExitSoundProvider.GetSound(null), this.m_transform.position, null);
 		}
+		Randomizer.Keysanity.ResetKeystoneCount();
 	}
 
 	public void RestoreOrbs()
@@ -74,6 +76,7 @@ public class DoorWithSlots : SaveSerialize
 		}
 		Characters.Sein.Inventory.CollectKeystones(this.NumberOfOrbsUsed);
 		this.NumberOfOrbsUsed = 0;
+		Randomizer.Keysanity.ResetKeystoneCount();
 	}
 
 	public void OnDisable()
