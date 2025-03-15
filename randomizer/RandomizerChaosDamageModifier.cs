@@ -1,17 +1,14 @@
 using System;
 using UnityEngine;
 
-// Token: 0x020009FB RID: 2555
 public class RandomizerChaosDamageModifier : RandomizerChaosEffect
 {
-	// Token: 0x0600377F RID: 14207
 	public override void Clear()
 	{
 		this.Countdown = 0;
 		Randomizer.DamageModifier = 1f;
 	}
 
-	// Token: 0x06003780 RID: 14208
 	public override void Start()
 	{
 		this.Countdown = UnityEngine.Random.Range(360, 3600);
@@ -35,7 +32,6 @@ public class RandomizerChaosDamageModifier : RandomizerChaosEffect
 		}
 	}
 
-	// Token: 0x06003781 RID: 14209
 	public override void Update()
 	{
 		if (this.Countdown > 0)
@@ -48,6 +44,5 @@ public class RandomizerChaosDamageModifier : RandomizerChaosEffect
 		}
 	}
 
-	// Token: 0x04003245 RID: 12869
 	public int Countdown;
 }

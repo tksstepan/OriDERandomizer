@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 
-// Token: 0x02000A13 RID: 2579
 public static class RandomizerDataMaps
 {
-	// Token: 0x0600380F RID: 14351
 	public static void LoadGinsoData()
 	{
 		Randomizer.GinsoData = new ArrayList();
@@ -810,7 +808,6 @@ public static class RandomizerDataMaps
 		});
 	}
 
-	// Token: 0x06003810 RID: 14352
 	public static void LoadForlornData()
 	{
 		Randomizer.ForlornData = new ArrayList();
@@ -1361,7 +1358,6 @@ public static class RandomizerDataMaps
 		forlornData.Add(array);
 	}
 
-	// Token: 0x06003811 RID: 14353
 	public static void LoadHoruData()
 	{
 		Randomizer.HoruData = new ArrayList();
@@ -1997,7 +1993,6 @@ public static class RandomizerDataMaps
 		});
 	}
 
-	// Token: 0x06003812 RID: 14354
 	public static void LoadGladesData()
 	{
 		Randomizer.GladesData = new ArrayList();
@@ -2017,20 +2012,8 @@ public static class RandomizerDataMaps
 		});
 	}
 
-	// Token: 0x06003888 RID: 14472
 	public static void LoadValleyData()
 	{
-		Randomizer.ValleyLeverDoorData = new ArrayList();
-		Randomizer.ValleyLeverDoorData.Add(new MoonGuid(-884657106, 90547188, 173222194, -1709968588));
-		ArrayList valleyLeverDoorData = Randomizer.ValleyLeverDoorData;
-		object[] array = new object[2];
-		array[0] = new MoonGuid(1278157257, 1311870159, -50118503, 598423583);
-		int num = 1;
-		byte[] array2 = new byte[256];
-		array2[3] = 64;
-		array2[4] = 1;
-		array[num] = array2;
-		valleyLeverDoorData.Add(array);
 		Randomizer.ValleyStompDoorData = new ArrayList();
 		Randomizer.ValleyStompDoorData.Add(new MoonGuid(-1888082719, 29676808, 980404922, 2060774650));
 		Randomizer.ValleyStompDoorData.Add(new object[]

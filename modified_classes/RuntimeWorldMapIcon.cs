@@ -1,11 +1,11 @@
 using System;
+using System.Linq;
 using Game;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-// Token: 0x0200081D RID: 2077
 public class RuntimeWorldMapIcon
 {
-	// Token: 0x06002CD7 RID: 11479 RVA: 0x00024BEE File Offset: 0x00022DEE
 	public RuntimeWorldMapIcon(GameWorldArea.WorldMapIcon icon, RuntimeGameWorldArea area)
 	{
 		this.Icon = icon.Icon;
@@ -15,13 +15,32 @@ public class RuntimeWorldMapIcon
 		this.IsSecret = icon.IsSecret;
 	}
 
-	// Token: 0x06002CD8 RID: 11480
 	public bool IsVisible(AreaMapUI areaMap)
 	{
-		return Characters.Sein.PlayerAbilities.MapMarkers.HasAbility;
+		// Sein.
+		if (this.Guid == new MoonGuid(-550456551, 1312223365, -251340902, -293109681)) {
+			MoonGuid fronkeyFight = new MoonGuid(686741138, 1236491904, -1735338082, 532353037);
+			RandomizerLocationManager.Location loc = RandomizerLocationManager.LocationsByGuid[fronkeyFight];
+			return !(Characters.Sein.PlayerAbilities.SpiritFlame.HasAbility && loc.Collected);
+		}
+		// show randomizer pickup icons only if they're reachable and not yet collected
+		if (RandomizerSettings.CurrentFilter == RandomizerSettings.MapFilterMode.InLogic && RandomizerLocationManager.LocationsByWorldMapGuid.ContainsKey(this.Guid))
+		{
+			RandomizerLocationManager.Location loc = RandomizerLocationManager.LocationsByWorldMapGuid[this.Guid];
+			return loc.Reachable && !loc.Collected;
+		}
+		// There are two Ginso Trees, with apparently different Guids. This is the second one that doesn't get automatically turned off.
+		if (this.Guid == new MoonGuid(-1906535857, 1336220761, 1768076162, -2078859709)) {
+			return false;
+		}
+		// This will remove already collected ones from the map.
+		if (RandomizerLocationManager.LocationsByWorldMapGuid.ContainsKey(this.Guid)) {
+			RandomizerLocationManager.Location loc = RandomizerLocationManager.LocationsByWorldMapGuid[this.Guid];
+			return !loc.Collected;	
+		}
+		return true;
 	}
 
-	// Token: 0x06002CD9 RID: 11481 RVA: 0x000C3830 File Offset: 0x000C1A30
 	public void Show()
 	{
 		AreaMapUI instance = AreaMapUI.Instance;
@@ -36,21 +55,97 @@ public class RuntimeWorldMapIcon
 		if (this.m_iconGameObject)
 		{
 			this.m_iconGameObject.SetActive(true);
+			return;
+		}
+
+		if (this.RandomizerIconType != RandomizerWorldMapIconType.None)
+		{
+			InitRandomizerIcon();
 		}
 		else
 		{
-			GameObject icon = instance.IconManager.GetIcon(this.Icon);
-			this.m_iconGameObject = (GameObject)InstantiateUtility.Instantiate(icon);
-			Transform transform = this.m_iconGameObject.transform;
-			transform.parent = instance.Navigation.MapPivot.transform;
-			transform.localPosition = this.Position;
-			transform.localRotation = Quaternion.identity;
-			transform.localScale = icon.transform.localScale;
-			TransparencyAnimator.Register(transform);
+			InitStandardIcon(this.Icon);
 		}
 	}
 
-	// Token: 0x06002CDA RID: 11482 RVA: 0x00024C2D File Offset: 0x00022E2D
+	private void InitStandardIcon(WorldMapIconType iconType)
+	{
+		GameObject icon = AreaMapUI.Instance.IconManager.GetIcon(iconType);
+		this.m_iconGameObject = (GameObject)InstantiateUtility.Instantiate(icon);
+		Transform transform = this.m_iconGameObject.transform;
+		transform.parent = AreaMapUI.Instance.Navigation.MapPivot.transform;
+		transform.localPosition = this.Position;
+		transform.localRotation = Quaternion.identity;
+		transform.localScale = icon.transform.localScale;
+		TransparencyAnimator.Register(transform);
+	}
+
+	private void InitRandomizerIcon()
+	{
+		switch (RandomizerIconType)
+		{
+			case RandomizerWorldMapIconType.WaterVein:
+				CreateIconFromInventory("ginsoKeyIcon/ginsoKeyGraphic", 4);
+				break;
+			case RandomizerWorldMapIconType.CleanWater:
+				CreateIconFromInventory("waterPurifiedIcon/waterPurifiedGraphics", 20);
+				var offset = m_iconGameObject.transform.Find("waterPurifiedGraphic").localPosition;
+				foreach (var child in m_iconGameObject.transform)
+					((Transform)child).localPosition -= offset;
+				break;
+			case RandomizerWorldMapIconType.WindRestored:
+				CreateIconFromInventory("windRestoredIcon/windRestoredIcon", 10);
+				break;
+			case RandomizerWorldMapIconType.Sunstone:
+				CreateIconFromInventory("mountHoru/sunStoneA", 8);
+				break;
+			case RandomizerWorldMapIconType.HoruRoom:
+				CreateIconFromInventory("warmthReturned/warmthReturnedGraphics", 10);
+				break;
+			case RandomizerWorldMapIconType.Plant:
+				InitStandardIcon(WorldMapIconType.HealthUpgrade);
+				this.m_iconGameObject.name = "plantMapIcon(Clone)";
+				Renderer[] componentsInChildren = this.m_iconGameObject.GetComponentsInChildren<Renderer>();
+				for (int i = 0; i < componentsInChildren.Length; i++)
+					componentsInChildren[i].material.color = new Color(0.1792157f, 0.2364706f, 0.8656863f);
+				this.m_iconGameObject.transform.rotation = Quaternion.Euler(0f, 0f, 180f);
+				break;
+			case RandomizerWorldMapIconType.SkillTree:
+				InitStandardIcon(WorldMapIconType.AbilityPedestal);
+				break;
+			case RandomizerWorldMapIconType.GumonSeal:
+				CreateIconFromInventory("forlornRuins/forlornKeyGraphic", 8f);
+				break;
+			case RandomizerWorldMapIconType.Keystone:
+				InitStandardIcon(WorldMapIconType.Keystone);
+				break;
+			case RandomizerWorldMapIconType.Experience:
+				InitStandardIcon(WorldMapIconType.Experience);
+				break;
+			default:
+				break;
+		}
+	}
+
+	private void CreateIconFromInventory(string name, float scale)
+	{
+		if (!inventoryTemplate)
+		{
+			// The visible inventory on the pause screen has transparency animations affecting the cloned icons
+			// So clone from the permanently disabled inventory that the visible one is cloned from
+			inventoryTemplate = SceneManager.GetSceneByName("loadBootstrap").GetRootGameObjects().First((GameObject go) => go.name == "inventoryScreen").transform;
+		}
+
+		var obj = inventoryTemplate.transform.Find("progression").Find(name);
+		var clone = GameObject.Instantiate(obj).gameObject;
+		clone.SetActive(true);
+		clone.transform.SetParent(AreaMapUI.Instance.Navigation.MapPivot.transform);
+		clone.transform.localScale = new Vector3(scale, scale, 1);
+		clone.transform.localPosition = this.Position;
+		TransparencyAnimator.Register(clone.transform);
+		m_iconGameObject = clone;
+	}
+	
 	public void Hide()
 	{
 		if (this.m_iconGameObject)
@@ -59,7 +154,6 @@ public class RuntimeWorldMapIcon
 		}
 	}
 
-	// Token: 0x06002CDB RID: 11483 RVA: 0x00024C4B File Offset: 0x00022E4B
 	public void SetIcon(WorldMapIconType icon)
 	{
 		if (this.m_iconGameObject)
@@ -69,21 +163,19 @@ public class RuntimeWorldMapIcon
 		this.Icon = icon;
 	}
 
-	// Token: 0x0400285B RID: 10331
 	public MoonGuid Guid;
 
-	// Token: 0x0400285C RID: 10332
 	public WorldMapIconType Icon;
 
-	// Token: 0x0400285D RID: 10333
 	public Vector2 Position;
 
-	// Token: 0x0400285E RID: 10334
 	private RuntimeGameWorldArea Area;
 
-	// Token: 0x0400285F RID: 10335
 	public bool IsSecret;
 
-	// Token: 0x04002860 RID: 10336
 	private GameObject m_iconGameObject;
+
+	public RandomizerWorldMapIconType RandomizerIconType;
+
+	private static Transform inventoryTemplate;
 }

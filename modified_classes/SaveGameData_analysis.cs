@@ -11,10 +11,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-// Token: 0x02000612 RID: 1554
 public partial class SaveGameData
 {
-	// Token: 0x06002152 RID: 8530
 	public bool LoadFromReader(BinaryReader reader)
 	{
 		this.Scenes.Clear();
@@ -25,8 +23,8 @@ public partial class SaveGameData
 		}
 		SaveGameData.CurrentSaveFileVersion = reader.ReadInt32();
 		int num = reader.ReadInt32();
-		bool logging = RandomizerSettings.BashDeadzone > 0.9f;
-		bool reading = RandomizerSettings.AbilityMenuOpacity > 0.9f;
+		bool logging = RandomizerSettings.Controls.BashDeadzone > 0.9f;
+		bool reading = RandomizerSettings.QOL.AbilityMenuOpacity > 0.9f;
 		Hashtable DifferentDataMap = new Hashtable();
 		if (reading)
 		{

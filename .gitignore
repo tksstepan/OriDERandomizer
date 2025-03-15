@@ -25,3 +25,8 @@ seed_gen/*.csv
 
 # Ignore compiled python files
 *.pyc
+
+# ignore dlls (commonly added to make dnspy less of a PITA)
+*.dll
+# ...don't ignore the important one, though
+!Assembly-Csharp.dll

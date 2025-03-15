@@ -184,6 +184,7 @@ public static class RandomizerStatsManager {
 
 		SceneToZone.Add("mangroveFallsDashEscalation", "mangrove");
 		SceneToZone.Add("northMangroveFallsIntro", "mangrove");
+		SceneToZone.Add("southMangroveFallsGrenadeEscalationB", "mangrove");
 		SceneToZone.Add("southMangroveFallsGrenadeEscalationBR", "mangrove");
 
 		SceneToZone.Add("mountHoruMovingPlatform", "mountHoru");
@@ -194,6 +195,10 @@ public static class RandomizerStatsManager {
 		SceneToZone.Add("catAndMouseLeft", "mountHoru");
 		SceneToZone.Add("catAndMouseResurrectionRoom", "mountHoru");
 		SceneToZone.Add("mountHoruHubBottom", "mountHoru");
+		SceneToZone.Add("mountHoruHubTop", "mountHoru");
+	}
+	public static string CurrentZone(bool pretty) {
+		return pretty ? ZonePrettyNames[CurrentZone()].Replace("\t","") : CurrentZone();
 	}
 
 	public static string CurrentZone() {
@@ -298,7 +303,20 @@ public static class RandomizerStatsManager {
 		}
 	}
 
-	public static void IncPickup () {
+	public static int GetObtainedPickupCount(string areaName)
+	{
+		if (!Game.Characters.Sein?.Inventory)
+			return 0;
+		return get(Pickups + Offsets[areaName]);
+	}
+
+	public static void IncPickup(int loc) {
+        if(Randomizer.HaveCoord(loc))
+        	return;
+	    IncPickup();
+	}
+
+	public static void IncPickup() {
 		if(!Active)
 			return;
 		try {
@@ -316,7 +334,6 @@ public static class RandomizerStatsManager {
 					set(PPM_max_count, count);
 				}
 			}
-
 			inc(Pickups + Offsets[CurrentZone()], 1);
 		}
 		catch(Exception e)
@@ -338,6 +355,8 @@ public static class RandomizerStatsManager {
 			{
 				Randomizer.PrintImmediately("", 1, false, false, false);
 				WriteStatsFile();
+				if(RandomizerSettings.Dev && BingoController.Active)
+					Randomizer.log("Bingo payload: " + BingoController.GetJson());
 			}
 			 else 
 				ShowStats(duration);
@@ -386,8 +405,12 @@ public static class RandomizerStatsManager {
 				float ppm_max = (float)get(PPM_max) / 100f;
 				statsPage = "ALIGNLEFTANCHORTOPPADDING_0_2_0_0_PARAMS_16_12_1_\nSaves:					" + get(Saves).ToString();
 				statsPage += "\nReloads:					" + get(Reloads).ToString();
-				statsPage += "\nAlt+Rs Used:				" + get(AltRCount).ToString();
-				statsPage += "\nTeleporters Used:			" + get(TeleporterCount).ToString();
+				var altrc = get(AltRCount);
+				if(altrc > 0) {
+					statsPage += "\nAlt+Rs Used:				" + get(altrc).ToString();
+					statsPage += "\nTeleporters Used:			" + get(TeleporterCount).ToString();
+				} else 
+					statsPage += "\nTimes Warped:				" + get(TeleporterCount).ToString();
 				statsPage += "\nEnemies Killed:				" + get(EnemiesKilled).ToString();
 				statsPage += "\nBy Leveling up:				" + get(LevelUpKills).ToString();
 				statsPage += "\nExp collected:				" + get(ExpGained).ToString();
@@ -480,7 +503,7 @@ public static class RandomizerStatsManager {
 
 	public static void WriteStatsFile() {
 		try {
-			string flagLine = File.ReadAllLines("randomizer.dat")[0];
+			string flagLine = File.ReadAllLines(Randomizer.SeedFilePath)[0];
 			string zonePart = GetStatsPage(0).Substring(33);
 			// formatting is garbage
 			zonePart = zonePart.Replace("   ", "");
@@ -605,7 +628,6 @@ public static class RandomizerStatsManager {
 			default:
 				break;
 		}
-
 	}
 
 

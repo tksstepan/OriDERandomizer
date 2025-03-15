@@ -1,0 +1,18 @@
+moonGrottoRopeBridge/*gumoBridgeSetup/group/action ActionSequenceSerializer 1360931587 1176121670 -1051255642 855352030 511e2b03-3146-461a-a61c-57c1dea2fb32
+moonGrottoRopeBridge/*gumoBridgeSetup/group/action WaitAction 705566895 1206307123 -626862952 223115723
+mountHoruHubMid/*doorSetups/lavaDrainSetups/*door1LavaDrains/*door1LavaDrain/04. Give randomized pickup RandomizerPickupAction 342379476 1279118974 1933979066 -2037494512 14684bd4-ce7e-4c3d-ba2d-4673104d8e86
+mountHoruHubMid/*doorSetups/lavaDrainSetups/*door2LavaDrains/*door2LavaDrain/04. Give randomized pickup RandomizerPickupAction 2094798756 1153586248 466487945 1718525856 7cdc17a4-5448-44c2-890a-ce1ba09f6e66
+mountHoruHubMid/*doorSetups/lavaDrainSetups/*door3LavaDrains/*door3LavaDrain/04. Give randomized pickup RandomizerPickupAction 1179998744 1229172424 1476012961 1113314946 46555a18-aec8-4943-a12b-fa5782d65b42
+mountHoruHubMid/*doorSetups/lavaDrainSetups/*door4LavaDrains/*door4LavaDrain/04. Run giveLeftPickup action if Get World Event Condition -1261986975 1336041250 1663544246 -817715174 b4c79b61-5f22-4fa2-b6ab-27631aa842cf
+mountHoruHubMid/*doorSetups/lavaDrainSetups/*door5LavaDrains/*door5LavaDrain/04. Give randomized pickup RandomizerPickupAction 507875409 1290402675 2000937858 431974005 1e459051-fb73-4ce9-82e3-43777566bf19
+mountHoruHubMid/*doorSetups/lavaDrainSetups/*door6LavaDrains/*door6LavaDrain/04. Run giveLeftPickup action if Get World Event Condition -300318401 1327879929 1536957364 -1500614911 ee19813f-d6f9-4f25-b41b-9c5b016f8ea6
+mountHoruHubMid/*doorSetups/lavaDrainSetups/*door7LavaDrains/*door7LavaDrain/04. Give randomized pickup RandomizerPickupAction 444584278 1175993457 1279651481 657435546 1a7fd156-3c71-4618-99ee-454c9aab2f27
+mountHoruHubMid/*doorSetups/lavaDrainSetups/*door8LavaDrains/*door8LavaDrain/04. Give randomized pickup RandomizerPickupAction 1919663033 1265578911 -1610223430 -2058149588 726bbbb9-339f-4b6f-baf0-05a02c215385
+mountHoruHubMid/*doorSetups/lavaDrainSetups/giveLeftPickup RandomizerPickupAction -113467076 1262471100 2067579068 -1446727120 f93ca13c-c7bc-4b3f-bcc0-3c7b30b2c4a9
+mountHoruHubMid/*doorSetups/lavaDrainSetups/giveRightPickup RandomizerPickupAction 1304729780 1199153037 -833875285 488721814 4dc498b4-9f8d-4779-ab12-4cce964d211d
+mountHoruLaserPuzzle/laserPuzzle/deactivateSequence ActionSequence -217873041 1228699831 -192933462 1616173080 f303856f-78b7-493c-aa11-80f418d85460
+mountHoruLaserPuzzle/laserPuzzle/deactivateSequence TriggerByString -1643625622 1244944140 -1378018126 -449882576 9e08436a-570c-4a34-b21c-ddad30562fe5
+mountHoruLaserPuzzle/laserPuzzle/deactivateSequence/01. Deactivate blockableLaser 83562839 1305673046 1379750071 220123169 04fb1157-fd56-4dd2-b750-3d5221d01e0d
+mountHoruLaserPuzzle/laserPuzzle/deactivateSequence/02. Deactivate blockableLaser 296308939 1211527480 -1445804128 1888526783 11a950cb-7138-4836-a0c7-d2a9bfa19070
+thornfeltSwampActTwoStart/musicZones/musicActivation OnSceneStartRunAction 560691571 1097907217 -1524861543 276788056 216b7973-bc11-4170-9975-1ca558737f10
+sunkenGladesRunaway/*objectiveSetup/objectiveSetupTrigger/objectiveSetupAction SetCharacterPosition 2033807637 1102752838 351348109 1564353675
