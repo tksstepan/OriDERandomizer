@@ -127,17 +127,17 @@
 
 === Keysanity ===
 300 - Glades Pool (2)
-301 - Spirit Caverns Lower (2)
-302 - Spirit Caverns Upper (4)
-303 - Grotto (2)
-304 - Ginso Lower (4)
-305 - Ginso Upper (4)
-306 - Swamp (2)
+301 - Lower Spirit Caverns (2)
+302 - Grotto (2)
+303 - Swamp (2)
+304 - Upper Spirit Caverns (4)
+305 - Lower Ginso (4)
+306 - Upper Ginso (4)
 307 - Misty (4)
 308 - Forlorn (4)
-309 - Sorrow Lower (4)
-310 - Sorrow Middle (4)
-311 - Sorrow Upper (4)
+309 - Lower Sorrow (4)
+310 - Mid Sorrow (4)
+311 - Upper Sorrow (4)
 
 800 - Open World
 801 - Closed Dungeons
