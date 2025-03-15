@@ -28,18 +28,18 @@ public class RandomizerKeysanity {
         };
 
         _hintMap = new Dictionary<int, string>() {
-            { 300, "Glades Pool Keystone"},
-            { 301, "Lower Spirit Caverns Keystone"},
-            { 302, "Grotto Keystone"},
-            { 303, "Swamp Keystone"},
-            { 304, "Upper Spirit Caverns Keystone"},
-            { 305, "Lower Ginso Keystone"},
-            { 306, "Upper Ginso Keystone"},            
-            { 307, "Misty Keystone"},
-            { 308, "Forlorn Keystone"},
-            { 309, "Lower Sorrow Keystone"},
-            { 310, "Mid Sorrow Keystone"},
-            { 311, "Upper Sorrow Keystone"},
+            { 300, "Glades Pool"},
+            { 301, "Lower Spirit Caverns"},
+            { 302, "Grotto"},
+            { 303, "Swamp"},
+            { 304, "Upper Spirit Caverns"},
+            { 305, "Lower Ginso"},
+            { 306, "Upper Ginso"},            
+            { 307, "Misty"},
+            { 308, "Forlorn"},
+            { 309, "Lower Sorrow"},
+            { 310, "Mid Sorrow"},
+            { 311, "Upper Sorrow"},
         };
 
 
@@ -66,26 +66,26 @@ public class RandomizerKeysanity {
         Characters.Sein.Inventory.Keystones = 0;
     }
 
-    private string GetProgress(int id) {
+    private string GetProgress(int id, bool printKeystone) {
         if (_hintMap.TryGetValue(id, out var baseHint)) {
             var canOpen = (_inventory.GetRandomizerItem(id) - (id < 304 ? 2 : 4)) == 0;
             if (canOpen) {
-                return $"${baseHint} ({_inventory.GetRandomizerItem(id)}/{(id < 304 ? 2 : 4)})$";
+                return $"${baseHint}{(printKeystone ? " Keystone " : " ")}({_inventory.GetRandomizerItem(id)}/{(id < 304 ? 2 : 4)})$";
             }
 
-            return $"{baseHint} ({_inventory.GetRandomizerItem(id)}/{(id < 304 ? 2 : 4)})";
+            return $"{baseHint}{(printKeystone ? " Keystone " : " ")}({_inventory.GetRandomizerItem(id)}/{(id < 304 ? 2 : 4)})";
         }
         return string.Empty;
     }
 
     public void ShowPickupHint(int id) {
-        RandomizerSwitch.PickupMessage(GetProgress(id));
+        RandomizerSwitch.PickupMessage($"{GetProgress(id, true)}");
     }
 
     public void ShowKeyProgress() {
         var sb = new StringBuilder();
         for (var id = 300; id < 312;) {
-            sb.Append($"{GetProgress(id++)} {GetProgress(id++)} {GetProgress(id++)}\n");
+            sb.Append($"{GetProgress(id++, false)} {GetProgress(id++, false)} {GetProgress(id++, false)}\n");
         }
         Randomizer.showHint(sb.ToString());
     }
