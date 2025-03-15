@@ -68,7 +68,12 @@ public class RandomizerKeysanity {
 
     private string GetProgress(int id) {
         if (_hintMap.TryGetValue(id, out var baseHint)) {
-            return $"{baseHint} ({_inventory.GetRandomizerItem(id)} / {(id < 304 ? 2 : 4)})";
+            var canOpen = (_inventory.GetRandomizerItem(id) - (id < 304 ? 2 : 4)) == 0;
+            if (canOpen) {
+                return $"${baseHint} ({_inventory.GetRandomizerItem(id)}/{(id < 304 ? 2 : 4)})$";
+            }
+
+            return $"{baseHint} ({_inventory.GetRandomizerItem(id)}/{(id < 304 ? 2 : 4)})";
         }
         return string.Empty;
     }
@@ -80,11 +85,7 @@ public class RandomizerKeysanity {
     public void ShowKeyProgress() {
         var sb = new StringBuilder();
         for (var id = 300; id < 312;) {
-            sb.Append(GetProgress(id++));
-            sb.Append(GetProgress(id++));
-            sb.Append(GetProgress(id++));
-            sb.Append(GetProgress(id++));
-            sb.Append("\n");
+            sb.Append($"{GetProgress(id++)} {GetProgress(id++)} {GetProgress(id++)}\n");
         }
         Randomizer.showHint(sb.ToString());
     }
