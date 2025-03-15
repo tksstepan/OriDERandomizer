@@ -12,7 +12,7 @@ using UnityEngine;
 
 public static class Randomizer
 {
-    public static string VERSION = "4.0.13";
+    public static string VERSION = "4.0.14";
     public static void initialize()
     {
         try {
@@ -1503,10 +1503,10 @@ public static class Randomizer
             var spawnItems = spawnItem.Decompose();
             // is it stupid to do it this way? yes. does it technically cover the edge case where your spawn item has HC/1/HC/1/HC/-1? also yes
             // does it make HC|4 valid but literally only on spawn? haha don't even worry about that my friends
-            spawnHCs += spawnItems.Where(item => item.Action == "HC").Select(item => (int)item.Value).Aggregate(1, (acc, next) => acc+next);
-            spawnECs += spawnItems.Where(item => item.Action == "EC").Select(item => (int)item.Value).Aggregate(1, (acc, next) => acc+next);
+            spawnHCs += spawnItems.Where(item => item.Action == "HC").Select(item => (int)item.Value).Aggregate(0, (acc, next) => acc+next);
+            spawnECs += spawnItems.Where(item => item.Action == "EC").Select(item => (int)item.Value).Aggregate(0, (acc, next) => acc+next);
             // let the survivors regroup
-            spawnItems = spawnItems.Where(item => item.Action != "HC" || item.Action != "EC").ToList();
+            spawnItems = spawnItems.Where(item => item.Action != "HC" && item.Action != "EC").ToList();
             if(spawnItems.Count == 1) 
                 RandomizerSwitch.GivePickup(spawnItems[0], 2, true);
             else if(spawnItems.Count > 1)
