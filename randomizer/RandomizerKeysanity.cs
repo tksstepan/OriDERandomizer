@@ -87,7 +87,7 @@ public class RandomizerKeysanity {
         for (var id = 300; id < 312;) {
             sb.Append($"{GetProgress(id++, false)} {GetProgress(id++, false)} {GetProgress(id++, false)}\n");
         }
-        Randomizer.showHint(sb.ToString());
+        Randomizer.printInfo(sb.ToString());
     }
 
 }
