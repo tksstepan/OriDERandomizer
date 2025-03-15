@@ -234,6 +234,7 @@ public static class RandomizerRebinding {
 	public static BindSet ListMapAltars = new BindSet(new List<SingleBind>());
 	public static BindSet ListTeleporters = new BindSet(new List<SingleBind>());
 	public static BindSet ShowStats = new BindSet(new List<SingleBind>());
+	public static BindSet ShowKeysanityProgress = new BindSet(new List<SingleBind>());
 	public static BindSet Bonus1 = new BindSet(new List<SingleBind>());
 	public static BindSet Bonus2 = new BindSet(new List<SingleBind>());
 	public static BindSet Bonus3 = new BindSet(new List<SingleBind>());
@@ -263,6 +264,7 @@ public static class RandomizerRebinding {
 		{"List Map Altars", ListMapAltars},
 		{"List Teleporters", ListTeleporters},
 		{"Show Stats", ShowStats},
+		{"Show Keysanity Progress", ShowKeysanityProgress},
 		{"Bonus 1", Bonus1},
 		{"Bonus 2", Bonus2},
 		{"Bonus 3", Bonus3},

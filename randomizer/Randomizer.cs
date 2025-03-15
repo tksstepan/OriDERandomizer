@@ -650,6 +650,11 @@ public static class Randomizer
             Randomizer.ColorShift = !Randomizer.ColorShift;
             Randomizer.printInfo(obj);
         }
+
+        if (RandomizerRebinding.ShowKeysanityProgress.IsPressed()) {
+            Keysanity.ShowKeyProgress();
+        }
+
         if (RandomizerRebinding.ToggleChaos.IsPressed() && Characters.Sein)
         {
             if (Randomizer.Chaos)
