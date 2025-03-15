@@ -109,7 +109,7 @@ public static class Randomizer
             Randomizer.InLogicWarps = false;
             Randomizer.TeleportersLockedByClues = false;
             Randomizer.WarpLogicLocations = new Hashtable();
-            Keysanity.IsActive = false;
+            Keysanity.Initialize();
 
             if (Randomizer.SeedFilePath == null)
             {
@@ -1380,6 +1380,11 @@ public static class Randomizer
         {
             RandomizerClues.AddClue(area, id_number / 2);
         }
+
+        if (Keysanity.IsActive && code == "RB") {
+            Keysanity.AddClue(id_number, area);
+        }
+
         if (code == "TW")
         {
             //6399872|TW|Warp to Spirit Cavern AC,-219,-176,SpiritCavernsACWarp|Swamp

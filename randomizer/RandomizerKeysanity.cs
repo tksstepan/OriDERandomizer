@@ -8,6 +8,7 @@ public class RandomizerKeysanity {
 
     public bool IsActive;
     private Dictionary<MoonGuid, int> _doorKeyMap;
+    private Dictionary<int, string> _keyClueMap;
     private Dictionary<int, string> _hintMap;
     private RandomizerInventory _inventory;
 
@@ -42,8 +43,25 @@ public class RandomizerKeysanity {
             { 311, "Upper Sorrow"},
         };
 
-
         _inventory = inventory;
+    }
+
+    public void Initialize() {
+        IsActive = false;
+        _keyClueMap = new Dictionary<int, string>() {
+            { 300, ""},
+            { 301, ""},
+            { 302, ""},
+            { 303, ""},
+            { 304, ""},
+            { 305, ""},
+            { 306, ""},            
+            { 307, ""},
+            { 308, ""},
+            { 309, ""},
+            { 310, ""},
+            { 311, ""},
+        };
     }
 
     public void ApplyKeystoneCount(MoonGuid guid, int numberUsed) { 
@@ -53,6 +71,7 @@ public class RandomizerKeysanity {
 
         if (_doorKeyMap.TryGetValue(guid, out var value)) {
             Characters.Sein.Inventory.Keystones = _inventory.GetRandomizerItem(value) - numberUsed;
+            Randomizer.showHint(_keyClueMap[value]);
             return;
         }
         Characters.Sein.Inventory.Keystones = 0;
@@ -88,6 +107,15 @@ public class RandomizerKeysanity {
             sb.Append($"{GetProgress(id++, false)} {GetProgress(id++, false)} {GetProgress(id++, false)}\n");
         }
         Randomizer.printInfo(sb.ToString());
+    }
+
+    public void AddClue(int id, string area) {
+        if (!_keyClueMap.ContainsKey(id)) {
+            return;
+        }
+
+        _keyClueMap[id] += $" {area}";
+        _keyClueMap[id].Trim();
     }
 
 }
