@@ -8,7 +8,7 @@ public class RandomizerKeysanity {
 
     public bool IsActive;
     private Dictionary<MoonGuid, int> _doorKeyMap;
-    private Dictionary<int, string> _keyClueMap;
+    private Dictionary<int, List<RandomizerKeysanityHintInfo>> _keyClueMap;
     private Dictionary<int, string> _hintMap;
     private RandomizerInventory _inventory;
 
@@ -48,19 +48,19 @@ public class RandomizerKeysanity {
 
     public void Initialize() {
         IsActive = false;
-        _keyClueMap = new Dictionary<int, string>() {
-            { 300, ""},
-            { 301, ""},
-            { 302, ""},
-            { 303, ""},
-            { 304, ""},
-            { 305, ""},
-            { 306, ""},            
-            { 307, ""},
-            { 308, ""},
-            { 309, ""},
-            { 310, ""},
-            { 311, ""},
+        _keyClueMap = new Dictionary<int, List<RandomizerKeysanityHintInfo>>() {
+            { 300, new List<RandomizerKeysanityHintInfo>()},
+            { 301, new List<RandomizerKeysanityHintInfo>()},
+            { 302, new List<RandomizerKeysanityHintInfo>()},
+            { 303, new List<RandomizerKeysanityHintInfo>()},
+            { 304, new List<RandomizerKeysanityHintInfo>()},
+            { 305, new List<RandomizerKeysanityHintInfo>()},
+            { 306, new List<RandomizerKeysanityHintInfo>()},            
+            { 307, new List<RandomizerKeysanityHintInfo>()},
+            { 308, new List<RandomizerKeysanityHintInfo>()},
+            { 309, new List<RandomizerKeysanityHintInfo>()},
+            { 310, new List<RandomizerKeysanityHintInfo>()},
+            { 311, new List<RandomizerKeysanityHintInfo>()},
         };
     }
 
@@ -71,7 +71,19 @@ public class RandomizerKeysanity {
 
         if (_doorKeyMap.TryGetValue(guid, out var value)) {
             Characters.Sein.Inventory.Keystones = _inventory.GetRandomizerItem(value) - numberUsed;
-            Randomizer.showHint(_keyClueMap[value]);
+
+            var hint = string.Empty;
+            foreach (var hintInfo in _keyClueMap[value]) {
+                if (!Randomizer.HaveCoord(hintInfo.Coords)) {
+                    hint += $" {hintInfo.Area}";
+                    hint.Trim();
+                }
+            }
+
+            if (!string.IsNullOrEmpty(hint)) {
+                Randomizer.showHint(_keyClueMap[value]);
+            }
+                        
             return;
         }
         Characters.Sein.Inventory.Keystones = 0;
@@ -109,13 +121,15 @@ public class RandomizerKeysanity {
         Randomizer.printInfo(sb.ToString());
     }
 
-    public void AddClue(int id, string area) {
+    public void AddClue(int id, int coords, string area) {
         if (!_keyClueMap.ContainsKey(id)) {
             return;
         }
 
-        _keyClueMap[id] += $" {area}";
-        _keyClueMap[id].Trim();
+        _keyClueMap[id].Add(new RandomizerKeysanityHintInfo {
+            Coords = coords,
+            Area = area,
+        });
     }
 
 }

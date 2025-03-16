@@ -1382,7 +1382,7 @@ public static class Randomizer
         }
 
         if (Keysanity.IsActive && code == "RB") {
-            Keysanity.AddClue(id_number, area);
+            Keysanity.AddClue(id_number, coords, area);
         }
 
         if (code == "TW")
