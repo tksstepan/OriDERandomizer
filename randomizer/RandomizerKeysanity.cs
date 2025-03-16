@@ -53,6 +53,19 @@ public class RandomizerKeysanity {
 
         if (_doorKeyMap.TryGetValue(guid, out var value)) {
             Characters.Sein.Inventory.Keystones = _inventory.GetRandomizerItem(value) - numberUsed;
+
+            var hint = string.Empty;
+            foreach (var hintInfo in _keyClueMap[value]) {
+                if (!Randomizer.HaveCoord(hintInfo.Coords)) {
+                    hint += $" {hintInfo.Area}";
+                    hint.Trim();
+                }
+            }
+
+            if (!string.IsNullOrEmpty(hint)) {
+                Randomizer.showHint(hint);
+            }
+                        
             return;
         }
         Characters.Sein.Inventory.Keystones = 0;
