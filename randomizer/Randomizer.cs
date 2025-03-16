@@ -76,7 +76,8 @@ public static class Randomizer
             Randomizer.LockedCount = 0;
             Randomizer.ResetTrackerCount = 0;
             Randomizer.HotCold = false;
-            Randomizer.HotColdTypes = new HashSet<string>() {"EV", "RB17", "RB19", "RB21", "RB28", "SK", "TPForlorn", "TPHoru", "TPGinso", "TPValley", "TPSorrow"};
+            Randomizer.HotColdTypes = new HashSet<string>() {"EV", "RB17", "RB19", "RB21", "RB28", "SK", "TPForlorn", "TPHoru", "TPGinso", "TPValley", "TPSorrow", 
+                "RB300", "RB301", "RB302", "RB303", "RB304", "RB305", "RB306", "RB307", "RB308", "RB309", "RB310", "RB311" };
             Randomizer.HotColdItems = new Dictionary<int, RandomizerHotColdItem>();
             Randomizer.HotColdFrags = new Dictionary<int, RandomizerHotColdItem>();
             Randomizer.HotColdMaps = new List<int>();
